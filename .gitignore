@@ -43,3 +43,7 @@ compile_commands.json
 r-type_server
 r-type_client
 build/
+
+# husky
+node_modules/
+package-lock.json
