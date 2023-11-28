@@ -7,6 +7,8 @@ on:
     branches-ignore:
       - feature/ignore/**
 
+  workflow_dispatch:
+
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2026/B-CPP-500-BDX-5-2-rtype-luka.camus.git"
   EXECUTABLE: "r-type_server,r-type_client"
