@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-find -name *.cpp -o -name *.hpp -o -name *.hh | xargs clang-format -i
+clang-format -i --style='file:.clang-format' `find -name *.cpp -o -name *.hh -o -name *.hpp`
