@@ -34,6 +34,7 @@ jobs:
 
   check_status_repos:
     name: "Check if all files are in the linter"
+    needs: check_repository_cleanliness
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -59,15 +60,14 @@ jobs:
           sudo apt-get install -y ninja-build clang-tidy-12 ccache
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
           sudo apt-get install -y --no-install-recommends libgtest-dev
-          sudo apt-get install -y just
           clang++ --version
           clang-tidy --version
+    - uses: extractions/setup-just@v1
+      with:
+        just-version: 0.8 # optional semver specification, otherwise latest
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-          #    - uses: extractions/setup-just@v1
-          #      with:
-          #        just-version: 0.8 # optional semver specification, otherwise latest
     - name: Compilation test
       run: just ninja
       shell: bash
