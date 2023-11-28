@@ -2,8 +2,6 @@
 ## CMakeLists: R-Type / Server
 ##
 
-cmake_minimum_required(VERSION 3.6)
-
 # standard version cpp
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -158,6 +156,11 @@ target_compile_options(rtype-server-core PRIVATE ${WARNING_FLAGS})
 target_include_directories(rtype-server-core PUBLIC include)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD_REQUIRED ON)
+target_link_libraries(
+    rtype-server-core PRIVATE
+    rtype-server-interface
+    asio::asio # link asio library to core
+    )
 
 message("${BoldWhite}Finished loading rtype-core${ColourReset}")
 
