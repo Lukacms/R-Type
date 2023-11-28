@@ -1,4 +1,4 @@
-name: CI Gomoku
+name: CI R-Type
 on:
   push:
     branches-ignore:
@@ -30,59 +30,77 @@ jobs:
           exit 1
         fi
 
-        # job_run_program:
-        #   needs: check_repository_cleanliness
-        #   runs-on: ubuntu-latest
-        #   steps:
-        #   - name : Install packages
-        #     run: |
-        #         sudo apt-get update -qq
-        #         sudo apt-get install -y ninja-build clang-tidy-12 ccache
-        #         sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
-        #         sudo apt-get install -y --no-install-recommends make
-        #         clang++ --version
-        #         clang-tidy --version
-        #   - uses: actions/checkout@v3
-        #     with:
-        #       fetch-depth: 0
-        #   - name: Compilation test
-        #     run: ./compile.sh --ninja
-        #     shell: bash
-        #     timeout-minutes: 2
-        #   - name: Check executable files exists
-        #     run: |
-        #       IFS=',' read -ra ADDR <<< $EXECUTABLES
-        #       for i in "${ADDR[@]}"; do
-        #         if [[ ! -x "./${i}" ]]; then
-        #           exit 1
-        #         fi
-        #       done
-        #
-        # run_tests:
-        #   needs: job_run_program
-        #   if: ${{ github.event_name == 'pull_request' }}
-        #   runs-on: ubuntu-latest
-        #   steps:
-        #   - name : Install packages
-        #     run: |
-        #         sudo apt-get update -qq
-        #         sudo apt-get install -y ninja-build clang-tidy-12 ccache
-        #         sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
-        #         sudo apt-get install -y --no-install-recommends libsfml-dev catch2 make gcovr
-        #         clang++ --version
-        #         clang-tidy --version
-        #   - uses: actions/checkout@v3
-        #     with:
-        #       fetch-depth: 0
-        #   - name: Compilation test
-        #     run: make tests_run
-        #     shell: bash
-        #     timeout-minutes: 5
+  check_status_repos:
+    name: "Check if all files are in the linter"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: install packages
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y clang-tidy-12 ccache
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
+          clang++ --version
+          clang-tidy --version
+      - name: run linter
+        run: clang-format -i -style=WebKit `find -name *.cpp -o *.hh -o *.hpp`
+
+  job_run_program:
+    needs: check_status_repos
+    runs-on: ubuntu-latest
+    steps:
+    - name : Install packages
+      run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ninja-build clang-tidy-12 ccache
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
+          sudo apt-get install -y --no-install-recommends libgtest-dev just
+          clang++ --version
+          clang-tidy --version
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: extractions/setup-just@v1
+      with:
+        just-version: 0.8 # optional semver specification, otherwise latest
+    - name: Compilation test
+      run: just ninja
+      shell: bash
+      timeout-minutes: 5
+    - name: Check executable files exists
+      run: |
+        IFS=',' read -ra ADDR <<< $EXECUTABLES
+        for i in "${ADDR[@]}"; do
+          if [[ ! -x "./${i}" ]]; then
+            exit 1
+          fi
+        done
+
+        #  run_tests:
+        #    needs: job_run_program
+        #    if: ${{ github.event_name == 'pull_request' }}
+        #    runs-on: ubuntu-latest
+        #    steps:
+        #    - name : Install packages
+        #      run: |
+        #          sudo apt-get update -qq
+        #          sudo apt-get install -y ninja-build clang-tidy-12 ccache
+        #          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
+        #          sudo apt-get install -y --no-install-recommends libsfml-dev catch2 make gcovr
+        #          clang++ --version
+        #          clang-tidy --version
+        #    - uses: actions/checkout@v3
+        #      with:
+        #        fetch-depth: 0
+        #    - name: Compilation test
+        #      run: make tests_run
+        #      shell: bash
+        #      timeout-minutes: 5
 
   push_to_mirror:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
-    needs: check_repository_cleanliness
+    needs: check_status_repos
     steps:
       - uses: actions/checkout@v3
         with:
