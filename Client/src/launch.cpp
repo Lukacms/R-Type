@@ -2,10 +2,10 @@
 ** EPITECH PROJECT, 2023
 ** src
 ** File description:
-** main
+** launch
 */
 
-int main(int /* argc */, const char * /* argv */[])
+int launch()
 {
     return 0;
 }

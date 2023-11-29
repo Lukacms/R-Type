@@ -1,6 +1,6 @@
-project(r-type)
-
 cmake_minimum_required(VERSION 3.6)
+
+project(r-type)
 
 set(PROJECT_SOURCE_DIR .)
 
@@ -24,6 +24,9 @@ FetchContent_MakeAvailable(asiocmake)
 
 message("Finished loading Asio")
 
+# need to first load this one to load library
+add_subdirectory(Network)
+
+add_subdirectory(Server)
 add_subdirectory(Client)
 add_subdirectory(GameEngine)
-add_subdirectory(Server)
