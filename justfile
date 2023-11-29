@@ -1,6 +1,6 @@
 # lint files with clang-format
 lint:
-    @find -name *.cpp -o -name *.hpp -o -name *.hh | xargs clang-format -i
+    @clang-format -i --style='file:.clang-format' `git diff --name-only | grep -E '.cpp$|.hh$|.hpp$'`
 
 names := "r-type_server r-type_client tests-rtype-server tests-rtype-client"
 name_tests_server  :=  "tests-rtype-server"
