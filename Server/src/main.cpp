@@ -5,9 +5,12 @@
 ** main
 */
 
-int launch();
+#include "rtype.hh"
+#include "rtype/Manager.hh"
 
 int main(int /* argc */, const char * /* argv */[])
 {
-    return launch();
+    rserver::Manager::launch(rserver::DEFAULT_PORT);
+
+    return rserver::SUCESS;
 }
