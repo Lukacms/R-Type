@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-clang-format -i --style='file:.clang-format' `git diff --staged --name-only | grep -E '.cpp$|.hh$|.hpp$'`
+clang-format -i --style='file:.clang-format' `git diff --name-status --staged | grep -E '^A|^M' | cut -c3- | grep -E '.cpp$|.hh$|.hpp$'`
