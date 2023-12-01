@@ -6,8 +6,11 @@
 */
 
 #include <iostream>
+#include <memory>
+#include <ostream>
 #include <rtype.hh>
 #include <rtype/Manager.hh>
+#include <rtype/network/Network.hh>
 
 /* constructors and destructors */
 
@@ -53,13 +56,16 @@ void rserver::Manager::launch(asio::ip::port_type port)
 
 void rserver::Manager::do_loop()
 {
+    ntw::Communication communication{ntw::Start, "oui\r\n"};
+
     while (true) {
         std::array<char, 1> recv_buf{};
         asio::ip::udp::endpoint remote_endpoint{};
 
         this->socket.receive_from(asio::buffer(recv_buf), remote_endpoint);
-        std::string message{"oui\r\n"};
+        std::cout << recv_buf[0] << ENDL;
         asio::error_code ignored{};
-        this->socket.send_to(asio::buffer(message), remote_endpoint, 0, ignored);
+        this->socket.send_to(asio::buffer(&communication, sizeof(communication)), remote_endpoint,
+                             0, ignored);
     }
 }

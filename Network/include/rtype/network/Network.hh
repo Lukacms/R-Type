@@ -20,6 +20,6 @@ namespace ntw
     struct Communication {
         public:
             NetworkType type{None};
-            std::vector<std::string> args{};
+            std::string args{};
     };
 } // namespace ntw
