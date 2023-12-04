@@ -4,8 +4,7 @@
 ** File description:
 ** main
 */
-
-<<<<<<< Updated upstream
+/*
 #include <asio.hpp>
 #include <iostream>
 #include <iterator>
@@ -45,8 +44,7 @@ int main(int argc, char *argv[])
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
-
-=======
+*/
 #include <rtype/Client.hpp>
 #include <rtype/Components/SpriteComponent.hpp>
 #include <rtype/Components/TagComponent.hpp>
@@ -78,6 +76,5 @@ int main(int /* argc */, const char * /* argv */[])
         client.render();
         client.update();
     }
->>>>>>> Stashed changes
     return 0;
 }
