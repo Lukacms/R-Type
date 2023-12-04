@@ -56,12 +56,16 @@ void rserver::Manager::launch(asio::ip::port_type port)
 
 void rserver::Manager::do_loop()
 {
-    ntw::Communication communication{ntw::Start, "oui\r\n"};
+    ntw::Communication communication{ntw::Start, {"oui\r\n"}};
 
     while (true) {
+        std::vector<char> buffer{};
         std::array<char, 1> recv_buf{};
         asio::ip::udp::endpoint remote_endpoint{};
+        buffer.clear();
 
+        buffer.push_back(static_cast<char>(communication.type));
+        std::copy(communication.args.begin(), communication.args.end(), std::back_inserter(buffer));
         this->socket.receive_from(asio::buffer(recv_buf), remote_endpoint);
         std::cout << recv_buf[0] << ENDL;
         asio::error_code ignored{};
