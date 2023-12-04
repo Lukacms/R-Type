@@ -149,7 +149,8 @@ add_library(
     rtype-client-core
     SHARED
     src/launch.cpp
-    )
+    src/rtype/Client.cpp
+)
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)
 target_compile_options(rtype-client-core PRIVATE ${WARNING_FLAGS})
@@ -161,6 +162,11 @@ target_link_libraries(
     rtype-client-interface
     r-type-network
     asio::asio # link asio library to core
+    sfml-window
+    sfml-graphics
+    sfml-system
+    sfml-audio
+    sfml-network
     )
 
 message("${BoldWhite}Finished loading rtype-core${ColourReset}")
@@ -169,14 +175,26 @@ message("${BoldWhite}Finished loading rtype-core${ColourReset}")
 add_executable(
     r-type_client
     src/main.cpp
-    )
+    src/rtype/Entity.cpp
+    src/rtype/Systems/MovementSystem.cpp
+    src/rtype/Systems/TransformSystem.cpp
+    src/rtype/Systems/SpriteSystem.cpp
+)
 
 # link the libraries to executable
 target_link_libraries(
     r-type_client PRIVATE
     rtype-client-core
     rtype-client-interface
+<<<<<<< Updated upstream
     asio::asio # link asio library to core
+=======
+    sfml-window
+    sfml-graphics
+    sfml-system
+    sfml-audio
+    sfml-network
+>>>>>>> Stashed changes
     )
 target_compile_features(r-type_client PRIVATE cxx_std_20)
 target_compile_options(r-type_client PRIVATE ${WARNING_FLAGS})
