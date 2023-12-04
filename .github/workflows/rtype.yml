@@ -48,7 +48,8 @@ jobs:
         clang++ --version
         clang-tidy --version
     - name: run linter
-      run: clang-format -i -style=WebKit `find -name *.cpp -o *.hh -o *.hpp`
+      run: clang-format -i --style='file:.clang-format' `find -name *.cpp -o -name *.hh -o -name *.hpp`
+
 
   job_run_program:
     needs: check_status_repos
