@@ -186,15 +186,12 @@ target_link_libraries(
     r-type_client PRIVATE
     rtype-client-core
     rtype-client-interface
-<<<<<<< Updated upstream
     asio::asio # link asio library to core
-=======
     sfml-window
     sfml-graphics
     sfml-system
     sfml-audio
     sfml-network
->>>>>>> Stashed changes
     )
 target_compile_features(r-type_client PRIVATE cxx_std_20)
 target_compile_options(r-type_client PRIVATE ${WARNING_FLAGS})
