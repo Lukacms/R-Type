@@ -7,19 +7,27 @@
 
 #pragma once
 
+#include <array>
 #include <string>
-#include <vector>
 
 namespace ntw
 {
+
+    constexpr int MAX_SIZE{128};
+
     enum NetworkType {
         Start,
         None,
     };
 
+#pragma pack(push, 1)
+
     struct Communication {
         public:
             NetworkType type{None};
-            std::vector<std::string> args{};
+            // std::string args{};
+            std::array<char, MAX_SIZE> args;
     };
+
+#pragma pack(pop)
 } // namespace ntw

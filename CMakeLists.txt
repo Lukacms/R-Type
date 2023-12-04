@@ -13,12 +13,16 @@ option(
   "Should asio be declared with FetchContent functions to be compatible. This doesn't not allow CPM cache to work."
   ON
 )
+# option(ASIO_TAG "tag instead of main branch" asio-1-28-2)
+
 # Download this repository
 include(FetchContent)
+
 FetchContent_Declare(
   asiocmake
   GIT_REPOSITORY "https://github.com/OlivierLDff/asio.cmake"
   GIT_TAG        "main"
+  SYSTEM
 )
 FetchContent_MakeAvailable(asiocmake)
 

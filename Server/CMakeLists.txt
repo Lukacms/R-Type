@@ -143,12 +143,16 @@ add_library(rtype-server-interface INTERFACE)
 # link the library
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD_REQUIRED ON)
+target_link_libraries(
+    rtype-server-interface INTERFACE
+    asio::asio
+    )
 
 # add library with all of the source file, execpt for the main
 add_library(
     rtype-server-core
     SHARED
-    src/launch.cpp
+    src/Manager.cpp
     )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
