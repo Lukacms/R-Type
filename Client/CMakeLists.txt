@@ -179,6 +179,7 @@ add_executable(
     src/rtype/Systems/MovementSystem.cpp
     src/rtype/Systems/TransformSystem.cpp
     src/rtype/Systems/SpriteSystem.cpp
+    src/rtype/Systems/AudioSystem.cpp
 )
 
 # link the libraries to executable

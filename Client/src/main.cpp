@@ -49,18 +49,29 @@ int main(int argc, char *argv[])
 #include <rtype/Components/SpriteComponent.hpp>
 #include <rtype/Components/TagComponent.hpp>
 #include <rtype/Components/TransformComponent.hpp>
+#include <rtype/Systems/AudioSystem.hpp>
 
 int main(int /* argc */, const char * /* argv */[])
 {
     rclient::Client client{};
     Entity ship{2};
     Entity test{5};
+    Entity background{1};
 
     SparseArray<SpriteComponent> sprites{};
     SparseArray<TransformComponent> transforms{};
     SparseArray<TagComponent> tags{};
     sf::Texture text{};
-    text.loadFromFile("./Client/assets/Spaceship.png");
+    AudioManager audioSystem{};
+    sf::Texture bg{};
+    bg.loadFromFile("./Client/assets/backgrounds/024.png");
+    sprites.emplace_at(background, sf::Sprite{bg}, sf::Rect<int>{0, 0, 800, 600});
+    transforms.emplace_at(background, 0.0F, 0.0F, 0.0F, 0.0F, 1.F, 1.F);
+    tags.emplace_at(background, "BACKGROUND");
+
+    text.loadFromFile("./Client/assets/ships/Spaceship.png");
+    audioSystem.loadSound("test", "./Client/assets/sounds/Spider-Dance.wav");
+    audioSystem.playSound("test");
 
     sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
     transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
