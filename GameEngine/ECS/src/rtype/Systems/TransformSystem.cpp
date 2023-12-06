@@ -5,19 +5,21 @@
 ** transform_system
 */
 
-#include <iostream>
 #include <rtype/Components/TransformComponent.hh>
-#include <rtype/Systems/TransformSystem.hh>
+#include <rtype/ECSManager.hpp>
 
-void TransformSystem::update(Registry &registry)
+namespace rtype
 {
-    SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
-    float delta_time = 0.1F;
+    void transform_system(Registry &registry)
+    {
+        SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
+        float delta_time = 0.1F;
 
-    for (auto &transform : transforms) {
-        if (transform == std::nullopt)
-            continue;
-        transform->position_x += transform->velocity_x * delta_time;
-        transform->position_y += transform->velocity_y * delta_time;
+        for (auto &transform : transforms) {
+            if (transform == std::nullopt)
+                continue;
+            transform->position_x += transform->velocity_x * delta_time;
+            transform->position_y += transform->velocity_y * delta_time;
+        }
     }
-}
+} // namespace rtype

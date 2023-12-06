@@ -52,8 +52,3 @@ int main(int argc, char *argv[])
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
-
-int main(int /* argc */, const char * /* argv */[])
-{
-    return 0;
-}

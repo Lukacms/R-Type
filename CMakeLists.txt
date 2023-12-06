@@ -31,6 +31,6 @@ message("Finished loading Asio")
 # need to first load this one to load library
 add_subdirectory(Network)
 
+add_subdirectory(GameEngine)
 add_subdirectory(Server)
 add_subdirectory(Client)
-add_subdirectory(GameEngine)

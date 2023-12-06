@@ -9,8 +9,8 @@ add_library(r-type-ecs SHARED
     src/rtype/Systems/SpriteSystem.cpp
     src/rtype/Systems/MovementSystem.cpp
     src/rtype/Systems/TransformSystem.cpp
-
-    )
+    src/rtype/EntityManager.cpp
+)
 
 target_include_directories(r-type-ecs PRIVATE ./include)
 target_compile_options(r-type-ecs PRIVATE ${WARNING_FLAGS})

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Registry.hpp"
 #include <functional>
+#include <rtype/Registry.hpp>
 #include <vector>
 
 class SystemManager
@@ -21,9 +21,8 @@ class SystemManager
         SystemManager &operator=(SystemManager const &to_copy) = default;
         SystemManager &operator=(SystemManager &&to_move) = default;
 
-        constexpr std::function<void(Registry &)> &
-        add_system(std::function<void(Registry &)> &function);
-        constexpr void update(Registry &registry, double delta_time);
+        std::function<void(Registry &)> &add_system(std::function<void(Registry &)> &function);
+        void update(Registry &registry);
 
     private:
         std::vector<std::function<void(Registry &)>> m_systems;

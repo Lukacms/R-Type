@@ -9,10 +9,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <rtype/ECSManager.hpp>
 #include <rtype/Registry.hpp>
-#include <rtype/Systems/MovementSystem.hpp>
-#include <rtype/Systems/SpriteSystem.hpp>
-#include <rtype/Systems/TransformSystem.hpp>
 
 namespace rclient
 {
@@ -33,19 +31,11 @@ namespace rclient
 
             bool is_running();
             void read_input();
-            void update();
-            void render();
-
-            Registry &get_registry();
+            void render(rtype::ECSManager &manager);
 
         private:
             size_t m_width{STANDARD_WIDTH};
             size_t m_height{STANDARD_HEIGHT};
             std::unique_ptr<sf::RenderWindow> m_window;
-            Registry m_registry{};
-
-            SpriteSystem m_sprite_system{};
-            TransformSystem m_transform_system{};
-            MovementSystem m_movement_system{};
     };
 } // namespace rclient

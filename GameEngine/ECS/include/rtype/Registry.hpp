@@ -17,13 +17,13 @@ class Registry
     public:
         Registry() = default;
         ~Registry() = default;
-        Registry(const Registry &) = delete;
-        Registry(Registry &&) = delete;
-        Registry &operator=(const Registry &) = delete;
-        Registry &operator=(Registry &&) = delete;
+        Registry(const Registry &) = default;
+        Registry(Registry &&) = default;
+        Registry &operator=(const Registry &) = default;
+        Registry &operator=(Registry &&) = default;
 
         template <class TComponent>
-        constexpr SparseArray<TComponent> &register_component(SparseArray<TComponent> &array)
+        SparseArray<TComponent> &register_component(SparseArray<TComponent> &array)
         {
             auto index = get_index<TComponent>();
             if (m_arrays.find(index) == m_arrays.end())
@@ -31,7 +31,7 @@ class Registry
             return std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
         }
 
-        template <class TComponent> constexpr SparseArray<TComponent> &get_components()
+        template <class TComponent> SparseArray<TComponent> &get_components()
         {
             auto index = get_index<TComponent>();
             if (m_arrays.find(index) == m_arrays.end())
@@ -39,13 +39,22 @@ class Registry
             return std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
         }
 
-        template <class TComponent> constexpr SparseArray<TComponent> const &get_components() const
+        template <class TComponent> SparseArray<TComponent> const &get_components() const
         {
             auto index = get_index<TComponent>();
             if (m_arrays.find(index) == m_arrays.end())
                 throw std::out_of_range("Not registered");
             const auto &res = std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
             return res;
+        }
+
+        template <class TComponent> void remove_component(size_t entity)
+        {
+            auto index = get_index<TComponent>(entity);
+            if (m_arrays.find(index) == m_arrays.end())
+                throw std::out_of_range("Not registered");
+            auto &res = std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
+            res[entity] = std::nullopt;
         }
 
         template <class TComponent> std::type_index get_index() const
