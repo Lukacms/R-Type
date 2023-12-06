@@ -1,3 +1,5 @@
-project(r-type-engine)
+##
+## CMakeLists: R-Type / Client
+##
 
-message("Not implemented yet")
+add_subdirectory(ECS)

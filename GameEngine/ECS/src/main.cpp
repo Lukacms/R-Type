@@ -4,6 +4,7 @@
 ** File description:
 ** main
 */
+
 /*
 <<<<<<< Updated upstream
 #include <asio.hpp>
@@ -47,37 +48,12 @@ int main(int argc, char *argv[])
     }
 
 =======
-*/
-#include <rtype/Client.hpp>
-#include <rtype/Components/SpriteComponent.hpp>
-#include <rtype/Components/TagComponent.hpp>
-#include <rtype/Components/TransformComponent.hpp>
+    */
+#include <rtype/Components/SpriteComponent.hh>
+#include <rtype/Components/TagComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
 
 int main(int /* argc */, const char * /* argv */[])
 {
-    rclient::Client client{};
-    Entity ship{2};
-    Entity test{5};
-
-    SparseArray<SpriteComponent> sprites{};
-    SparseArray<TransformComponent> transforms{};
-    SparseArray<TagComponent> tags{};
-    sf::Texture text{};
-    text.loadFromFile("./Client/assets/Spaceship.png");
-
-    sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
-    transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
-    tags.emplace_at(ship, "PLAYER");
-    sprites.emplace_at(test, sf::Sprite{text}, sf::Rect<int>{33, 0, 33, 15});
-    transforms.emplace_at(test, 300.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
-    tags.emplace_at(test, "ENEMY");
-    client.get_registry().register_component(sprites);
-    client.get_registry().register_component(transforms);
-    client.get_registry().register_component(tags);
-    while (client.is_running()) {
-        client.read_input();
-        client.render();
-        client.update();
-    }
     return 0;
 }

@@ -143,8 +143,8 @@ add_library(rtype-client-interface INTERFACE)
 # link the library
 set_property(TARGET rtype-client-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-interface PROPERTY CXX_STANDARD_REQUIRED ON)
-
 # add library with all of the source file, execpt for the main
+
 add_library(
     rtype-client-core
     SHARED
@@ -168,8 +168,8 @@ target_link_libraries(
     sfml-audio
     sfml-network
     )
-
 message("${BoldWhite}Finished loading rtype-core${ColourReset}")
+
 
 # add the executable with the main
 add_executable(
@@ -186,15 +186,12 @@ target_link_libraries(
     r-type_client PRIVATE
     rtype-client-core
     rtype-client-interface
-<<<<<<< Updated upstream
     asio::asio # link asio library to core
-=======
     sfml-window
     sfml-graphics
     sfml-system
     sfml-audio
     sfml-network
->>>>>>> Stashed changes
     )
 target_compile_features(r-type_client PRIVATE cxx_std_20)
 target_compile_options(r-type_client PRIVATE ${WARNING_FLAGS})
