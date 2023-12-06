@@ -7,7 +7,7 @@
 
 #include <asio.hpp>
 #include <iostream>
-#include <rtype/client.hh>
+#include <rtype/NetworkManager.hh>
 #include <rtype/network/Network.hh>
 
 using asio::ip::udp;

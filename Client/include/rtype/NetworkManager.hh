@@ -17,6 +17,11 @@ namespace rclient
     {
         public:
             NetworkManager(const std::string &host, const std::string &port);
+            ~NetworkManager() = default;
+            NetworkManager(NetworkManager const &other) = delete;
+            NetworkManager(NetworkManager &&other) noexcept;
+            NetworkManager &operator=(NetworkManager const &other) = delete;
+            NetworkManager &operator=(NetworkManager &&other) noexcept;
             void run();
 
         private:
