@@ -153,6 +153,8 @@ add_library(
     rtype-server-core
     SHARED
     src/Manager.cpp
+    src/clients/Player.cpp
+    src/clients/MessageQueue.cpp
     )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)

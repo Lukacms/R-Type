@@ -7,8 +7,13 @@
 
 #pragma once
 
+// NOTE need to do this to be able to build the shared library of the server core
+#define ASIO_HEADER_ONLY
+
 #include <asio.hpp>
-#include <cstddef>
+#include <rtype/clients/MessageQueue.hh>
+#include <rtype/clients/Player.hh>
+#include <vector>
 
 namespace rserver
 {
@@ -40,6 +45,9 @@ namespace rserver
         private:
             asio::io_context context{};
             asio::ip::udp::socket socket;
+
+            std::vector<Player> players{};
+            MessageQueue queue{};
     };
 
 } // namespace rserver
