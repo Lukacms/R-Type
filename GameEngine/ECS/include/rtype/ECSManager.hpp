@@ -10,9 +10,9 @@
 
 namespace rtype
 {
-    void movement_system(Registry &registry);
-    void transform_system(Registry &registry);
-    void sprite_system(Registry &registry);
+    void movement_system(Registry &registry, float);
+    void transform_system(Registry &registry, float);
+    void sprite_system(Registry &registry, float);
 
     class ECSManager
     {
@@ -55,14 +55,14 @@ namespace rtype
                 return m_registry.get_components<TComponent>()[entity].value();
             }
 
-            std::function<void(Registry &)> &add_system(std::function<void(Registry &)> &function)
+            std::function<void(Registry &, float)> &add_system(std::function<void(Registry &, float)> &function)
             {
                 return m_system_manager.add_system(function);
             }
 
-            void apply_system()
+            void apply_system(float delta_time)
             {
-                m_system_manager.update(m_registry);
+                m_system_manager.update(m_registry, delta_time);
             }
 
         private:

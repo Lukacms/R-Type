@@ -12,7 +12,7 @@
 
 namespace rtype
 {
-    void movement_system(Registry &registry)
+    void movement_system(Registry &registry, [[maybe_unused]] float delta_time)
     {
         SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
         SparseArray<TagComponent> &tags = registry.get_components<TagComponent>();
@@ -22,11 +22,11 @@ namespace rtype
                 continue;
             if (tags[index]->tag != "PLAYER")
                 continue;
-            transforms[index]->velocity_x = sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ? -1.0f :
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Right)                            ? 1.0f :
+            transforms[index]->velocity_x = sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ? -2.0f :
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Right)                            ? 2.0f :
                                                                                              0.0f;
-            transforms[index]->velocity_y = sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ? -1.0f :
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Down)                           ? 1.0f :
+            transforms[index]->velocity_y = sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ? -2.0f :
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Down)                           ? 2.0f :
                                                                                            0.0f;
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
                 sf::Keyboard::isKeyPressed(sf::Keyboard::Down))

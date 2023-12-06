@@ -12,7 +12,7 @@
 
 namespace rtype
 {
-    void sprite_system(Registry &registry)
+    void sprite_system(Registry &registry, [[maybe_unused]] float delta_time)
     {
         SparseArray<SpriteComponent> &sprites = registry.get_components<SpriteComponent>();
         SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();

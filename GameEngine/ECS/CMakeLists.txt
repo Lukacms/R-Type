@@ -5,8 +5,7 @@
 add_library(r-type-ecs SHARED
     src/rtype/Entity.cpp
     src/rtype/SystemManager.cpp
-    src/launch.cpp
-    src/rtype/Systems/SpriteSystem.cpp
+        src/rtype/Systems/SpriteSystem.cpp
     src/rtype/Systems/MovementSystem.cpp
     src/rtype/Systems/TransformSystem.cpp
     src/rtype/EntityManager.cpp

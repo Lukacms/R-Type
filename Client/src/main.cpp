@@ -53,42 +53,47 @@ int main(int argc, char *argv[])
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
+#include <chrono>
 
 int main(int /* argc */, const char * /* argv */[])
 {
     rclient::Client le_client{};
     rtype::ECSManager manager{};
-    Entity ship{manager.create_entity()};
-    Entity test{manager.create_entity()};
-
     SparseArray<SpriteComponent> sprites{};
     SparseArray<TransformComponent> transforms{};
     SparseArray<TagComponent> tags{};
     sf::Texture text{};
     text.loadFromFile("./Client/assets/Spaceship.png");
 
+    Entity ship{manager.create_entity()};
+
     sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
     transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
     tags.emplace_at(ship, "PLAYER");
-    sprites.emplace_at(test, sf::Sprite{text}, sf::Rect<int>{33, 0, 33, 15});
-    transforms.emplace_at(test, 300.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
-    tags.emplace_at(test, "ENEMY");
+
+    for (size_t i = 0; i < 9999; i += 1) {
+        Entity ship{manager.create_entity()};
+
+        sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
+        transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
+    }
     manager.register_component(sprites);
     manager.register_component(tags);
     manager.register_component(transforms);
-    std::function<void(Registry &)> transform = &rtype::transform_system;
-    std::function<void(Registry &)> movement = &rtype::movement_system;
-    std::function<void(Registry &)> sprite = &rtype::sprite_system;
+    std::function<void(Registry &, float)> transform = &rtype::transform_system;
+    std::function<void(Registry &, float)> movement = &rtype::movement_system;
+    std::function<void(Registry &, float)> sprite = &rtype::sprite_system;
     manager.add_system(transform);
     manager.add_system(movement);
     manager.add_system(sprite);
-    auto &abc = manager.get_component<TransformComponent>(ship);
-    abc.position_x = 500;
-    abc.position_y = 500;
+    float delta_time = 0.F;
     while (le_client.is_running()) {
+        auto start = std::chrono::high_resolution_clock::now();
         le_client.render(manager);
-        manager.apply_system();
+        manager.apply_system(delta_time * 144);
         le_client.read_input();
+        auto end = std::chrono::high_resolution_clock::now();
+        delta_time = std::chrono::duration<float, std::chrono::seconds::period>(end - start).count();
     }
     return 0;
 }

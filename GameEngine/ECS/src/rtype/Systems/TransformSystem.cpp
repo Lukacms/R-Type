@@ -10,10 +10,9 @@
 
 namespace rtype
 {
-    void transform_system(Registry &registry)
+    void transform_system(Registry &registry, float delta_time)
     {
         SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
-        float delta_time = 0.1F;
 
         for (auto &transform : transforms) {
             if (transform == std::nullopt)
