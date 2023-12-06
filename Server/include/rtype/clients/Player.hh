@@ -31,6 +31,9 @@ namespace rserver
             Player &operator=(Player &&to_move);
             [[nodiscard]] bool operator==(asio::ip::port_type &p_port) const;
 
+            /* methods */
+            [[nodiscard]] asio::ip::port_type get_port() const;
+
         private:
             asio::ip::port_type port;
     };

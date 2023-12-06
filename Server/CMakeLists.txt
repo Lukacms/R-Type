@@ -154,6 +154,7 @@ add_library(
     SHARED
     src/Manager.cpp
     src/clients/Player.cpp
+    src/clients/PlayersManager.cpp
     src/clients/MessageQueue.cpp
     )
 

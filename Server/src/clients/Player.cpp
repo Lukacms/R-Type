@@ -38,3 +38,9 @@ bool rserver::Player::operator==(asio::ip::port_type &p_port) const
 {
     return p_port == this->port;
 }
+
+/* getters / setters */
+asio::ip::port_type rserver::Player::get_port() const
+{
+    return this->port;
+}

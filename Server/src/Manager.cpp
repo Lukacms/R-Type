@@ -56,17 +56,24 @@ void rserver::Manager::launch(asio::ip::port_type port)
 
 void rserver::Manager::do_loop()
 {
-    ntw::Communication communication{ntw::Start, {"oui\r\n"}};
-
     while (true) {
-        std::array<char, 1> recv_buf{};
+        ntw::Communication recv{};
         asio::ip::udp::endpoint remote_endpoint{};
 
-        this->socket.receive_from(asio::buffer(recv_buf), remote_endpoint);
-        std::cout << remote_endpoint.port() << "\n";
-        std::cout << recv_buf[0] << ENDL;
-        asio::error_code ignored{};
-        this->socket.send_to(asio::buffer(&communication, sizeof(communication)), remote_endpoint,
-                             0, ignored);
+        this->socket.receive_from(asio::buffer(&recv, sizeof(recv)), remote_endpoint);
+        this->queue.push_back(remote_endpoint.port(), recv);
+        this->handle_command();
+    }
+}
+
+void rserver::Manager::handle_command()
+{
+    rserver::Message message{this->queue.pop_front()};
+
+    try {
+        Player &player = this->players.get_by_id(message.port);
+
+    } catch (PlayersManager::PlayersExceptions &) {
+        this->players.add_player(std::move(message.port));
     }
 }

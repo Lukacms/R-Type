@@ -13,6 +13,7 @@
 #include <asio.hpp>
 #include <rtype/clients/MessageQueue.hh>
 #include <rtype/clients/Player.hh>
+#include <rtype/clients/PlayersManager.hh>
 #include <vector>
 
 namespace rserver
@@ -41,12 +42,14 @@ namespace rserver
             /* methods */
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
             [[noreturn]] void do_loop();
+            void handle_command();
 
         private:
             asio::io_context context{};
             asio::ip::udp::socket socket;
+            asio::error_code ignored{};
 
-            std::vector<Player> players{};
+            PlayersManager players{};
             MessageQueue queue{};
     };
 
