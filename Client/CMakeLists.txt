@@ -169,7 +169,8 @@ message("${BoldWhite}Finished loading rtype-core${ColourReset}")
 add_executable(
     r-type_client
     src/main.cpp
-    )
+    src/networkManager.cpp
+)
 
 # link the libraries to executable
 target_link_libraries(
