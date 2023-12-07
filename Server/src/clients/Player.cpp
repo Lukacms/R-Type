@@ -15,25 +15,6 @@ rserver::Player::Player(asio::ip::udp::endpoint p_endpoint) : endpoint{std::move
     std::cout << INFOS << NEW_CLIENT << this->endpoint << ENDL;
 }
 
-rserver::Player::Player(rserver::Player &&to_move) : endpoint{std::move(to_move.endpoint)}
-{
-    std::cout << INFOS << MOVE_CLIENT << this->endpoint << ENDL;
-}
-
-rserver::Player::~Player()
-{
-    std::cout << INFOS << DEL_CLIENT << this->endpoint << ENDL;
-}
-
-/* operator overload */
-rserver::Player &rserver::Player::operator=(Player &&to_move)
-{
-    this->endpoint = std::move(to_move.endpoint);
-
-    std::cout << INFOS << MOVE_CLIENT << this->endpoint << ENDL;
-    return *this;
-}
-
 bool rserver::Player::operator==(asio::ip::port_type &port) const
 {
     return port == this->endpoint.port();

@@ -23,12 +23,12 @@ namespace rserver
             /* constructor / destructor */
             Player(asio::ip::udp::endpoint p_endpoint);
             Player(Player const &to_copy) = delete;
-            Player(Player &&to_move);
-            ~Player();
+            Player(Player &&to_move) = default;
+            ~Player() = default;
 
             /* operator overload */
             Player &operator=(Player const &to_copy) = delete;
-            Player &operator=(Player &&to_move);
+            Player &operator=(Player &&to_move) = default;
             [[nodiscard]] bool operator==(asio::ip::port_type &port) const;
 
             /* methods */

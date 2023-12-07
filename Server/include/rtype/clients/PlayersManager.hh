@@ -32,7 +32,7 @@ namespace rserver
 
             /* methods */
             Player &get_by_id(asio::ip::port_type const &port);
-            void add_player(asio::ip::udp::endpoint endpoint, asio::ip::udp::socket &socket);
+            void add_player(asio::ip::udp::endpoint &endpoint, asio::ip::udp::socket &socket);
 
             /* exception */
             class PlayersExceptions : public std::exception

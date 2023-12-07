@@ -71,11 +71,11 @@ void rserver::Manager::handle_command()
     rserver::Message message{this->queue.pop_front()};
 
     try {
-        Player &player = this->players.get_by_id(message.endpoint.port());
+        Player &player{this->players.get_by_id(message.endpoint.port())};
 
         this->command_manager(player, message);
     } catch (PlayersManager::PlayersExceptions &) {
-        this->players.add_player(std::move(message.endpoint), socket);
+        this->players.add_player(message.endpoint, socket);
     }
 }
 
@@ -83,7 +83,7 @@ void rserver::Manager::command_manager(Player &player, Message const &message)
 {
     // parse command arguments
     // loop through commands and go to method pointers
-    this->socket.send_to(asio::buffer("mouais"), player.get_endpoint());
+    this->socket.send_to(asio::buffer("mouais\n"), player.get_endpoint());
 }
 
 /* exception */
