@@ -5,12 +5,15 @@
 ** Manager
 */
 
+#include <csignal>
 #include <iostream>
 #include <memory>
 #include <ostream>
 #include <rtype.hh>
 #include <rtype/Manager.hh>
 #include <rtype/network/Network.hh>
+
+static volatile std::atomic_int RUNNING = 1;
 
 /* constructors and destructors */
 
@@ -22,6 +25,7 @@
 rserver::Manager::Manager(asio::ip::port_type port)
     : socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
 {
+    std::signal(SIGINT, Manager::handle_disconnection);
 }
 
 rserver::Manager::Manager(rserver::Manager &&to_move) : socket{std::move(to_move.socket)}
@@ -48,35 +52,55 @@ void rserver::Manager::launch(asio::ip::port_type port)
     try {
         Manager manager{port};
 
-        manager.do_loop();
+        manager.start_receive();
+        manager.run();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
     }
 }
 
-void rserver::Manager::do_loop()
+void rserver::Manager::run()
 {
-    while (true) {
-        ntw::Communication recv{};
-        asio::ip::udp::endpoint remote_endpoint{};
+    this->context.run();
+}
 
-        this->socket.receive_from(asio::buffer(&recv, sizeof(recv)), remote_endpoint);
-        this->queue.push_back(remote_endpoint, recv);
-        this->handle_command();
+void rserver::Manager::start_receive()
+{
+    ntw::Communication communication{};
+
+    if (RUNNING) {
+        std::cout << "un\n";
+        this->socket.async_receive_from(asio::buffer(&communication, sizeof(communication)),
+                                        this->endpoint, [this](auto &&p_h1, auto &&p_h2) {
+                                            std::cout << "trois\n";
+                                            handle_receive(std::forward<decltype(p_h1)>(p_h1),
+                                                           std::forward<decltype(p_h2)>(p_h2));
+                                        });
     }
 }
 
-void rserver::Manager::handle_command()
+void rserver::Manager::handle_receive(const asio::error_code &error,
+                                      std::size_t /* bytes_transferre */)
 {
-    rserver::Message message{this->queue.pop_front()};
+    ntw::Communication communication{};
 
-    try {
-        Player &player{this->players.get_by_id(message.endpoint.port())};
-
-        this->command_manager(player, message);
-    } catch (PlayersManager::PlayersExceptions &) {
-        this->players.add_player(message.endpoint, socket);
+    std::cout << "deux\n";
+    std::cout << error.message() << "\n";
+    if (!error && RUNNING) {
+        this->socket.async_send_to(asio::buffer(&communication, sizeof(communication)),
+                                   this->endpoint, [this, communication](auto &&p_h1, auto &&p_h2) {
+                                       handle_send(communication,
+                                                   std::forward<decltype(p_h1)>(p_h1),
+                                                   std::forward<decltype(p_h2)>(p_h2));
+                                   });
+        this->start_receive();
     }
+}
+
+void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
+                                   const asio::error_code & /*error*/,
+                                   std::size_t /*bytes_transferred*/)
+{
 }
 
 void rserver::Manager::command_manager(Player &player, Message const &message)
@@ -84,6 +108,11 @@ void rserver::Manager::command_manager(Player &player, Message const &message)
     // parse command arguments
     // loop through commands and go to method pointers
     this->socket.send_to(asio::buffer("mouais\n"), player.get_endpoint());
+}
+
+void rserver::Manager::handle_disconnection(int /*unused*/)
+{
+    RUNNING = 0;
 }
 
 /* exception */

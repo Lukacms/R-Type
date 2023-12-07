@@ -22,6 +22,7 @@ namespace rserver
 {
 
     constexpr size_t DEFAULT_PORT{8080};
+    constexpr short int TIMEOUT_MS{200};
     constexpr std::string_view DEFAULT_ERROR{"Error"};
 
     /**
@@ -43,9 +44,13 @@ namespace rserver
             Manager &operator=(Manager &&to_move);
 
             /* methods */
+            void run();
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
-            [[noreturn]] void do_loop();
-            void handle_command();
+            void start_receive();
+            void handle_receive(const asio::error_code &error, std::size_t ytes_transferre);
+            void handle_send(const ntw::Communication & /*message*/,
+                             const asio::error_code & /*error*/, std::size_t /*bytes_transferred*/);
+
             void command_manager(Player &player, Message const &message);
 
             class ManagerException : public std::exception
@@ -65,12 +70,17 @@ namespace rserver
             };
 
         private:
+            /* variables */
             asio::io_context context{};
             asio::ip::udp::socket socket;
             asio::error_code ignored{};
+            asio::ip::udp::endpoint endpoint{};
 
             PlayersManager players{};
             MessageQueue queue{};
+
+            /* methods */
+            static void handle_disconnection(int);
     };
 
 } // namespace rserver
