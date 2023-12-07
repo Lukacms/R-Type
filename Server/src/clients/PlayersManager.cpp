@@ -6,6 +6,7 @@
 */
 
 #include <algorithm>
+#include <asio/registered_buffer.hpp>
 #include <rtype/clients/PlayersManager.hh>
 
 rserver::Player &rserver::PlayersManager::get_by_id(asio::ip::port_type const &port)
@@ -17,9 +18,11 @@ rserver::Player &rserver::PlayersManager::get_by_id(asio::ip::port_type const &p
     throw PlayersExceptions();
 }
 
-void rserver::PlayersManager::add_player(asio::ip::port_type port)
+void rserver::PlayersManager::add_player(asio::ip::udp::endpoint endpoint,
+                                         asio::ip::udp::socket &socket)
 {
-    this->players.emplace_back(std::move(port));
+    this->players.emplace_back(std::move(endpoint));
+    socket.send_to(asio::buffer("oui"), endpoint);
 }
 
 /* exception */

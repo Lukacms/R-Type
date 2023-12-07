@@ -21,7 +21,7 @@ namespace rserver
     {
         public:
             /* constructor / destructor */
-            Player(asio::ip::port_type p_port);
+            Player(asio::ip::udp::endpoint p_endpoint);
             Player(Player const &to_copy) = delete;
             Player(Player &&to_move);
             ~Player();
@@ -29,13 +29,14 @@ namespace rserver
             /* operator overload */
             Player &operator=(Player const &to_copy) = delete;
             Player &operator=(Player &&to_move);
-            [[nodiscard]] bool operator==(asio::ip::port_type &p_port) const;
+            [[nodiscard]] bool operator==(asio::ip::port_type &port) const;
 
             /* methods */
             [[nodiscard]] asio::ip::port_type get_port() const;
+            [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
 
         private:
-            asio::ip::port_type port;
+            asio::ip::udp::endpoint endpoint;
     };
 
 } // namespace rserver

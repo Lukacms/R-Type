@@ -8,9 +8,11 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
+#include <string_view>
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
+#include <exception>
 #include <rtype/clients/MessageQueue.hh>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
@@ -20,6 +22,7 @@ namespace rserver
 {
 
     constexpr size_t DEFAULT_PORT{8080};
+    constexpr std::string_view DEFAULT_ERROR{"Error"};
 
     /**
      * @class Manager
@@ -43,6 +46,23 @@ namespace rserver
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
             [[noreturn]] void do_loop();
             void handle_command();
+            void command_manager(Player &player, Message const &message);
+
+            class ManagerException : public std::exception
+            {
+                public:
+                    ManagerException(std::string p_error = DEFAULT_ERROR.data());
+                    ManagerException(ManagerException const &to_copy) = default;
+                    ManagerException(ManagerException &&to_move) = default;
+                    ~ManagerException() override = default;
+                    ManagerException &operator=(ManagerException const &to_copy) = default;
+                    ManagerException &operator=(ManagerException &&to_move) = default;
+
+                    [[nodiscard]] const char *what() const noexcept override;
+
+                private:
+                    std::string error{};
+            };
 
         private:
             asio::io_context context{};

@@ -9,8 +9,8 @@
 #include <rtype/clients/MessageQueue.hh>
 
 /* struct message */
-rserver::Message::Message(asio::ip::port_type p_port, ntw::Communication p_communication)
-    : port{std::move(p_port)}, communication{std::move(p_communication)}
+rserver::Message::Message(asio::ip::udp::endpoint p_endpoint, ntw::Communication p_communication)
+    : endpoint{std::move(p_endpoint)}, communication{std::move(p_communication)}
 {
 }
 
@@ -28,9 +28,10 @@ void rserver::MessageQueue::push_back(rserver::Message message)
     this->messages.emplace_back(std::move(message));
 }
 
-void rserver::MessageQueue::push_back(asio::ip::port_type port, ntw::Communication communication)
+void rserver::MessageQueue::push_back(asio::ip::udp::endpoint endpoint,
+                                      ntw::Communication communication)
 {
-    this->messages.emplace_back(std::move(port), std::move(communication));
+    this->messages.emplace_back(std::move(endpoint), std::move(communication));
 }
 
 size_t rserver::MessageQueue::get_size_queue() const

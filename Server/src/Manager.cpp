@@ -61,7 +61,7 @@ void rserver::Manager::do_loop()
         asio::ip::udp::endpoint remote_endpoint{};
 
         this->socket.receive_from(asio::buffer(&recv, sizeof(recv)), remote_endpoint);
-        this->queue.push_back(remote_endpoint.port(), recv);
+        this->queue.push_back(remote_endpoint, recv);
         this->handle_command();
     }
 }
@@ -71,9 +71,28 @@ void rserver::Manager::handle_command()
     rserver::Message message{this->queue.pop_front()};
 
     try {
-        Player &player = this->players.get_by_id(message.port);
+        Player &player = this->players.get_by_id(message.endpoint.port());
 
+        this->command_manager(player, message);
     } catch (PlayersManager::PlayersExceptions &) {
-        this->players.add_player(std::move(message.port));
+        this->players.add_player(std::move(message.endpoint), socket);
     }
+}
+
+void rserver::Manager::command_manager(Player &player, Message const &message)
+{
+    // parse command arguments
+    // loop through commands and go to method pointers
+    this->socket.send_to(asio::buffer("mouais"), player.get_endpoint());
+}
+
+/* exception */
+rserver::Manager::ManagerException::ManagerException(std::string p_error)
+    : error{std::move(p_error)}
+{
+}
+
+const char *rserver::Manager::ManagerException::what() const noexcept
+{
+    return this->error.data();
 }
