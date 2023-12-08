@@ -34,6 +34,7 @@ rserver::Manager::Manager(rserver::Manager &&to_move) : socket{std::move(to_move
 
 rserver::Manager::~Manager()
 {
+    this->threads.stop();
     std::cout << "bye" << ENDL;
 }
 

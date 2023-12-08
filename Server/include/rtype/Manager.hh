@@ -8,6 +8,7 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
+#include "rtype/clients/ThreadPool.hh"
 #include <string_view>
 #define ASIO_HEADER_ONLY
 
@@ -78,6 +79,7 @@ namespace rserver
 
             PlayersManager players{};
             MessageQueue queue{};
+            ThreadPool threads{};
 
             /* methods */
             static void handle_disconnection(int);

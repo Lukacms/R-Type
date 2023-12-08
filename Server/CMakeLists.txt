@@ -156,6 +156,7 @@ add_library(
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
     src/clients/MessageQueue.cpp
+    src/clients/ThreadPool.cpp
     )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
