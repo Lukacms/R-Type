@@ -54,6 +54,11 @@ jobs:
   job_run_program:
     needs: check_status_repos
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [gcc13]
+        cpp: [17, 20]
     steps:
     - name : Install packages
       run: |
@@ -73,14 +78,14 @@ jobs:
       run: just ninja
       shell: bash
       timeout-minutes: 5
-        #   - name: Check executable files exists
-        #     run: |
-        #       IFS=',' read -ra ADDR <<< $EXECUTABLES
-        #       for i in "${ADDR[@]}"; do
-        #         if [[ ! -x "./${i}" ]]; then
-        #           exit 1
-        #         fi
-        #       done
+    - name: Check executable files exists
+      run: |
+        IFS=',' read -ra ADDR <<< $EXECUTABLES
+        for i in "${ADDR[@]}"; do
+          if [[ ! -x "./${i}" ]]; then
+            exit 1
+          fi
+        done
 
         #  run_tests:
         #    needs: job_run_program
