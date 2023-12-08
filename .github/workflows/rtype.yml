@@ -57,9 +57,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [gcc13]
+        version: [g++13]
         cpp: [17, 20]
     steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name : Install packages
       run: |
           sudo apt-get update -qq
@@ -68,14 +71,21 @@ jobs:
           sudo apt-get install -y --no-install-recommends libgtest-dev
           clang++ --version
           clang-tidy --version
+
+    - name: Install newer Clang
+      run: |
+       wget https://apt.llvm.org/llvm.sh
+       chmod +x ./llvm.sh
+       sudo ./llvm.sh 17
+
     - uses: extractions/setup-just@v1
       with:
         just-version: 0.8 # optional semver specification, otherwise latest
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
     - name: Compilation test
-      run: just ninja
+      run: |
+          mkdir -p build && cd build
+          cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-17 -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_EXPORT_COMPILE_COMMANDS=true
+          ninja
       shell: bash
       timeout-minutes: 5
     - name: Check executable files exists
