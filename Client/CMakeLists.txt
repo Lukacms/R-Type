@@ -153,13 +153,13 @@ add_library(
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)
 target_compile_options(rtype-client-core PRIVATE ${WARNING_FLAGS})
-target_include_directories(rtype-client-core PUBLIC include ../Network/include/)
+target_include_directories(rtype-client-core PUBLIC include ../RType-Utils/include/)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
-    r-type-network
+    r-type-utils
     asio::asio # link asio library to core
     )
 
