@@ -5,7 +5,7 @@
 ** sceneManager
 */
 
-#include <Manager/SceneManager.hpp>
+#include <rtype/SceneManager.hpp>
 
 SceneManager::SceneManager() : currentScene(nullptr) {
 }

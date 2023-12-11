@@ -3,12 +3,12 @@
 ##
 
 add_library(r-type-graphics SHARED
-    src/Manager/AudioManager.cpp
-    src/Manager/InputManager.cpp
-    src/Manager/SceneManager.cpp
-    src/Manager/SpriteManager.cpp
-    src/Manager/WindowManager.cpp
-    src/Manager/TextureManager.cpp
+    src/rtype/AudioManager.cpp
+    src/rtype/InputManager.cpp
+    src/rtype/SceneManager.cpp
+    src/rtype/SpriteManager.cpp
+    src/rtype/WindowManager.cpp
+    src/rtype/TextureManager.cpp
 )
 
 

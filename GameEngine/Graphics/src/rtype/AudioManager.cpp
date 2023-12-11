@@ -5,7 +5,7 @@
 ** audioManager
 */
 
-#include <Manager/AudioManager.hpp>
+#include <rtype/AudioManager.hpp>
 
 AudioManager::AudioManager() {
 }

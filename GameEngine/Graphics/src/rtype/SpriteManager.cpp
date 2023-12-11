@@ -5,7 +5,7 @@
 ** spriteManager
 */
 
-#include <Manager/SpriteManager.hpp>
+#include <rtype/SpriteManager.hpp>
 
 SpriteManager::SpriteManager() {
 }

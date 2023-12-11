@@ -5,7 +5,7 @@
 ** inputManager
 */
 
-#include <Manager/InputManager.hpp>
+#include <rtype/InputManager.hpp>
 
 InputManager::InputManager() {
 }

@@ -5,7 +5,7 @@
 ** windowManager
 */
 
-#include <Manager/WindowManager.hpp>
+#include <rtype/WindowManager.hpp>
 
 WindowManager::WindowManager() {
 }
