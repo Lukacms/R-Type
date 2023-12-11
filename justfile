@@ -1,6 +1,6 @@
 # lint files with clang-format
 lint:
-    @clang-format -i --style='file:.clang-format' `find Server/ Client/ Network/ GameEngine/ -name *.cpp -o -name *.hh -o -name *.hpp`
+    @clang-format -i --style='file:.clang-format' `find Server/ Client/ RType-Utils/ GameEngine/ -name *.cpp -o -name *.hh -o -name *.hpp`
 
 names := "r-type_server r-type_client tests-rtype-server tests-rtype-client"
 name_tests_server  :=  "tests-rtype-server"
