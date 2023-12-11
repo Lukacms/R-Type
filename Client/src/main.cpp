@@ -48,20 +48,22 @@ int main(int argc, char *argv[])
 
 =======
 */
+#include <chrono>
 #include <rtype/Client.hpp>
+#include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
-#include <chrono>
 
 int main(int /* argc */, const char * /* argv */[])
 {
     rclient::Client le_client{};
     rtype::ECSManager manager{};
-    SparseArray<SpriteComponent> sprites{};
-    SparseArray<TransformComponent> transforms{};
-    SparseArray<TagComponent> tags{};
+    SparseArray<rtype::SpriteComponent> sprites{};
+    SparseArray<rtype::TransformComponent> transforms{};
+    SparseArray<rtype::TagComponent> tags{};
+    SparseArray<rtype::BoxColliderComponent> colliders{};
     sf::Texture text{};
     text.loadFromFile("./Client/assets/Spaceship.png");
 
@@ -69,31 +71,37 @@ int main(int /* argc */, const char * /* argv */[])
 
     sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
     transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
+    colliders.emplace_at(ship, 33.F, 15.F);
     tags.emplace_at(ship, "PLAYER");
 
-    for (size_t i = 0; i < 9999; i += 1) {
+    for (size_t i = 0; i < 1; i += 1) {
         Entity ship{manager.create_entity()};
 
         sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
-        transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
+        transforms.emplace_at(ship, 300.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
+        colliders.emplace_at(ship, 33.F, 15.F);
     }
     manager.register_component(sprites);
     manager.register_component(tags);
     manager.register_component(transforms);
+    manager.register_component(colliders);
     std::function<void(Registry &, float)> transform = &rtype::transform_system;
     std::function<void(Registry &, float)> movement = &rtype::movement_system;
     std::function<void(Registry &, float)> sprite = &rtype::sprite_system;
+    std::function<void(Registry &, float)> collider = &rtype::collider_system;
     manager.add_system(transform);
     manager.add_system(movement);
     manager.add_system(sprite);
+    manager.add_system(collider);
     float delta_time = 0.F;
     while (le_client.is_running()) {
         auto start = std::chrono::high_resolution_clock::now();
         le_client.render(manager);
-        manager.apply_system(delta_time * 144);
+        manager.apply_system(delta_time);
         le_client.read_input();
         auto end = std::chrono::high_resolution_clock::now();
-        delta_time = std::chrono::duration<float, std::chrono::seconds::period>(end - start).count();
+        delta_time =
+            std::chrono::duration<float, std::chrono::seconds::period>(end - start).count();
     }
     return 0;
 }

@@ -22,11 +22,12 @@ namespace rtype
                 continue;
             if (tags[index]->tag != "PLAYER")
                 continue;
-            transforms[index]->velocity_x = sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ? -2.0f :
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Right)                            ? 2.0f :
-                                                                                             0.0f;
-            transforms[index]->velocity_y = sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ? -2.0f :
-                sf::Keyboard::isKeyPressed(sf::Keyboard::Down)                           ? 2.0f :
+            transforms[index]->velocity_x = sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ?
+                -200.0f :
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ? 200.0f :
+                                                                  0.0f;
+            transforms[index]->velocity_y = sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ? -200.0f :
+                sf::Keyboard::isKeyPressed(sf::Keyboard::Down)                           ? 200.0f :
                                                                                            0.0f;
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
                 sf::Keyboard::isKeyPressed(sf::Keyboard::Down))

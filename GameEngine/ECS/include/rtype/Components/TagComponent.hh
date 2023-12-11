@@ -6,6 +6,9 @@
 
 #include <string>
 
-struct TagComponent {
-        std::string tag;
-};
+namespace rtype
+{
+    struct TagComponent {
+            std::string tag;
+    };
+} // namespace rtype

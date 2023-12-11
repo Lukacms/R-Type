@@ -7,7 +7,10 @@
 
 #include <SFML/Graphics.hpp>
 
-struct SpriteComponent {
-        sf::Sprite sprite;
-        sf::Rect<int> texture_rect;
-};
+namespace rtype
+{
+    struct SpriteComponent {
+            sf::Sprite sprite;
+            sf::Rect<int> texture_rect;
+    };
+} // namespace rtype
