@@ -5,7 +5,7 @@
 ** textureManager
 */
 
-#include <include/Manager/TextureManager.hpp>
+#include <Manager/TextureManager.hpp>
 
 TextureManager::TextureManager() {
 }

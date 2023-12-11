@@ -6,10 +6,12 @@
 */
 
 #include <deque>
+#include <cstddef>
+
 
 namespace rtype
 {
-    const constexpr size_t MAX_ENTITIES{10000};
+    const constexpr std::size_t MAX_ENTITIES{10000};
 
     class EntityManager
     {
