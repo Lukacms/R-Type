@@ -43,6 +43,7 @@ compile_commands.json
 r-type_server
 r-type_client
 build/
+libs/
 
 # husky
 node_modules/

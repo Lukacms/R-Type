@@ -28,8 +28,11 @@ FetchContent_MakeAvailable(asiocmake)
 
 message("Finished loading Asio")
 
+# for library compilation => shared libraries of game engine, utils, etc
+set(LIBRARY_OUTPUT_PATH ${r-type_SOURCE_DIR}/libs)
+
 # need to first load this one to load library
-add_subdirectory(Network)
+add_subdirectory(RType-Utils)
 
 add_subdirectory(Server)
 add_subdirectory(Client)

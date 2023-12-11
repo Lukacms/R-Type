@@ -5,8 +5,8 @@
 ** main
 */
 
-#include "rtype.hh"
-#include "rtype/Manager.hh"
+#include <rtype.hh>
+#include <rtype/Manager.hh>
 
 int main(int /* argc */, const char * /* argv */[])
 {
