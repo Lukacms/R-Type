@@ -7,6 +7,9 @@
 
 #include <SFML/Graphics.hpp>
 
-struct TextureLibraryComponent {
-        sf::Texture m_texture;
-};
+namespace rtype
+{
+    struct TextureLibraryComponent {
+            sf::Texture m_texture;
+    };
+} // namespace rtype

@@ -32,7 +32,7 @@ void rclient::Client::read_input()
 
 void rclient::Client::render(rtype::ECSManager &manager)
 {
-    auto sprites = manager.get_components<SpriteComponent>();
+    auto sprites = manager.get_components<rtype::SpriteComponent>();
 
     m_window->clear();
     for (auto &sprite : sprites)

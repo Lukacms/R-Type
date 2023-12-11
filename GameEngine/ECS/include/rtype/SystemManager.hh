@@ -21,7 +21,8 @@ class SystemManager
         SystemManager &operator=(SystemManager const &to_copy) = default;
         SystemManager &operator=(SystemManager &&to_move) = default;
 
-        std::function<void(Registry &, float)> &add_system(std::function<void(Registry &, float)> &function);
+        std::function<void(Registry &, float)> &
+        add_system(std::function<void(Registry &, float)> &function);
         void update(Registry &registry, float delta_time);
 
     private:
