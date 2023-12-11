@@ -153,6 +153,8 @@ add_library(
     rtype-server-core
     SHARED
     src/Manager.cpp
+    src/utils.cpp
+    src/config/ArgsParser.cpp
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
     src/clients/MessageQueue.cpp

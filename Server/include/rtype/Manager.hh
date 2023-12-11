@@ -8,8 +8,6 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
-#include "rtype/clients/ThreadPool.hh"
-#include <string_view>
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
@@ -17,6 +15,8 @@
 #include <rtype/clients/MessageQueue.hh>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
+#include <rtype/clients/ThreadPool.hh>
+#include <string_view>
 #include <vector>
 
 namespace rserver
