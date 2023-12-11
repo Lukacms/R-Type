@@ -55,29 +55,43 @@ int main(int argc, char *argv[])
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
+#include <rtype/AudioManager.hpp>
+#include <rtype/SpriteManager.hpp>
+#include <rtype/TextureManager.hpp>
 
 int main(int /* argc */, const char * /* argv */[])
 {
+    AudioManager audioSystem{};
+    TextureManager textureSystem{};
+    SpriteManager spriteSystem{};
     rclient::Client le_client{};
     rtype::ECSManager manager{};
     SparseArray<rtype::SpriteComponent> sprites{};
     SparseArray<rtype::TransformComponent> transforms{};
     SparseArray<rtype::TagComponent> tags{};
     SparseArray<rtype::BoxColliderComponent> colliders{};
-    sf::Texture text{};
-    text.loadFromFile("./Client/assets/Spaceship.png");
+    spriteSystem.loadTexture("BG", "./Client/assets/backgrounds/024.png");
+    spriteSystem.loadTexture("ship", "./Client/assets/ships/Spaceship.png");
+    spriteSystem.setPosition("shipSprite", 100, 100);
 
+    audioSystem.loadSound("test", "./Client/assets/sounds/Spider-Dance.wav");
+    audioSystem.playSound("test");
+    // sf::Texture text{};
+    // text.loadFromFile("./Client/assets/ships/Spaceship.png");
+
+    Entity background{manager.create_entity()};
     Entity ship{manager.create_entity()};
 
-    sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
+    sprites.emplace_at(background, spriteSystem.createSprite("BGSprite", "BG"), sf::Rect<int>{0, 0, 800, 600});
+    sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"), sf::Rect<int>{0, 0, 33, 15});
+    transforms.emplace_at(background, 0.0F, 0.0F, 0.0F, 0.0F, 1.F, 1.F);
     transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
     colliders.emplace_at(ship, 33.F, 15.F);
     tags.emplace_at(ship, "PLAYER");
 
     for (size_t i = 0; i < 1; i += 1) {
         Entity ship{manager.create_entity()};
-
-        sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
+        sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"), sf::Rect<int>{0, 0, 33, 15});
         transforms.emplace_at(ship, 300.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
         colliders.emplace_at(ship, 33.F, 15.F);
     }

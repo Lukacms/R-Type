@@ -17,7 +17,7 @@ public:
     SpriteManager();
 
     bool loadTexture(const std::string& name, const std::string& filename);
-    void createSprite(const std::string& spriteName, const std::string& textureName);
+    sf::Sprite createSprite(const std::string& spriteName, const std::string& textureName);
     void setPosition(const std::string& name, float x, float y);
     void drawSprite(sf::RenderWindow& window, const std::string& name);
 

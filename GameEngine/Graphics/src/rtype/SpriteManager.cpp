@@ -20,12 +20,14 @@ bool SpriteManager::loadTexture(const std::string& name, const std::string& file
     return true;
 }
 
-void SpriteManager::createSprite(const std::string& spriteName, const std::string& textureName) {
+sf::Sprite SpriteManager::createSprite(const std::string& spriteName, const std::string& textureName) {
+    sf::Sprite sprite;
+
     if (textures.find(textureName) != textures.end()) {
-        sf::Sprite sprite;
         sprite.setTexture(textures[textureName]);
         sprites[spriteName] = sprite;
-    }
+    };
+    return sprite;
 }
 
 void SpriteManager::setPosition(const std::string& name, float x, float y) {
