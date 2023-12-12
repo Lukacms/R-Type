@@ -25,7 +25,6 @@ namespace ntw
     struct Communication {
         public:
             NetworkType type{None};
-            // std::string args{};
             std::array<char, MAX_SIZE> args;
     };
 

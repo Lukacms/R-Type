@@ -17,7 +17,7 @@ using asio::ip::udp;
 
 int main(int argc, char *argv[])
 {
-    ntw::Communication communication{};
+    ntw::Communication communication{ntw::Start, {"oofdfh"}};
 
     try {
         if (argc != 2) {
@@ -32,11 +32,9 @@ int main(int argc, char *argv[])
         udp::socket socket(io_context);
         socket.open(udp::v4());
 
-        std::array<char, 1> send_buf = {'k'};
-        socket.send_to(asio::buffer(send_buf, 1), receiver_endpoint);
+        socket.send_to(asio::buffer(&communication, sizeof(communication)), receiver_endpoint);
         udp::endpoint sender_endpoint;
-        size_t len = socket.receive_from(asio::buffer(&communication, sizeof(communication)),
-                                         receiver_endpoint);
+        socket.receive_from(asio::buffer(&communication, sizeof(communication)), receiver_endpoint);
 
         std::cout << (communication.type == ntw::Start ? "oui\n" : "non\n");
         std::cout << "String address: " << &communication.args << std::endl;

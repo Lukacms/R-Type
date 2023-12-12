@@ -153,17 +153,23 @@ add_library(
     rtype-server-core
     SHARED
     src/Manager.cpp
+    src/utils.cpp
+    src/config/ArgsParser.cpp
+    src/clients/Player.cpp
+    src/clients/PlayersManager.cpp
+    src/clients/MessageQueue.cpp
+    src/clients/ThreadPool.cpp
     )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
 target_compile_options(rtype-server-core PRIVATE ${WARNING_FLAGS})
-target_include_directories(rtype-server-core PUBLIC include ../Network/include/)
+target_include_directories(rtype-server-core PUBLIC include ../RType-Utils/include/)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-server-core PRIVATE
     rtype-server-interface
-    r-type-network
+    r-type-utils
     asio::asio # link asio library to core
     )
 

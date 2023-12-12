@@ -5,12 +5,15 @@
 ** Manager
 */
 
+#include <csignal>
 #include <iostream>
 #include <memory>
 #include <ostream>
 #include <rtype.hh>
 #include <rtype/Manager.hh>
 #include <rtype/network/Network.hh>
+
+static volatile std::atomic_int RUNNING = 1;
 
 /* constructors and destructors */
 
@@ -22,6 +25,7 @@
 rserver::Manager::Manager(asio::ip::port_type port)
     : socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
 {
+    // std::signal(SIGINT, Manager::handle_disconnection);
 }
 
 rserver::Manager::Manager(rserver::Manager &&to_move) : socket{std::move(to_move.socket)}
@@ -30,6 +34,7 @@ rserver::Manager::Manager(rserver::Manager &&to_move) : socket{std::move(to_move
 
 rserver::Manager::~Manager()
 {
+    this->threads.stop();
     std::cout << "bye" << ENDL;
 }
 
@@ -48,28 +53,77 @@ void rserver::Manager::launch(asio::ip::port_type port)
     try {
         Manager manager{port};
 
-        manager.do_loop();
+        manager.start_receive();
+        manager.run();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
     }
 }
 
-void rserver::Manager::do_loop()
+void rserver::Manager::run()
 {
-    ntw::Communication communication{ntw::Start, {"oui\r\n"}};
+    if (RUNNING)
+        this->context.run();
+}
 
-    while (true) {
-        std::vector<char> buffer{};
-        std::array<char, 1> recv_buf{};
-        asio::ip::udp::endpoint remote_endpoint{};
-        buffer.clear();
+void rserver::Manager::start_receive()
+{
+    ntw::Communication communication{};
 
-        buffer.push_back(static_cast<char>(communication.type));
-        std::copy(communication.args.begin(), communication.args.end(), std::back_inserter(buffer));
-        this->socket.receive_from(asio::buffer(recv_buf), remote_endpoint);
-        std::cout << recv_buf[0] << ENDL;
-        asio::error_code ignored{};
-        this->socket.send_to(asio::buffer(&communication, sizeof(communication)), remote_endpoint,
-                             0, ignored);
+    if (RUNNING) {
+        this->socket.async_receive_from(asio::buffer(&communication, sizeof(communication)),
+                                        this->endpoint, [this](auto &&p_h1, auto &&p_h2) {
+                                            handle_receive(std::forward<decltype(p_h1)>(p_h1),
+                                                           std::forward<decltype(p_h2)>(p_h2));
+                                        });
+        if (this->endpoint.port() > 0)
+            this->threads.add_job([&, this]() { this->command_manager(communication, endpoint); });
     }
+}
+
+void rserver::Manager::handle_receive(const asio::error_code &error,
+                                      std::size_t /* bytes_transferre */)
+{
+    ntw::Communication communication{};
+
+    if (!error && RUNNING) {
+        this->socket.async_send_to(asio::buffer(&communication, sizeof(communication)),
+                                   this->endpoint, [this, communication](auto &&p_h1, auto &&p_h2) {
+                                       handle_send(communication,
+                                                   std::forward<decltype(p_h1)>(p_h1),
+                                                   std::forward<decltype(p_h2)>(p_h2));
+                                   });
+        this->start_receive();
+    }
+}
+
+void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
+                                   const asio::error_code & /*error*/,
+                                   std::size_t /*bytes_transferred*/)
+{
+}
+
+void rserver::Manager::command_manager(ntw::Communication &communication,
+                                       asio::ip::udp::endpoint &client)
+{
+    // TODO parse command arguments
+    // loop through commands and go to method pointers
+    // TODO also check if client is new or not
+    std::cout << "oue " << client << "\n";
+}
+
+void rserver::Manager::handle_disconnection(int /*unused*/)
+{
+    RUNNING = 0;
+}
+
+/* exception */
+rserver::Manager::ManagerException::ManagerException(std::string p_error)
+    : error{std::move(p_error)}
+{
+}
+
+const char *rserver::Manager::ManagerException::what() const noexcept
+{
+    return this->error.data();
 }
