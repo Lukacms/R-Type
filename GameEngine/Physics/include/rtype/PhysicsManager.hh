@@ -2,10 +2,11 @@
 // Created by kane on 12/12/23.
 //
 
-#include <vector>
 #include <rtype/ComponentManager.hpp>
+#include <vector>
 
-namespace rtype {
+namespace rtype
+{
 
     struct Collision {
             std::size_t entity{0};

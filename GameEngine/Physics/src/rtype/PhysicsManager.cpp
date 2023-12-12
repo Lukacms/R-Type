@@ -2,13 +2,14 @@
 // Created by kane on 12/12/23.
 //
 
-#include <rtype/PhysicsManager.hh>
-#include <rtype/Components/TransformComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
+#include <rtype/PhysicsManager.hh>
 
 void rtype::PhysicsManager::check_collisions(ComponentManager &component_manager)
 {
-    SparseArray<TransformComponent> &transforms = component_manager.get_components<TransformComponent>();
+    SparseArray<TransformComponent> &transforms =
+        component_manager.get_components<TransformComponent>();
     SparseArray<BoxColliderComponent> &colliders =
         component_manager.get_components<BoxColliderComponent>();
     Collision collision{};
@@ -55,5 +56,6 @@ bool rtype::PhysicsManager::is_collided(std::size_t entity1, std::size_t entity2
         if (collision.entity == entity1)
             collisions = collision;
     }
-    return std::find(collisions.collided.begin(), collisions.collided.end(), entity2) == std::end(collisions.collided);
+    return std::find(collisions.collided.begin(), collisions.collided.end(), entity2) ==
+        std::end(collisions.collided);
 }
