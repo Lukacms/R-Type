@@ -53,9 +53,8 @@ class ComponentManager
 
         template <class TComponent> void remove_component(size_t entity)
         {
-            for (auto &val : m_arrays) {
+            for (auto &val : m_arrays)
                 val.second->remove(entity);
-            }
         }
 
         template <class TComponent> std::type_index get_index() const
