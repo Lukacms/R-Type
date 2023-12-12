@@ -25,7 +25,7 @@ static volatile std::atomic_int RUNNING = 1;
 rserver::Manager::Manager(asio::ip::port_type port)
     : socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
 {
-    std::signal(SIGINT, Manager::handle_disconnection);
+    // std::signal(SIGINT, Manager::handle_disconnection);
 }
 
 rserver::Manager::Manager(rserver::Manager &&to_move) : socket{std::move(to_move.socket)}
@@ -62,7 +62,8 @@ void rserver::Manager::launch(asio::ip::port_type port)
 
 void rserver::Manager::run()
 {
-    this->context.run();
+    if (RUNNING)
+        this->context.run();
 }
 
 void rserver::Manager::start_receive()
@@ -70,13 +71,13 @@ void rserver::Manager::start_receive()
     ntw::Communication communication{};
 
     if (RUNNING) {
-        std::cout << "un\n";
         this->socket.async_receive_from(asio::buffer(&communication, sizeof(communication)),
                                         this->endpoint, [this](auto &&p_h1, auto &&p_h2) {
-                                            std::cout << "trois\n";
                                             handle_receive(std::forward<decltype(p_h1)>(p_h1),
                                                            std::forward<decltype(p_h2)>(p_h2));
                                         });
+        if (this->endpoint.port() > 0)
+            this->threads.add_job([&, this]() { this->command_manager(communication, endpoint); });
     }
 }
 
@@ -85,8 +86,6 @@ void rserver::Manager::handle_receive(const asio::error_code &error,
 {
     ntw::Communication communication{};
 
-    std::cout << "deux\n";
-    std::cout << error.message() << "\n";
     if (!error && RUNNING) {
         this->socket.async_send_to(asio::buffer(&communication, sizeof(communication)),
                                    this->endpoint, [this, communication](auto &&p_h1, auto &&p_h2) {
@@ -104,11 +103,13 @@ void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
 {
 }
 
-void rserver::Manager::command_manager(Player &player, Message const &message)
+void rserver::Manager::command_manager(ntw::Communication &communication,
+                                       asio::ip::udp::endpoint &client)
 {
-    // parse command arguments
+    // TODO parse command arguments
     // loop through commands and go to method pointers
-    this->socket.send_to(asio::buffer("mouais\n"), player.get_endpoint());
+    // TODO also check if client is new or not
+    std::cout << "oue " << client << "\n";
 }
 
 void rserver::Manager::handle_disconnection(int /*unused*/)

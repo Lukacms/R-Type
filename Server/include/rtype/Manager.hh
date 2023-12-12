@@ -12,10 +12,10 @@
 
 #include <asio.hpp>
 #include <exception>
-#include <rtype/clients/MessageQueue.hh>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/clients/ThreadPool.hh>
+#include <rtype/network/Network.hh>
 #include <string_view>
 #include <vector>
 
@@ -52,7 +52,8 @@ namespace rserver
             void handle_send(const ntw::Communication & /*message*/,
                              const asio::error_code & /*error*/, std::size_t /*bytes_transferred*/);
 
-            void command_manager(Player &player, Message const &message);
+            void command_manager(ntw::Communication &communication,
+                                 asio::ip::udp::endpoint &endpoint);
 
             class ManagerException : public std::exception
             {
@@ -78,7 +79,6 @@ namespace rserver
             asio::ip::udp::endpoint endpoint{};
 
             PlayersManager players{};
-            MessageQueue queue{};
             ThreadPool threads{};
 
             /* methods */
