@@ -12,15 +12,15 @@
 #include <typeindex>
 #include <unordered_map>
 
-class Registry
+class ComponentManager
 {
     public:
-        Registry() = default;
-        ~Registry() = default;
-        Registry(const Registry &) = default;
-        Registry(Registry &&) = default;
-        Registry &operator=(const Registry &) = default;
-        Registry &operator=(Registry &&) = default;
+        ComponentManager() = default;
+        ~ComponentManager() = default;
+        ComponentManager(const ComponentManager &) = default;
+        ComponentManager(ComponentManager &&) = default;
+        ComponentManager &operator=(const ComponentManager &) = default;
+        ComponentManager &operator=(ComponentManager &&) = default;
 
         template <class TComponent>
         SparseArray<TComponent> &register_component(SparseArray<TComponent> &array)

@@ -99,14 +99,13 @@ int main(int /* argc */, const char * /* argv */[])
     manager.register_component(tags);
     manager.register_component(transforms);
     manager.register_component(colliders);
-    std::function<void(Registry &, float)> transform = &rtype::transform_system;
-    std::function<void(Registry &, float)> movement = &rtype::movement_system;
-    std::function<void(Registry &, float)> sprite = &rtype::sprite_system;
-    std::function<void(Registry &, float)> collider = &rtype::collider_system;
+    std::function<void(ComponentManager &, float)> transform = &rtype::transform_system;
+    std::function<void(ComponentManager &, float)> movement = &rtype::movement_system;
+    std::function<void(ComponentManager &, float)> sprite = &rtype::sprite_system;
+    std::function<void(ComponentManager &, float)> collider = &rtype::collider_system;
     manager.add_system(transform);
     manager.add_system(movement);
     manager.add_system(sprite);
-    manager.add_system(collider);
     float delta_time = 0.F;
     while (le_client.is_running()) {
         auto start = std::chrono::high_resolution_clock::now();

@@ -10,7 +10,7 @@
 
 namespace rtype
 {
-    void transform_system(Registry &registry, float delta_time)
+    void transform_system(ComponentManager &registry, float delta_time)
     {
         SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
 
