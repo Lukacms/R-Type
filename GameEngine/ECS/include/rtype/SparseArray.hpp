@@ -1,13 +1,18 @@
-//
-// Created by kane on 28/11/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** ECS2
+** File description:
+** SparseArray
+*/
 
 #pragma once
 
+#include "ISparseArray.hh"
+#include <exception>
 #include <optional>
 #include <vector>
 
-template <typename TComponent> class SparseArray
+template <typename TComponent> class SparseArray : public ISparseArray
 {
     public:
         using value_type = std::optional<TComponent>;
@@ -23,6 +28,7 @@ template <typename TComponent> class SparseArray
         SparseArray(SparseArray &&) = default;
         SparseArray &operator=(SparseArray const &) = default;
         SparseArray &operator=(SparseArray &&) = default;
+        ~SparseArray() override = default;
 
         reference_type operator[](size_t index)
         {
@@ -92,8 +98,10 @@ template <typename TComponent> class SparseArray
             return m_data[pos];
         }
 
-        void erase(size_type pos)
+        void remove(size_t pos) override
         {
+            if (pos >= m_data.size())
+                throw std::exception{};
             m_data[pos] = std::nullopt;
         }
 

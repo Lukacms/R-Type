@@ -12,7 +12,7 @@
 
 namespace rtype
 {
-    void movement_system(Registry &registry, [[maybe_unused]] float delta_time)
+    void movement_system(ComponentManager &registry, [[maybe_unused]] float delta_time)
     {
         SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
         SparseArray<TagComponent> &tags = registry.get_components<TagComponent>();

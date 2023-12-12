@@ -8,11 +8,11 @@
 namespace rtype
 {
     struct TransformComponent {
-            float position_x;
-            float position_y;
-            float velocity_x;
-            float velocity_y;
-            float scale_x;
-            float scale_y;
+            float position_x{0};
+            float position_y{0};
+            float velocity_x{0};
+            float velocity_y{0};
+            float scale_x{0};
+            float scale_y{0};
     };
 } // namespace rtype

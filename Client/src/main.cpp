@@ -49,13 +49,13 @@ int main(int argc, char *argv[])
 =======
 */
 #include <chrono>
+#include <rtype/AudioManager.hpp>
 #include <rtype/Client.hpp>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
-#include <rtype/AudioManager.hpp>
 #include <rtype/SpriteManager.hpp>
 #include <rtype/TextureManager.hpp>
 
@@ -82,8 +82,10 @@ int main(int /* argc */, const char * /* argv */[])
     Entity background{manager.create_entity()};
     Entity ship{manager.create_entity()};
 
-    sprites.emplace_at(background, spriteSystem.createSprite("BGSprite", "BG"), sf::Rect<int>{0, 0, 800, 600});
-    sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"), sf::Rect<int>{0, 0, 33, 15});
+    sprites.emplace_at(background, spriteSystem.createSprite("BGSprite", "BG"),
+                       sf::Rect<int>{0, 0, 800, 600});
+    sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"),
+                       sf::Rect<int>{0, 0, 33, 15});
     transforms.emplace_at(background, 0.0F, 0.0F, 0.0F, 0.0F, 1.F, 1.F);
     transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
     colliders.emplace_at(ship, 33.F, 15.F);
@@ -91,7 +93,8 @@ int main(int /* argc */, const char * /* argv */[])
 
     for (size_t i = 0; i < 1; i += 1) {
         Entity ship{manager.create_entity()};
-        sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"), sf::Rect<int>{0, 0, 33, 15});
+        sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"),
+                           sf::Rect<int>{0, 0, 33, 15});
         transforms.emplace_at(ship, 300.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
         colliders.emplace_at(ship, 33.F, 15.F);
     }
@@ -99,10 +102,10 @@ int main(int /* argc */, const char * /* argv */[])
     manager.register_component(tags);
     manager.register_component(transforms);
     manager.register_component(colliders);
-    std::function<void(Registry &, float)> transform = &rtype::transform_system;
-    std::function<void(Registry &, float)> movement = &rtype::movement_system;
-    std::function<void(Registry &, float)> sprite = &rtype::sprite_system;
-    std::function<void(Registry &, float)> collider = &rtype::collider_system;
+    std::function<void(ComponentManager &, float)> transform = &rtype::transform_system;
+    std::function<void(ComponentManager &, float)> movement = &rtype::movement_system;
+    std::function<void(ComponentManager &, float)> sprite = &rtype::sprite_system;
+    std::function<void(ComponentManager &, float)> collider = &rtype::collider_system;
     manager.add_system(transform);
     manager.add_system(movement);
     manager.add_system(sprite);

@@ -21,10 +21,10 @@ class SystemManager
         SystemManager &operator=(SystemManager const &to_copy) = default;
         SystemManager &operator=(SystemManager &&to_move) = default;
 
-        std::function<void(Registry &, float)> &
-        add_system(std::function<void(Registry &, float)> &function);
-        void update(Registry &registry, float delta_time);
+        std::function<void(ComponentManager &, float)> &
+        add_system(std::function<void(ComponentManager &, float)> &function);
+        void update(ComponentManager &registry, float delta_time);
 
     private:
-        std::vector<std::function<void(Registry &, float)>> m_systems;
+        std::vector<std::function<void(ComponentManager &, float)>> m_systems;
 };

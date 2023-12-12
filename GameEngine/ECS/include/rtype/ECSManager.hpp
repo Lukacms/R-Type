@@ -10,10 +10,10 @@
 
 namespace rtype
 {
-    void movement_system(Registry &registry, float);
-    void transform_system(Registry &registry, float);
-    void sprite_system(Registry &registry, float);
-    void collider_system(Registry &registry, [[maybe_unused]] float delta_time);
+    void movement_system(ComponentManager &registry, float);
+    void transform_system(ComponentManager &registry, float);
+    void sprite_system(ComponentManager &registry, float);
+    void collider_system(ComponentManager &registry, [[maybe_unused]] float delta_time);
 
     class ECSManager
     {
@@ -56,8 +56,8 @@ namespace rtype
                 return m_registry.get_components<TComponent>()[entity].value();
             }
 
-            std::function<void(Registry &, float)> &
-            add_system(std::function<void(Registry &, float)> &function)
+            std::function<void(ComponentManager &, float)> &
+            add_system(std::function<void(ComponentManager &, float)> &function)
             {
                 return m_system_manager.add_system(function);
             }
@@ -68,7 +68,7 @@ namespace rtype
             }
 
         private:
-            Registry m_registry{};
+            ComponentManager m_registry{};
             SystemManager m_system_manager{};
             EntityManager m_entity_manager{};
     };

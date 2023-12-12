@@ -1,10 +1,14 @@
-//
-// Created by kane on 28/11/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** Registry
+*/
 
 #pragma once
 
 #include "Entity.hh"
+#include "ISparseArray.hh"
 #include "SparseArray.hpp"
 #include <any>
 #include <functional>
@@ -12,23 +16,23 @@
 #include <typeindex>
 #include <unordered_map>
 
-class Registry
+class ComponentManager
 {
     public:
-        Registry() = default;
-        ~Registry() = default;
-        Registry(const Registry &) = default;
-        Registry(Registry &&) = default;
-        Registry &operator=(const Registry &) = default;
-        Registry &operator=(Registry &&) = default;
+        ComponentManager() = default;
+        ~ComponentManager() = default;
+        ComponentManager(const ComponentManager &) = default;
+        ComponentManager(ComponentManager &&) = default;
+        ComponentManager &operator=(const ComponentManager &) = default;
+        ComponentManager &operator=(ComponentManager &&) = default;
 
         template <class TComponent>
         SparseArray<TComponent> &register_component(SparseArray<TComponent> &array)
         {
             auto index = get_index<TComponent>();
             if (m_arrays.find(index) == m_arrays.end())
-                m_arrays[index] = std::any{array};
-            return std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
+                m_arrays[index] = std::move(std::make_unique<SparseArray<TComponent>>(array));
+            return *static_cast<SparseArray<TComponent> *>(m_arrays[index].get());
         }
 
         template <class TComponent> SparseArray<TComponent> &get_components()
@@ -36,7 +40,7 @@ class Registry
             auto index = get_index<TComponent>();
             if (m_arrays.find(index) == m_arrays.end())
                 throw std::out_of_range("Not registered");
-            return std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
+            return *static_cast<SparseArray<TComponent> *>(m_arrays[index].get());
         }
 
         template <class TComponent> SparseArray<TComponent> const &get_components() const
@@ -44,17 +48,14 @@ class Registry
             auto index = get_index<TComponent>();
             if (m_arrays.find(index) == m_arrays.end())
                 throw std::out_of_range("Not registered");
-            const auto &res = std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
-            return res;
+            return *static_cast<const SparseArray<TComponent> *>(m_arrays[index].get());
         }
 
         template <class TComponent> void remove_component(size_t entity)
         {
-            auto index = get_index<TComponent>(entity);
-            if (m_arrays.find(index) == m_arrays.end())
-                throw std::out_of_range("Not registered");
-            auto &res = std::any_cast<SparseArray<TComponent> &>(m_arrays[index]);
-            res[entity] = std::nullopt;
+            for (auto &val : m_arrays) {
+                val.second->remove(entity);
+            }
         }
 
         template <class TComponent> std::type_index get_index() const
@@ -63,5 +64,5 @@ class Registry
         }
 
     private:
-        std::unordered_map<std::type_index, std::any> m_arrays;
+        std::unordered_map<std::type_index, std::unique_ptr<ISparseArray>> m_arrays;
 };

@@ -9,7 +9,7 @@
 
 namespace rtype
 {
-    void collider_system(Registry &registry, [[maybe_unused]] float delta_time)
+    void collider_system(ComponentManager &registry, [[maybe_unused]] float delta_time)
     {
         SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
         SparseArray<BoxColliderComponent> &colliders =
