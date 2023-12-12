@@ -23,9 +23,10 @@ namespace rtype {
             PhysicsManager &operator=(PhysicsManager &&to_move) = default;
 
             void check_collisions(ComponentManager &component_manager);
-            std::vector<std::size_t> get_collision(std::size_t entity) const;
+            [[nodiscard]] std::vector<std::size_t> get_collision(std::size_t entity) const;
+            [[nodiscard]] bool is_collided(std::size_t entity1, std::size_t entity2) const;
 
         private:
             std::vector<Collision> m_collisions{};
     };
-}
+} // namespace rtype

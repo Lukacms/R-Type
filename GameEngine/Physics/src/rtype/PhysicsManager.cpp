@@ -46,3 +46,14 @@ std::vector<std::size_t> rtype::PhysicsManager::get_collision(std::size_t entity
             return collision.collided;
     }
 }
+
+bool rtype::PhysicsManager::is_collided(std::size_t entity1, std::size_t entity2) const
+{
+    Collision collisions{};
+
+    for (const auto &collision : m_collisions) {
+        if (collision.entity == entity1)
+            collisions = collision;
+    }
+    return std::find(collisions.collided.begin(), collisions.collided.end(), entity2) == std::end(collisions.collided);
+}
