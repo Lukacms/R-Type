@@ -175,7 +175,11 @@ message("${BoldWhite}Finished loading rtype-core${ColourReset}")
 add_executable(
     r-type_client
     src/main.cpp
-    src/NetworkManager.cpp
+    src/rtype/Entity.cpp
+    src/rtype/Systems/MovementSystem.cpp
+    src/rtype/Systems/TransformSystem.cpp
+    src/rtype/Systems/SpriteSystem.cpp
+    src/rtype/Systems/AudioSystem.cpp
 )
 
 # link the libraries to executable
