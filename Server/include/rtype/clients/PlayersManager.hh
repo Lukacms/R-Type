@@ -35,15 +35,15 @@ namespace rserver
             void add_player(asio::ip::udp::endpoint &endpoint, asio::ip::udp::socket &socket);
 
             /* exception */
-            class PlayersExceptions : public std::exception
+            class PlayersException : public std::exception
             {
                 public:
-                    PlayersExceptions(std::string p_error = PM_ERROR.data());
-                    PlayersExceptions(PlayersExceptions const &to_copy) = default;
-                    PlayersExceptions(PlayersExceptions &&to_move) = default;
-                    ~PlayersExceptions() override = default;
-                    PlayersExceptions &operator=(PlayersExceptions const &to_copy) = default;
-                    PlayersExceptions &operator=(PlayersExceptions &&to_move) = default;
+                    PlayersException(std::string p_error = PM_ERROR.data());
+                    PlayersException(PlayersException const &to_copy) = default;
+                    PlayersException(PlayersException &&to_move) = default;
+                    ~PlayersException() override = default;
+                    PlayersException &operator=(PlayersException const &to_copy) = default;
+                    PlayersException &operator=(PlayersException &&to_move) = default;
                     [[nodiscard]] const char *what() const noexcept override;
 
                 private:

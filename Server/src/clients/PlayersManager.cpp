@@ -15,7 +15,7 @@ rserver::Player &rserver::PlayersManager::get_by_id(asio::ip::port_type const &p
         if (client.get_port() == port)
             return client;
     }
-    throw PlayersExceptions();
+    throw PlayersException();
 }
 
 void rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint,
@@ -26,12 +26,12 @@ void rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint,
 }
 
 /* exception */
-rserver::PlayersManager::PlayersExceptions::PlayersExceptions(std::string p_error)
+rserver::PlayersManager::PlayersException::PlayersException(std::string p_error)
     : error_msg{std::move(p_error)}
 {
 }
 
-const char *rserver::PlayersManager::PlayersExceptions::what() const noexcept
+const char *rserver::PlayersManager::PlayersException::what() const noexcept
 {
     return this->error_msg.data();
 }

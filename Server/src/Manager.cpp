@@ -7,13 +7,13 @@
 
 #include <csignal>
 #include <iostream>
-#include <memory>
-#include <ostream>
 #include <rtype.hh>
 #include <rtype/Manager.hh>
 #include <rtype/network/Network.hh>
 
 static volatile std::atomic_int RUNNING = 1;
+
+static const std::vector<rserver::CommandHandler> HANDLER{};
 
 /* constructors and destructors */
 
@@ -68,31 +68,31 @@ void rserver::Manager::run()
 
 void rserver::Manager::start_receive()
 {
-    ntw::Communication communication{};
+    ntw::Communication commn{};
 
     if (RUNNING) {
-        this->socket.async_receive_from(asio::buffer(&communication, sizeof(communication)),
-                                        this->endpoint, [this](auto &&p_h1, auto &&p_h2) {
+        this->socket.async_receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint,
+                                        [this](auto &&p_h1, auto &&p_h2) {
                                             handle_receive(std::forward<decltype(p_h1)>(p_h1),
                                                            std::forward<decltype(p_h2)>(p_h2));
                                         });
         if (this->endpoint.port() > 0)
-            this->threads.add_job([&, this]() { this->command_manager(communication, endpoint); });
+            this->threads.add_job([&, this]() { this->command_manager(commn, endpoint); });
     }
 }
 
 void rserver::Manager::handle_receive(const asio::error_code &error,
                                       std::size_t /* bytes_transferre */)
 {
-    ntw::Communication communication{};
+    // ntw::Communication communication{};
 
     if (!error && RUNNING) {
-        this->socket.async_send_to(asio::buffer(&communication, sizeof(communication)),
+        /* this->socket.async_send_to(asio::buffer(&communication, sizeof(communication)),
                                    this->endpoint, [this, communication](auto &&p_h1, auto &&p_h2) {
                                        handle_send(communication,
                                                    std::forward<decltype(p_h1)>(p_h1),
                                                    std::forward<decltype(p_h2)>(p_h2));
-                                   });
+                                   }); */
         this->start_receive();
     }
 }
@@ -106,10 +106,20 @@ void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
 void rserver::Manager::command_manager(ntw::Communication &communication,
                                        asio::ip::udp::endpoint &client)
 {
-    // TODO parse command arguments
-    // loop through commands and go to method pointers
-    // TODO also check if client is new or not
-    std::cout << "oue " << client << "\n";
+    std::vector<std::string> args{
+        split_delimitor(std::string{communication.args.data()}, ntw::DELIMITORS.data())};
+
+    try {
+        Player &player{this->players.get_by_id(client.port())};
+
+        for (const auto &handle : HANDLER) {
+            if (handle.type == communication.type) {
+                handle.handler(*this, player, args);
+                return;
+            }
+        }
+    } catch (PlayersManager::PlayersException & /* e */) {
+    }
 }
 
 void rserver::Manager::handle_disconnection(int /*unused*/)
