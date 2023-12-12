@@ -4,8 +4,9 @@
 
 #pragma once
 
+#include <rtype/ComponentManager.hpp>
 #include <rtype/EntityManager.hh>
-#include <rtype/Registry.hpp>
+#include <rtype/PhysicsManager.hh>
 #include <rtype/SystemManager.hh>
 
 namespace rtype
@@ -37,23 +38,23 @@ namespace rtype
 
             template <class TComponent> void remove_component(size_t entity)
             {
-                m_registry.remove_component<TComponent>(entity);
+                m_component_manager.remove_component<TComponent>(entity);
             }
 
             template <class TComponent>
             SparseArray<TComponent> &register_component(SparseArray<TComponent> &array)
             {
-                return m_registry.register_component<TComponent>(array);
+                return m_component_manager.register_component<TComponent>(array);
             }
 
             template <class TComponent> SparseArray<TComponent> &get_components()
             {
-                return m_registry.get_components<TComponent>();
+                return m_component_manager.get_components<TComponent>();
             }
 
             template <class TComponent> TComponent &get_component(size_t entity)
             {
-                return m_registry.get_components<TComponent>()[entity].value();
+                return m_component_manager.get_components<TComponent>()[entity].value();
             }
 
             std::function<void(ComponentManager &, float)> &
@@ -64,12 +65,19 @@ namespace rtype
 
             void apply_system(float delta_time)
             {
-                m_system_manager.update(m_registry, delta_time);
+                m_system_manager.update(m_component_manager, delta_time);
+                m_physics_manager.check_collisions(m_component_manager);
+            }
+
+            std::vector<std::size_t> get_collision(std::size_t entity)
+            {
+                return m_physics_manager.get_collision(entity);
             }
 
         private:
-            ComponentManager m_registry{};
+            ComponentManager m_component_manager{};
             SystemManager m_system_manager{};
             EntityManager m_entity_manager{};
+            PhysicsManager m_physics_manager{};
     };
 } // namespace rtype

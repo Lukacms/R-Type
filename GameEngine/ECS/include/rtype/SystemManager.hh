@@ -8,7 +8,7 @@
 #pragma once
 
 #include <functional>
-#include <rtype/Registry.hpp>
+#include <rtype/ComponentManager.hpp>
 #include <vector>
 
 class SystemManager

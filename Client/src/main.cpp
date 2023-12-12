@@ -109,7 +109,6 @@ int main(int /* argc */, const char * /* argv */[])
     manager.add_system(transform);
     manager.add_system(movement);
     manager.add_system(sprite);
-    manager.add_system(collider);
     float delta_time = 0.F;
     while (le_client.is_running()) {
         auto start = std::chrono::high_resolution_clock::now();

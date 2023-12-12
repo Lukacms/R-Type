@@ -9,8 +9,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <rtype/ComponentManager.hpp>
 #include <rtype/ECSManager.hpp>
-#include <rtype/Registry.hpp>
 
 namespace rclient
 {

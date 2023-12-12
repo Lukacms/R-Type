@@ -12,7 +12,7 @@ add_library(r-type-ecs SHARED
     src/rtype/Systems/ColliderSystem.cpp
 )
 
-target_include_directories(r-type-ecs PRIVATE ./include)
+target_include_directories(r-type-ecs PRIVATE ./include ../Physics/include)
 target_compile_options(r-type-ecs PRIVATE ${WARNING_FLAGS})
 #target_link_libraries(r-type-ecs PRIVATE raytracer-interface)
 set_property(TARGET r-type-ecs PROPERTY CXX_STANDARD 20)
