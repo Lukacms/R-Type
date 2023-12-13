@@ -30,3 +30,8 @@ asio::ip::udp::endpoint rserver::Player::get_endpoint() const
 {
     return this->endpoint;
 }
+
+std::size_t rserver::Player::get_entity_value() const
+{
+    return this->entity_value;
+}

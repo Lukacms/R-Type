@@ -10,6 +10,7 @@
 // NOTE need to do this to be able to build the shared library of the server core
 #define ASIO_HEADER_ONLY
 
+#include <cstddef>
 #include <exception>
 #include <rtype/clients/Player.hh>
 #include <string_view>
@@ -31,8 +32,10 @@ namespace rserver
             PlayersManager &operator=(PlayersManager &&to_move) = default;
 
             /* methods */
-            Player &get_by_id(asio::ip::port_type const &port);
+            [[nodiscard]] Player &get_by_id(asio::ip::port_type const &port);
+            [[nodiscard]] Player &get_by_entity_id(std::size_t &entity);
             void add_player(asio::ip::udp::endpoint &endpoint, asio::ip::udp::socket &socket);
+            [[nodiscard]] std::size_t length() const;
 
             /* exception */
             class PlayersException : public std::exception
