@@ -4,13 +4,15 @@
 
 #pragma once
 
+#include <asio.hpp>
 #include <rtype/ECSManager.hpp>
 #include <rtype/clients/PlayersManager.hh>
-#include <asio.hpp>
 #include <vector>
 
-namespace rserver {
-    class GameLogic {
+namespace rserver
+{
+    class GameLogic
+    {
         public:
             explicit GameLogic(asio::ip::udp::socket &socket);
             GameLogic(GameLogic const &to_copy) = default;
@@ -22,12 +24,15 @@ namespace rserver {
             void game_loop(rtype::ECSManager &manager, rserver::PlayersManager &players_manager);
 
             // Collisions responses
-            void collision_responses(rtype::ECSManager &manager, rserver::PlayersManager &players_manager);
-            void player_collision_responses(rtype::ECSManager &manager, rserver::PlayersManager &players_manager);
-            void enemy_collision_responses(rtype::ECSManager &manager, rserver::PlayersManager &players_manager);
+            void collision_responses(rtype::ECSManager &manager,
+                                     rserver::PlayersManager &players_manager);
+            void player_collision_responses(rtype::ECSManager &manager,
+                                            rserver::PlayersManager &players_manager);
+            void enemy_collision_responses(rtype::ECSManager &manager,
+                                           rserver::PlayersManager &players_manager);
 
         private:
             std::vector<size_t> m_entities;
             asio::ip::udp::socket &m_socket;
     };
-}
+} // namespace rserver

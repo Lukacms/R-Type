@@ -37,7 +37,6 @@ namespace rtype
                 m_component_manager.remove_all_component(entity);
             }
 
-
             template <class TComponent> void remove_component(size_t entity)
             {
                 m_component_manager.remove_component<TComponent>(entity);

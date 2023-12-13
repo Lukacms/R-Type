@@ -5,23 +5,28 @@
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/GameLogic/GameLogic.hh>
-#include <rtype/clients/PlayersManager.hh>
 #include <rtype/Manager.hh>
+#include <rtype/clients/PlayersManager.hh>
 
-rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket) : m_socket{socket} {}
+rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket) : m_socket{socket}
+{
+}
 
-void rserver::GameLogic::game_loop(rtype::ECSManager &manager, rserver::PlayersManager &players_manager)
+void rserver::GameLogic::game_loop(rtype::ECSManager &manager,
+                                   rserver::PlayersManager &players_manager)
 {
     collision_responses(manager, players_manager);
 }
 
-void rserver::GameLogic::collision_responses(rtype::ECSManager &manager, rserver::PlayersManager &players_manager)
+void rserver::GameLogic::collision_responses(rtype::ECSManager &manager,
+                                             rserver::PlayersManager &players_manager)
 {
     player_collision_responses(manager, players_manager);
     enemy_collision_responses(manager, players_manager);
 }
 
-void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager, rserver::PlayersManager &players_manager)
+void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager,
+                                                    rserver::PlayersManager &players_manager)
 {
     SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
@@ -51,7 +56,8 @@ void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager, 
     }
 }
 
-void rserver::GameLogic::enemy_collision_responses(rtype::ECSManager &manager, rserver::PlayersManager &players_manager)
+void rserver::GameLogic::enemy_collision_responses(rtype::ECSManager &manager,
+                                                   rserver::PlayersManager &players_manager)
 {
     SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
