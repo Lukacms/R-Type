@@ -12,6 +12,7 @@
 
 #include <array>
 #include <string_view>
+#include <vector>
 
 #ifdef __unix__
     #define ENDL "\n"
@@ -34,5 +35,7 @@ namespace rserver
 
     bool is_number(std::string const &str);
     std::size_t get_number(std::string const &str);
+    std::vector<std::string> split_delimitor(std::string &src, const std::string &del);
+    std::vector<std::string> split_delimitor(std::string src, const std::string &del);
 
 } // namespace rserver

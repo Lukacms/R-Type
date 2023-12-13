@@ -52,9 +52,6 @@ namespace rserver
             void handle_send(const ntw::Communication & /*message*/,
                              const asio::error_code & /*error*/, std::size_t /*bytes_transferred*/);
 
-            void command_manager(ntw::Communication &communication,
-                                 asio::ip::udp::endpoint &endpoint);
-
             class ManagerException : public std::exception
             {
                 public:
@@ -83,6 +80,13 @@ namespace rserver
 
             /* methods */
             static void handle_disconnection(int);
+            void command_manager(ntw::Communication &communication,
+                                 asio::ip::udp::endpoint &client);
+    };
+
+    struct CommandHandler {
+            ntw::NetworkType type;
+            std::function<void(Manager &, Player &, std::vector<std::string> &)> handler;
     };
 
 } // namespace rserver

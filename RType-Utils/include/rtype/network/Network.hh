@@ -9,11 +9,13 @@
 
 #include <array>
 #include <string>
+#include <string_view>
 
 namespace ntw
 {
 
     constexpr int MAX_SIZE{128};
+    constexpr std::string_view DELIMITORS{" "};
 
     enum NetworkType {
         Start,

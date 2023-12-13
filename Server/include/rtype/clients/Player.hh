@@ -34,9 +34,11 @@ namespace rserver
             /* methods */
             [[nodiscard]] asio::ip::port_type get_port() const;
             [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
+            [[nodiscard]] std::size_t get_entity_value() const;
 
         private:
             asio::ip::udp::endpoint endpoint;
+            std::size_t entity_value{};
     };
 
 } // namespace rserver
