@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <asio/registered_buffer.hpp>
 #include <rtype/clients/PlayersManager.hh>
+#include <vector>
 
 rserver::Player &rserver::PlayersManager::get_by_id(asio::ip::port_type const &port)
 {
@@ -37,6 +38,11 @@ void rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint,
 std::size_t rserver::PlayersManager::length() const
 {
     return this->players.size();
+}
+
+const std::vector<rserver::Player> &rserver::PlayersManager::get_all_players() const
+{
+    return this->players;
 }
 
 /* exception */

@@ -47,11 +47,19 @@ namespace rserver
             /* methods */
             void run();
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
+            static void send_message(ntw::Communication &to_send, Player &client,
+                                     asio::ip::udp::socket &udp_socket);
+            static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
+                                    asio::ip::udp::socket &udp_socket);
+
+            /* async networking methods */
+            /* udp methods */
             void start_receive();
             void handle_receive(const asio::error_code &error, std::size_t ytes_transferre);
             void handle_send(const ntw::Communication & /*message*/,
                              const asio::error_code & /*error*/, std::size_t /*bytes_transferred*/);
 
+            /* exception */
             class ManagerException : public std::exception
             {
                 public:
@@ -71,8 +79,10 @@ namespace rserver
         private:
             /* variables */
             asio::io_context context{};
-            asio::ip::udp::socket socket;
             asio::error_code ignored{};
+
+            /* udp, will handle the majority of the events */
+            asio::ip::udp::socket udp_socket;
             asio::ip::udp::endpoint endpoint{};
 
             PlayersManager players{};
@@ -82,6 +92,9 @@ namespace rserver
             static void handle_disconnection(int);
             void command_manager(ntw::Communication &communication,
                                  asio::ip::udp::endpoint &client);
+            void refuse_client(asio::ip::udp::endpoint &client);
+
+            /* function pointers for commands */
     };
 
     struct CommandHandler {
