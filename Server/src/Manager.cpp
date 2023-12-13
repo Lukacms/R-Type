@@ -23,12 +23,12 @@ static const std::vector<rserver::CommandHandler> HANDLER{};
  * @param port port_type, default to 8080
  */
 rserver::Manager::Manager(asio::ip::port_type port)
-    : socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
+    : udp_socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
 {
     // std::signal(SIGINT, Manager::handle_disconnection);
 }
 
-rserver::Manager::Manager(rserver::Manager &&to_move) : socket{std::move(to_move.socket)}
+rserver::Manager::Manager(rserver::Manager &&to_move) : udp_socket{std::move(to_move.udp_socket)}
 {
 }
 
@@ -42,7 +42,7 @@ rserver::Manager::~Manager()
 
 rserver::Manager &rserver::Manager::operator=(Manager &&to_move)
 {
-    this->socket = std::move(to_move.socket);
+    this->udp_socket = std::move(to_move.udp_socket);
 
     return *this;
 }
@@ -66,34 +66,48 @@ void rserver::Manager::run()
         this->context.run();
 }
 
+/* send data to clients */
+void rserver::Manager::send_message(ntw::Communication &to_send, Player &client,
+                                    asio::ip::udp::socket &udp_socket)
+{
+    udp_socket.async_send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint(),
+                             [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+}
+
+void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &players,
+                                   asio::ip::udp::socket &udp_socket)
+{
+    for (const auto &client : players.get_all_players()) {
+        udp_socket.async_send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint(),
+                                 [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+    }
+}
+
+/* async udp methods */
 void rserver::Manager::start_receive()
 {
     ntw::Communication commn{};
 
     if (RUNNING) {
-        this->socket.async_receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint,
-                                        [this](auto &&p_h1, auto &&p_h2) {
-                                            handle_receive(std::forward<decltype(p_h1)>(p_h1),
-                                                           std::forward<decltype(p_h2)>(p_h2));
-                                        });
+        this->udp_socket.async_receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint,
+                                            [this](auto &&p_h1, auto &&p_h2) {
+                                                handle_receive(std::forward<decltype(p_h1)>(p_h1),
+                                                               std::forward<decltype(p_h2)>(p_h2));
+                                            });
         if (this->endpoint.port() > 0)
             this->threads.add_job([&, this]() { this->command_manager(commn, endpoint); });
+    } else {
+        this->context.stop();
     }
 }
 
 void rserver::Manager::handle_receive(const asio::error_code &error,
                                       std::size_t /* bytes_transferre */)
 {
-    // ntw::Communication communication{};
-
     if (!error && RUNNING) {
-        /* this->socket.async_send_to(asio::buffer(&communication, sizeof(communication)),
-                                   this->endpoint, [this, communication](auto &&p_h1, auto &&p_h2) {
-                                       handle_send(communication,
-                                                   std::forward<decltype(p_h1)>(p_h1),
-                                                   std::forward<decltype(p_h2)>(p_h2));
-                                   }); */
         this->start_receive();
+    } else {
+        this->context.stop();
     }
 }
 
@@ -119,9 +133,29 @@ void rserver::Manager::command_manager(ntw::Communication &communication,
             }
         }
     } catch (PlayersManager::PlayersException & /* e */) {
+        if (this->players.length() >= 4) {
+            this->refuse_client(client);
+        } else {
+            this->players.add_player(client, this->udp_socket);
+        }
     }
 }
 
+void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
+{
+    ntw::Communication communication{.type = ntw::Refusal};
+
+    this->udp_socket.async_send_to(asio::buffer(&communication, sizeof(communication)), client,
+                                   [this, communication](auto &&p_h1, auto &&p_h2) {
+                                       handle_send(communication,
+                                                   std::forward<decltype(p_h1)>(p_h1),
+                                                   std::forward<decltype(p_h2)>(p_h2));
+                                   });
+}
+
+/**
+ * @brief catch <CTRL-C> and stop server from running
+ */
 void rserver::Manager::handle_disconnection(int /*unused*/)
 {
     RUNNING = 0;

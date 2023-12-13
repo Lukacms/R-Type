@@ -18,8 +18,11 @@ namespace ntw
     constexpr std::string_view DELIMITORS{" "};
 
     enum NetworkType {
-        Start,
         None,
+        Start,
+        Connection, // client trying to join a server's game
+        Refusal,    // a client cannot join a server's game
+        Ok,         // everything is good
     };
 
 #pragma pack(push, 1)
