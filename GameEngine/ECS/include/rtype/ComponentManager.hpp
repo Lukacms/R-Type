@@ -53,6 +53,14 @@ class ComponentManager
 
         template <class TComponent> void remove_component(size_t entity)
         {
+            auto index = get_index<TComponent>();
+            if (m_arrays.find(index) == m_arrays.end())
+                throw std::out_of_range("Not registered");
+            m_arrays[index]->remove(entity);
+        }
+
+        void remove_all_component(size_t entity)
+        {
             for (auto &val : m_arrays)
                 val.second->remove(entity);
         }

@@ -34,7 +34,9 @@ namespace rtype
             void delete_entity(size_t entity)
             {
                 m_entity_manager.delete_entity(entity);
+                m_component_manager.remove_all_component(entity);
             }
+
 
             template <class TComponent> void remove_component(size_t entity)
             {
@@ -72,6 +74,11 @@ namespace rtype
             std::vector<std::size_t> get_collision(std::size_t entity)
             {
                 return m_physics_manager.get_collision(entity);
+            }
+
+            bool is_collided(std::size_t entity1, std::size_t entity2)
+            {
+                return m_physics_manager.is_collided(entity1, entity2);
             }
 
         private:
