@@ -46,7 +46,7 @@ void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager,
                         continue;
                     }
                     com.type = ntw::Destruction;
-                    //com.args = static_cast<char>(entity1);
+                    // com.args = static_cast<char>(entity1);
                     rserver::Manager::send_message(com, player, m_socket);
                 }
                 manager.delete_entity(entity1);
