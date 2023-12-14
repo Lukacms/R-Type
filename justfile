@@ -1,34 +1,33 @@
 # lint files with clang-format
 lint:
-    @clang-format -i --style='file:.clang-format' `find Server/ Client/ Network/ GameEngine/ -name *.cpp -o -name *.hh -o -name *.hpp`
+    @clang-format -i --style='file:.clang-format' `find Server/ Client/ RType-Utils/ GameEngine/ -name *.cpp -o -name *.hh -o -name *.hpp`
 
-names := "r-type_server r-type_client tests-rtype-server tests-rtype-client"
-name_tests_server  :=  "tests-rtype-server"
-name_tests_client  :=  "tests-rtype-client"
+names   := "r-type_server r-type_client tests-rtype-server tests-rtype-client"
+name_tests_server   :=  "tests-rtype-server"
+name_tests_client   :=  "tests-rtype-client"
 
-make_build:
-    @mkdir -p build
+build_folder    :=  "build"
 
-release: make_build
-    cd build &&\
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
-    cmake --build .
+release:
+    cmake -B {{ build_folder }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
+    cmake --build {{ build_folder }} --config Release
 
-debug: make_build
-    cd build &&\
-    cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
-    cmake --build .
+debug:
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
+    ninja -C {{ build_folder }}
 
-ninja: make_build
-    cd build &&\
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
-    ninja
+ninja:
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=None -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
+    ninja -C {{ build_folder }}
 
-tests: make_build
-    cd build &&\
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DRAYTRACER_BUILD_TESTS=true &&\
-    ninja &&\
-    cd .. && ./{{ name_tests_server }} && ./{{ name_tests_client }}
+tsan:
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=tsan -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
+    ninja -C {{ build_folder }}
+
+tests:
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DRTYPE_BUILD_TESTS=true &&\
+    ninja -C {{ build_folder }} &&\
+    ./{{ name_tests_server }} && ./{{ name_tests_client }}
 
 clean:
     @rm -rf {{ names }}

@@ -6,6 +6,7 @@
 */
 
 #include <rtype/Client.hpp>
+#include <rtype/Components/SpriteComponent.hh>
 
 rclient::Client::Client(u_int width, u_int height)
 {
@@ -29,21 +30,13 @@ void rclient::Client::read_input()
     }
 }
 
-void rclient::Client::update()
+void rclient::Client::render(rtype::ECSManager &manager)
 {
-    m_movement_system.update(m_registry);
-    m_transform_system.update(m_registry);
-    m_sprite_system.update(m_registry);
-}
+    auto sprites = manager.get_components<rtype::SpriteComponent>();
 
-void rclient::Client::render()
-{
-    m_window->clear(sf::Color::Black);
-    m_sprite_system.render(m_registry, m_window);
+    m_window->clear();
+    for (auto &sprite : sprites)
+        if (sprite.has_value())
+            m_window->draw(sprite->sprite);
     m_window->display();
-}
-
-Registry &rclient::Client::get_registry()
-{
-    return m_registry;
 }

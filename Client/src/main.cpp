@@ -44,12 +44,15 @@ int main(int argc, char *argv[])
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
+
+=======
 */
+#include <chrono>
+#include <rtype/AudioManager.hpp>
 #include <rtype/Client.hpp>
 #include <rtype/Components/SpriteComponent.hpp>
 #include <rtype/Components/TagComponent.hpp>
 #include <rtype/Components/TransformComponent.hpp>
-#include <rtype/Systems/AudioSystem.hpp>
 
 int main(int /* argc */, const char * /* argv */[])
 {
@@ -72,20 +75,50 @@ int main(int /* argc */, const char * /* argv */[])
     text.loadFromFile("./Client/assets/ships/Spaceship.png");
     audioSystem.loadSound("test", "./Client/assets/sounds/Spider-Dance.wav");
     audioSystem.playSound("test");
+    audioSystem.loadSound("test", "./Client/assets/sounds/Spider-Dance.wav");
+    audioSystem.playSound("test");
+    // sf::Texture text{};
+    // text.loadFromFile("./Client/assets/ships/Spaceship.png");
 
-    sprites.emplace_at(ship, sf::Sprite{text}, sf::Rect<int>{0, 0, 33, 15});
+    Entity background{manager.create_entity()};
+    Entity ship{manager.create_entity()};
+
+    sprites.emplace_at(background, spriteSystem.createSprite("BGSprite", "BG"),
+                       sf::Rect<int>{0, 0, 800, 600});
+    sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"),
+                       sf::Rect<int>{0, 0, 33, 15});
+    transforms.emplace_at(background, 0.0F, 0.0F, 0.0F, 0.0F, 1.F, 1.F);
     transforms.emplace_at(ship, 1.0F, 1.0F, 0.0F, 0.0F, 2.F, 2.F);
+    colliders.emplace_at(ship, 33.F, 15.F);
     tags.emplace_at(ship, "PLAYER");
-    sprites.emplace_at(test, sf::Sprite{text}, sf::Rect<int>{33, 0, 33, 15});
-    transforms.emplace_at(test, 300.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
-    tags.emplace_at(test, "ENEMY");
-    client.get_registry().register_component(sprites);
-    client.get_registry().register_component(transforms);
-    client.get_registry().register_component(tags);
-    while (client.is_running()) {
-        client.read_input();
-        client.render();
-        client.update();
+
+    for (size_t i = 0; i < 1; i += 1) {
+        Entity ship{manager.create_entity()};
+        sprites.emplace_at(ship, spriteSystem.createSprite("shipSprite", "ship"),
+                           sf::Rect<int>{0, 0, 33, 15});
+        transforms.emplace_at(ship, 300.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
+        colliders.emplace_at(ship, 33.F, 15.F);
+    }
+    manager.register_component(sprites);
+    manager.register_component(tags);
+    manager.register_component(transforms);
+    manager.register_component(colliders);
+    std::function<void(ComponentManager &, float)> transform = &rtype::transform_system;
+    std::function<void(ComponentManager &, float)> movement = &rtype::movement_system;
+    std::function<void(ComponentManager &, float)> sprite = &rtype::sprite_system;
+    std::function<void(ComponentManager &, float)> collider = &rtype::collider_system;
+    manager.add_system(transform);
+    manager.add_system(movement);
+    manager.add_system(sprite);
+    float delta_time = 0.F;
+    while (le_client.is_running()) {
+        auto start = std::chrono::high_resolution_clock::now();
+        le_client.render(manager);
+        manager.apply_system(delta_time);
+        le_client.read_input();
+        auto end = std::chrono::high_resolution_clock::now();
+        delta_time =
+            std::chrono::duration<float, std::chrono::seconds::period>(end - start).count();
     }
     return 0;
 }
