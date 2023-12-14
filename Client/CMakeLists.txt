@@ -51,6 +51,7 @@ target_link_libraries(
     rtype-client-interface
     asio::asio # link asio library to core
     )
+target_link_options(r-type_server PRIVATE -rdynamic)
 target_compile_features(r-type_client PRIVATE cxx_std_20)
 target_compile_options(r-type_client PRIVATE ${WARNING_FLAGS})
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD 20)

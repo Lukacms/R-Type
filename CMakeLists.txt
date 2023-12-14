@@ -62,7 +62,7 @@ set(CLANG_WARNING_FLAGS
     -Wno-weak-vtables)
 
 if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 13.0.0)
-    set(CLANG_WARNING_FLAGS ${CLANG_WARNING_FLAGS} -Wno-return-std-move-in-c++11)
+    set(CLANG_WARNING_FLAGS "${CLANG_WARNING_FLAGS} -Wno-return-std-move-in-c++11")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always -std=c++20")
@@ -76,7 +76,7 @@ set(WARNING_FLAGS
     -Wold-style-cast
     -Wcast-align
     -Wunused
-    -Wno-covered-switch-default
+    -Wno-switch-default
     -Woverloaded-virtual
     -Wpedantic
     -Wconversion
@@ -114,15 +114,16 @@ if(NOT WIN32)
 endif()
 
 # set different flags
-set(CMAKE_BUILD_TYPE
-    ${CMAKE_BUILD_TYPE}
-    CACHE
-      STRING
-      "Choose the type of build, options are: None Debug"
-      FORCE)
+set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}
+  CACHE STRING
+  "Choose the type of build, options are: None Debug Release tsan"
+  FORCE)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb3")
+elseif(CMAKE_BUILD_TYPE MATCHES "tsan")
+  set(CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread")
 endif()
 
 # Clang-tidy

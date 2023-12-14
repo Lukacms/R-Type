@@ -36,7 +36,7 @@ add_library(
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
 target_compile_options(rtype-server-core PRIVATE ${WARNING_FLAGS})
-target_include_directories(rtype-server-core PUBLIC include ../RType-Utils/include/)
+target_include_directories(rtype-server-core PUBLIC ../RType-Utils/include/)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
@@ -60,6 +60,7 @@ target_link_libraries(
     rtype-server-core
     rtype-server-interface
     )
+target_link_options(r-type_server PRIVATE -rdynamic)
 target_compile_features(r-type_server PRIVATE cxx_std_20)
 target_compile_options(r-type_server PRIVATE ${WARNING_FLAGS})
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD 20)
