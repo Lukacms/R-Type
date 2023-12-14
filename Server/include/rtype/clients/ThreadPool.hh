@@ -44,9 +44,9 @@ namespace rserver
         private:
             /* variables */
             u_int nb_threads;
-            mutable std::mutex mutex;
-            std::condition_variable condition;
-            std::vector<std::thread> threads;
+            mutable std::mutex mutex{};
+            std::condition_variable condition{};
+            std::vector<std::thread> threads{};
             std::queue<std::function<void()>> queue{};
 
             bool should_terminate{false};

@@ -11,7 +11,7 @@
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
-#include <rtype/network/Network.hh>
+#include <rtype/network/Network.hpp>
 #include <vector>
 
 namespace rserver

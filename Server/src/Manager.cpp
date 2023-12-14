@@ -9,7 +9,8 @@
 #include <iostream>
 #include <rtype.hh>
 #include <rtype/Manager.hh>
-#include <rtype/network/Network.hh>
+#include <rtype/network/Network.hpp>
+#include <unistd.h>
 
 static volatile std::atomic_int RUNNING = 1;
 
@@ -25,6 +26,7 @@ static const std::vector<rserver::CommandHandler> HANDLER{};
 rserver::Manager::Manager(asio::ip::port_type port)
     : udp_socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
 {
+    DEBUG(("Constructed manager with port: %d%s", port, ENDL));
     // std::signal(SIGINT, Manager::handle_disconnection);
 }
 
@@ -35,7 +37,7 @@ rserver::Manager::Manager(rserver::Manager &&to_move) : udp_socket{std::move(to_
 rserver::Manager::~Manager()
 {
     this->threads.stop();
-    std::cout << "bye" << ENDL;
+    DEBUG(("Finished server%s", ENDL));
 }
 
 /* operator overload */
@@ -53,6 +55,7 @@ void rserver::Manager::launch(asio::ip::port_type port)
     try {
         Manager manager{port};
 
+        manager.run_game_logic();
         manager.start_receive();
         manager.run();
     } catch (std::exception &e) {
@@ -64,6 +67,21 @@ void rserver::Manager::run()
 {
     if (RUNNING)
         this->context.run();
+}
+
+/**
+ * @brief method to run game logic
+ *  the game logic has to be on another thread, as the asio context run is an infinite loop
+ * TODO
+ */
+void rserver::Manager::run_game_logic()
+{
+    this->threads.add_job([this]() {
+        while (RUNNING) {
+            std::cout << "oui: " << this->players.length() << "\n";
+            sleep(1);
+        }
+    });
 }
 
 /* send data to clients */

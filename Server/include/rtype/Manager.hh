@@ -15,7 +15,7 @@
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/clients/ThreadPool.hh>
-#include <rtype/network/Network.hh>
+#include <rtype/network/Network.hpp>
 #include <string_view>
 #include <vector>
 
@@ -51,6 +51,7 @@ namespace rserver
                                      asio::ip::udp::socket &udp_socket);
             static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket);
+            void run_game_logic();
 
             /* async networking methods */
             /* udp methods */

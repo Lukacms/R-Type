@@ -20,6 +20,12 @@
     #define ENDL "\r\n"
 #endif
 
+#ifdef NDEBUG
+    #define DEBUG(x)
+#else
+    #define DEBUG(x) printf x
+#endif
+
 namespace rserver
 {
 

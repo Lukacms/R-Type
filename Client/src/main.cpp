@@ -10,7 +10,7 @@
 #include <iostream>
 #include <iterator>
 #include <rtype.hh>
-#include <rtype/network/Network.hh>
+#include <rtype/network/Network.hpp>
 #include <unistd.h>
 
 using asio::ip::udp;
