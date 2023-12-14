@@ -7,47 +7,58 @@
 
 #include <rtype/WindowManager.hpp>
 
-WindowManager::WindowManager() {
+WindowManager::WindowManager()
+{
 }
 
-WindowManager::~WindowManager() {
+WindowManager::~WindowManager()
+{
 }
 
-void WindowManager::createWindow(int width, int height, const std::string& title) {
+void WindowManager::createWindow(int width, int height, const std::string &title)
+{
     window.create(sf::VideoMode(width, height), title);
 }
 
-sf::RenderWindow& WindowManager::getWindow() {
+sf::RenderWindow &WindowManager::getWindow()
+{
     return window;
 }
 
-void WindowManager::closeWindow() {
+void WindowManager::closeWindow()
+{
     window.close();
 }
 
-void WindowManager::clear() {
+void WindowManager::clear()
+{
     window.clear();
 }
 
-void WindowManager::display() {
+void WindowManager::display()
+{
     window.display();
 }
 
-bool WindowManager::isWindowOpen() const {
+bool WindowManager::isWindowOpen() const
+{
     return window.isOpen();
 }
 
-void WindowManager::pollEvents() {
+void WindowManager::pollEvents()
+{
     sf::Event event;
     while (window.pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
-                if (eventCallbacks.count(GameEvent::Close)) eventCallbacks[GameEvent::Close]();
+                if (eventCallbacks.count(GameEvent::Close))
+                    eventCallbacks[GameEvent::Close]();
                 break;
         }
     }
 }
 
-void WindowManager::onEvent(GameEvent event, std::function<void()> callback) {
+void WindowManager::onEvent(GameEvent event, std::function<void()> callback)
+{
     eventCallbacks[event] = callback;
 }

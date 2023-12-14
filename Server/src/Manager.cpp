@@ -67,7 +67,7 @@ void rserver::Manager::run()
 }
 
 /* send data to clients */
-void rserver::Manager::send_message(ntw::Communication &to_send, Player &client,
+void rserver::Manager::send_message(ntw::Communication &to_send, const Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
     udp_socket.async_send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint(),

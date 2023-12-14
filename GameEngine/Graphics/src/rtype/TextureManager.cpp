@@ -7,10 +7,12 @@
 
 #include <rtype/TextureManager.hpp>
 
-TextureManager::TextureManager() {
+TextureManager::TextureManager()
+{
 }
 
-bool TextureManager::loadTexture(const std::string& name, const std::string& filename) {
+bool TextureManager::loadTexture(const std::string &name, const std::string &filename)
+{
     sf::Texture texture;
     if (!texture.loadFromFile(filename)) {
         return false;
@@ -20,10 +22,12 @@ bool TextureManager::loadTexture(const std::string& name, const std::string& fil
     return true;
 }
 
-sf::Texture& TextureManager::getTexture(const std::string& name) {
+sf::Texture &TextureManager::getTexture(const std::string &name)
+{
     return textures.at(name);
 }
 
-void TextureManager::removeTexture(const std::string& name) {
+void TextureManager::removeTexture(const std::string &name)
+{
     textures.erase(name);
 }

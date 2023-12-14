@@ -47,7 +47,7 @@ namespace rserver
             /* methods */
             void run();
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
-            static void send_message(ntw::Communication &to_send, Player &client,
+            static void send_message(ntw::Communication &to_send, const Player &client,
                                      asio::ip::udp::socket &udp_socket);
             static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket);

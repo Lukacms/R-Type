@@ -2,7 +2,6 @@
 // Created by kane on 13/12/23.
 //
 
-#include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/GameLogic/GameLogic.hh>
 #include <rtype/Manager.hh>
@@ -38,14 +37,17 @@ void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager,
                 continue;
             if ((tags[entity2]->tag == "ENEMY" || tags[entity2]->tag == "ENEMY_PROJECTILE") &&
                 manager.is_collided(entity1, entity2)) {
+                ntw::Communication com = {};
+                manager.delete_entity(entity1);
                 for (const auto &player : players_manager.get_all_players()) {
                     if (player.get_entity_value() == entity1) {
-                        // Send END of the game;
-                        // rserver::Manager::send_message(/*command*/ , c, m_socket);
+                        com.type = ntw::End;
+                        rserver::Manager::send_message(com, player, m_socket);
                         continue;
                     }
-                    // Send destroy of an entity;
-                    // rserver::Manager::send_message(/*command*/ , c, m_socket);
+                    com.type = ntw::Destruction;
+                    //com.args = static_cast<char>(entity1);
+                    rserver::Manager::send_message(com, player, m_socket);
                 }
                 manager.delete_entity(entity1);
             }
@@ -69,7 +71,10 @@ void rserver::GameLogic::enemy_collision_responses(rtype::ECSManager &manager,
                 continue;
             if (tags[entity2]->tag == "PLAYER_PROJECTILE" &&
                 manager.is_collided(entity1, entity2)) {
-                // Send message of the death of enemy :x
+                ntw::Communication com = {};
+                com.type = ntw::Destruction;
+                com.args[0] = static_cast<char>(entity1);
+                rserver::Manager::send_to_all(com, players_manager, m_socket);
                 manager.delete_entity(entity1);
             }
         }

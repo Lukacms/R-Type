@@ -20,9 +20,12 @@ namespace ntw
     enum NetworkType {
         None,
         Start,
-        Connection, // client trying to join a server's game
-        Refusal,    // a client cannot join a server's game
-        Ok,         // everything is good
+        End,         // Terminate the game of one client
+        Connection,  // client trying to join a server's game
+        Refusal,     // a client cannot join a server's game
+        Ok,          // everything is good
+        Creation,    // Creation of an Entity
+        Destruction, // Destruction of an Entity
     };
 
 #pragma pack(push, 1)

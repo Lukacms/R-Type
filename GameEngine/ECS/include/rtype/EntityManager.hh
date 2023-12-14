@@ -5,9 +5,8 @@
 ** EntityManager
 */
 
-#include <deque>
 #include <cstddef>
-
+#include <deque>
 
 namespace rtype
 {

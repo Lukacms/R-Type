@@ -10,21 +10,22 @@ enum class GameEvent {
     MouseClick,
 };
 
-class WindowManager {
-private:
-    sf::RenderWindow window;
-    std::unordered_map<GameEvent, std::function<void()>> eventCallbacks;
+class WindowManager
+{
+    private:
+        sf::RenderWindow window;
+        std::unordered_map<GameEvent, std::function<void()>> eventCallbacks;
 
-public:
-    WindowManager();
-    ~WindowManager();
+    public:
+        WindowManager();
+        ~WindowManager();
 
-    void createWindow(int width, int height, const std::string& title);
-    sf::RenderWindow& getWindow();
-    void closeWindow();
-    void clear();
-    void display();
-    bool isWindowOpen() const;
-    void pollEvents();
-    void onEvent(GameEvent event, std::function<void()> callback);
+        void createWindow(int width, int height, const std::string &title);
+        sf::RenderWindow &getWindow();
+        void closeWindow();
+        void clear();
+        void display();
+        bool isWindowOpen() const;
+        void pollEvents();
+        void onEvent(GameEvent event, std::function<void()> callback);
 };
