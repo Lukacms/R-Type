@@ -30,8 +30,9 @@ namespace rclient
     class Client
     {
         public:
-            explicit Client(unsigned int width = STANDARD_WIDTH, unsigned int height = STANDARD_HEIGHT,
-                   const std::string &title = STANDARD_TITLE);
+            explicit Client(unsigned int width = STANDARD_WIDTH,
+                            unsigned int height = STANDARD_HEIGHT,
+                            const std::string &title = STANDARD_TITLE);
             ~Client() = default;
             Client(const Client &) = delete;
             Client(Client &&) = delete;

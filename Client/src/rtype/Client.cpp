@@ -5,12 +5,11 @@
 ** client
 */
 
+#include <iostream>
 #include <rtype/Client.hh>
-#include <rtype/Components/SpriteComponent.hh>
+#include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
-#include <rtype/Components/BoxColliderComponent.hh>
-#include <iostream>
 
 rclient::Client::Client(unsigned int width, unsigned int height, const std::string &title)
 {
@@ -43,7 +42,7 @@ void rclient::Client::client_menu()
         std::cout << "TEST LEFT" << std::endl;
     // if (action in order to change the scene);
     // call configure_network();
-    //m_state = STATE::Game;
+    // m_state = STATE::Game;
 }
 
 void rclient::Client::client_game()

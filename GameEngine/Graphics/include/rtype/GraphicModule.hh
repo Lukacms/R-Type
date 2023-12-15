@@ -2,10 +2,10 @@
 // Created by kane on 14/12/23.
 //
 
-#include <rtype/Components/SpriteComponent.hh>
 #include <SFML/Graphics.hpp>
-#include <rtype/SparseArray.hpp>
+#include <rtype/Components/SpriteComponent.hh>
 #include <rtype/InputManager.hpp>
+#include <rtype/SparseArray.hpp>
 
 namespace rtype
 {
