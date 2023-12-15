@@ -7,12 +7,9 @@
 
 #include <rtype/WindowManager.hpp>
 
-WindowManager::WindowManager()
+WindowManager::WindowManager(int width, int height, const std::string &title)
 {
-}
-
-WindowManager::~WindowManager()
-{
+    this->window
 }
 
 void WindowManager::createWindow(int width, int height, const std::string &title)
@@ -61,4 +58,8 @@ void WindowManager::pollEvents()
 void WindowManager::onEvent(GameEvent event, std::function<void()> callback)
 {
     eventCallbacks[event] = callback;
+}
+
+rclient::WindowManager::WindowManager(int width, int height, const std::string &title)
+{
 }

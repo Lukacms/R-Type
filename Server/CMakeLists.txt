@@ -59,6 +59,8 @@ add_executable(
 target_link_libraries(
     r-type_server PRIVATE
     rtype-server-core
+    r-type-physics
+    r-type-ecs
     rtype-server-interface
     )
 target_link_options(r-type_server PRIVATE -rdynamic)

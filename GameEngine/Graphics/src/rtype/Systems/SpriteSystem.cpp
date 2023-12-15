@@ -5,10 +5,10 @@
 ** sprite_system
 */
 
+#include "../../../include/rtype/Components/SpriteComponent.hh"
+#include "rtype/Components/TransformComponent.hh"
+#include "rtype/ECSManager.hpp"
 #include <iostream>
-#include <rtype/Components/SpriteComponent.hh>
-#include <rtype/Components/TransformComponent.hh>
-#include <rtype/ECSManager.hpp>
 
 namespace rtype
 {

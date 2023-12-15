@@ -5,38 +5,58 @@
 ** client
 */
 
-#include <rtype/Client.hpp>
+#include <rtype/Client.hh>
 #include <rtype/Components/SpriteComponent.hh>
+#include <rtype/Components/TagComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
+#include <rtype/Components/BoxColliderComponent.hh>
+#include <iostream>
 
-rclient::Client::Client(u_int width, u_int height)
+rclient::Client::Client(unsigned int width, unsigned int height, const std::string &title)
 {
-    sf::VideoMode video_mode{width, height};
-    m_window = std::make_unique<sf::RenderWindow>(video_mode, WINDOW_NAME, WINDOW_STYLE);
+    m_ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
+    m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
+        unsigned int width, unsigned int height, const std::string &title)>(
+        "./libs/r-type-graphics.so", "entrypoint", width, height, title);
+    SparseArray<rtype::SpriteComponent> sprites{};
+    SparseArray<rtype::TransformComponent> transforms{};
+    SparseArray<rtype::TagComponent> tags{};
+    SparseArray<rtype::BoxColliderComponent> colliders{};
+    m_ecs.get_class().register_component(sprites);
+    m_ecs.get_class().register_component(transforms);
+    m_ecs.get_class().register_component(tags);
+    m_ecs.get_class().register_component(colliders);
 }
 
-bool rclient::Client::is_running()
+int rclient::Client::client_run()
 {
-    return m_window->isOpen();
-}
-
-void rclient::Client::read_input()
-{
-    sf::Event evt{};
-
-    while (m_window->pollEvent(evt)) {
-        if (evt.type == sf::Event::Closed) {
-            m_window->close();
-        }
+    while ((m_graphical_module.get_class().is_window_open())) {
+        m_graphical_module.get_class().update();
+        m_state == STATE::Menu ? client_menu() : client_game();
     }
+    return 0;
 }
 
-void rclient::Client::render(rtype::ECSManager &manager)
+void rclient::Client::client_menu()
 {
-    auto sprites = manager.get_components<rtype::SpriteComponent>();
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Left))
+        std::cout << "TEST LEFT" << std::endl;
+    // if (action in order to change the scene);
+    // call configure_network();
+    //m_state = STATE::Game;
+}
 
-    m_window->clear();
-    for (auto &sprite : sprites)
-        if (sprite.has_value())
-            m_window->draw(sprite->sprite);
-    m_window->display();
+void rclient::Client::client_game()
+{
+    m_network->fetch_messages();
+
+    // if die
+    // change m_state to STATE::Menu
+    // destroy the networkManager
+}
+
+void rclient::Client::configure_network()
+{
+    m_network = std::make_unique<NetworkManager>(m_host, m_port);
+    m_state = STATE::Game;
 }

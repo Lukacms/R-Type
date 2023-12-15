@@ -41,9 +41,9 @@ namespace dl
             DlLoader &operator=(DlLoader &&to_move) = default;
 
             /* methods */
-            std::reference_wrapper<TLoad> get_class() const
+            TLoad &get_class() const
             {
-                return std::ref(this->element);
+                return *this->element.get();
             }
 
             template <typename TSignature, typename... TValues>
@@ -55,7 +55,8 @@ namespace dl
 
                 if (!this->handle)
                     throw DlException(dlerror());
-                auto *loader = reinterpret_cast<TSignature *>(dlsym(this->handle, loader_func));
+                auto *loader =
+                    reinterpret_cast<TSignature *>(dlsym(this->handle, loader_func.data()));
                 if (!loader)
                     throw DlException(ERROR_FETCH_LOADER.data());
                 if (!(this->element = loader(std::forward<TValues>(values)...)))

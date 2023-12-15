@@ -4,28 +4,33 @@
 #include <functional>
 #include <unordered_map>
 
-enum class GameEvent {
-    Close,
-    KeyPress,
-    MouseClick,
-};
-
-class WindowManager
+namespace rclient
 {
-    private:
-        sf::RenderWindow window;
-        std::unordered_map<GameEvent, std::function<void()>> eventCallbacks;
 
-    public:
-        WindowManager();
-        ~WindowManager();
+    const constexpr int STANDARD_WIDTH{800};
+    const constexpr int STANDARD_HEIGHT{800};
+    const constexpr char *STANDARD_TITLE{"R-TYPE"};
 
-        void createWindow(int width, int height, const std::string &title);
-        sf::RenderWindow &getWindow();
-        void closeWindow();
-        void clear();
-        void display();
-        bool isWindowOpen() const;
-        void pollEvents();
-        void onEvent(GameEvent event, std::function<void()> callback);
-};
+    class WindowManager
+    {
+        public:
+            WindowManager(int width = STANDARD_WIDTH, int height = STANDARD_HEIGHT,
+                          const std::string &title = STANDARD_TITLE);
+            ~WindowManager() = default;
+            WindowManager(const WindowManager &) = delete;
+            WindowManager(WindowManager &&) = delete;
+            WindowManager &operator=(const WindowManager &) = delete;
+            WindowManager &operator=(WindowManager &&) = delete;
+
+            sf::RenderWindow &getWindow();
+            void closeWindow();
+            void clear();
+            void display();
+            bool isWindowOpen() const;
+            void pollEvents();
+
+        private:
+            sf::VideoMode m_mode;
+            sf::RenderWindow m_window;
+    };
+} // namespace rclient

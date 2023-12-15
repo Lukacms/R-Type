@@ -11,7 +11,7 @@ InputManager::InputManager()
 {
 }
 
-void InputManager::update(const sf::Window &window)
+void InputManager::update()
 {
     for (int key = sf::Keyboard::Key::A; key != sf::Keyboard::Key::KeyCount; ++key) {
         keyMap[static_cast<sf::Keyboard::Key>(key)] =
@@ -24,7 +24,7 @@ void InputManager::update(const sf::Window &window)
     }
 }
 
-bool InputManager::isKeyPressed(sf::Keyboard::Key key) const
+bool InputManager::is_key_pressed(sf::Keyboard::Key key) const
 {
     auto it = keyMap.find(key);
     if (it != keyMap.end()) {
@@ -33,7 +33,7 @@ bool InputManager::isKeyPressed(sf::Keyboard::Key key) const
     return false;
 }
 
-bool InputManager::isMouseButtonPressed(sf::Mouse::Button button) const
+bool InputManager::is_mouse_button_pressed(sf::Mouse::Button button) const
 {
     auto it = mouseButtonMap.find(button);
     if (it != mouseButtonMap.end()) {
@@ -42,7 +42,7 @@ bool InputManager::isMouseButtonPressed(sf::Mouse::Button button) const
     return false;
 }
 
-sf::Vector2i InputManager::getMousePosition(const sf::Window &window) const
+sf::Vector2i InputManager::get_mouse_position(const sf::Window &window) const
 {
     return sf::Mouse::getPosition(window);
 }
