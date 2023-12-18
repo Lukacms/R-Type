@@ -32,11 +32,12 @@ add_library(
     src/clients/PlayersManager.cpp
     src/clients/MessageQueue.cpp
     src/clients/ThreadPool.cpp
-    )
+    src/GameLogic/GameLogic.cpp
+)
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
 target_compile_options(rtype-server-core PRIVATE ${WARNING_FLAGS})
-target_include_directories(rtype-server-core PUBLIC ../RType-Utils/include/)
+target_include_directories(rtype-server-core PUBLIC include ../RType-Utils/include/ ../GameEngine/ECS/include ../GameEngine/Physics/include)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
@@ -58,6 +59,8 @@ add_executable(
 target_link_libraries(
     r-type_server PRIVATE
     rtype-server-core
+    r-type-physics
+    r-type-ecs
     rtype-server-interface
     )
 target_link_options(r-type_server PRIVATE -rdynamic)

@@ -162,6 +162,6 @@ set(LIBRARY_OUTPUT_PATH ${r-type_SOURCE_DIR}/libs)
 # need to first load this one to load library
 add_subdirectory(RType-Utils)
 
+add_subdirectory(GameEngine)
 add_subdirectory(Server)
 add_subdirectory(Client)
-add_subdirectory(GameEngine)
