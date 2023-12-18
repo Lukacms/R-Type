@@ -20,14 +20,16 @@ namespace ntw
     constexpr std::string_view DELIMITORS{" "};
 
     enum NetworkType {
-        None,
-        Start,
-        Connection,  // client trying to join a server's game
-        Refusal,     // a client cannot join a server's game
-        Ok,          // everything is good
-        End,         // End the game for one player
-        Creation,    // Create a new entity
-        Destruction, // Destruct one entity
+        None,        // Nothing : None
+        Start,       // Start the game : Start
+        Connection,  // client trying to join a server's game : Connection
+        Refusal,     // 1 client cannot join a server's game : Refusal
+        Ok,          // Everything is good : Ok
+        End,         // End the game for one player : End
+        Creation,    // Create a new entity : Creation [Id] [Type]
+        Destruction, // Destruct one entity : Destruction [Id]
+        Position,    // Send the position of an entity : Position [Id] [x] [y]
+        Input,       // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
     };
 
 #pragma pack(push, 1)
@@ -58,6 +60,22 @@ namespace ntw
                     this->args[i] = to_add[ind];
                     ind++;
                 }
+            }
+
+            std::vector<std::string> deserialize()
+            {
+                std::vector<std::string> dest{};
+                size_t pos = 0;
+                std::string src{this->args.data()};
+
+                while ((pos = src.find_first_of(DELIMITORS.data())) != std::string::npos) {
+                    dest.emplace_back(src.substr(0, pos));
+                    pos = src.find_first_not_of(DELIMITORS.data(), pos);
+                    src.erase(0, pos);
+                }
+                if (!src.empty())
+                    dest.emplace_back(src);
+                return dest;
             }
     };
 
