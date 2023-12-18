@@ -81,19 +81,19 @@ void rclient::Client::check_input()
         to_send.add_param(0);
         m_to_send.emplace_back(to_send);
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Right)){
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Right)) {
         to_send.add_param(1);
         m_to_send.emplace_back(to_send);
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Down)){
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Down)) {
         to_send.add_param(2);
         m_to_send.emplace_back(to_send);
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Left)){
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Left)) {
         to_send.add_param(3);
         m_to_send.emplace_back(to_send);
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::W)){
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::W)) {
         to_send.add_param(4);
         m_to_send.emplace_back(to_send);
     }

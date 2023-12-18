@@ -41,7 +41,7 @@ void rclient::NetworkManager::send_message(ntw::Communication &communication)
     if (m_socket.available() < 0)
         return;
     m_socket.async_send_to(asio::buffer(&communication, sizeof(communication)), m_receiver_endpoint,
-                             [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+                           [](auto && /* p_h1 */, auto && /* p_h2 */) {});
 }
 
 std::deque<ntw::Communication> &rclient::NetworkManager::get_message_queue()

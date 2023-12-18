@@ -48,6 +48,7 @@ namespace rclient
 
             void send_client_input();
             void check_input();
+
         private:
             dl::DlLoader<rtype::ECSManager> m_ecs;
             dl::DlLoader<rtype::GraphicModule> m_graphical_module;
