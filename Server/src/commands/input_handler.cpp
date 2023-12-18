@@ -5,9 +5,9 @@
 ** input_handler
 */
 
-#include "rtype.hh"
 #include <array>
 #include <iostream>
+#include <rtype.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Manager.hh>
 #include <vector>

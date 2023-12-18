@@ -87,9 +87,10 @@ set(WARNING_FLAGS
     -Wdouble-promotion
     -Wformat=2
     -Weffc++
+    -Wno-suggest-override
+    -Wno-suggest-destructor-override
     -Wno-documentation
-    -Wno-unsafe-buffer-usage
-    -Wno-float-equal
+    -Wno-zero-as-null-pointer-constant
     -Wno-padded
     -Wno-ctad-maybe-unsupported)
 

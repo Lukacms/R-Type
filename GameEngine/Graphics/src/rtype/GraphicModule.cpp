@@ -6,7 +6,7 @@
 
 rtype::GraphicModule::GraphicModule(unsigned int width, unsigned int height,
                                     const std::string &title)
-    : m_mode{{width, height}}, m_window{m_mode, title}
+    : m_mode{width, height}, m_window{m_mode, title}
 {
 }
 
