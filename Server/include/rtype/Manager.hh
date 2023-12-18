@@ -8,13 +8,13 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
-#include "rtype/SparseArray.hpp"
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
 #include <exception>
 #include <rtype/ECSManager.hpp>
 #include <rtype/GameLogic/GameLogic.hh>
+#include <rtype/SparseArray.hpp>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/clients/ThreadPool.hh>

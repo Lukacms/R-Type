@@ -33,7 +33,7 @@ namespace rserver
                                            rserver::PlayersManager &players_manager);
 
         private:
-            std::vector<size_t> m_entities;
+            std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
     };
 } // namespace rserver

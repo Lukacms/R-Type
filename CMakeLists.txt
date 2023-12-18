@@ -38,6 +38,38 @@ FetchContent_MakeAvailable(asiocmake)
 
 message("Finished loading Asio")
 
+# Loading SFML library
+FetchContent_Declare(
+        sfml
+        GIT_REPOSITORY  "https://github.com/SFML/SFML.git"
+        GIT_TAG         "2.6.x"
+        SYSTEM
+)
+
+FetchContent_GetProperties(sfml)
+if (NOT sfml_POPULATED)
+    FetchContent_Populate(sfml)
+    # add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
+endif ()
+FetchContent_MakeAvailable(sfml)
+
+message("Finished loading sfml")
+
+# NOTE The lines below suppress the warnings during sfml compilation,
+# as we can't do anything about them
+# List of SFML targets
+set(SFML_MODULES sfml-system sfml-window sfml-graphics sfml-audio sfml-network)
+
+foreach(SFML_MODULE ${SFML_MODULES})
+    if(TARGET ${SFML_MODULE})
+        target_compile_options(${SFML_MODULE} PRIVATE
+            -w  # Suppress all warnings
+            # Add other warning suppression options as needed
+        )
+    endif()
+endforeach()
+# NOTE end of compilation warnings suppressors
+
 # Warning flags
 set(GCC_WARNING_FLAGS
     -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches

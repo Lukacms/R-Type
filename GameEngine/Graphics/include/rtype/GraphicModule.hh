@@ -37,6 +37,6 @@ namespace rtype
         private:
             sf::VideoMode m_mode;
             sf::RenderWindow m_window;
-            InputManager m_input;
+            InputManager m_input{};
     };
 } // namespace rtype
