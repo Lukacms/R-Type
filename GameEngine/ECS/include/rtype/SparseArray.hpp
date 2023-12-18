@@ -117,5 +117,5 @@ template <typename TComponent> class SparseArray : public ISparseArray
         }
 
     private:
-        container_t m_data;
+        container_t m_data{};
 };

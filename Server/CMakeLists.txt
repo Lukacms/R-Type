@@ -36,6 +36,8 @@ add_library(
     src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
         src/Factory/ServerEntityFactory.cpp
+    src/commands/input_handler.cpp
+    src/commands/add_new_player.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)

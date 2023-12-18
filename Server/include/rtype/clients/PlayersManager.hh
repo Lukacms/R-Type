@@ -34,7 +34,8 @@ namespace rserver
             /* methods */
             [[nodiscard]] Player &get_by_id(asio::ip::port_type const &port);
             [[nodiscard]] Player &get_by_entity_id(std::size_t &entity);
-            void add_player(asio::ip::udp::endpoint &endpoint, asio::ip::udp::socket &socket);
+            rserver::Player &add_player(asio::ip::udp::endpoint &endpoint,
+                                        asio::ip::udp::socket &socket);
             [[nodiscard]] std::size_t length() const;
             [[nodiscard]] const std::vector<Player> &get_all_players() const;
 

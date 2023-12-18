@@ -71,5 +71,5 @@ class ComponentManager
         }
 
     private:
-        std::unordered_map<std::type_index, std::unique_ptr<ISparseArray>> m_arrays;
+        std::unordered_map<std::type_index, std::unique_ptr<ISparseArray>> m_arrays{};
 };

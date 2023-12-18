@@ -11,6 +11,8 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(PROJECT_SOURCE_DIR .)
 
+#add_subdirectory(deps)
+
 # option to build tests
 option(RTYPE_BUILD_TESTS "Build the tests" OFF)
 
@@ -19,9 +21,9 @@ message("Loading Asio library")
 
 option(ASIO_USE_CPM "Download Asio with CPM instead of FetchContent" OFF)
 option(
-  ASIO_CPM_FETCHCONTENT_COMPAT
-  "Should asio be declared with FetchContent functions to be compatible. This doesn't not allow CPM cache to work."
-  ON
+    ASIO_CPM_FETCHCONTENT_COMPAT
+    "Should asio be declared with FetchContent functions to be compatible. This doesn't not allow CPM cache to work."
+    ON
 )
 # option(ASIO_TAG "tag instead of main branch" asio-1-28-2)
 
@@ -29,14 +31,15 @@ option(
 include(FetchContent)
 
 FetchContent_Declare(
-  asiocmake
-  GIT_REPOSITORY "https://github.com/OlivierLDff/asio.cmake"
-  GIT_TAG        "main"
-  SYSTEM
+    asiocmake
+    GIT_REPOSITORY "https://github.com/OlivierLDff/asio.cmake"
+    GIT_TAG        "main"
+    SYSTEM
 )
-FetchContent_MakeAvailable(asiocmake)
 
 message("Finished loading Asio")
+
+FetchContent_MakeAvailable(asiocmake)
 
 # Warning flags
 set(GCC_WARNING_FLAGS
@@ -84,6 +87,10 @@ set(WARNING_FLAGS
     -Wdouble-promotion
     -Wformat=2
     -Weffc++
+    -Wno-suggest-override
+    -Wno-suggest-destructor-override
+    -Wno-documentation
+    -Wno-zero-as-null-pointer-constant
     -Wno-padded
     -Wno-ctad-maybe-unsupported)
 

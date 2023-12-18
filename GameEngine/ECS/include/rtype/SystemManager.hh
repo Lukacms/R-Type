@@ -26,5 +26,5 @@ class SystemManager
         void update(ComponentManager &registry, float delta_time);
 
     private:
-        std::vector<std::function<void(ComponentManager &, float)>> m_systems;
+        std::vector<std::function<void(ComponentManager &, float)>> m_systems{};
 };

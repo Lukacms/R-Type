@@ -89,7 +89,7 @@ namespace dl
 
         private:
             void *handle{nullptr};
-            std::unique_ptr<TLoad> element;
+            std::unique_ptr<TLoad> element{nullptr};
     };
 
 } // namespace dl

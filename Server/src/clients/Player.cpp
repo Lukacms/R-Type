@@ -35,3 +35,8 @@ std::size_t rserver::Player::get_entity_value() const
 {
     return this->entity_value;
 }
+
+void rserver::Player::set_entity_value(std::size_t const &value)
+{
+    this->entity_value = value;
+}

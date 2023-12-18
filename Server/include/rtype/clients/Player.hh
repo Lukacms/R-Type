@@ -17,6 +17,14 @@ namespace rserver
     constexpr std::string_view MOVE_CLIENT{"Moved client to new instance, with ip "};
     constexpr std::string_view DEL_CLIENT{"Client will be deleted, with ip "};
 
+    struct Vector2f {
+        public:
+            float pos_x{0.0};
+            float pos_y{0.0};
+    };
+
+    constexpr float POSITION_CHANGE{10.0};
+
     class Player
     {
         public:
@@ -35,6 +43,7 @@ namespace rserver
             [[nodiscard]] asio::ip::port_type get_port() const;
             [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
             [[nodiscard]] std::size_t get_entity_value() const;
+            void set_entity_value(std::size_t const &value);
 
         private:
             asio::ip::udp::endpoint endpoint;

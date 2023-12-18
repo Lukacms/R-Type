@@ -21,6 +21,6 @@ class InputManager
         sf::Vector2i get_mouse_position(const sf::Window &window) const;
 
     private:
-        std::unordered_map<sf::Keyboard::Key, bool> keyMap;
-        std::unordered_map<sf::Mouse::Button, bool> mouseButtonMap;
+        std::unordered_map<sf::Keyboard::Key, bool> keyMap{};
+        std::unordered_map<sf::Mouse::Button, bool> mouseButtonMap{};
 };
