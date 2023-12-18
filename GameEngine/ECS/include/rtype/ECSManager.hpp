@@ -6,7 +6,6 @@
 
 #include <rtype/ComponentManager.hpp>
 #include <rtype/EntityManager.hh>
-#include <rtype/PhysicsManager.hh>
 #include <rtype/SystemManager.hh>
 
 namespace rtype
@@ -67,8 +66,10 @@ namespace rtype
             void apply_system(float delta_time)
             {
                 m_system_manager.update(m_component_manager, delta_time);
-                m_physics_manager.check_collisions(m_component_manager);
+                //    m_physics_manager.check_collisions(m_component_manager);
             }
+
+            /*
 
             std::vector<std::size_t> get_collision(std::size_t entity)
             {
@@ -79,11 +80,12 @@ namespace rtype
             {
                 return m_physics_manager.is_collided(entity1, entity2);
             }
+            */
 
         private:
             ComponentManager m_component_manager{};
             SystemManager m_system_manager{};
             EntityManager m_entity_manager{};
-            PhysicsManager m_physics_manager{};
+            // PhysicsManager m_physics_manager{};
     };
 } // namespace rtype

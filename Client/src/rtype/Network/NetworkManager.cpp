@@ -8,6 +8,7 @@
 #include <iostream>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
+#include <rtype/Factory/ClientEntityFactory.hh>
 #include <rtype/Network/NetworkManager.hh>
 
 using asio::ip::udp;
@@ -67,7 +68,8 @@ void rclient::NetworkManager::create_entity(
     rtype::ECSManager &ecs_manager, ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
-    // Call Factory with ECS etc
+    rclient::ClientEntityFactory::create(static_cast<size_t>(std::stoi(arguments[0])), arguments[1],
+                                         ecs_manager);
 }
 
 void rclient::NetworkManager::move_entity(

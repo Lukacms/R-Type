@@ -41,8 +41,8 @@ void rclient::Client::client_menu()
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Left))
         std::cout << "TEST LEFT" << std::endl;
     // if (action in order to change the scene);
-    // m_host = "127.0.0.1";
-    // m_port = "8080";
+    m_host = "127.0.0.1";
+    m_port = "8080";
     configure_network();
     // m_state = STATE::Game;
 }

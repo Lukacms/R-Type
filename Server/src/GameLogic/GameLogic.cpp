@@ -11,21 +11,24 @@ rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket) : m_socket{socket}
 {
 }
 
-void rserver::GameLogic::game_loop(rtype::ECSManager &manager,
-                                   rserver::PlayersManager &players_manager)
+void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
+                                   rserver::PlayersManager &players_manager,
+                                   rtype::ECSManager &manager)
 {
-    collision_responses(manager, players_manager);
+    collision_responses(physics_manager, players_manager, manager);
 }
 
-void rserver::GameLogic::collision_responses(rtype::ECSManager &manager,
-                                             rserver::PlayersManager &players_manager)
+void rserver::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
+                                             rserver::PlayersManager &players_manager,
+                                             rtype::ECSManager &manager)
 {
-    player_collision_responses(manager, players_manager);
-    enemy_collision_responses(manager, players_manager);
+    player_collision_responses(physics_manager, players_manager, manager);
+    enemy_collision_responses(physics_manager, players_manager, manager);
 }
 
-void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager,
-                                                    rserver::PlayersManager &players_manager)
+void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager &physics_manager,
+                                                    rserver::PlayersManager &players_manager,
+                                                    rtype::ECSManager &manager)
 {
     SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
@@ -36,7 +39,7 @@ void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager,
             if (tags[entity2].has_value() || tags[entity2]->tag != "PLAYER" || entity1 == entity2)
                 continue;
             if ((tags[entity2]->tag == "ENEMY" || tags[entity2]->tag == "ENEMY_PROJECTILE") &&
-                manager.is_collided(entity1, entity2)) {
+                physics_manager.is_collided(entity1, entity2)) {
                 ntw::Communication com = {};
                 manager.delete_entity(entity1);
                 for (const auto &player : players_manager.get_all_players()) {
@@ -51,15 +54,16 @@ void rserver::GameLogic::player_collision_responses(rtype::ECSManager &manager,
                 }
                 manager.delete_entity(entity1);
             }
-            if (tags[entity2]->tag == "POWER_UP" && manager.is_collided(entity1, entity2)) {
+            if (tags[entity2]->tag == "POWER_UP" && physics_manager.is_collided(entity1, entity2)) {
                 // upgrade of player
             }
         }
     }
 }
 
-void rserver::GameLogic::enemy_collision_responses(rtype::ECSManager &manager,
-                                                   rserver::PlayersManager &players_manager)
+void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physics_manager,
+                                                   rserver::PlayersManager &players_manager,
+                                                   rtype::ECSManager &manager)
 {
     SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
@@ -70,7 +74,7 @@ void rserver::GameLogic::enemy_collision_responses(rtype::ECSManager &manager,
             if (tags[entity2].has_value() || tags[entity2]->tag != "ENEMY" || entity1 == entity2)
                 continue;
             if (tags[entity2]->tag == "PLAYER_PROJECTILE" &&
-                manager.is_collided(entity1, entity2)) {
+                physics_manager.is_collided(entity1, entity2)) {
                 ntw::Communication com = {};
                 com.type = ntw::Destruction;
                 com.args[0] = static_cast<char>(entity1);

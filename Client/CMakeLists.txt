@@ -29,16 +29,19 @@ add_library(
     src/launch.cpp
     src/rtype/Client.cpp
     src/rtype/Network/NetworkManager.cpp
+    src/Factory/ClientEntityFactory.cpp
 )
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)
 target_compile_options(rtype-client-core PRIVATE ${WARNING_FLAGS})
 target_include_directories(rtype-client-core PUBLIC include ../Network/include/ ../GameEngine/ECS/include/ ../GameEngine/Graphics/include/ ../GameEngine/Physics/include ../RType-Utils/include/ ../GameEngine/Graphics/include)
+target_include_directories(rtype-client-core PUBLIC include include/rtype/Factory ../Network/include/ ../GameEngine/ECS/include/ ../GameEngine/Graphics/include/ ../GameEngine/Physics/include ../RType-Utils/include/)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
+    r-type-utils
     asio::asio # link asio library to core
     r-type-utils
     sfml-window

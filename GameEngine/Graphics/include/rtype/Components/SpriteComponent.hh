@@ -10,7 +10,7 @@
 namespace rtype
 {
     struct SpriteComponent {
-            sf::Sprite sprite;
-            sf::Rect<int> texture_rect;
+            sf::Sprite sprite{};
+            sf::Texture texture{};
     };
 } // namespace rtype

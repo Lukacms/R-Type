@@ -46,6 +46,7 @@ std::vector<std::size_t> rtype::PhysicsManager::get_collision(std::size_t entity
         if (collision.entity == entity)
             return collision.collided;
     }
+    throw std::runtime_error{"Entity has no collider"};
 }
 
 bool rtype::PhysicsManager::is_collided(std::size_t entity1, std::size_t entity2) const
