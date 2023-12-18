@@ -20,3 +20,11 @@ if (RTYPE_BUILD_TESTS)
     set(CMAKE_CXX_STANDARD ${OLD_CMAKE_CXX_STANDARD})
     unset(OLD_CMAKE_CXX_STANDARD)
 endif()
+
+# glfw
+add_subdirectory(glfw EXCLUDE_FROM_ALL)
+
+# glew
+add_definitions(-DGLEW_SHARED)
+add_subdirectory(glew EXCLUDE_FROM_ALL)
+add_library(glew ALIAS libglew_shared)
