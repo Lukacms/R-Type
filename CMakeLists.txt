@@ -11,6 +11,8 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(PROJECT_SOURCE_DIR .)
 
+add_subdirectory(deps)
+
 # option to build tests
 option(RTYPE_BUILD_TESTS "Build the tests" OFF)
 
@@ -19,9 +21,9 @@ message("Loading Asio library")
 
 option(ASIO_USE_CPM "Download Asio with CPM instead of FetchContent" OFF)
 option(
-  ASIO_CPM_FETCHCONTENT_COMPAT
-  "Should asio be declared with FetchContent functions to be compatible. This doesn't not allow CPM cache to work."
-  ON
+    ASIO_CPM_FETCHCONTENT_COMPAT
+    "Should asio be declared with FetchContent functions to be compatible. This doesn't not allow CPM cache to work."
+    ON
 )
 # option(ASIO_TAG "tag instead of main branch" asio-1-28-2)
 
@@ -29,52 +31,15 @@ option(
 include(FetchContent)
 
 FetchContent_Declare(
-  asiocmake
-  GIT_REPOSITORY "https://github.com/OlivierLDff/asio.cmake"
-  GIT_TAG        "main"
-  SYSTEM
+    asiocmake
+    GIT_REPOSITORY "https://github.com/OlivierLDff/asio.cmake"
+    GIT_TAG        "main"
+    SYSTEM
 )
 
 message("Finished loading Asio")
 
-# Loading SFML library
-FetchContent_Declare(
-        sfml
-        GIT_REPOSITORY  "https://github.com/SFML/SFML.git"
-        GIT_TAG         "2.6.x"
-        SYSTEM
-)
-
-FetchContent_GetProperties(sfml)
-if (NOT sfml_POPULATED)
-    FetchContent_Populate(sfml)
-    add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
-endif ()
-FetchContent_MakeAvailable(asiocmake sfml)
-# message("Finished loading sfml")
-
-# NOTE The lines below suppress the warnings during sfml compilation,
-# as we can't do anything about them
-# List of SFML targets
-set(SFML_MODULES sfml-system sfml-window sfml-graphics sfml-audio sfml-network)
-
-foreach(SFML_MODULE ${SFML_MODULES})
-    if(TARGET ${SFML_MODULE})
-        target_compile_options(${SFML_MODULE} PRIVATE
-            -w  # Suppress all warnings
-            # Add other warning suppression options as needed
-        )
-    endif()
-endforeach()
-# NOTE end of compilation warnings suppressors
-
-if(WIN32)
-    add_custom_command(
-        TARGET CMakeSFMLProject
-        COMMENT "Copy OpenAL DLL"
-        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:CMakeSFMLProject>
-        VERBATIM)
-endif()
+FetchContent_MakeAvailable(asiocmake)
 
 # Warning flags
 set(GCC_WARNING_FLAGS
@@ -122,6 +87,9 @@ set(WARNING_FLAGS
     -Wdouble-promotion
     -Wformat=2
     -Weffc++
+    -Wno-documentation
+    -Wno-unsafe-buffer-usage
+    -Wno-float-equal
     -Wno-padded
     -Wno-ctad-maybe-unsupported)
 
