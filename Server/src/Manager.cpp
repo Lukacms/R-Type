@@ -27,7 +27,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
     : udp_socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
 {
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
-    // std::signal(SIGINT, Manager::handle_disconnection);
+    std::signal(SIGINT, Manager::handle_disconnection);
 }
 
 rserver::Manager::Manager(rserver::Manager &&to_move) : udp_socket{std::move(to_move.udp_socket)}
@@ -65,8 +65,7 @@ void rserver::Manager::launch(asio::ip::port_type port)
 
 void rserver::Manager::run()
 {
-    if (RUNNING)
-        this->context.run();
+    this->context.run();
 }
 
 /**
@@ -81,6 +80,7 @@ void rserver::Manager::run_game_logic()
             std::cout << "oui: " << this->players.length() << "\n";
             sleep(1);
         }
+        this->context.stop();
     });
 }
 
@@ -106,26 +106,19 @@ void rserver::Manager::start_receive()
 {
     ntw::Communication commn{};
 
-    if (RUNNING) {
-        this->udp_socket.async_receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint,
-                                            [this](auto &&p_h1, auto &&p_h2) {
-                                                handle_receive(std::forward<decltype(p_h1)>(p_h1),
-                                                               std::forward<decltype(p_h2)>(p_h2));
-                                            });
-        if (this->endpoint.port() > 0)
-            this->threads.add_job([&, this]() { this->command_manager(commn, endpoint); });
-    } else {
-        this->context.stop();
-    }
+    this->udp_socket.async_receive_from(
+        asio::buffer(&commn, sizeof(commn)), this->endpoint, [this](auto &&p_h1, auto &&p_h2) {
+            handle_receive(std::forward<decltype(p_h1)>(p_h1), std::forward<decltype(p_h2)>(p_h2));
+        });
+    if (this->endpoint.port() > 0)
+        this->threads.add_job([&, this]() { this->command_manager(commn, endpoint); });
 }
 
 void rserver::Manager::handle_receive(const asio::error_code &error,
                                       std::size_t /* bytes_transferre */)
 {
-    if (!error && RUNNING) {
+    if (!error) {
         this->start_receive();
-    } else {
-        this->context.stop();
     }
 }
 
@@ -139,7 +132,7 @@ void rserver::Manager::command_manager(ntw::Communication &communication,
                                        asio::ip::udp::endpoint &client)
 {
     std::vector<std::string> args{
-        split_delimitor(std::string{communication.args.data()}, ntw::DELIMITORS.data())};
+        split_delimitor(communication.args.data(), ntw::DELIMITORS.data())};
 
     try {
         Player &player{this->players.get_by_id(client.port())};

@@ -50,7 +50,7 @@ namespace ntw
                     arg_ind++;
                 }
                 if (arg_ind != 0)
-                    this->args[arg_ind++] = ' ';
+                    this->args[arg_ind++] = DELIMITORS[0];
                 for (size_t i = arg_ind; i < MAX_SIZE && i < arg_ind + to_add.size(); i++) {
                     this->args[i] = to_add[ind];
                     ind++;
