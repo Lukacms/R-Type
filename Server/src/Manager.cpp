@@ -153,9 +153,7 @@ void rserver::Manager::command_manager(ntw::Communication &communication,
                                        asio::ip::udp::endpoint &client)
 {
     std::vector<std::string> args{
-        "2"
-        // split_delimitor(communication.args.data(), ntw::DELIMITORS.data())
-    };
+        split_delimitor(communication.args.data(), ntw::DELIMITORS.data())};
 
     try {
         Player &player{this->players.get_by_id(client.port())};
