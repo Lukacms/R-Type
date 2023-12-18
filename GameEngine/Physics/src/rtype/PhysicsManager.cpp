@@ -2,6 +2,7 @@
 // Created by kane on 12/12/23.
 //
 
+#include <exception>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/PhysicsManager.hh>
@@ -46,6 +47,7 @@ std::vector<std::size_t> rtype::PhysicsManager::get_collision(std::size_t entity
         if (collision.entity == entity)
             return collision.collided;
     }
+    throw PhysicsException();
 }
 
 bool rtype::PhysicsManager::is_collided(std::size_t entity1, std::size_t entity2) const
@@ -58,4 +60,10 @@ bool rtype::PhysicsManager::is_collided(std::size_t entity1, std::size_t entity2
     }
     return std::find(collisions.collided.begin(), collisions.collided.end(), entity2) ==
         std::end(collisions.collided);
+}
+
+/* Exception */
+const char *rtype::PhysicsManager::PhysicsException::what() const noexcept
+{
+    return EXCEPTION_OCCURED.data();
 }

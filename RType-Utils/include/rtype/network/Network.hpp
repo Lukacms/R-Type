@@ -28,6 +28,7 @@ namespace ntw
         End,         // End the game for one player
         Creation,    // Create a new entity
         Destruction, // Destruct one entity
+        Input,       // Input recieved from client to move
     };
 
 #pragma pack(push, 1)

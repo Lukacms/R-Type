@@ -28,11 +28,13 @@ rserver::Player &rserver::PlayersManager::get_by_entity_id(std::size_t &entity)
     throw PlayersException();
 }
 
-void rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint,
-                                         asio::ip::udp::socket &socket)
+rserver::Player &rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint,
+                                                     asio::ip::udp::socket &socket)
 {
     this->players.emplace_back(endpoint);
     socket.send_to(asio::buffer("oui\n"), endpoint);
+
+    return this->players.back();
 }
 
 std::size_t rserver::PlayersManager::length() const

@@ -8,13 +8,17 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
+#include "rtype/SparseArray.hpp"
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
 #include <exception>
+#include <rtype/ECSManager.hpp>
+#include <rtype/GameLogic/GameLogic.hh>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/clients/ThreadPool.hh>
+#include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/network/Network.hpp>
 #include <string_view>
 #include <vector>
@@ -24,7 +28,11 @@ namespace rserver
 
     constexpr size_t DEFAULT_PORT{8080};
     constexpr short int TIMEOUT_MS{200};
+    constexpr std::string_view ECS_SL_PATH{"./libs/r-type-ecs.so"};
+
+    /* exceptions */
     constexpr std::string_view DEFAULT_ERROR{"Error"};
+    constexpr std::string_view WRONG_ARGUMENTS{"Error while analyzing the arguments."};
 
     /**
      * @class Manager
@@ -60,6 +68,10 @@ namespace rserver
             void handle_send(const ntw::Communication & /*message*/,
                              const asio::error_code & /*error*/, std::size_t /*bytes_transferred*/);
 
+            /* function pointers for commands */
+            /* They have to be public to be called */
+            void input_handler(Player &, std::vector<std::string> &);
+
             /* exception */
             class ManagerException : public std::exception
             {
@@ -88,14 +100,15 @@ namespace rserver
 
             PlayersManager players{};
             ThreadPool threads{};
+            GameLogic logic;
+            dl::DlLoader<rtype::ECSManager> ecs{};
 
             /* methods */
             static void handle_disconnection(int);
             void command_manager(ntw::Communication &communication,
                                  asio::ip::udp::endpoint &client);
             void refuse_client(asio::ip::udp::endpoint &client);
-
-            /* function pointers for commands */
+            void add_new_player(asio::ip::udp::endpoint &client);
     };
 
     struct CommandHandler {

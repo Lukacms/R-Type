@@ -18,6 +18,7 @@ namespace rserver
             GameLogic(GameLogic const &to_copy) = default;
             GameLogic(GameLogic &&to_move) = default;
             ~GameLogic() = default;
+
             GameLogic &operator=(GameLogic const &to_copy) = delete;
             GameLogic &operator=(GameLogic &&to_move) = delete;
 
