@@ -8,6 +8,9 @@ name_tests_client   :=  "tests-rtype-client"
 
 build_folder    :=  "build"
 
+system_packages:
+    ./build_packages.py libx11 libxcursor libxrandr
+
 release:
     cmake -B {{ build_folder }} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
     cmake --build {{ build_folder }} --config Release
