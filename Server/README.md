@@ -14,7 +14,7 @@ std::thread::hardware_concurrency()
 The threads created are waiting until a command is recieved by the server, which will then trigger a [condition variable](https://en.cppreference.com/w/cpp/thread/condition_variable) to allow the thread to select the first command in the queue. When the command is executed, the thread will try to fetch another command, or go back into a waiting mode.\
 At the end of the program, the threads are destroyed.
 
-## Protocol :x:
+## Protocol :white_check_mark:
 It manage the communication with the client·s. It must be a [binary protocol](https://en.wikipedia.org/wiki/Communication_protocol#Binary).\
 For that, the client and server use the same `structure` that is given in the RType-Utils folder, and look like this:
 ```cpp
@@ -30,16 +30,14 @@ For that, the client and server use the same `structure` that is given in the RT
 ```
 The `#pragma pack` is used to avoid buffering problems.
 
-## Architecture
-```mermaid
----
-title: Architecture for server
----
-classDiagram
-    class Manager {
-    }
-    class ThreadPool {
-    }
-    class GameManager {
-    }
+## Game Logic :white_check_mark:
+The server is the hub of the game. It handles the games, the players, ...\
+The Game Logic is the parts that handles this. It takes entities and components from the ECS, move them, decide when a boss will appear, ...
+
+## How to launch the project ?
+```
+$> ./r-type_server -h
+USAGE ./r-type_server [port] [-h]
+	port	is the port number, default is 8080
+	-h	display this message and exit
 ```
