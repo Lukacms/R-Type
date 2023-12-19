@@ -12,6 +12,7 @@
 
 #include <asio.hpp>
 #include <deque>
+#include <rtype/ECSManager.hpp>
 #include <rtype/network/Network.hpp>
 
 using asio::ip::udp;
@@ -32,6 +33,7 @@ namespace rclient
             void fetch_messages();
             void send_message(ntw::Communication &communication);
             void manage_message(rtype::ECSManager &manager);
+            void handle_receive(const asio::error_code &error, std::size_t bytes_transferre);
 
             [[nodiscard]] std::deque<ntw::Communication> &get_message_queue();
 
@@ -50,7 +52,7 @@ namespace rclient
                                  ntw::Communication &communication);*/
 
         private:
-            asio::io_context m_io_context;
+            asio::io_context m_io_context{};
             asio::ip::udp::resolver m_resolver;
             asio::ip::udp::endpoint m_receiver_endpoint;
             asio::ip::udp::socket m_socket;

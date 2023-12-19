@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <csignal>
 #include <iostream>
+#include <mutex>
 #include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
@@ -48,6 +49,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
     this->ecs.get_class().register_component(healths);
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
     std::signal(SIGINT, Manager::handle_disconnection);
+    this->start_receive();
 }
 
 rserver::Manager::Manager(rserver::Manager &&to_move)
@@ -77,7 +79,6 @@ void rserver::Manager::launch(asio::ip::port_type port)
         Manager manager{port};
 
         manager.run_game_logic();
-        manager.start_receive();
         manager.run();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
@@ -99,7 +100,7 @@ void rserver::Manager::run_game_logic()
     this->threads.add_job([this]() {
         while (RUNNING) {
             // std::cout << "oui: " << this->players.length() << "\n";
-            sleep(1);
+            // sleep(1);
         }
         this->context.stop();
     });
@@ -127,12 +128,17 @@ void rserver::Manager::start_receive()
 {
     ntw::Communication commn{};
 
-    this->udp_socket.async_receive_from(
-        asio::buffer(&commn, sizeof(commn)), this->endpoint, [this](auto &&p_h1, auto &&p_h2) {
-            handle_receive(std::forward<decltype(p_h1)>(p_h1), std::forward<decltype(p_h2)>(p_h2));
-        });
-    if (this->endpoint.port() > 0)
-        this->threads.add_job([&, this]() { this->command_manager(commn, endpoint); });
+    while (RUNNING) {
+        this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
+        /* this->udp_socket.async_receive_from(
+            asio::buffer(&commn, sizeof(commn)), this->endpoint,
+            [this](auto &&p_h1, auto &&p_h2) { handle_receive(p_h1, p_h2); }); */
+        DEBUG(("port upon recieving %d\n", this->endpoint.port()));
+        DEBUG(("arguments here: %s\n", commn.args.data()));
+        if (this->endpoint.port() > 0)
+            this->threads.add_job(
+                [commn, this]() { this->command_manager(commn, this->endpoint); });
+    }
 }
 
 void rserver::Manager::handle_receive(const asio::error_code &error,
@@ -158,14 +164,15 @@ void rserver::Manager::command_manager(ntw::Communication communication,
     try {
         Player &player{this->players.get_by_id(client.port())};
 
-        player.lock();
-        for (const auto &handle : HANDLER) {
-            if (handle.type == communication.type) {
-                handle.handler(*this, player, args);
-                return;
+        {
+            std::unique_lock<std::mutex> lock{player.mutex};
+            for (const auto &handle : HANDLER) {
+                if (handle.type == communication.type) {
+                    handle.handler(*this, player, args);
+                    return;
+                }
             }
         }
-        player.unlock();
     } catch (PlayersManager::PlayersException & /* e */) {
         if (this->players.length() >= 4) {
             this->refuse_client(client);
@@ -181,9 +188,7 @@ void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
 
     this->udp_socket.async_send_to(asio::buffer(&communication, sizeof(communication)), client,
                                    [this, communication](auto &&p_h1, auto &&p_h2) {
-                                       handle_send(communication,
-                                                   std::forward<decltype(p_h1)>(p_h1),
-                                                   std::forward<decltype(p_h2)>(p_h2));
+                                       handle_send(communication, p_h1, p_h2);
                                    });
 }
 

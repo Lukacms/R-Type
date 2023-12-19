@@ -5,11 +5,13 @@
 ** networkManager.cpp
 */
 
+#include <asio/buffer.hpp>
 #include <iostream>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <rtype/Factory/ClientEntityFactory.hh>
 #include <rtype/Network/NetworkManager.hh>
+#include <rtype/network/Network.hpp>
 
 using asio::ip::udp;
 
@@ -21,28 +23,41 @@ static const std::vector<rclient::CommandHandler> HANDLER{
 };
 
 rclient::NetworkManager::NetworkManager(const std::string &host, const std::string &port)
-    : m_resolver(m_io_context),
-      m_receiver_endpoint(*m_resolver.resolve(asio::ip::udp::v4(), host, port).begin()),
-      m_socket(m_io_context, asio::ip::udp::v4())
+    : m_resolver{m_io_context},
+      m_receiver_endpoint{*(m_resolver.resolve(asio::ip::udp::v4(), host, port).begin())},
+      m_socket{m_io_context}
 {
+    m_receiver_endpoint = *m_resolver.resolve(asio::ip::udp::v4(), host, port).begin();
+    m_socket.open(udp::v4());
+    ntw::Communication commn{.type = ntw::NetworkType::Connection, .args = {"sdhkg"}};
+
+    this->send_message(commn);
+    this->m_io_context.run();
 }
 
 void rclient::NetworkManager::fetch_messages()
 {
-    while (m_socket.available() > 0) {
-        ntw::Communication comm{};
-        asio::ip::udp::endpoint sender_endpoint;
-        m_socket.receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint);
+    ntw::Communication comm{};
+    asio::ip::udp::endpoint sender_endpoint;
+
+    m_socket.async_receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint,
+                                [this](auto &&p_1, auto &&p_2) { this->handle_receive(p_1, p_2); });
+    if (sender_endpoint.port() > 0)
         m_queue.emplace_back(comm);
+}
+
+void rclient::NetworkManager::handle_receive(const asio::error_code &error,
+                                             std::size_t bytes_transferred)
+{
+    if (!error) {
+        this->fetch_messages();
     }
 }
 
 void rclient::NetworkManager::send_message(ntw::Communication &communication)
 {
-    if (m_socket.available() < 0)
-        return;
     m_socket.async_send_to(asio::buffer(&communication, sizeof(communication)), m_receiver_endpoint,
-                           [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+                           [](auto && /* p_1 */, auto && /* p_2 */) {});
 }
 
 std::deque<ntw::Communication> &rclient::NetworkManager::get_message_queue()
@@ -83,9 +98,9 @@ void rclient::NetworkManager::move_entity(
     transform.position_y = static_cast<float>(std::stof(arguments[2]));
 }
 
-void rclient::NetworkManager::end_game(rclient::NetworkManager &network_manager,
-                                       rtype::ECSManager &ecs_manager,
-                                       ntw::Communication &communication)
+void rclient::NetworkManager::end_game(rclient::NetworkManager & /* network_manager */,
+                                       rtype::ECSManager & /* ecs_manager */,
+                                       ntw::Communication & /* communication */)
 {
     // Find how to pass the game State;
 }

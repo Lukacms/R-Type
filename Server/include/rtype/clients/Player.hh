@@ -29,6 +29,7 @@ namespace rserver
     class Player
     {
         public:
+            std::mutex mutex{};
             /* constructor / destructor */
             Player(asio::ip::udp::endpoint p_endpoint);
             Player(Player const &to_copy) = delete;
@@ -51,7 +52,6 @@ namespace rserver
         private:
             asio::ip::udp::endpoint endpoint;
             std::size_t entity_value{};
-            std::mutex mutex{};
     };
 
 } // namespace rserver
