@@ -5,7 +5,7 @@
 ** ServerEntityFactory
 */
 
-#include "rtype/ECSManager.hpp"
+#include <rtype/ECSManager.hpp>
 #include <string_view>
 
 class ServerEntityFactory
