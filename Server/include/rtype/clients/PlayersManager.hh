@@ -39,6 +39,8 @@ namespace rserver
             [[nodiscard]] std::size_t length() const;
             [[nodiscard]] const std::vector<Player> &get_all_players() const;
 
+            // void delete_player(asio::ip::udp::endpoint &endpoint);
+
             /* exception */
             class PlayersException : public std::exception
             {

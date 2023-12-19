@@ -37,9 +37,9 @@ FetchContent_Declare(
     SYSTEM
 )
 
-message("Finished loading Asio")
-
 FetchContent_MakeAvailable(asiocmake)
+
+message("Finished loading Asio")
 
 # Warning flags
 set(GCC_WARNING_FLAGS

@@ -1,0 +1,151 @@
+name: Build the project and publish a release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  create_release_draft:
+    name: Create a draft release
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.create_release_draft.outputs.id }}
+      upload_url: ${{ steps.create_release_draft.outputs.upload_url }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get release version
+        run: echo "::set-output name=version::${GITHUB_REF/refs\/tags\//}"
+        id: version
+
+      - name: Create release draft
+        uses: actions/create-release@v1
+        id: create_release_draft
+        with:
+          draft: true
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+
+  build:
+    name: Build project for ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
+    needs: [create-release-draft]
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d ' ' -f1 | sort > .lfs-assets-id
+
+      - name: Restore LFS cache
+        uses: actions/cache@v3
+        id: lfs-cache
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+
+      - name: Git LFS Pull
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.os }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.os }}-
+            Library-
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/vcpkg
+            ./build/vcpkg_installed
+            ${{ env.HOME }}/.cache/vcpkg/archives
+            ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
+            ${{ env.LOCALAPPDATA }}\vcpkg\archives
+            ${{ env.APPDATA }}\vcpkg\archives
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ env.BUILD_TYPE }}-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.BUILD_TYPE }}-
+
+      - name: Generate build name
+        id: build-name
+        run: echo "::set-output name=${GITHUB_REPOSITORY/\//_}_Build_${{ needs.create-release-draft.outputs.version }}_${{ matrix.os }}"
+
+      - name : Install packages
+        run: |
+            if [[ "RUNNER_OS" == "Linux" ]]; then
+              sudo apt-get update -qq
+              sudo apt-get install -y ninja-build clang-tidy-12 ccache
+              sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
+              sudo apt-get install -y --no-install-recommends libx11-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev > /dev/null
+              clang++ --version
+              clang-tidy --version
+            fi
+
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v1
+        with:
+          compiler: ${{ matrix.compiler }}
+          vcvarsall: ${{ contains(matrix.os, 'windows') }}
+          cmake: true
+          ninja: true
+          vcpkg: true
+          cppcheck: true
+          clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
+
+      - name: Zip build assets
+        run: |
+          ln -s ./build/${{ matrix.os }} ./${{ steps.build-name.outputs.build_name }}
+          zip -r ./${{ steps.build-name.outputs.build_name }}.zip ./${{ steps.build-name.outputs.build_name }}
+
+      - name: Upload build assets to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ needs.create-release-draft.outputs.upload_url }}
+          asset_path: ./${{ steps.build-name.outputs.build_name }}.zip
+          asset_name: ${{ steps.build-name.outputs.build_name }}.zip
+          asset_content_type: application/zip
+
+  publish-release:
+    name: Publish release draft
+    runs-on: ubuntu-latest
+    needs: [create-release-draft, build]
+    steps:
+      - uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          release_id: ${{ needs.create-release-draft.outputs.id }}
+
+  delete-release-draft-on-error:
+    name: Delete release draft if an error occured
+    runs-on: ubuntu-latest
+    needs: [create-release-draft, build, publish-release]
+    if: ${{ failure() }}
+    steps:
+      - name: Delete release draft and tag
+        uses: larryjoelane/delete-release-action@v1.0.22
+        with:
+          release-name: ${{ needs.create-release-draft.outputs.version }}
+          token: ${{ github.token }}
