@@ -37,9 +37,26 @@ FetchContent_Declare(
     SYSTEM
 )
 
-message("Finished loading Asio")
-
 FetchContent_MakeAvailable(asiocmake)
+
+message("Finished loading Asio, loading SFML")
+
+# Loading SFML library
+FetchContent_Declare(
+        sfml
+        GIT_REPOSITORY  "https://github.com/SFML/SFML.git"
+        GIT_TAG         "2.6.x"
+        SYSTEM
+)
+
+FetchContent_GetProperties(sfml)
+if (NOT sfml_POPULATED)
+    FetchContent_Populate(sfml)
+    add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
+endif ()
+FetchContent_MakeAvailable(sfml)
+
+message("Finished loading sfml")
 
 # Warning flags
 set(GCC_WARNING_FLAGS
@@ -91,6 +108,7 @@ set(WARNING_FLAGS
     -Wno-suggest-destructor-override
     -Wno-documentation
     -Wno-zero-as-null-pointer-constant
+    -Wno-deprecated-copy-with-user-provided-dtor
     -Wno-padded
     -Wno-ctad-maybe-unsupported)
 

@@ -1,10 +1,10 @@
-/*
-** EPITECH PROJECT, 2023
+/* ** EPITECH PROJECT, 2023
 ** clients
 ** File description:
 ** Player
 */
 
+#include <algorithm>
 #include <iostream>
 #include <rtype.hh>
 #include <rtype/clients/Player.hh>
@@ -13,6 +13,19 @@
 rserver::Player::Player(asio::ip::udp::endpoint p_endpoint) : endpoint{std::move(p_endpoint)}
 {
     std::cout << INFOS << NEW_CLIENT << this->endpoint << ENDL;
+}
+
+rserver::Player::Player(rserver::Player &&to_move)
+    : endpoint{std::move(to_move.endpoint)}, entity_value{std::move(to_move.entity_value)}
+{
+}
+
+rserver::Player &rserver::Player::operator=(Player &&to_move)
+{
+    this->endpoint = std::move(to_move.endpoint);
+    this->entity_value = std::move(to_move.entity_value);
+
+    return *this;
 }
 
 bool rserver::Player::operator==(asio::ip::port_type &port) const
@@ -39,4 +52,14 @@ std::size_t rserver::Player::get_entity_value() const
 void rserver::Player::set_entity_value(std::size_t const &value)
 {
     this->entity_value = value;
+}
+
+void rserver::Player::lock()
+{
+    this->mutex.lock();
+}
+
+void rserver::Player::unlock()
+{
+    this->mutex.unlock();
 }

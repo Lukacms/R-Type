@@ -105,8 +105,7 @@ namespace rserver
 
             /* methods */
             static void handle_disconnection(int);
-            void command_manager(ntw::Communication &communication,
-                                 asio::ip::udp::endpoint &client);
+            void command_manager(ntw::Communication communication, asio::ip::udp::endpoint client);
             void refuse_client(asio::ip::udp::endpoint &client);
             void add_new_player(asio::ip::udp::endpoint &client);
     };

@@ -30,12 +30,17 @@ To build the project, follow the steps below:
 # ⚠️ The following system packages installation commands may change depending on 
 # your OS. Below example is for Ubuntu 20.04
 sudo apt-get update -qq
-sudo apt-get install -y ninja-build clang-tidy-12 ccache
-sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
+sudo apt-get install -y cmake clang ninja-build just
+
+# Have to install some libraries required for some libraries, such as SFML
+sudo apt-get install -y --no-install-recommends libx11-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev libudev-dev > /dev/null
 
 # clone the repository
 git clone git@github.com:Lukacms/R-Type.git
 cd R-Type
+
+# clone git submodules
+git submodule update --init --recursive
 
 just ninja # clangd
 just release # g++

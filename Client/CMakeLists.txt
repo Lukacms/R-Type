@@ -44,7 +44,7 @@ target_include_directories(
     ../GameEngine/Physics/include
     ../RType-Utils/include/
     ../GameEngine/Graphics/include
-    ../deps/SFML/include/)
+    ${CMAKE_BINARY_DIR}/_deps/sfml-src/include)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
