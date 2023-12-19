@@ -98,7 +98,7 @@ void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
         while (RUNNING) {
-            std::cout << "oui: " << this->players.length() << "\n";
+            // std::cout << "oui: " << this->players.length() << "\n";
             sleep(1);
         }
         this->context.stop();
@@ -149,8 +149,8 @@ void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
 {
 }
 
-void rserver::Manager::command_manager(ntw::Communication &communication,
-                                       asio::ip::udp::endpoint &client)
+void rserver::Manager::command_manager(ntw::Communication communication,
+                                       asio::ip::udp::endpoint client)
 {
     std::vector<std::string> args{
         split_delimitor(communication.args.data(), ntw::DELIMITORS.data())};
@@ -158,13 +158,14 @@ void rserver::Manager::command_manager(ntw::Communication &communication,
     try {
         Player &player{this->players.get_by_id(client.port())};
 
-        /* for (const auto &handle : HANDLER) {
+        player.lock();
+        for (const auto &handle : HANDLER) {
             if (handle.type == communication.type) {
                 handle.handler(*this, player, args);
                 return;
             }
-        } */
-        this->input_handler(player, args);
+        }
+        player.unlock();
     } catch (PlayersManager::PlayersException & /* e */) {
         if (this->players.length() >= 4) {
             this->refuse_client(client);
