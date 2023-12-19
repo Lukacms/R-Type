@@ -29,10 +29,9 @@ rserver::Player &rserver::PlayersManager::get_by_entity_id(std::size_t &entity)
 }
 
 rserver::Player &rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint,
-                                                     asio::ip::udp::socket &socket)
+                                                     asio::ip::udp::socket & /* socket */)
 {
     this->players.emplace_back(endpoint);
-    socket.send_to(asio::buffer("oui\n"), endpoint);
 
     return this->players.back();
 }

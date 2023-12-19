@@ -5,6 +5,7 @@
 ** add_new_player
 */
 
+#include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
@@ -25,4 +26,7 @@ void rserver::Manager::add_new_player(asio::ip::udp::endpoint &client)
     boxes.insert_at(new_player.get_entity_value(), {});
     tags.insert_at(new_player.get_entity_value(), {});
     healths.insert_at(new_player.get_entity_value(), {});
+    DEBUG(("New player with port: %d\n", new_player.get_port()));
+    ntw::Communication commn{.type = ntw::Ok, .args = {"everything is good my brah"}};
+    Manager::send_message(commn, new_player, this->udp_socket);
 }
