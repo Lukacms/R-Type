@@ -33,7 +33,7 @@ sudo apt-get update -qq
 sudo apt-get install -y cmake clang ninja-build just
 
 # Have to install some libraries required for some libraries, such as SFML
-sudo apt-get install -y --no-install-recommends libx11-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev > /dev/null
+sudo apt-get install -y --no-install-recommends libx11-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev libudev-dev > /dev/null
 
 # clone the repository
 git clone git@github.com:Lukacms/R-Type.git
