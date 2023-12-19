@@ -12,12 +12,12 @@
 
 #include <asio.hpp>
 #include <deque>
+#include <rtype/network/Network.hpp>
 
 using asio::ip::udp;
 
 namespace rclient
 {
-    constexpr int MAX_SIZE{128};
 
     class NetworkManager
     {
@@ -30,15 +30,37 @@ namespace rclient
             NetworkManager &operator=(NetworkManager &&other) = delete;
 
             void fetch_messages();
-            void send_message();
+            void send_message(ntw::Communication &communication);
+            void manage_message(rtype::ECSManager &manager);
 
-            [[nodiscard]] std::deque<std::array<char, MAX_SIZE>> &get_message_queue();
+            [[nodiscard]] std::deque<ntw::Communication> &get_message_queue();
+
+            // In order to have a pointer on these functions
+            static void create_entity(NetworkManager &network_manager,
+                                      rtype::ECSManager &ecs_manager,
+                                      ntw::Communication &communication);
+            static void move_entity(NetworkManager &network_manager, rtype::ECSManager &ecs_manager,
+                                    ntw::Communication &communication);
+            static void end_game(NetworkManager &network_manager, rtype::ECSManager &ecs_manager,
+                                 ntw::Communication &communication);
+            static void delete_entity(NetworkManager &network_manager,
+                                      rtype::ECSManager &ecs_manager,
+                                      ntw::Communication &communication);
+            /*static void end_game(NetworkManager &network_manager, rtype::ECSManager &ecs_manager,
+                                 ntw::Communication &communication);*/
 
         private:
             asio::io_context m_io_context;
             asio::ip::udp::resolver m_resolver;
             asio::ip::udp::endpoint m_receiver_endpoint;
             asio::ip::udp::socket m_socket;
-            std::deque<std::array<char, MAX_SIZE>> m_queue{};
+            std::deque<ntw::Communication> m_queue{};
+    };
+
+    struct CommandHandler {
+            ntw::NetworkType type;
+            std::function<void(rclient::NetworkManager &, rtype::ECSManager &,
+                               ntw::Communication &)>
+                handler;
     };
 } // namespace rclient

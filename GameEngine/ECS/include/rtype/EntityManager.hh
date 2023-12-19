@@ -6,7 +6,7 @@
 */
 
 #include <cstddef>
-#include <deque>
+#include <vector>
 
 namespace rtype
 {
@@ -23,9 +23,10 @@ namespace rtype
             EntityManager &operator=(EntityManager &&to_move) = default;
 
             size_t create_entity();
+            size_t create_entity(size_t entity);
             void delete_entity(size_t entity);
 
         private:
-            std::deque<size_t> m_queue{};
+            std::vector<size_t> m_queue{};
     };
 } // namespace rtype

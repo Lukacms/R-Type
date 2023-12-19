@@ -11,7 +11,7 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(PROJECT_SOURCE_DIR .)
 
-add_subdirectory(deps)
+#add_subdirectory(deps)
 
 # option to build tests
 option(RTYPE_BUILD_TESTS "Build the tests" OFF)

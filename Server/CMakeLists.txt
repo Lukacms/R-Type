@@ -18,6 +18,8 @@ set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-server-interface INTERFACE
+    r-type-ecs
+    r-type-physics
     asio::asio
     )
 
@@ -33,6 +35,7 @@ add_library(
     src/clients/MessageQueue.cpp
     src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
+        src/Factory/ServerEntityFactory.cpp
     src/commands/input_handler.cpp
     src/commands/add_new_player.cpp
 )

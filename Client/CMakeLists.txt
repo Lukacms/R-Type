@@ -29,6 +29,7 @@ add_library(
     src/launch.cpp
     src/rtype/Client.cpp
     src/rtype/Network/NetworkManager.cpp
+    src/Factory/ClientEntityFactory.cpp
 )
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)
@@ -49,6 +50,7 @@ set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
+    r-type-utils
     asio::asio # link asio library to core
     r-type-utils
     sfml-window
@@ -74,7 +76,6 @@ target_link_libraries(
     asio::asio # link asio library to core
     r-type-ecs
     r-type-graphics
-    r-type-physics
     sfml-window
     sfml-graphics
     sfml-system

@@ -46,12 +46,16 @@ namespace rclient
 
             void configure_network();
 
+            void send_client_input();
+            void check_input();
+
         private:
             dl::DlLoader<rtype::ECSManager> m_ecs;
             dl::DlLoader<rtype::GraphicModule> m_graphical_module;
             STATE m_state{STATE::Menu};
-            std::unique_ptr<NetworkManager> m_network{nullptr};
+            std::unique_ptr<rclient::NetworkManager> m_network{nullptr};
             std::string m_host;
             std::string m_port;
+            std::deque<ntw::Communication> m_to_send{};
     };
 } // namespace rclient
