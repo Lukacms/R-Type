@@ -16,7 +16,7 @@
 using asio::ip::udp;
 
 static const std::vector<rclient::CommandHandler> HANDLER{
-    {ntw::Creation, {rclient::NetworkManager::create_entity}},
+    {ntw::Entity, {rclient::NetworkManager::manage_entity}},
     {ntw::Destruction, {rclient::NetworkManager::delete_entity}},
     {ntw::Position, {rclient::NetworkManager::move_entity}},
     {ntw::End, {rclient::NetworkManager::end_game}},
@@ -29,7 +29,7 @@ rclient::NetworkManager::NetworkManager(const std::string &host, const std::stri
 {
     m_receiver_endpoint = *m_resolver.resolve(asio::ip::udp::v4(), host, port).begin();
     m_socket.open(udp::v4());
-    ntw::Communication commn{.type = ntw::NetworkType::Connection, .args = {"sdhkg"}};
+    ntw::Communication commn{.type = ntw::NetworkType::Connection, .args = {}};
 
     this->send_message(commn);
     this->m_io_context.run();
@@ -94,8 +94,8 @@ void rclient::NetworkManager::move_entity(
     std::vector<std::string> arguments = communication.deserialize();
     auto &transform = ecs_manager.get_component<rtype::TransformComponent>(
         static_cast<size_t>(std::stoi(arguments[0])));
-    transform.position_x = static_cast<float>(std::stof(arguments[1]));
-    transform.position_y = static_cast<float>(std::stof(arguments[2]));
+    transform.position_x = static_cast<float>(std::stof(arguments[2]));
+    transform.position_y = static_cast<float>(std::stof(arguments[3]));
 }
 
 void rclient::NetworkManager::end_game(rclient::NetworkManager & /* network_manager */,
@@ -111,4 +111,15 @@ void rclient::NetworkManager::delete_entity(
 {
     std::vector<std::string> arguments = communication.deserialize();
     ecs_manager.delete_entity(static_cast<size_t>(std::stoi(arguments[0])));
+}
+
+void rclient::NetworkManager::manage_entity(rclient::NetworkManager &network_manager,
+                                            rtype::ECSManager &ecs_manager,
+                                            ntw::Communication &communication)
+{
+    std::vector<std::string> arguments = communication.deserialize();
+
+    if (!ecs_manager.is_entity_used(std::stoul(arguments[0])))
+        rclient::NetworkManager::create_entity(network_manager, ecs_manager, communication);
+    rclient::NetworkManager::move_entity(network_manager, ecs_manager, communication);
 }

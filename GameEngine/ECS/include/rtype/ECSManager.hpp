@@ -30,6 +30,11 @@ namespace rtype
                 return m_entity_manager.create_entity();
             }
 
+            Entity create_entity(std::size_t entity)
+            {
+                return m_entity_manager.create_entity(entity);
+            }
+
             void delete_entity(size_t entity)
             {
                 m_entity_manager.delete_entity(entity);
@@ -69,23 +74,14 @@ namespace rtype
                 //    m_physics_manager.check_collisions(m_component_manager);
             }
 
-            /*
-
-            std::vector<std::size_t> get_collision(std::size_t entity)
+            bool is_entity_used(std::size_t entity)
             {
-                return m_physics_manager.get_collision(entity);
+                return m_entity_manager.is_entity_used(entity);
             }
-
-            bool is_collided(std::size_t entity1, std::size_t entity2)
-            {
-                return m_physics_manager.is_collided(entity1, entity2);
-            }
-            */
 
         private:
             ComponentManager m_component_manager{};
             SystemManager m_system_manager{};
             EntityManager m_entity_manager{};
-            // PhysicsManager m_physics_manager{};
     };
 } // namespace rtype

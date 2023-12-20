@@ -11,6 +11,6 @@ namespace rtype
 {
     struct SpriteComponent {
             sf::Sprite sprite{};
-            sf::Texture texture{};
+            std::string texture_path{};
     };
 } // namespace rtype

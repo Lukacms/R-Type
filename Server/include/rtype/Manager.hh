@@ -29,6 +29,7 @@ namespace rserver
     constexpr size_t DEFAULT_PORT{8080};
     constexpr short int TIMEOUT_MS{200};
     constexpr std::string_view ECS_SL_PATH{"./libs/r-type-ecs.so"};
+    constexpr std::string_view PHYSICS_SL_PATH{"./libs/r-type-physics.so"};
 
     /* exceptions */
     constexpr std::string_view DEFAULT_ERROR{"Error"};
@@ -102,6 +103,7 @@ namespace rserver
             ThreadPool threads{};
             GameLogic logic;
             dl::DlLoader<rtype::ECSManager> ecs{};
+            dl::DlLoader<rtype::PhysicsManager> physics{};
 
             /* methods */
             static void handle_disconnection(int);

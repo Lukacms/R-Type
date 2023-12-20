@@ -26,7 +26,6 @@ target_link_libraries(
 add_library(
     rtype-client-core
     SHARED
-    src/launch.cpp
     src/rtype/Client.cpp
     src/rtype/Network/NetworkManager.cpp
     src/Factory/ClientEntityFactory.cpp
@@ -43,8 +42,7 @@ target_include_directories(
     ../GameEngine/Graphics/include/
     ../GameEngine/Physics/include
     ../RType-Utils/include/
-    ../GameEngine/Graphics/include
-    ${CMAKE_BINARY_DIR}/_deps/sfml-src/include)
+    ../GameEngine/Graphics/include)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(

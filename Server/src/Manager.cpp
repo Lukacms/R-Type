@@ -37,6 +37,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
       logic{this->udp_socket}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
+    this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
 
     SparseArray<rtype::TransformComponent> transform{};
     SparseArray<rtype::BoxColliderComponent> boxes{};
@@ -49,7 +50,6 @@ rserver::Manager::Manager(asio::ip::port_type port)
     this->ecs.get_class().register_component(healths);
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
     std::signal(SIGINT, Manager::handle_disconnection);
-    this->start_receive();
 }
 
 rserver::Manager::Manager(rserver::Manager &&to_move)
@@ -77,9 +77,9 @@ void rserver::Manager::launch(asio::ip::port_type port)
 {
     try {
         Manager manager{port};
-
         manager.run_game_logic();
-        manager.run();
+        manager.start_receive();
+        // manager.run();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
     }
@@ -99,8 +99,7 @@ void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
         while (RUNNING) {
-            // std::cout << "oui: " << this->players.length() << "\n";
-            // sleep(1);
+            logic.game_loop(this->physics.get_class(), players, this->ecs.get_class());
         }
         this->context.stop();
     });

@@ -2,6 +2,7 @@
 // Created by kane on 14/12/23.
 //
 
+#include <iostream>
 #include <rtype/GraphicModule.hh>
 
 rtype::GraphicModule::GraphicModule(unsigned int width, unsigned int height,
@@ -10,15 +11,23 @@ rtype::GraphicModule::GraphicModule(unsigned int width, unsigned int height,
 {
 }
 
-void rtype::GraphicModule::draw_components(SparseArray<rtype::SpriteComponent> sprites)
+void rtype::GraphicModule::draw_components(SparseArray<rtype::SpriteComponent> sprites,
+                                           SparseArray<rtype::TransformComponent> transforms)
 {
-    for (auto &sprite : sprites) {
-        if (sprite.has_value())
-            m_window.draw(sprite.value().sprite);
+    sf::Texture texture{};
+
+    for (size_t index = 0; index < sprites.size(); index += 1) {
+        if (!sprites[index].has_value())
+            continue;
+        texture.loadFromFile(sprites[index]->texture_path);
+        sprites[index]->sprite.setPosition(transforms[index]->position_x,
+                                           transforms[index]->position_y);
+        sprites[index]->sprite.setTexture(texture);
+        m_window.draw(sprites[index]->sprite);
     }
 }
 
-void rtype::GraphicModule::draw(sf::Sprite &sprite)
+void rtype::GraphicModule::draw(sf::Sprite &sprite, TransformComponent transform)
 {
     m_window.draw(sprite);
 }

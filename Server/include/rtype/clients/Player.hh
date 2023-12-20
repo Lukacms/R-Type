@@ -24,7 +24,7 @@ namespace rserver
             float pos_y{0.0};
     };
 
-    constexpr float POSITION_CHANGE{10.0};
+    constexpr float POSITION_CHANGE{1.0};
 
     class Player
     {

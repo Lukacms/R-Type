@@ -22,11 +22,9 @@ void rserver::Manager::add_new_player(asio::ip::udp::endpoint &client)
     auto &tags{this->ecs.get_class().get_components<rtype::TagComponent>()};
     auto &healths{this->ecs.get_class().get_components<rtype::HealthComponent>()};
 
+    tags.insert_at(new_player.get_entity_value(), {.tag = "Player"});
     transform.insert_at(new_player.get_entity_value(), {50, 250, 0, 0, 2, 2});
     boxes.insert_at(new_player.get_entity_value(), {});
-    tags.insert_at(new_player.get_entity_value(), {});
     healths.insert_at(new_player.get_entity_value(), {});
     DEBUG(("New player with port: %d\n", new_player.get_port()));
-    ntw::Communication commn{.type = ntw::Ok, .args = {"everything is good my brah"}};
-    Manager::send_message(commn, new_player, this->udp_socket);
 }

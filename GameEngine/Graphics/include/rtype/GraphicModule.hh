@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <rtype/Components/SpriteComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/InputManager.hpp>
 #include <rtype/SparseArray.hpp>
 
@@ -27,8 +28,9 @@ namespace rtype
             GraphicModule &operator=(GraphicModule &&) = delete;
 
             void update();
-            void draw_components(SparseArray<SpriteComponent> sprites);
-            void draw(sf::Sprite &sprite);
+            void draw_components(SparseArray<SpriteComponent> sprites,
+                                 SparseArray<rtype::TransformComponent> transforms);
+            void draw(sf::Sprite &sprite, rtype::TransformComponent transform);
             void display();
             void clear();
             bool is_input_pressed(sf::Keyboard::Key key);

@@ -42,19 +42,19 @@ FetchContent_MakeAvailable(asiocmake)
 message("Finished loading Asio, loading SFML")
 
 # Loading SFML library
-FetchContent_Declare(
-        sfml
-        GIT_REPOSITORY  "https://github.com/SFML/SFML.git"
-        GIT_TAG         "2.6.x"
-        SYSTEM
-)
+#FetchContent_Declare(
+#        sfml
+#        GIT_REPOSITORY  "https://github.com/SFML/SFML.git"
+#        GIT_TAG         "2.6.x"
+#        SYSTEM
+#)
 
-FetchContent_GetProperties(sfml)
+#[[ FetchContent_GetProperties(sfml)
 if (NOT sfml_POPULATED)
-    FetchContent_Populate(sfml)
+    #FetchContent_Populate(sfml)
     add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
 endif ()
-FetchContent_MakeAvailable(sfml)
+FetchContent_MakeAvailable(sfml) ]]
 
 message("Finished loading sfml")
 

@@ -24,9 +24,11 @@ namespace rtype
 
             size_t create_entity();
             size_t create_entity(size_t entity);
+            bool is_entity_used(std::size_t entity);
             void delete_entity(size_t entity);
 
         private:
-            std::vector<size_t> m_queue{};
+            std::vector<std::size_t> m_queue{};
+            std::vector<std::size_t> m_used{};
     };
 } // namespace rtype

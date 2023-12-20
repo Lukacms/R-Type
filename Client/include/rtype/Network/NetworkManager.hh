@@ -48,6 +48,9 @@ namespace rclient
             static void delete_entity(NetworkManager &network_manager,
                                       rtype::ECSManager &ecs_manager,
                                       ntw::Communication &communication);
+            static void manage_entity(NetworkManager &network_manager,
+                                      rtype::ECSManager &ecs_manager,
+                                      ntw::Communication &communication);
             /*static void end_game(NetworkManager &network_manager, rtype::ECSManager &ecs_manager,
                                  ntw::Communication &communication);*/
 

@@ -25,6 +25,7 @@ namespace rserver
 
             void game_loop(rtype::PhysicsManager &physics_manager,
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
+            void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
 
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,
