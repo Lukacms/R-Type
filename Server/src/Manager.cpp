@@ -55,7 +55,6 @@ rserver::Manager::Manager(asio::ip::port_type port)
     this->ecs.get_class().register_component(healths);
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
     std::signal(SIGINT, Manager::handle_disconnection);
-    this->start_receive();
 }
 
 /**
@@ -105,6 +104,7 @@ void rserver::Manager::launch(asio::ip::port_type port)
         Manager manager{port};
 
         manager.run_game_logic();
+        manager.start_receive();
         manager.run();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
@@ -198,8 +198,8 @@ void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
 {
 }
 
-void rserver::Manager::command_manager(ntw::Communication communication,
-                                       asio::ip::udp::endpoint client)
+void rserver::Manager::command_manager(ntw::Communication const &communication,
+                                       asio::ip::udp::endpoint &client)
 {
     std::vector<std::string> args{
         split_delimitor(communication.args.data(), ntw::DELIMITORS.data())};

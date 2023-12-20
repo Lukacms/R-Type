@@ -30,7 +30,6 @@ add_library(
     src/config/ArgsParser.cpp
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
-    src/clients/MessageQueue.cpp
     src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
     src/Factory/ServerEntityFactory.cpp

@@ -24,7 +24,10 @@ tsan:
     cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=tsan -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true &&\
     ninja -C {{ build_folder }}
 
-tests:
+clean_tests:
+    @find -name *.gc* -delete
+
+tests: clean_tests
     cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DRTYPE_BUILD_TESTS=true &&\
     ninja -C {{ build_folder }} &&\
     ./{{ name_tests_server }} && ./{{ name_tests_client }}
