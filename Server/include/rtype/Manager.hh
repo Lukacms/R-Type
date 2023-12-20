@@ -102,6 +102,7 @@ namespace rserver
             ThreadPool threads{};
             GameLogic logic;
             dl::DlLoader<rtype::ECSManager> ecs{};
+            std::mutex ecs_mutex{};
 
             /* methods */
             static void handle_disconnection(int);

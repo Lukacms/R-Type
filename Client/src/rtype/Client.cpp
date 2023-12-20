@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <rtype.hh>
 #include <rtype/Client.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TagComponent.hh>
@@ -33,7 +34,7 @@ int rclient::Client::client_run()
         m_graphical_module.get_class().update();
         m_state == STATE::Menu ? client_menu() : client_game();
     }
-    return 0;
+    return rserver::SUCCESS;
 }
 
 void rclient::Client::client_menu()

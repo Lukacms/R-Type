@@ -2,10 +2,7 @@
 ** EPITECH PROJECT, 2023
 ** src
 ** File description:
-** launch
+** utils
 */
 
-int launch()
-{
-    return 0;
-}
+#include <gtest/gtest.h>

@@ -9,9 +9,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # change library prefix to none
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
-set(PROJECT_SOURCE_DIR .)
-
-#add_subdirectory(deps)
+# executables will be at the root of the folder
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 # option to build tests
 option(RTYPE_BUILD_TESTS "Build the tests" OFF)
@@ -42,11 +41,12 @@ FetchContent_MakeAvailable(asiocmake)
 message("Finished loading Asio, loading SFML")
 
 # Loading SFML library
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
 FetchContent_Declare(
-        sfml
-        GIT_REPOSITORY  "https://github.com/SFML/SFML.git"
-        GIT_TAG         "2.6.x"
-        SYSTEM
+    sfml
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x
 )
 
 FetchContent_GetProperties(sfml)
@@ -103,12 +103,13 @@ set(WARNING_FLAGS
     -Wsign-conversion
     -Wdouble-promotion
     -Wformat=2
-    -Weffc++
+    -Wno-effc++
     -Wno-suggest-override
     -Wno-suggest-destructor-override
     -Wno-documentation
-    -Wno-zero-as-null-pointer-constant
     -Wno-deprecated-copy-with-user-provided-dtor
+    -Wno-null-dereference
+    -Wno-zero-as-null-pointer-constant
     -Wno-padded
     -Wno-ctad-maybe-unsupported)
 
@@ -159,8 +160,7 @@ if(USE_CLANG_TIDY)
     DOC "Path to clang-tidy executable")
   if(CLANG_TIDY_EXE)
       if(DEFINED RTYPE_CLANG_TIDY_FLAGS)
-      set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}"
-          "${RTYPE_BUILD_TESTS_CLANG_TIDY_FLAGS}")
+      set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE} ${RTYPE_CLANG_TIDY_FLAGS}")
     else()
       set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
     endif()
@@ -190,3 +190,17 @@ add_subdirectory(RType-Utils)
 add_subdirectory(GameEngine)
 add_subdirectory(Server)
 add_subdirectory(Client)
+
+if (RTYPE_BUILD_TESTS)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY "https://github.com/google/googletest.git"
+        GIT_TAG "v1.14.x"
+        OVERRIDE_FIND_PACKAGE)
+    if (WIN32)
+        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    endif()
+    FetchContent_MakeAvailable(googletest)
+    add_subdirectory(Server/tests)
+    add_subdirectory(Client/tests)
+endif()

@@ -45,6 +45,11 @@ r-type_client
 build/
 libs/
 
+# tests
+tests-r-type_server
+tests-r-type_client
+Testing/
+
 # husky
 node_modules/
 package-lock.json

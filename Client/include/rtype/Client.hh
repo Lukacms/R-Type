@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include <memory>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/ECSManager.hpp>
 #include <rtype/GraphicModule.hh>
 #include <rtype/Network/NetworkManager.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <string_view>
 
 namespace rclient
 {
@@ -25,14 +25,14 @@ namespace rclient
 
     const constexpr int STANDARD_WIDTH{800};
     const constexpr int STANDARD_HEIGHT{600};
-    const constexpr char *STANDARD_TITLE{"R-TYPE"};
+    const constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
 
     class Client
     {
         public:
             explicit Client(unsigned int width = STANDARD_WIDTH,
                             unsigned int height = STANDARD_HEIGHT,
-                            const std::string &title = STANDARD_TITLE);
+                            const std::string &title = STANDARD_TITLE.data());
             ~Client() = default;
             Client(const Client &) = delete;
             Client(Client &&) = delete;

@@ -14,7 +14,6 @@ add_library(r-type-ecs SHARED
     src/rtype/EntryPoint.cpp
 )
 
-
 target_include_directories(r-type-ecs PRIVATE ./include)
 target_compile_options(r-type-ecs PRIVATE ${WARNING_FLAGS})
 target_link_libraries(r-type-ecs PRIVATE r-type-ecs-interface)

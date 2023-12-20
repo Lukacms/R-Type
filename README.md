@@ -24,6 +24,8 @@ All other dependencies are built with cmake using FetchContent.
 To have more information, look at the [docs](./docs/) folder.
 
 ## Build
+
+### Linux
 To build the project, follow the steps below:
 ```bash
 # Make sure you have the necessary system packages installed
@@ -33,7 +35,17 @@ sudo apt-get update -qq
 sudo apt-get install -y cmake clang ninja-build just
 
 # Have to install some libraries required for some libraries, such as SFML
-sudo apt-get install -y --no-install-recommends libx11-dev libxcursor-dev libxrandr-dev libgl1-mesa-dev libudev-dev > /dev/null
+sudo apt-get install \
+    libxrandr-dev \
+    libxcursor-dev \
+    libudev-dev \
+    libopenal-dev \
+    libflac-dev \
+    libvorbis-dev \
+    libgl1-mesa-dev \
+    libegl1-mesa-dev \
+    libdrm-dev \
+    libgbm-dev
 
 # clone the repository
 git clone git@github.com:Lukacms/R-Type.git
@@ -65,6 +77,8 @@ Once the project is built, it will have the following architecture:
 ├── RType-Utils
 └── Server
 ```
+
+### Windows
 
 ## Authors
 * [Luka Camus](https://github.com/Lukacms)

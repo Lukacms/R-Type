@@ -19,8 +19,14 @@
 #include <rtype/network/Network.hpp>
 #include <unistd.h>
 
+/**
+ * @brief used to handle sigint, is atomic to be modified between the threads
+ */
 static volatile std::atomic_int RUNNING = 1;
 
+/**
+ * @brief array of method pointers to handle commands recieved from client
+ */
 static const std::vector<rserver::CommandHandler> HANDLER{
     {.type = ntw::Input, .handler = &rserver::Manager::input_handler},
 };
@@ -52,11 +58,19 @@ rserver::Manager::Manager(asio::ip::port_type port)
     this->start_receive();
 }
 
+/**
+ * @brief Constructor by move
+ *
+ * @param to_move - Manager &&
+ */
 rserver::Manager::Manager(rserver::Manager &&to_move)
     : udp_socket{std::move(to_move.udp_socket)}, logic{std::move(to_move.logic)}
 {
 }
 
+/**
+ * @brief Destructor. Stop threads and quit
+ */
 rserver::Manager::~Manager()
 {
     this->threads.stop();
@@ -65,6 +79,12 @@ rserver::Manager::~Manager()
 
 /* operator overload */
 
+/**
+ * @brief operator = to move
+ *
+ * @param to_move - Manager &&
+ * @return Manager &
+ */
 rserver::Manager &rserver::Manager::operator=(Manager &&to_move)
 {
     this->udp_socket = std::move(to_move.udp_socket);
@@ -73,6 +93,12 @@ rserver::Manager &rserver::Manager::operator=(Manager &&to_move)
 }
 
 /* methods */
+/**
+ * @brief static method to launch project.
+ * Define Manager, run game logic on thread and start running asio networking
+ *
+ * @param port - port_type
+ */
 void rserver::Manager::launch(asio::ip::port_type port)
 {
     try {
@@ -85,6 +111,9 @@ void rserver::Manager::launch(asio::ip::port_type port)
     }
 }
 
+/**
+ * @brief call the method `run` on asio::udp::context. It blocks until all works has finished
+ */
 void rserver::Manager::run()
 {
     this->context.run();
@@ -107,6 +136,13 @@ void rserver::Manager::run_game_logic()
 }
 
 /* send data to clients */
+/**
+ * @brief Send a message to a specific client
+ *
+ * @param to_send - Communication - struct containing message to send
+ * @param client - Player - containing udp endpoint to send message to
+ * @param udp_socket - socket - udp::socket to send message from
+ */
 void rserver::Manager::send_message(ntw::Communication &to_send, const Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
@@ -114,6 +150,13 @@ void rserver::Manager::send_message(ntw::Communication &to_send, const Player &c
                              [](auto && /* p_h1 */, auto && /* p_h2 */) {});
 }
 
+/**
+ * @brief Send message to all clients that the Manager has
+ *
+ * @param to_send
+ * @param players
+ * @param udp_socket
+ */
 void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                    asio::ip::udp::socket &udp_socket)
 {
