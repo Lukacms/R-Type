@@ -30,7 +30,6 @@ rclient::NetworkManager::NetworkManager(const std::string &host, const std::stri
     m_receiver_endpoint = *m_resolver.resolve(asio::ip::udp::v4(), host, port).begin();
     m_socket.open(udp::v4());
     ntw::Communication commn{.type = ntw::NetworkType::Connection, .args = {}};
-
     this->send_message(commn);
     this->m_io_context.run();
 }

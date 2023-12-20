@@ -60,11 +60,7 @@ void rclient::Client::client_game()
 
 void rclient::Client::configure_network()
 {
-    ntw::Communication connection{};
-
-    connection.type = ntw::Connection;
     m_network = std::make_unique<NetworkManager>(m_host, m_port);
-    m_network->send_message(connection);
     m_state = STATE::Game;
 }
 
