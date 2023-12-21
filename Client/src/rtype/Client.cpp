@@ -5,6 +5,8 @@
 ** client
 */
 
+#include <iostream>
+#include <rtype.hh>
 #include <rtype/Client.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
@@ -21,6 +23,7 @@ rclient::Client::Client(unsigned int width, unsigned int height, const std::stri
     SparseArray<rtype::TagComponent> tags{};
     SparseArray<rtype::BoxColliderComponent> colliders{};
     SparseArray<rtype::HealthComponent> health{};
+
     m_ecs.get_class().register_component(sprites);
     m_ecs.get_class().register_component(transforms);
     m_ecs.get_class().register_component(tags);
@@ -40,7 +43,7 @@ int rclient::Client::client_run()
             m_ecs.get_class().get_components<rtype::TransformComponent>());
         m_graphical_module.get_class().display();
     }
-    return 0;
+    return rserver::SUCCESS;
 }
 
 void rclient::Client::client_menu()
@@ -51,14 +54,15 @@ void rclient::Client::client_menu()
     configure_network();
 }
 
-void rclient::Client::client_game(std::chrono::time_point<std::chrono::steady_clock> &start)
+void rclient::Client::client_game(std::chrono::time_point<std::chrono::steady_clock> & start)
 {
     m_network->fetch_messages();
     m_network->manage_message(m_ecs.get_class());
+
+    check_input();
     if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                 std::chrono::steady_clock::now() - start)
-                                .count()) > 0.01) {
-        check_input();
+                                .count()) > 16) {
         send_client_input();
         start = std::chrono::steady_clock::now();
     }
@@ -104,10 +108,14 @@ void rclient::Client::check_input()
         to_send.add_param(3);
         m_to_send.emplace_back(to_send);
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::W)) {
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::W) &&
+        static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
+                               std::chrono::steady_clock::now() - m_timer_shoot)
+                               .count()) > 60) {
         ntw::Communication to_send{};
         to_send.type = ntw::Input;
         to_send.add_param(4);
         m_to_send.emplace_back(to_send);
+        m_timer_shoot = std::chrono::steady_clock::now();
     }
 }

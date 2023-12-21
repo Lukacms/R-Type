@@ -5,12 +5,11 @@
 ** factory header file
 */
 
+#pragma once
+
 #include <array>
 #include <rtype/ECSManager.hpp>
 #include <vector>
-
-#ifndef FACTORY_HH_
-    #define FACTORY_HH_
 
 namespace rclient
 {
@@ -37,5 +36,3 @@ namespace rclient
             static size_t create_bullet(std::size_t entity, rtype::ECSManager &ecs_manager);
     };
 } // namespace rclient
-
-#endif /* !FACTORY_HH_ */

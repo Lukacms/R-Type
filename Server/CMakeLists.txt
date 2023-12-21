@@ -5,8 +5,6 @@
 # project name
 project(r-type_server)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/..)
-
 # include directories
 include_directories(include/)
 
@@ -32,10 +30,9 @@ add_library(
     src/config/ArgsParser.cpp
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
-    src/clients/MessageQueue.cpp
     src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
-        src/Factory/ServerEntityFactory.cpp
+    src/Factory/ServerEntityFactory.cpp
     src/commands/input_handler.cpp
     src/commands/add_new_player.cpp
 )
@@ -64,8 +61,6 @@ add_executable(
 target_link_libraries(
     r-type_server PRIVATE
     rtype-server-core
-    r-type-physics
-    r-type-ecs
     rtype-server-interface
     )
 target_link_options(r-type_server PRIVATE -rdynamic)

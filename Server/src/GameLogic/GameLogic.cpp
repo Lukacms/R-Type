@@ -17,10 +17,7 @@ void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                    rtype::ECSManager &manager, float delta_time)
 {
     collision_responses(physics_manager, players_manager, manager);
-    {
-        std::shared_lock<std::shared_mutex> lock{m_system_mutex};
-        manager.apply_system(delta_time);
-    }
+    destroy_too_far_entities(players_manager, manager);
     send_entity(players_manager, manager);
 }
 
@@ -107,5 +104,28 @@ void rserver::GameLogic::send_entity(rserver::PlayersManager &players_manager,
         entity_descriptor.add_param(transforms[entity]->position_x);
         entity_descriptor.add_param(transforms[entity]->position_y);
         Manager::send_to_all(entity_descriptor, players_manager, m_socket);
+    }
+}
+
+void rserver::GameLogic::destroy_too_far_entities(rserver::PlayersManager &players_manager,
+                                                  rtype::ECSManager &manager)
+{
+    auto &transforms = manager.get_components<rtype::TransformComponent>();
+
+    for (size_t entity = 0; entity < transforms.size(); entity += 1) {
+        if (!transforms[entity].has_value())
+            continue;
+        if (transforms[entity]->position_x < MIN_POSITION || transforms[entity]->position_x > MAX_POSITION_X) {
+            ntw::Communication send{.type = ntw::Destruction, .args = {}};
+            manager.delete_entity(entity);
+            send.add_param(entity);
+            Manager::send_to_all(send, players_manager, m_socket);
+        }
+        if (transforms[entity]->position_y < MIN_POSITION || transforms[entity]->position_y > MAX_POSITION_Y) {
+            ntw::Communication send{.type = ntw::Destruction, .args = {}};
+            manager.delete_entity(entity);
+            send.add_param(entity);
+            Manager::send_to_all(send, players_manager, m_socket);
+        }
     }
 }

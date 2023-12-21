@@ -85,6 +85,6 @@ size_t rserver::ServerEntityFactory::create_bullet(rtype::ECSManager &ecs_manage
     collider.insert_at(entity, rtype::BoxColliderComponent{10, 10});
     tag.insert_at(entity, rtype::TagComponent{"Bullet"});
     transform.insert_at(entity, rtype::TransformComponent{});
-    transform[entity]->velocity_x = 10;
+    transform[entity]->velocity_x = 1;
     return entity;
 }

@@ -6,7 +6,6 @@
 */
 
 #include <chrono>
-#include <rtype/AudioManager.hpp>
 #include <rtype/Client.hh>
 
 int main()

@@ -19,8 +19,14 @@
 #include <rtype/network/Network.hpp>
 #include <unistd.h>
 
+/**
+ * @brief used to handle sigint, is atomic to be modified between the threads
+ */
 static volatile std::atomic_int RUNNING = 1;
 
+/**
+ * @brief array of method pointers to handle commands recieved from client
+ */
 static const std::vector<rserver::CommandHandler> HANDLER{
     {.type = ntw::Input, .handler = &rserver::Manager::input_handler},
 };
@@ -45,20 +51,36 @@ rserver::Manager::Manager(asio::ip::port_type port)
     SparseArray<rtype::HealthComponent> healths{};
     std::function<void(ComponentManager &, float)> transform_system = &rtype::transform_system;
 
+    try {
+        this->udp_socket.non_blocking(true);
+        /* should set timeout on non-blocking, but doesn't seems to be working */
+        this->udp_socket.set_option(
+            asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>{TIMEOUT_MS});
+        std::signal(SIGINT, Manager::handle_disconnection);
+    } catch (std::exception & /* e */) {
+        DEBUG(("This instance will stay blocking, clean <CTRL-C> will not work.\n"));
+    }
     this->ecs.get_class().register_component(transform);
     this->ecs.get_class().register_component(boxes);
     this->ecs.get_class().register_component(tags);
     this->ecs.get_class().register_component(healths);
     this->ecs.get_class().add_system(transform_system);
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
-    std::signal(SIGINT, Manager::handle_disconnection);
 }
 
+/**
+ * @brief Constructor by move
+ *
+ * @param to_move - Manager &&
+ */
 rserver::Manager::Manager(rserver::Manager &&to_move)
     : udp_socket{std::move(to_move.udp_socket)}, logic{to_move.udp_socket}
 {
 }
 
+/**
+ * @brief Destructor. Stop threads and quit
+ */
 rserver::Manager::~Manager()
 {
     this->threads.stop();
@@ -67,6 +89,12 @@ rserver::Manager::~Manager()
 
 /* operator overload */
 
+/**
+ * @brief operator = to move
+ *
+ * @param to_move - Manager &&
+ * @return Manager &
+ */
 rserver::Manager &rserver::Manager::operator=(Manager &&to_move)
 {
     this->udp_socket = std::move(to_move.udp_socket);
@@ -75,18 +103,26 @@ rserver::Manager &rserver::Manager::operator=(Manager &&to_move)
 }
 
 /* methods */
+/**
+ * @brief static method to launch project.
+ * Define Manager, run game logic on thread and start running asio networking
+ *
+ * @param port - port_type
+ */
 void rserver::Manager::launch(asio::ip::port_type port)
 {
     try {
         Manager manager{port};
         manager.run_game_logic();
         manager.start_receive();
-        // manager.run();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
     }
 }
 
+/**
+ * @brief call the method `run` on asio::udp::context. It blocks until all works has finished
+ */
 void rserver::Manager::run()
 {
     this->context.run();
@@ -113,20 +149,33 @@ void rserver::Manager::run_game_logic()
                                 delta_time);
                 timer = std::chrono::steady_clock::now();
             }
+            ecs.get_class().apply_system(delta_time);
             start = std::chrono::steady_clock::now();
         }
-        this->context.stop();
     });
 }
 
 /* send data to clients */
+/**
+ * @brief Send a message to a specific client
+ *
+ * @param to_send - Communication - struct containing message to send
+ * @param client - Player - containing udp endpoint to send message to
+ * @param udp_socket - socket - udp::socket to send message from
+ */
 void rserver::Manager::send_message(ntw::Communication &to_send, const Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
-    udp_socket.async_send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint(),
-                             [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+    udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
 }
 
+/**
+ * @brief Send message to all clients that the Manager has
+ *
+ * @param to_send
+ * @param players
+ * @param udp_socket
+ */
 void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                    asio::ip::udp::socket &udp_socket)
 {
@@ -141,40 +190,28 @@ void rserver::Manager::start_receive()
     ntw::Communication commn{};
 
     while (RUNNING) {
-        this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
-        /* this->udp_socket.async_receive_from(
-            asio::buffer(&commn, sizeof(commn)), this->endpoint,
-            [this](auto &&p_h1, auto &&p_h2) { handle_receive(p_h1, p_h2); }); */
-        DEBUG(("port upon recieving %d\n", this->endpoint.port()));
-        DEBUG(("arguments here: %s\n", commn.args.data()));
-        if (this->endpoint.port() > 0)
-            this->threads.add_job(
-                [commn, this]() { this->command_manager(commn, this->endpoint); });
+        try {
+            this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
+            DEBUG(("port upon recieving %d\n", this->endpoint.port()));
+            DEBUG(("arguments here: %s\n", commn.args.data()));
+            if (this->endpoint.port() > 0)
+                this->threads.add_job(
+                    [commn, this]() { this->command_manager(commn, this->endpoint); });
+        } catch (std::exception & /* e */) {
+            // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
+        }
     }
 }
 
-void rserver::Manager::handle_receive(const asio::error_code &error,
-                                      std::size_t /* bytes_transferre */)
-{
-    if (!error) {
-        this->start_receive();
-    }
-}
-
-void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
-                                   const asio::error_code & /*error*/,
-                                   std::size_t /*bytes_transferred*/)
-{
-}
-
-void rserver::Manager::command_manager(ntw::Communication communication,
-                                       asio::ip::udp::endpoint client)
+void rserver::Manager::command_manager(ntw::Communication const &communication,
+                                       asio::ip::udp::endpoint &client)
 {
     std::vector<std::string> args{
         split_delimitor(communication.args.data(), ntw::DELIMITORS.data())};
 
     try {
         Player &player{this->players.get_by_id(client.port())};
+
         {
             std::shared_lock<std::shared_mutex> lock{player.mutex};
             for (const auto &handle : HANDLER) {
@@ -190,6 +227,8 @@ void rserver::Manager::command_manager(ntw::Communication communication,
         } else {
             this->add_new_player(client);
         }
+    } catch (ManagerException &e) {
+        DEBUG(("Exception while handling commands: %s\n", e.what()));
     }
 }
 
@@ -197,10 +236,7 @@ void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
 {
     ntw::Communication communication{.type = ntw::Refusal, .args = {}};
 
-    this->udp_socket.async_send_to(asio::buffer(&communication, sizeof(communication)), client,
-                                   [this, communication](auto &&p_h1, auto &&p_h2) {
-                                       handle_send(communication, p_h1, p_h2);
-                                   });
+    this->udp_socket.send_to(asio::buffer(&communication, sizeof(communication)), client);
 }
 
 /**

@@ -2,7 +2,6 @@
 ## CMakeLists: R-Type / Client
 ##
 
-
 add_library(r-type-ecs-interface INTERFACE)
 
 add_library(r-type-ecs SHARED
@@ -13,7 +12,6 @@ add_library(r-type-ecs SHARED
     src/rtype/Systems/ColliderSystem.cpp
     src/rtype/EntryPoint.cpp
 )
-
 
 target_include_directories(r-type-ecs PRIVATE ./include)
 target_compile_options(r-type-ecs PRIVATE ${WARNING_FLAGS})

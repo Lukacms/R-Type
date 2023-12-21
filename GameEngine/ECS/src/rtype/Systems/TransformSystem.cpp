@@ -17,8 +17,8 @@ namespace rtype
         for (auto &transform : transforms) {
             if (transform == std::nullopt)
                 continue;
-            transform->position_x += transform->velocity_x * delta_time;
-            transform->position_y += transform->velocity_y * delta_time;
+            transform->position_x += transform->velocity_x;
+            transform->position_y += transform->velocity_y;
         }
     }
 } // namespace rtype

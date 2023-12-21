@@ -29,7 +29,7 @@
 namespace rserver
 {
 
-    constexpr int SUCESS{0};
+    constexpr int SUCCESS{0};
     constexpr int FAILURE{84};
 
     /* Log infos */

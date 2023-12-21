@@ -39,8 +39,7 @@ void rclient::NetworkManager::fetch_messages()
     ntw::Communication comm{};
     asio::ip::udp::endpoint sender_endpoint;
 
-    m_socket.async_receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint,
-                                [this](auto &&p_1, auto &&p_2) { this->handle_receive(p_1, p_2); });
+    m_socket.receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint);
     if (sender_endpoint.port() > 0)
         m_queue.emplace_back(comm);
 }
@@ -77,7 +76,7 @@ void rclient::NetworkManager::manage_message(rtype::ECSManager &manager)
 }
 
 void rclient::NetworkManager::create_entity(
-    rclient::NetworkManager &network_manager __attribute_maybe_unused__,
+    rclient::NetworkManager & /* network_manager */,
     rtype::ECSManager &ecs_manager, ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
@@ -87,7 +86,7 @@ void rclient::NetworkManager::create_entity(
 }
 
 void rclient::NetworkManager::move_entity(
-    rclient::NetworkManager &network_manager __attribute_maybe_unused__,
+    rclient::NetworkManager & /* network_manager */,
     rtype::ECSManager &ecs_manager, ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
@@ -119,11 +118,9 @@ void rclient::NetworkManager::manage_entity(rclient::NetworkManager &network_man
                                             ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
-    // ntw::Communication response{ntw::Ok, {}};
 
     if (!ecs_manager.is_entity_used(std::stoul(arguments[0])))
         rclient::NetworkManager::create_entity(network_manager, ecs_manager, communication);
     rclient::NetworkManager::move_entity(network_manager, ecs_manager, communication);
     std::cout << "NEW X : " << arguments[2] << " NEW Y : " << arguments[3] << std::endl;
-    // network_manager.send_message(response);
 }

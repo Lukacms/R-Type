@@ -28,6 +28,7 @@ namespace rserver
 
     constexpr size_t DEFAULT_PORT{8080};
     constexpr short int TIMEOUT_MS{200};
+    constexpr float TIMEOUT_GL{1000000.0};
     constexpr std::string_view ECS_SL_PATH{"./libs/r-type-ecs.so"};
     constexpr std::string_view PHYSICS_SL_PATH{"./libs/r-type-physics.so"};
 
@@ -62,12 +63,8 @@ namespace rserver
                                     asio::ip::udp::socket &udp_socket);
             void run_game_logic();
 
-            /* async networking methods */
             /* udp methods */
             void start_receive();
-            void handle_receive(const asio::error_code &error, std::size_t ytes_transferre);
-            void handle_send(const ntw::Communication & /*message*/,
-                             const asio::error_code & /*error*/, std::size_t /*bytes_transferred*/);
 
             /* function pointers for commands */
             /* They have to be public to be called */
@@ -103,11 +100,13 @@ namespace rserver
             ThreadPool threads{};
             GameLogic logic;
             dl::DlLoader<rtype::ECSManager> ecs{};
+            std::mutex ecs_mutex{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
 
             /* methods */
             static void handle_disconnection(int);
-            void command_manager(ntw::Communication communication, asio::ip::udp::endpoint client);
+            void command_manager(ntw::Communication const &communication,
+                                 asio::ip::udp::endpoint &client);
             void refuse_client(asio::ip::udp::endpoint &client);
             void add_new_player(asio::ip::udp::endpoint &client);
     };

@@ -5,30 +5,33 @@
 ** main
 */
 
-#include "rtype/Factory/ServerEntityFactory.hh"
 #include <iostream>
 #include <rtype.hh>
-#include <rtype/Components/HealthComponent.hh>
-#include <rtype/ECSManager.hpp>
 #include <rtype/Manager.hh>
 #include <rtype/config/ArgsParser.hh>
 
+/**
+ * @brief Show help message
+ *
+ * @return SUCCESS
+ */
 static int display_help()
 {
     for (auto const &str : rserver::HELP_MSG) {
         std::cout << str << ENDL;
     }
-    return rserver::SUCESS;
+    return rserver::SUCCESS;
 }
 
+/**
+ * @brief Main function. Load the arguments and launch the server's manager.
+ *
+ * @param argc int - nb of args
+ * @param argv const char[] - array with the arguments
+ * @return int - SUCCESS (0) is okay, else FAILURE (84)
+ */
 int main(int argc, const char *argv[])
 {
-    // ServerEntityFactory factory{};
-    // rtype::ECSManager ecsManager{};
-    // SparseArray<rtype::HealthComponent> healthComponents{};
-    // ecsManager.register_component<rtype::HealthComponent>(healthComponents);
-    // size_t id {factory.create("Enemy", ecsManager)};
-    // std::cout << ecsManager.get_component<rtype::HealthComponent>(id).health;
     try {
         rserver::Infos infos{
             rserver::ArgsParser::get_args(argc, std::span(argv, std::size_t(argc)))};
@@ -41,5 +44,5 @@ int main(int argc, const char *argv[])
         return rserver::FAILURE;
     }
 
-    return rserver::SUCESS;
+    return rserver::SUCCESS;
 }

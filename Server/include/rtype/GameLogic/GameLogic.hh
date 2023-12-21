@@ -12,6 +12,9 @@
 
 namespace rserver
 {
+    const constexpr int MAX_POSITION_X{700};
+    const constexpr int MAX_POSITION_Y{900};
+    const constexpr int MIN_POSITION{-100};
     class GameLogic
     {
         public:
@@ -27,7 +30,7 @@ namespace rserver
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
                            float delta_time);
             void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
-
+            void destroy_too_far_entities(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,
                                      rserver::PlayersManager &players_manager,

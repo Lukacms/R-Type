@@ -27,7 +27,7 @@ size_t rtype::EntityManager::create_entity(size_t entity)
     for (size_t i{0}; i < m_queue.size(); i++)
         if (m_queue[i] == entity) {
             exist = true;
-            m_queue.erase(m_queue.begin() + i);
+            m_queue.erase(m_queue.begin() + static_cast<ssize_t>(i));
         }
     if (!exist)
         throw std::runtime_error("entity already assign");
