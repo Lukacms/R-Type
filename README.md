@@ -6,6 +6,9 @@ C++ Game Engine with networking
     1. [Dependencies](#Dependencies)
     2. [Documentation](#Documentation)
 2. [Build the project](#Build)
+    1. [On Linux](#Linux)
+    2. [On Windows](#Windows)
+3. [Authors](#Authors)
 
 ## Project
 [R-Type](https://en.wikipedia.org/wiki/R-Type) is an old arcade game.\
@@ -35,17 +38,7 @@ sudo apt-get update -qq
 sudo apt-get install -y cmake clang ninja-build just
 
 # Have to install some libraries required for some libraries, such as SFML
-sudo apt-get install \
-    libxrandr-dev \
-    libxcursor-dev \
-    libudev-dev \
-    libopenal-dev \
-    libflac-dev \
-    libvorbis-dev \
-    libgl1-mesa-dev \
-    libegl1-mesa-dev \
-    libdrm-dev \
-    libgbm-dev
+sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev
 
 # clone the repository
 git clone git@github.com:Lukacms/R-Type.git
@@ -79,6 +72,26 @@ Once the project is built, it will have the following architecture:
 ```
 
 ### Windows
+Make sure to have the following package installed. Name may vary:
+* just
+* cmake
+* clang
+* ninja-build
+
+And for SFML:
+* libxrandr-dev
+* libxcursor-dev
+* libudev-dev
+* libopenal-dev
+* libflac-dev
+* libvorbis-dev
+* libgl1-mesa-dev
+* libegl1-mesa-dev
+* libdrm-dev
+* libgbm-dev
+
+You can then launch the project with `just windows`.
+
 
 ## Authors
 * [Luka Camus](https://github.com/Lukacms)

@@ -30,8 +30,8 @@ namespace ntw
         Creation,    // Create a new entity : Creation [Id] [Type]
         Destruction, // Destruct one entity : Destruction [Id]
         Position,    // Send the position of an entity : Position [Id] [x] [y]
-        Input, // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
-        Entity // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
+        Input,  // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
+        Entity, // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
     };
 
 #pragma pack(push, 1)

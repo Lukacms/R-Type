@@ -90,7 +90,7 @@ jobs:
           cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-17 -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_EXPORT_COMPILE_COMMANDS=true
           ninja
       shell: bash
-      timeout-minutes: 5
+      timeout-minutes: 3
 
     - name: Check executable files exists
       run: |
@@ -119,6 +119,11 @@ jobs:
           vcpkg: true
           cppcheck: true
           clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
+      - name: Build project with msvc
+        run: |
+          cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true
+          ninja -C build
+        timeout-minutes: 3
 
   run_tests:
     name: Run tests
