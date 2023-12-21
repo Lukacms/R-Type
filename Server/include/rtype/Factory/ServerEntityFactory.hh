@@ -8,7 +8,8 @@
 #include <rtype/ECSManager.hpp>
 #include <string_view>
 
-namespace rserver {
+namespace rserver
+{
     class ServerEntityFactory
     {
 
@@ -28,4 +29,4 @@ namespace rserver {
             static size_t create_other_player(rtype::ECSManager &ecs_manager);
             static size_t create_bullet(rtype::ECSManager &ecs_manager);
     };
-}
+} // namespace rserver

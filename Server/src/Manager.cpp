@@ -103,7 +103,9 @@ void rserver::Manager::run_game_logic()
         auto start = std::chrono::steady_clock::now();
         while (RUNNING) {
             auto update = std::chrono::steady_clock::now();
-            float delta_time = std::chrono::duration_cast<std::chrono::microseconds>(update - start).count() / 1000000.0f;
+            float delta_time =
+                std::chrono::duration_cast<std::chrono::microseconds>(update - start).count() /
+                1000000.0f;
             logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(), delta_time);
             start = std::chrono::steady_clock::now();
         }
