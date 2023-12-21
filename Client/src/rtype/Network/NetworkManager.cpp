@@ -31,7 +31,7 @@ rclient::NetworkManager::NetworkManager(const std::string &host, const std::stri
     m_socket.open(udp::v4());
     ntw::Communication commn{.type = ntw::NetworkType::Connection, .args = {}};
     this->send_message(commn);
-    //this->m_io_context.run();
+    // this->m_io_context.run();
 }
 
 void rclient::NetworkManager::fetch_messages()
@@ -119,11 +119,11 @@ void rclient::NetworkManager::manage_entity(rclient::NetworkManager &network_man
                                             ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
-    //ntw::Communication response{ntw::Ok, {}};
+    // ntw::Communication response{ntw::Ok, {}};
 
     if (!ecs_manager.is_entity_used(std::stoul(arguments[0])))
         rclient::NetworkManager::create_entity(network_manager, ecs_manager, communication);
     rclient::NetworkManager::move_entity(network_manager, ecs_manager, communication);
     std::cout << "NEW X : " << arguments[2] << " NEW Y : " << arguments[3] << std::endl;
-    //network_manager.send_message(response);
+    // network_manager.send_message(response);
 }

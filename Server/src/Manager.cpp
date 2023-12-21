@@ -109,7 +109,8 @@ void rserver::Manager::run_game_logic()
             if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                         std::chrono::steady_clock::now() - timer)
                                         .count()) > 0.01) {
-                logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(), delta_time);
+                logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
+                                delta_time);
                 timer = std::chrono::steady_clock::now();
             }
             start = std::chrono::steady_clock::now();
