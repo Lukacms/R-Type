@@ -66,9 +66,9 @@ size_t rclient::ClientEntityFactory::create_player(std::size_t entity,
     tag.insert_at(entity, rtype::TagComponent{"Player"});
     rtype::SpriteComponent tmp;
     sprite.insert_at(entity, rtype::SpriteComponent{tmp});
-    sprite[entity].value().texture_path = "./Client/assets/ships/Spaceship.png";
-    sprite[entity].value().sprite.setTextureRect({0, 0, 33, 15});
-    sprite[entity].value().sprite.setScale(2, 2);
+    sprite[entity]->texture_path = "./Client/assets/Spaceship.png";
+    sprite[entity]->sprite.setTextureRect({0, 0, 33, 15});
+    sprite[entity]->sprite.setScale(2, 2);
     return entity;
 }
 
@@ -96,16 +96,14 @@ size_t rclient::ClientEntityFactory::create_bullet(std::size_t entity,
                                                    rtype::ECSManager &ecs_manager)
 {
     auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-    transform.insert_at(entity, rtype::TransformComponent{});
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    tag.insert_at(entity, rtype::TagComponent{"Bullet"});
     auto &sprite{ecs_manager.get_components<rtype::SpriteComponent>()};
-    rtype::SpriteComponent tmp;
 
-    /*tmp.texture.loadFromFile("../../assets/elements/011.png");
-    tmp.sprite.setTexture(tmp.texture);*/
-    sf::IntRect rect(0, 0, 32, 32);
-    tmp.sprite.setTextureRect(rect);
+    transform.insert_at(entity, rtype::TransformComponent{});
+    tag.insert_at(entity, rtype::TagComponent{"Bullet"});
+    rtype::SpriteComponent tmp;
     sprite.insert_at(entity, rtype::SpriteComponent{tmp});
+    sprite[entity]->texture_path = "./Client/assets/PlayerShoot.png";
+    sprite[entity]->sprite.setScale(2, 2);
     return entity;
 }

@@ -30,9 +30,10 @@ rclient::Client::Client(unsigned int width, unsigned int height, const std::stri
 
 int rclient::Client::client_run()
 {
+    auto start = std::chrono::steady_clock::now();
     while ((m_graphical_module.get_class().is_window_open())) {
         m_graphical_module.get_class().update();
-        m_state == STATE::Menu ? client_menu() : client_game();
+        m_state == STATE::Menu ? client_menu() : client_game(start);
         m_graphical_module.get_class().clear();
         m_graphical_module.get_class().draw_components(
             m_ecs.get_class().get_components<rtype::SpriteComponent>(),
@@ -50,8 +51,9 @@ void rclient::Client::client_menu()
     configure_network();
 }
 
-void rclient::Client::client_game()
+void rclient::Client::client_game(std::chrono::time_point<std::chrono::steady_clock> &start)
 {
+    auto end = std::chrono::steady_clock::now();
     m_network->fetch_messages();
     m_network->manage_message(m_ecs.get_class());
     check_input();

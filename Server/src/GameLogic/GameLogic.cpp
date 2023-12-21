@@ -14,9 +14,10 @@ rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket) : m_socket{socket}
 
 void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                    rserver::PlayersManager &players_manager,
-                                   rtype::ECSManager &manager)
+                                   rtype::ECSManager &manager, float delta_time)
 {
     collision_responses(physics_manager, players_manager, manager);
+    manager.apply_system(delta_time * 10000);
     send_entity(players_manager, manager);
 }
 

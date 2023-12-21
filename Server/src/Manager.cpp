@@ -43,11 +43,13 @@ rserver::Manager::Manager(asio::ip::port_type port)
     SparseArray<rtype::BoxColliderComponent> boxes{};
     SparseArray<rtype::TagComponent> tags{};
     SparseArray<rtype::HealthComponent> healths{};
+    std::function<void(ComponentManager &, float)> transform_system = &rtype::transform_system;
 
     this->ecs.get_class().register_component(transform);
     this->ecs.get_class().register_component(boxes);
     this->ecs.get_class().register_component(tags);
     this->ecs.get_class().register_component(healths);
+    this->ecs.get_class().add_system(transform_system);
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
     std::signal(SIGINT, Manager::handle_disconnection);
 }
@@ -98,8 +100,12 @@ void rserver::Manager::run()
 void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
+        auto start = std::chrono::steady_clock::now();
         while (RUNNING) {
-            logic.game_loop(this->physics.get_class(), players, this->ecs.get_class());
+            auto update = std::chrono::steady_clock::now();
+            float delta_time = std::chrono::duration_cast<std::chrono::microseconds>(update - start).count() / 1000000.0f;
+            logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(), delta_time);
+            start = std::chrono::steady_clock::now();
         }
         this->context.stop();
     });
@@ -117,8 +123,7 @@ void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &
                                    asio::ip::udp::socket &udp_socket)
 {
     for (const auto &client : players.get_all_players()) {
-        udp_socket.async_send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint(),
-                                 [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+        udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
     }
 }
 

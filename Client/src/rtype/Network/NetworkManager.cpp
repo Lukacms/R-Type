@@ -82,6 +82,7 @@ void rclient::NetworkManager::create_entity(
     rtype::ECSManager &ecs_manager, ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
+
     rclient::ClientEntityFactory::create(static_cast<size_t>(std::stoi(arguments[0])), arguments[1],
                                          ecs_manager);
 }
@@ -93,6 +94,7 @@ void rclient::NetworkManager::move_entity(
     std::vector<std::string> arguments = communication.deserialize();
     auto &transform = ecs_manager.get_component<rtype::TransformComponent>(
         static_cast<size_t>(std::stoi(arguments[0])));
+
     transform.position_x = static_cast<float>(std::stof(arguments[2]));
     transform.position_y = static_cast<float>(std::stof(arguments[3]));
 }
@@ -109,6 +111,7 @@ void rclient::NetworkManager::delete_entity(
     rtype::ECSManager &ecs_manager, ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
+
     ecs_manager.delete_entity(static_cast<size_t>(std::stoi(arguments[0])));
 }
 

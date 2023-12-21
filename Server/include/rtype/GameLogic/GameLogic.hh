@@ -24,7 +24,7 @@ namespace rserver
             GameLogic &operator=(GameLogic &&to_move) = delete;
 
             void game_loop(rtype::PhysicsManager &physics_manager,
-                           rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
+                           rserver::PlayersManager &players_manager, rtype::ECSManager &manager, float delta_time);
             void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
 
             // Collisions responses
