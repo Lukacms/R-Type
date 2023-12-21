@@ -15,7 +15,7 @@ env:
 
 jobs:
   check_repository_cleanliness:
-    name: "Check if the repository is clean and void of any unwanted files (temp, files, binary files, etc.)"
+    name: Check if the repository is clean and void of any unwanted files (temp, files, binary files, etc.)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
         fi
 
   check_status_repos:
-    name: "Check if all files are in the linter"
+    name: Check if all files are in the linter
     needs: check_repository_cleanliness
     runs-on: ubuntu-latest
     steps:
@@ -52,6 +52,7 @@ jobs:
 
 
   job_run_program:
+    name: Run cmake on ubuntu
     needs: check_status_repos
     runs-on: ubuntu-latest
     strategy:
@@ -62,7 +63,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        submodules: recursive
+        fetch-depth: 0
 
     - uses: extractions/setup-just@v1
       with:
@@ -100,26 +101,53 @@ jobs:
           fi
         done
 
-        #  run_tests:
-        #    needs: job_run_program
-        #    if: ${{ github.event_name == 'pull_request' }}
-        #    runs-on: ubuntu-latest
-        #    steps:
-        #    - name : Install packages
-        #      run: |
-        #          sudo apt-get update -qq
-        #          sudo apt-get install -y ninja-build clang-tidy-12 ccache
-        #          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
-        #          sudo apt-get install -y --no-install-recommends libsfml-dev catch2 make gcovr
-        #          clang++ --version
-        #          clang-tidy --version
-        #    - uses: actions/checkout@v3
-        #      with:
-        #        fetch-depth: 0
-        #    - name: Compilation test
-        #      run: make tests_run
-        #      shell: bash
-        #      timeout-minutes: 5
+  run_program_windows:
+    name: Compile on Windows with msvc
+    needs: check_status_repos
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v1
+        with:
+          compiler: msvc
+          vcvarsall: true
+          cmake: true
+          ninja: true
+          vcpkg: true
+          cppcheck: true
+          clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
+
+  run_tests:
+    name: Run tests
+    needs: job_run_program
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name : Install packages
+      run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ninja-build clang-tidy-12 ccache
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 100
+          sudo apt-get install -y --no-install-recommends libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev just
+          clang++ --version
+          clang-tidy --version
+
+    - name: Install newer Clang
+      run: |
+       wget https://apt.llvm.org/llvm.sh
+       chmod +x ./llvm.sh
+       sudo ./llvm.sh 17
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Compilation test
+      run: just tests
+      shell: bash
+      timeout-minutes: 5
 
   push_to_mirror:
     if: ${{ github.event_name == 'push' }}
