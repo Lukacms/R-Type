@@ -43,18 +43,25 @@ rserver::Manager::Manager(asio::ip::port_type port)
       logic{this->udp_socket}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
-
     SparseArray<rtype::TransformComponent> transform{};
     SparseArray<rtype::BoxColliderComponent> boxes{};
     SparseArray<rtype::TagComponent> tags{};
     SparseArray<rtype::HealthComponent> healths{};
 
+    try {
+        this->udp_socket.non_blocking(true);
+        /* should set timeout on non-blocking, but doesn't seems to be working */
+        this->udp_socket.set_option(
+            asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>{TIMEOUT_MS});
+        std::signal(SIGINT, Manager::handle_disconnection);
+    } catch (std::exception & /* e */) {
+        DEBUG(("This instance will stay blocking, clean <CTRL-C> will not work.\n"));
+    }
     this->ecs.get_class().register_component(transform);
     this->ecs.get_class().register_component(boxes);
     this->ecs.get_class().register_component(tags);
     this->ecs.get_class().register_component(healths);
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
-    std::signal(SIGINT, Manager::handle_disconnection);
 }
 
 /**
@@ -105,7 +112,6 @@ void rserver::Manager::launch(asio::ip::port_type port)
 
         manager.run_game_logic();
         manager.start_receive();
-        manager.run();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
     }
@@ -131,7 +137,6 @@ void rserver::Manager::run_game_logic()
             // std::cout << "oui: " << this->players.length() << "\n";
             // sleep(1);
         }
-        this->context.stop();
     });
 }
 
@@ -172,15 +177,16 @@ void rserver::Manager::start_receive()
     ntw::Communication commn{};
 
     while (RUNNING) {
-        this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
-        /* this->udp_socket.async_receive_from(
-            asio::buffer(&commn, sizeof(commn)), this->endpoint,
-            [this](auto &&p_h1, auto &&p_h2) { handle_receive(p_h1, p_h2); }); */
-        DEBUG(("port upon recieving %d\n", this->endpoint.port()));
-        DEBUG(("arguments here: %s\n", commn.args.data()));
-        if (this->endpoint.port() > 0)
-            this->threads.add_job(
-                [commn, this]() { this->command_manager(commn, this->endpoint); });
+        try {
+            this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
+            DEBUG(("port upon recieving %d\n", this->endpoint.port()));
+            DEBUG(("arguments here: %s\n", commn.args.data()));
+            if (this->endpoint.port() > 0)
+                this->threads.add_job(
+                    [commn, this]() { this->command_manager(commn, this->endpoint); });
+        } catch (std::exception & /* e */) {
+            // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
+        }
     }
 }
 
@@ -222,6 +228,8 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
         } else {
             this->add_new_player(client);
         }
+    } catch (ManagerException &e) {
+        DEBUG(("Exception while handling commands: %s\n", e.what()));
     }
 }
 

@@ -11,7 +11,7 @@
 
 TEST(ArgsParser, get_args_help)
 {
-    const char *argv[]{"kfj", "-h"};
+    const char *argv[]{"kfj", "-h"}; // NOLINT
     rserver::Infos parsed{rserver::ArgsParser::get_args(2, std::span(argv, 2))};
 
     EXPECT_TRUE(parsed.help);
@@ -19,8 +19,8 @@ TEST(ArgsParser, get_args_help)
 
 TEST(ArgsParser, get_args_wrong_arg_nb)
 {
-    const char *argv_too_little[]{};
-    const char *argv_too_much[]{"lkjeza", "ljh", "lkh"};
+    const char *argv_too_little[]{};                     // NOLINT
+    const char *argv_too_much[]{"lkjeza", "ljh", "lkh"}; // NOLINT
 
     EXPECT_THROW(rserver::ArgsParser::get_args(0, std::span(argv_too_little, 0)),
                  rserver::ArgsParser::ArgsException);
@@ -30,8 +30,8 @@ TEST(ArgsParser, get_args_wrong_arg_nb)
 
 TEST(ArgsParser, get_port)
 {
-    const char *none[]{"lkhg"};
-    const char *some[]{"kelj", "8909"};
+    const char *none[]{"lkhg"};         // NOLINT
+    const char *some[]{"kelj", "8909"}; // NOLINT
     rserver::Infos none_infos{rserver::ArgsParser::get_args(1, std::span(none, 1))};
     rserver::Infos some_infos{rserver::ArgsParser::get_args(2, std::span(some, 2))};
 
