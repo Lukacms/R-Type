@@ -31,7 +31,7 @@ rclient::NetworkManager::NetworkManager(const std::string &host, const std::stri
     m_socket.open(udp::v4());
     ntw::Communication commn{.type = ntw::NetworkType::Connection, .args = {}};
     this->send_message(commn);
-    this->m_io_context.run();
+    //this->m_io_context.run();
 }
 
 void rclient::NetworkManager::fetch_messages()
@@ -55,8 +55,7 @@ void rclient::NetworkManager::handle_receive(const asio::error_code &error,
 
 void rclient::NetworkManager::send_message(ntw::Communication &communication)
 {
-    m_socket.async_send_to(asio::buffer(&communication, sizeof(communication)), m_receiver_endpoint,
-                           [](auto && /* p_1 */, auto && /* p_2 */) {});
+    m_socket.send_to(asio::buffer(&communication, sizeof(communication)), m_receiver_endpoint);
 }
 
 std::deque<ntw::Communication> &rclient::NetworkManager::get_message_queue()
@@ -120,8 +119,11 @@ void rclient::NetworkManager::manage_entity(rclient::NetworkManager &network_man
                                             ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
+    //ntw::Communication response{ntw::Ok, {}};
 
     if (!ecs_manager.is_entity_used(std::stoul(arguments[0])))
         rclient::NetworkManager::create_entity(network_manager, ecs_manager, communication);
     rclient::NetworkManager::move_entity(network_manager, ecs_manager, communication);
+    std::cout << "NEW X : " << arguments[2] << " NEW Y : " << arguments[3] << std::endl;
+    //network_manager.send_message(response);
 }

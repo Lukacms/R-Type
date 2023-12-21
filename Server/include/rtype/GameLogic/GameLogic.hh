@@ -16,8 +16,8 @@ namespace rserver
     {
         public:
             explicit GameLogic(asio::ip::udp::socket &socket);
-            GameLogic(GameLogic const &to_copy) = default;
-            GameLogic(GameLogic &&to_move) = default;
+            GameLogic(GameLogic const &to_copy) = delete;
+            GameLogic(GameLogic &&to_move) = delete;
             ~GameLogic() = default;
 
             GameLogic &operator=(GameLogic const &to_copy) = delete;
@@ -42,5 +42,6 @@ namespace rserver
         private:
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
+            std::shared_mutex m_system_mutex{};
     };
 } // namespace rserver

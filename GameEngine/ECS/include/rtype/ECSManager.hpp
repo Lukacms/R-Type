@@ -71,7 +71,6 @@ namespace rtype
             void apply_system(float delta_time)
             {
                 m_system_manager.update(m_component_manager, delta_time);
-                //    m_physics_manager.check_collisions(m_component_manager);
             }
 
             bool is_entity_used(std::size_t entity)

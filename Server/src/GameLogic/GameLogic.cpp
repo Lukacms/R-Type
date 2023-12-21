@@ -17,7 +17,10 @@ void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                    rtype::ECSManager &manager, float delta_time)
 {
     collision_responses(physics_manager, players_manager, manager);
-    manager.apply_system(delta_time * 10000);
+    {
+        std::shared_lock<std::shared_mutex> lock{m_system_mutex};
+        manager.apply_system(delta_time);
+    }
     send_entity(players_manager, manager);
 }
 

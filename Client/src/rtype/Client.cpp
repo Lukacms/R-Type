@@ -53,11 +53,15 @@ void rclient::Client::client_menu()
 
 void rclient::Client::client_game(std::chrono::time_point<std::chrono::steady_clock> &start)
 {
-    auto end = std::chrono::steady_clock::now();
     m_network->fetch_messages();
     m_network->manage_message(m_ecs.get_class());
-    check_input();
-    send_client_input();
+    if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
+                                std::chrono::steady_clock::now() - start)
+                                .count()) > 0.01) {
+        check_input();
+        send_client_input();
+        start = std::chrono::steady_clock::now();
+    }
 }
 
 void rclient::Client::configure_network()

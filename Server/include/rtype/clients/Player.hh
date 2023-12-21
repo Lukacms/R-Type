@@ -8,8 +8,8 @@
 #pragma once
 
 #include <asio.hpp>
-#include <mutex>
 #include <string_view>
+#include <shared_mutex>
 
 namespace rserver
 {
@@ -30,7 +30,7 @@ namespace rserver
     class Player
     {
         public:
-            std::mutex mutex{};
+            std::shared_mutex mutex{};
             /* constructor / destructor */
             Player(asio::ip::udp::endpoint p_endpoint);
             Player(Player const &to_copy) = delete;

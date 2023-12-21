@@ -55,7 +55,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
 }
 
 rserver::Manager::Manager(rserver::Manager &&to_move)
-    : udp_socket{std::move(to_move.udp_socket)}, logic{std::move(to_move.logic)}
+    : udp_socket{std::move(to_move.udp_socket)}, logic{to_move.udp_socket}
 {
 }
 
@@ -101,12 +101,17 @@ void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
         auto start = std::chrono::steady_clock::now();
+        auto timer = std::chrono::steady_clock::now();
         while (RUNNING) {
             auto update = std::chrono::steady_clock::now();
-            float delta_time =
-                std::chrono::duration_cast<std::chrono::microseconds>(update - start).count() /
-                1000000.0f;
-            logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(), delta_time);
+            float delta_time = static_cast<float>(
+                std::chrono::duration_cast<std::chrono::milliseconds>(update - start).count());
+            if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
+                                        std::chrono::steady_clock::now() - timer)
+                                        .count()) > 0.01) {
+                logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(), delta_time);
+                timer = std::chrono::steady_clock::now();
+            }
             start = std::chrono::steady_clock::now();
         }
         this->context.stop();
@@ -169,9 +174,8 @@ void rserver::Manager::command_manager(ntw::Communication communication,
 
     try {
         Player &player{this->players.get_by_id(client.port())};
-
         {
-            std::unique_lock<std::mutex> lock{player.mutex};
+            std::shared_lock<std::shared_mutex> lock{player.mutex};
             for (const auto &handle : HANDLER) {
                 if (handle.type == communication.type) {
                     handle.handler(*this, player, args);
