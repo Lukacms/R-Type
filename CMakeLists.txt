@@ -45,8 +45,8 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 FetchContent_Declare(
     sfml
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x
+    GIT_REPOSITORY "https://github.com/SFML/SFML.git"
+    GIT_TAG "2.6.x"
 )
 
 FetchContent_GetProperties(sfml)

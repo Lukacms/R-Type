@@ -42,7 +42,7 @@ namespace rclient
             // Methods for running client
             int client_run();
             void client_menu();
-            void client_game();
+            void client_game(std::chrono::time_point<std::chrono::steady_clock> &start);
 
             void configure_network();
 

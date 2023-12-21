@@ -17,6 +17,22 @@ set_property(TARGET r-type-graphics PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     r-type-graphics PRIVATE
     r-type-ecs-interface
+    r-type-graphics-interface
+    r-type-ecs
+    sfml-window
+    sfml-graphics
+    sfml-system
+    sfml-audio
+    sfml-network
+)
+
+# interface libraries for .h files
+add_library(r-type-graphics-interface INTERFACE)
+set_property(TARGET r-type-graphics-interface PROPERTY CXX_STANDARD 20)
+set_property(TARGET r-type-graphics-interface PROPERTY CXX_STANDARD_REQUIRED ON)
+target_link_libraries(
+    r-type-graphics-interface INTERFACE
+    r-type-graphics
     r-type-ecs
     sfml-window
     sfml-graphics

@@ -4,6 +4,7 @@
 
 add_library(r-type-physics SHARED
     src/rtype/PhysicsManager.cpp
+    src/rtype/EntryPoint.cpp
 )
 
 target_include_directories(r-type-physics PRIVATE ./include ../ECS/include)

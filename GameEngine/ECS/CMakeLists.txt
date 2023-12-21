@@ -2,7 +2,6 @@
 ## CMakeLists: R-Type / Client
 ##
 
-
 add_library(r-type-ecs-interface INTERFACE)
 
 add_library(r-type-ecs SHARED

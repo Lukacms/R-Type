@@ -3,6 +3,7 @@
 //
 
 #include <rtype/Components/TagComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/GameLogic/GameLogic.hh>
 #include <rtype/Manager.hh>
 #include <rtype/clients/PlayersManager.hh>
@@ -13,9 +14,11 @@ rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket) : m_socket{socket}
 
 void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                    rserver::PlayersManager &players_manager,
-                                   rtype::ECSManager &manager)
+                                   rtype::ECSManager &manager, float delta_time)
 {
     collision_responses(physics_manager, players_manager, manager);
+    manager.apply_system(delta_time * 10000);
+    send_entity(players_manager, manager);
 }
 
 void rserver::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
@@ -82,5 +85,24 @@ void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physic
                 manager.delete_entity(entity1);
             }
         }
+    }
+}
+
+void rserver::GameLogic::send_entity(rserver::PlayersManager &players_manager,
+                                     rtype::ECSManager &manager)
+{
+    SparseArray<rtype::TransformComponent> &transforms =
+        manager.get_components<rtype::TransformComponent>();
+    SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
+
+    for (size_t entity = 0; entity < transforms.size(); entity += 1) {
+        ntw::Communication entity_descriptor{ntw::Entity, {}};
+        if (!transforms[entity].has_value())
+            continue;
+        entity_descriptor.add_param(entity);
+        entity_descriptor.add_param(!tags[entity].has_value() ? "NOTHING" : tags[entity]->tag);
+        entity_descriptor.add_param(transforms[entity]->position_x);
+        entity_descriptor.add_param(transforms[entity]->position_y);
+        Manager::send_to_all(entity_descriptor, players_manager, m_socket);
     }
 }

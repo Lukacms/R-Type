@@ -43,10 +43,13 @@ rserver::Manager::Manager(asio::ip::port_type port)
       logic{this->udp_socket}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
+    this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
+
     SparseArray<rtype::TransformComponent> transform{};
     SparseArray<rtype::BoxColliderComponent> boxes{};
     SparseArray<rtype::TagComponent> tags{};
     SparseArray<rtype::HealthComponent> healths{};
+    std::function<void(ComponentManager &, float)> transform_system = &rtype::transform_system;
 
     try {
         this->udp_socket.non_blocking(true);
@@ -61,6 +64,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
     this->ecs.get_class().register_component(boxes);
     this->ecs.get_class().register_component(tags);
     this->ecs.get_class().register_component(healths);
+    this->ecs.get_class().add_system(transform_system);
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
 }
 
@@ -109,7 +113,6 @@ void rserver::Manager::launch(asio::ip::port_type port)
 {
     try {
         Manager manager{port};
-
         manager.run_game_logic();
         manager.start_receive();
     } catch (std::exception &e) {
@@ -133,9 +136,14 @@ void rserver::Manager::run()
 void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
+        auto start = std::chrono::steady_clock::now();
         while (RUNNING) {
-            // std::cout << "oui: " << this->players.length() << "\n";
-            // sleep(1);
+            auto update = std::chrono::steady_clock::now();
+            float delta_time =
+                std::chrono::duration_cast<std::chrono::microseconds>(update - start).count() /
+                TIMEOUT_GL;
+            logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(), delta_time);
+            start = std::chrono::steady_clock::now();
         }
     });
 }
@@ -151,8 +159,7 @@ void rserver::Manager::run_game_logic()
 void rserver::Manager::send_message(ntw::Communication &to_send, const Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
-    udp_socket.async_send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint(),
-                             [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+    udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
 }
 
 /**
@@ -166,8 +173,7 @@ void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &
                                    asio::ip::udp::socket &udp_socket)
 {
     for (const auto &client : players.get_all_players()) {
-        udp_socket.async_send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint(),
-                                 [](auto && /* p_h1 */, auto && /* p_h2 */) {});
+        udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
     }
 }
 
@@ -188,20 +194,6 @@ void rserver::Manager::start_receive()
             // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
         }
     }
-}
-
-void rserver::Manager::handle_receive(const asio::error_code &error,
-                                      std::size_t /* bytes_transferre */)
-{
-    if (!error) {
-        this->start_receive();
-    }
-}
-
-void rserver::Manager::handle_send(const ntw::Communication & /*message*/,
-                                   const asio::error_code & /*error*/,
-                                   std::size_t /*bytes_transferred*/)
-{
 }
 
 void rserver::Manager::command_manager(ntw::Communication const &communication,
@@ -237,10 +229,7 @@ void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
 {
     ntw::Communication communication{.type = ntw::Refusal, .args = {}};
 
-    this->udp_socket.async_send_to(asio::buffer(&communication, sizeof(communication)), client,
-                                   [this, communication](auto &&p_h1, auto &&p_h2) {
-                                       handle_send(communication, p_h1, p_h2);
-                                   });
+    this->udp_socket.send_to(asio::buffer(&communication, sizeof(communication)), client);
 }
 
 /**
