@@ -12,12 +12,12 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 if (WIN32)
     include(FetchContent)
     FetchContent_Declare(
-        dlfcn
+        dlfcn-win32
         GIT_REPOSITORY "https://github.com/dlfcn-win32/dlfcn-win32.git"
         GIT_TAG "v1.4.1"
         SYSTEM
     )
-    FetchContent_MakeAvailable(dlfcn)
+    FetchContent_MakeAvailable(dlfcn-win32)
 endif()
 
 # only add the interface library
@@ -27,6 +27,7 @@ add_library(r-type-utils INTERFACE)
 set_property(TARGET r-type-utils PROPERTY CXX_STANDARD 20)
 set_property(TARGET r-type-utils PROPERTY CXX_STANDARD_REQUIRED ON)
 if (WIN32)
-    target_include_directories(r-type-utils INTERFACE ${CMAKE_BINARY_DIR}/_deps/dlfcn-src/src)
+    find_package(dlfcn-win32 REQUIRED)
+    target_include_directories(r-type-utils INTERFACE ${CMAKE_BINARY_DIR}/_deps/dlfcn-win32-src/src)
     target_link_libraries(r-type-utils INTERFACE dlfcn-win32::dl)
 endif()
