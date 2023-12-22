@@ -19,6 +19,21 @@ bool rclient::Client::is_running()
     return m_window->isOpen();
 }
 
+sf::Vector2u rclient::Client::get_window_size()
+{
+    return m_window->getSize();
+}
+
+void rclient::Client::close_window()
+{
+    m_window->close();
+}
+
+void rclient::Client::set_position(sf::Vector2i pos)
+{
+    m_window->setPosition(pos);
+}
+
 void rclient::Client::read_input()
 {
     sf::Event evt{};
