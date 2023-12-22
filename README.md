@@ -24,7 +24,8 @@ The project is done in [C++](https://en.wikipedia.org/wiki/C%2B%2B), and build u
 All other dependencies are built with cmake using FetchContent.
 
 ### Documentation
-To have more information, look at the [docs](./docs/) folder.
+To have more information, look at the [docs](./docs/) folder.\
+There is also a [wiki](./wiki).
 
 ## Build
 
