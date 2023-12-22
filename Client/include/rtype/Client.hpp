@@ -35,6 +35,7 @@ namespace rclient
             sf::Vector2u get_window_size();
             void set_position(sf::Vector2i pos);
             void close_window();
+            sf::RenderWindow &get_window();
 
         private:
             size_t m_width{STANDARD_WIDTH};

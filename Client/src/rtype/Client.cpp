@@ -24,6 +24,11 @@ sf::Vector2u rclient::Client::get_window_size()
     return m_window->getSize();
 }
 
+sf::RenderWindow &rclient::Client::get_window()
+{
+    return *m_window;
+}
+
 void rclient::Client::close_window()
 {
     m_window->close();
