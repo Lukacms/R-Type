@@ -12,6 +12,7 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/SpriteManager.hpp>
 #include <rtype/TextureManager.hpp>
+#include <rtype/WindowManager.hpp>
 
 namespace rclient
 {
@@ -28,5 +29,6 @@ namespace rclient
             SpriteManager sprite_system{};
             rclient::Client le_client{};
             rtype::ECSManager manager{};
+            WindowManager window_manager{};
     };
 } // namespace rclient

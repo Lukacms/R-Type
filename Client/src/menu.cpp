@@ -57,6 +57,12 @@ void rclient::Menu::menu()
     transforms.emplace_at(scale_button, 250.0F, 300.0F, 0.0F, 0.0F, 2.F, 2.F);
     transforms.emplace_at(quit_button, 250.0F, 400.0F, 0.0F, 0.0F, 2.F, 2.F);
 
+    tags.emplace_at(background, "background");
+    tags.emplace_at(start_button, "start_button");
+    tags.emplace_at(music_button, "music_button");
+    tags.emplace_at(scale_button, "scale_button");
+    tags.emplace_at(quit_button, "quit_button");
+
     manager.register_component(sprites);
     manager.register_component(tags);
     manager.register_component(transforms);
@@ -66,23 +72,30 @@ void rclient::Menu::menu()
     manager.add_system(transform);
     manager.add_system(movement);
     manager.add_system(sprite);
-    float delta_time = 0.F;
 
     while (le_client.is_running()) {
+        constexpr float delta_time = 0.F;
         le_client.render(manager);
         manager.apply_system(delta_time);
         le_client.read_input();
+
+        const sf::Vector2u window_size = le_client.get_window_size();
+
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             const sf::Vector2i position = sf::Mouse::getPosition();
-            if (position.x >= 300 && position.x <= 600 && position.y >= 225 && position.y <= 300)
-                // TODO: Start game
+            if (position.x >= window_size.x - 500 && position.x <= window_size.x - 200 &&
+                position.y >= window_size.y - 375 && position.y <= window_size.y - 300)
                 continue;
-            if (position.x >= 300 && position.x <= 600 && position.y >= 325 && position.y <= 400)
+            // TODO: Start game
+            if (position.x >= window_size.x - 500 && position.x <= window_size.x - 200 &&
+                position.y >= window_size.y - 275 && position.y <= window_size.y - 200)
                 audio_system.setVolume("test", 0);
-            if (position.x >= 300 && position.x <= 600 && position.y >= 425 && position.y <= 500)
+            if (position.x >= window_size.x - 500 && position.x <= window_size.x - 200 &&
+                position.y >= window_size.y - 175 && position.y <= window_size.y - 100)
                 audio_system.setVolume("test", 100);
-            if (position.x >= 300 && position.x <= 600 && position.y >= 525 && position.y <= 600)
-                exit(0);
+            if (position.x >= window_size.x - 500 && position.x <= window_size.x - 200 &&
+                position.y >= window_size.y - 75 && position.y <= window_size.y)
+                le_client.close_window();
         }
     }
 }
