@@ -12,6 +12,7 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/GraphicModule.hh>
 #include <rtype/Network/NetworkManager.hh>
+#include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <string_view>
 
@@ -39,11 +40,14 @@ namespace rclient
             Client &operator=(const Client &) = delete;
             Client &operator=(Client &&) = delete;
 
+            // static method to launch client
+            static int launch(Arguments &infos);
             // Methods for running client
             int client_run();
             void client_menu();
             void client_game(std::chrono::time_point<std::chrono::steady_clock> &start);
 
+            void set_network_infos(Arguments &infos);
             void configure_network();
 
             void send_client_input();
