@@ -45,7 +45,7 @@ void rclient::NetworkManager::fetch_messages()
 }
 
 void rclient::NetworkManager::handle_receive(const asio::error_code &error,
-                                             std::size_t bytes_transferred)
+                                             std::size_t /* bytes_transferred */)
 {
     if (!error) {
         this->fetch_messages();
@@ -75,9 +75,9 @@ void rclient::NetworkManager::manage_message(rtype::ECSManager &manager)
     }
 }
 
-void rclient::NetworkManager::create_entity(
-    rclient::NetworkManager & /* network_manager */,
-    rtype::ECSManager &ecs_manager, ntw::Communication &communication)
+void rclient::NetworkManager::create_entity(rclient::NetworkManager & /* network_manager */,
+                                            rtype::ECSManager &ecs_manager,
+                                            ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
 
@@ -85,9 +85,9 @@ void rclient::NetworkManager::create_entity(
                                          ecs_manager);
 }
 
-void rclient::NetworkManager::move_entity(
-    rclient::NetworkManager & /* network_manager */,
-    rtype::ECSManager &ecs_manager, ntw::Communication &communication)
+void rclient::NetworkManager::move_entity(rclient::NetworkManager & /* network_manager */,
+                                          rtype::ECSManager &ecs_manager,
+                                          ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
     auto &transform = ecs_manager.get_component<rtype::TransformComponent>(
