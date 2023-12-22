@@ -12,6 +12,7 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/GraphicModule.hh>
 #include <rtype/Network/NetworkManager.hh>
+#include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <string_view>
@@ -34,7 +35,7 @@ namespace rclient
             explicit Client(unsigned int width = STANDARD_WIDTH,
                             unsigned int height = STANDARD_HEIGHT,
                             const std::string &title = STANDARD_TITLE.data());
-            ~Client() = default;
+            ~Client();
             Client(const Client &) = delete;
             Client(Client &&) = delete;
             Client &operator=(const Client &) = delete;
@@ -56,11 +57,14 @@ namespace rclient
         private:
             dl::DlLoader<rtype::ECSManager> m_ecs;
             dl::DlLoader<rtype::GraphicModule> m_graphical_module;
+
             STATE m_state{STATE::Menu};
+            std::chrono::time_point<std::chrono::steady_clock> m_timer_shoot;
+
             std::unique_ptr<rclient::NetworkManager> m_network{nullptr};
+            ThreadPool threads{};
             std::string m_host;
             std::string m_port;
-            std::chrono::time_point<std::chrono::steady_clock> m_timer_shoot;
             std::deque<ntw::Communication> m_to_send{};
     };
 } // namespace rclient

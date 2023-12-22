@@ -27,9 +27,10 @@ add_library(
     rtype-client-core
     SHARED
     src/rtype/Client.cpp
-    src/rtype/Network/NetworkManager.cpp
-    src/Factory/ClientEntityFactory.cpp
     src/rtype/config/ArgsConfig.cpp
+    src/rtype/Network/NetworkManager.cpp
+    src/rtype/Network/ThreadPool.cpp
+    src/Factory/ClientEntityFactory.cpp
 )
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)

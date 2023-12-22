@@ -28,31 +28,30 @@ rclient::NetworkManager::NetworkManager(const std::string &host, const std::stri
       m_socket{m_io_context}
 {
     m_receiver_endpoint = *m_resolver.resolve(asio::ip::udp::v4(), host, port).begin();
+    // m_socket.non_blocking(true);
+    // m_socket.set_option(asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>{1000});
     m_socket.open(udp::v4());
-    ntw::Communication commn{.type = ntw::NetworkType::Connection, .args = {}};
-    this->send_message(commn);
-    // this->m_io_context.run();
+    this->send_message({.type = ntw::NetworkType::Connection, .args = {}});
 }
 
-void rclient::NetworkManager::fetch_messages()
+void rclient::NetworkManager::fetch_messages(rtype::ECSManager &manager)
 {
     ntw::Communication comm{};
     asio::ip::udp::endpoint sender_endpoint;
 
-    m_socket.receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint);
-    if (sender_endpoint.port() > 0)
-        m_queue.emplace_back(comm);
-}
-
-void rclient::NetworkManager::handle_receive(const asio::error_code &error,
-                                             std::size_t /* bytes_transferred */)
-{
-    if (!error) {
-        this->fetch_messages();
+    while (RUNNING) {
+        m_socket.receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint);
+        if (sender_endpoint.port() > 0)
+            this->manage_message(manager);
     }
 }
 
 void rclient::NetworkManager::send_message(ntw::Communication &communication)
+{
+    m_socket.send_to(asio::buffer(&communication, sizeof(communication)), m_receiver_endpoint);
+}
+
+void rclient::NetworkManager::send_message(ntw::Communication communication)
 {
     m_socket.send_to(asio::buffer(&communication, sizeof(communication)), m_receiver_endpoint);
 }

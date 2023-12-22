@@ -20,6 +20,8 @@ using asio::ip::udp;
 namespace rclient
 {
 
+    static volatile std::atomic_int RUNNING{1};
+
     class NetworkManager
     {
         public:
@@ -30,10 +32,10 @@ namespace rclient
             NetworkManager &operator=(NetworkManager const &other) = delete;
             NetworkManager &operator=(NetworkManager &&other) = delete;
 
-            void fetch_messages();
+            void fetch_messages(rtype::ECSManager &manager);
             void send_message(ntw::Communication &communication);
+            void send_message(ntw::Communication communication);
             void manage_message(rtype::ECSManager &manager);
-            void handle_receive(const asio::error_code &error, std::size_t bytes_transferre);
 
             [[nodiscard]] std::deque<ntw::Communication> &get_message_queue();
 
