@@ -46,8 +46,8 @@ namespace ntw
             template <typename TType> void add_param(TType param)
             {
                 std::string to_add{};
-                size_t ind{0};
-                size_t arg_ind{0};
+                std::size_t ind{0};
+                std::size_t arg_ind{0};
 
                 if constexpr (std::is_arithmetic<TType>::value)
                     to_add = std::to_string(param);

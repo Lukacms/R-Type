@@ -11,6 +11,7 @@
 #include <functional>
 #include <mutex>
 #include <queue>
+#include <sys/types.h>
 #include <thread>
 #include <vector>
 
