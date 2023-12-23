@@ -159,8 +159,8 @@ jobs:
 
     - name: Compilation test
       run: |
-        cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DRTYPE_BUILD_TESTS=true
-        ninja -C {{ build_folder }}
+        cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DRTYPE_BUILD_TESTS=true
+        ninja -C build
       shell: bash
       timeout-minutes: 5
 
