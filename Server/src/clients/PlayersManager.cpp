@@ -19,7 +19,7 @@ rserver::Player &rserver::PlayersManager::get_by_id(asio::ip::port_type const &p
     throw PlayersException();
 }
 
-rserver::Player &rserver::PlayersManager::get_by_entity_id(std::size_t &entity)
+rserver::Player &rserver::PlayersManager::get_by_entity_id(std::size_t const &entity)
 {
     for (auto &client : this->players) {
         if (client.get_entity_value() == entity)
@@ -28,8 +28,7 @@ rserver::Player &rserver::PlayersManager::get_by_entity_id(std::size_t &entity)
     throw PlayersException();
 }
 
-rserver::Player &rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint,
-                                                     asio::ip::udp::socket & /* socket */)
+rserver::Player &rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint)
 {
     this->players.emplace_back(endpoint);
 

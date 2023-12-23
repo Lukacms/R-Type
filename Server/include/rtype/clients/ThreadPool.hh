@@ -32,7 +32,7 @@ namespace rserver
             ThreadPool(u_int p_nb_threads = std::thread::hardware_concurrency());
             ThreadPool(ThreadPool const &to_copy) = delete;
             ThreadPool(ThreadPool &&to_move);
-            ~ThreadPool() = default;
+            ~ThreadPool();
 
             /* override operator */
             ThreadPool &operator=(ThreadPool const &to_copy) = delete;

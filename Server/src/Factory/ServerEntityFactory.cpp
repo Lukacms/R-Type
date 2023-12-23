@@ -5,11 +5,11 @@
 ** ServerEntityFactory
 */
 
-#include "rtype/Factory/ServerEntityFactory.hh"
-#include "rtype/Components/BoxColliderComponent.hh"
-#include "rtype/Components/HealthComponent.hh"
-#include "rtype/Components/TagComponent.hh"
-#include "rtype/Components/TransformComponent.hh"
+#include <rtype/Components/BoxColliderComponent.hh>
+#include <rtype/Components/HealthComponent.hh>
+#include <rtype/Components/TagComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
+#include <rtype/Factory/ServerEntityFactory.hh>
 
 size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSManager &ecs_manager)
 {
@@ -25,7 +25,7 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
     if (type == "Bullet") {
         return create_bullet(ecs_manager);
     }
-    throw std::runtime_error("Unknown entity type");
+    throw FactoryException("Unknown entity type");
 }
 
 size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager)
@@ -87,4 +87,15 @@ size_t rserver::ServerEntityFactory::create_bullet(rtype::ECSManager &ecs_manage
     transform.insert_at(entity, rtype::TransformComponent{});
     transform[entity]->velocity_x = 10;
     return entity;
+}
+
+/* exception */
+rserver::ServerEntityFactory::FactoryException::FactoryException(std::string &&perror_msg)
+    : error_msg{std::move(perror_msg)}
+{
+}
+
+const char *rserver::ServerEntityFactory::FactoryException::what() const noexcept
+{
+    return this->error_msg.c_str();
 }

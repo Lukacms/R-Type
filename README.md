@@ -78,6 +78,7 @@ Make sure to have the following package installed. Name may vary:
 * cmake
 * clang
 * ninja-build
+* dlfcn-win32 with `vcpkg`
 
 And for SFML:
 * libxrandr-dev
