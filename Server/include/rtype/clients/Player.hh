@@ -7,6 +7,9 @@
 
 #pragma once
 
+// NOTE need to do this to be able to build the shared library of the server core
+#define ASIO_HEADER_ONLY
+
 #include <asio.hpp>
 #include <mutex>
 #include <string_view>

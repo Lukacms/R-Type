@@ -1,6 +1,9 @@
-//
-// Created by kane on 13/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** GameLogic
+** File description:
+** GameLogic
+*/
 
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>

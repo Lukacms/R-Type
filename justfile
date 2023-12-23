@@ -33,7 +33,7 @@ tests: clean_tests
 
 # compile on windows
 windows:
-    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true && \
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DASIO_STANDALONE && \
     ninja -C {{ build_folder }}
 
 clean:
