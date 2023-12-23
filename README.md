@@ -8,7 +8,8 @@ C++ Game Engine with networking
 2. [Build the project](#Build)
     1. [On Linux](#Linux)
     2. [On Windows](#Windows)
-3. [Authors](#Authors)
+3. [Contribute](#Contribute-to-the-project)
+4. [Authors](#Authors)
 
 ## Project
 [R-Type](https://en.wikipedia.org/wiki/R-Type) is an old arcade game.\
@@ -25,7 +26,7 @@ All other dependencies are built with cmake using FetchContent.
 
 ### Documentation
 To have more information, look at the [docs](./docs/) folder.\
-There is also a [wiki](./wiki).
+There is also a [wiki](https://github.com/Lukacms/R-Type/wiki/).
 
 ## Build
 
@@ -94,6 +95,10 @@ And for SFML:
 
 You can then launch the project with `just windows`.
 
+## Contribute to the project
+The details are on the [wiki's](https://github.com/Lukacms/R-Type/wiki/New-Developer-on-the-project-%3F) page to known how to startr contributing on the project.
+
+You can create a new branch: `feature/<what-you-are-implementing>`, push and then make a pull request to release a new version of the project on `main`.
 
 ## Authors
 * [Luka Camus](https://github.com/Lukacms)
