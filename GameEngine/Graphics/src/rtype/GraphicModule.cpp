@@ -2,7 +2,6 @@
 // Created by kane on 14/12/23.
 //
 
-#include <iostream>
 #include <rtype/GraphicModule.hh>
 
 rtype::GraphicModule::GraphicModule(unsigned int width, unsigned int height,

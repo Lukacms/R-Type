@@ -41,6 +41,7 @@ void rclient::NetworkManager::fetch_messages(rtype::ECSManager &manager)
 
     while (RUNNING) {
         m_socket.receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint);
+        m_queue.emplace_back(comm);
         if (sender_endpoint.port() > 0)
             this->manage_message(manager);
     }

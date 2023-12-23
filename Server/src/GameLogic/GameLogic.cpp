@@ -111,17 +111,24 @@ void rserver::GameLogic::destroy_too_far_entities(rserver::PlayersManager &playe
                                                   rtype::ECSManager &manager)
 {
     auto &transforms = manager.get_components<rtype::TransformComponent>();
+    auto &tag = manager.get_components<rtype::TagComponent>();
 
     for (size_t entity = 0; entity < transforms.size(); entity += 1) {
         if (!transforms[entity].has_value())
             continue;
-        if (transforms[entity]->position_x < MIN_POSITION || transforms[entity]->position_x > MAX_POSITION_X) {
+        if (!tag[entity].has_value())
+            continue;
+        if (tag[entity].value().tag == "Player")
+            continue;
+        if (transforms[entity]->position_x < MIN_POSITION ||
+            transforms[entity]->position_x > MAX_POSITION_X) {
             ntw::Communication send{.type = ntw::Destruction, .args = {}};
             manager.delete_entity(entity);
             send.add_param(entity);
             Manager::send_to_all(send, players_manager, m_socket);
         }
-        if (transforms[entity]->position_y < MIN_POSITION || transforms[entity]->position_y > MAX_POSITION_Y) {
+        if (transforms[entity]->position_y < MIN_POSITION ||
+            transforms[entity]->position_y > MAX_POSITION_Y) {
             ntw::Communication send{.type = ntw::Destruction, .args = {}};
             manager.delete_entity(entity);
             send.add_param(entity);
