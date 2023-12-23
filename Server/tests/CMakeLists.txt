@@ -10,6 +10,7 @@ add_executable(
     tests-r-type_server
     src/testsUtils.cpp
     src/config/testsArgsParser.cpp
+    src/clients/testsPlayer.cpp
     )
 target_compile_options(tests-r-type_server PRIVATE ${WARNING_FLAGS})
 target_include_directories(tests-r-type_server PUBLIC ${PROJECT_SOURCE_DIR}/Server/include)

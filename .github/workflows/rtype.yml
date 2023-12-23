@@ -121,7 +121,7 @@ jobs:
           clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
       - name: Build project with msvc
         run: |
-          cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DASIO_STANDALONE
+          cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DASIO_STANDALONE=true
           ninja -C build
         timeout-minutes: 10
 
