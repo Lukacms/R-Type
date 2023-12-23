@@ -7,9 +7,7 @@
 
 #pragma once
 
-// NOTE need to do this to be able to build the shared library of the server core
-#define ASIO_HEADER_ONLY
-
+#include <cstddef>
 #include <exception>
 #include <rtype/clients/Player.hh>
 #include <string_view>
@@ -31,19 +29,24 @@ namespace rserver
             PlayersManager &operator=(PlayersManager &&to_move) = default;
 
             /* methods */
-            Player &get_by_id(asio::ip::port_type const &port);
-            void add_player(asio::ip::udp::endpoint &endpoint, asio::ip::udp::socket &socket);
+            [[nodiscard]] Player &get_by_id(asio::ip::port_type const &port);
+            [[nodiscard]] Player &get_by_entity_id(std::size_t const &entity);
+            rserver::Player &add_player(asio::ip::udp::endpoint &endpoint);
+            [[nodiscard]] std::size_t length() const;
+            [[nodiscard]] const std::vector<Player> &get_all_players() const;
+
+            // void delete_player(asio::ip::udp::endpoint &endpoint);
 
             /* exception */
-            class PlayersExceptions : public std::exception
+            class PlayersException : public std::exception
             {
                 public:
-                    PlayersExceptions(std::string p_error = PM_ERROR.data());
-                    PlayersExceptions(PlayersExceptions const &to_copy) = default;
-                    PlayersExceptions(PlayersExceptions &&to_move) = default;
-                    ~PlayersExceptions() override = default;
-                    PlayersExceptions &operator=(PlayersExceptions const &to_copy) = default;
-                    PlayersExceptions &operator=(PlayersExceptions &&to_move) = default;
+                    PlayersException(std::string p_error = PM_ERROR.data());
+                    PlayersException(PlayersException const &to_copy) = default;
+                    PlayersException(PlayersException &&to_move) = default;
+                    ~PlayersException() override = default;
+                    PlayersException &operator=(PlayersException const &to_copy) = default;
+                    PlayersException &operator=(PlayersException &&to_move) = default;
                     [[nodiscard]] const char *what() const noexcept override;
 
                 private:

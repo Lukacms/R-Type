@@ -14,6 +14,8 @@
 #include <thread>
 #include <vector>
 
+using u_int = unsigned int;
+
 namespace rserver
 {
 
@@ -30,7 +32,7 @@ namespace rserver
             ThreadPool(u_int p_nb_threads = std::thread::hardware_concurrency());
             ThreadPool(ThreadPool const &to_copy) = delete;
             ThreadPool(ThreadPool &&to_move);
-            ~ThreadPool() = default;
+            ~ThreadPool();
 
             /* override operator */
             ThreadPool &operator=(ThreadPool const &to_copy) = delete;
@@ -44,9 +46,9 @@ namespace rserver
         private:
             /* variables */
             u_int nb_threads;
-            mutable std::mutex mutex;
-            std::condition_variable condition;
-            std::vector<std::thread> threads;
+            mutable std::mutex mutex{};
+            std::condition_variable condition{};
+            std::vector<std::thread> threads{};
             std::queue<std::function<void()>> queue{};
 
             bool should_terminate{false};

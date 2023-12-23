@@ -8,7 +8,7 @@
 
 #pragma once
 
-// NOTE need to do this to be able to build the shared library of the server core
+// NOTE need to do this to be able to build the shared library of the client core
 #define ASIO_HEADER_ONLY
 
 #ifdef __unix__
@@ -20,7 +20,7 @@
 namespace rserver
 {
 
-    constexpr int SUCESS{0};
+    constexpr int SUCCESS{0};
     constexpr int FAILURE{84};
 
 } // namespace rserver
