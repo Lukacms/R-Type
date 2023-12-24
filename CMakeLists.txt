@@ -12,8 +12,9 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "")
 # executables will be at the root of the folder
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
-# option to build tests
+# options of the project
 option(RTYPE_BUILD_TESTS "Build the tests" OFF)
+option(RTYPE_BUILD_BENCHMARKS "Build benchmarks" OFF)
 
 # fetch asio library which is used by both client and server
 message("Loading Asio library")
@@ -207,4 +208,17 @@ if (RTYPE_BUILD_TESTS)
     add_subdirectory(Server/tests)
     add_subdirectory(Client/tests)
     add_subdirectory(RType-Utils/tests/)
+endif()
+
+if (RTYPE_BUILD_BENCHMARKS)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY "https://github.com/google/googletest.git"
+        GIT_TAG "v1.14.x"
+        OVERRIDE_FIND_PACKAGE)
+    if (WIN32)
+        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    endif()
+    FetchContent_MakeAvailable(googletest)
+    add_subdirectory(benchmarks)
 endif()

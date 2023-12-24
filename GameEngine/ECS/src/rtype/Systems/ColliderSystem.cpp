@@ -32,7 +32,7 @@ namespace rtype
                     transforms[index1]->position_y +
                             (colliders[index1]->height * transforms[index1]->scale_y) >
                         transforms[index2]->position_y)
-                    std::cout << "Collision" << std::endl;
+                    DEBUG(("Collision\n"));
             }
         }
     }
