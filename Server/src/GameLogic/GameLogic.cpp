@@ -46,7 +46,8 @@ void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager &physi
         for (auto entity2 : m_entities) {
             if (entity1 == entity2 || !tags[entity2].has_value())
                 continue;
-            if (tags[entity2]->tag.find("Player") != std::string::npos && physics_manager.is_collided(entity1, entity2))
+            if (tags[entity2]->tag.find("Player") != std::string::npos &&
+                physics_manager.is_collided(entity1, entity2))
                 std::cout << "Hit With Another Player" << std::endl;
         }
     }
@@ -62,9 +63,11 @@ void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physic
         if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
             continue;
         for (const auto entity2 : m_entities) {
-            if (!tags[entity1].has_value() || tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
+            if (!tags[entity1].has_value() ||
+                tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
                 continue;
-            if (tags[entity2]->tag.find("Bullet") != std::string::npos && physics_manager.is_collided(entity2, entity1))
+            if (tags[entity2]->tag.find("Bullet") != std::string::npos &&
+                physics_manager.is_collided(entity2, entity1))
                 std::cout << "HIT" << std::endl;
         }
     }

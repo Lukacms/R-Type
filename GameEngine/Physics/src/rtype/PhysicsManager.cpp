@@ -8,8 +8,7 @@
 
 void rtype::PhysicsManager::check_collisions(ECSManager &ecs_manager)
 {
-    SparseArray<TransformComponent> &transforms =
-        ecs_manager.get_components<TransformComponent>();
+    SparseArray<TransformComponent> &transforms = ecs_manager.get_components<TransformComponent>();
     SparseArray<BoxColliderComponent> &colliders =
         ecs_manager.get_components<BoxColliderComponent>();
     Collision collision{};

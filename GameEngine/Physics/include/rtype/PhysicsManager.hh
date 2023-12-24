@@ -3,9 +3,9 @@
 //
 
 #include <exception>
+#include <rtype/ECSManager.hpp>
 #include <string_view>
 #include <vector>
-#include <rtype/ECSManager.hpp>
 
 namespace rtype
 {
