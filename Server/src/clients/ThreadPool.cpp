@@ -17,6 +17,11 @@ rserver::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(p_nb_
     }
 }
 
+rserver::ThreadPool::~ThreadPool()
+{
+    this->stop();
+}
+
 rserver::ThreadPool::ThreadPool(rserver::ThreadPool &&to_move)
     : nb_threads{std::move(to_move.nb_threads)}, queue{std::move(to_move.queue)}
 {

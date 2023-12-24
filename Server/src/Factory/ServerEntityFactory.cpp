@@ -26,7 +26,7 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
     if (type == "Bullet") {
         return create_bullet(ecs_manager);
     }
-    throw std::runtime_error("Unknown entity type");
+    throw FactoryException("Unknown entity type");
 }
 
 size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager)
@@ -88,4 +88,15 @@ size_t rserver::ServerEntityFactory::create_bullet(rtype::ECSManager &ecs_manage
     transform.insert_at(entity, rtype::TransformComponent{0, 0, 0, 0, 2, 2});
     transform[entity]->velocity_x = 1;
     return entity;
+}
+
+/* exception */
+rserver::ServerEntityFactory::FactoryException::FactoryException(std::string &&perror_msg)
+    : error_msg{std::move(perror_msg)}
+{
+}
+
+const char *rserver::ServerEntityFactory::FactoryException::what() const noexcept
+{
+    return this->error_msg.c_str();
 }

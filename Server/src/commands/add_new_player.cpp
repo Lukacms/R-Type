@@ -11,7 +11,7 @@
 
 void rserver::Manager::add_new_player(asio::ip::udp::endpoint &client)
 {
-    Player &new_player{this->players.add_player(client, this->udp_socket)};
+    Player &new_player{this->players.add_player(client)};
 
     {
         std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};

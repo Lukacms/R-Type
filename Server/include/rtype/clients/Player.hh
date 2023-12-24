@@ -7,6 +7,9 @@
 
 #pragma once
 
+// NOTE need to do this to be able to build the shared library of the server core
+#define ASIO_HEADER_ONLY
+
 #include <asio.hpp>
 #include <shared_mutex>
 #include <string_view>
@@ -46,7 +49,7 @@ namespace rserver
             /* methods */
             [[nodiscard]] asio::ip::port_type get_port() const;
             [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
-            [[nodiscard]] std::size_t get_entity_value() const;
+            [[nodiscard]] const std::size_t &get_entity_value() const;
             void set_entity_value(std::size_t const &value);
             void lock();
             void unlock();

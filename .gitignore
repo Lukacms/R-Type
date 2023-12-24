@@ -49,6 +49,7 @@ libs/
 tests-r-type_server
 tests-r-type_client
 Testing/
+/tests/
 
 # husky
 node_modules/

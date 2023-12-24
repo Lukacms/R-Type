@@ -184,7 +184,7 @@ endif()
 message("Warning flags: ${Cyan} ${WARNING_FLAGS}${ColourReset}")
 
 # for library compilation => shared libraries of game engine, utils, etc
-set(LIBRARY_OUTPUT_PATH ${r-type_SOURCE_DIR}/libs)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/libs)
 
 # need to first load this one to load library
 add_subdirectory(RType-Utils)
@@ -194,6 +194,7 @@ add_subdirectory(Server)
 add_subdirectory(Client)
 
 if (RTYPE_BUILD_TESTS)
+    set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/tests)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY "https://github.com/google/googletest.git"
@@ -205,4 +206,5 @@ if (RTYPE_BUILD_TESTS)
     FetchContent_MakeAvailable(googletest)
     add_subdirectory(Server/tests)
     add_subdirectory(Client/tests)
+    add_subdirectory(RType-Utils/tests/)
 endif()

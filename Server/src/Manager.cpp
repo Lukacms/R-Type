@@ -17,7 +17,6 @@
 #include <rtype/Manager.hh>
 #include <rtype/SparseArray.hpp>
 #include <rtype/network/Network.hpp>
-#include <unistd.h>
 
 /**
  * @brief used to handle sigint, is atomic to be modified between the threads

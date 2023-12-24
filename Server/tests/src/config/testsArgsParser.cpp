@@ -19,7 +19,7 @@ TEST(ArgsParser, get_args_help)
 
 TEST(ArgsParser, get_args_wrong_arg_nb)
 {
-    const char *argv_too_little[]{};                     // NOLINT
+    const char **argv_too_little{};                      // NOLINT
     const char *argv_too_much[]{"lkjeza", "ljh", "lkh"}; // NOLINT
 
     EXPECT_THROW(rserver::ArgsParser::get_args(0, std::span(argv_too_little, 0)),

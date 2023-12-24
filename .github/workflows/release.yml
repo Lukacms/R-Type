@@ -6,6 +6,31 @@ on:
       - "v*"
 
 jobs:
+  create-release-draft:
+    name: Create a release draft
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.create_release_draft.outputs.id }}
+      upload_url: ${{ steps.create_release_draft.outputs.upload_url }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Get release version
+        run: echo "::set-output name=version::${GITHUB_REF/refs\/tags\//}"
+        id: version
+      - name: Create release draft
+        uses: actions/create-release@v1
+        id: create_release_draft
+        with:
+          draft: true
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
@@ -277,7 +302,7 @@ jobs:
   delete-release-draft-on-error:
     name: Delete release draft if an error occured
     runs-on: ubuntu-latest
-    needs: [create-release-draft, build, publish-release]
+    needs: [create-release-draft, build, publish]
     if: ${{ failure() }}
     steps:
       - name: Delete release draft and tag

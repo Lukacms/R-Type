@@ -27,7 +27,7 @@ size_t rtype::EntityManager::create_entity(size_t entity)
     for (size_t i{0}; i < m_queue.size(); i++)
         if (m_queue[i] == entity) {
             exist = true;
-            m_queue.erase(m_queue.begin() + static_cast<ssize_t>(i));
+            m_queue.erase(m_queue.begin() + static_cast<long>(i));
         }
     if (!exist)
         throw std::runtime_error("entity already assign");
@@ -48,7 +48,7 @@ void rtype::EntityManager::delete_entity(size_t entity)
 
 bool rtype::EntityManager::is_entity_used(std::size_t entity)
 {
-    for (auto used : m_used)
+    for (auto used : m_used) // NOLINT
         if (used == entity)
             return true;
     return false;

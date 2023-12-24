@@ -1,8 +1,14 @@
-//
-// Created by kane on 12/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** GameLogic
+** File description:
+** GameLogic
+*/
 
 #pragma once
+
+// NOTE need to do this to be able to build the shared library of the server core
+#define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
 #include <rtype/ECSManager.hpp>

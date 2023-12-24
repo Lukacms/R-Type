@@ -30,8 +30,8 @@ namespace ntw
         Creation,    // Create a new entity : Creation [Id] [Type]
         Destruction, // Destruct one entity : Destruction [Id]
         Position,    // Send the position of an entity : Position [Id] [x] [y]
-        Input, // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
-        Entity // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
+        Input,  // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
+        Entity, // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
     };
 
 #pragma pack(push, 1)
@@ -46,8 +46,8 @@ namespace ntw
             template <typename TType> void add_param(TType param)
             {
                 std::string to_add{};
-                size_t ind{0};
-                size_t arg_ind{0};
+                std::size_t ind{0};
+                std::size_t arg_ind{0};
 
                 if constexpr (std::is_arithmetic<TType>::value)
                     to_add = std::to_string(param);
