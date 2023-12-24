@@ -2,6 +2,7 @@
 // Created by kane on 12/12/23.
 //
 
+#include <iostream>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/PhysicsManager.hh>
@@ -17,10 +18,10 @@ void rtype::PhysicsManager::check_collisions(ECSManager &ecs_manager)
     for (size_t entity1 = 0; entity1 < colliders.size(); entity1 += 1) {
         collision.entity = entity1;
         collision.collided.clear();
-        if (colliders[entity1] == std::nullopt || transforms[entity1] == std::nullopt)
+        if (!colliders[entity1].has_value() || !transforms[entity1].has_value())
             continue;
         for (size_t entity2 = 0; entity2 < colliders.size(); entity2 += 1) {
-            if (colliders[entity2] == std::nullopt || transforms[entity2] == std::nullopt ||
+            if (!colliders[entity2].has_value() || !transforms[entity2].has_value() ||
                 entity1 == entity2)
                 continue;
             if (transforms[entity1]->position_x < transforms[entity2]->position_x +
@@ -56,8 +57,8 @@ bool rtype::PhysicsManager::is_collided(std::size_t entity1, std::size_t entity2
         if (collision.entity == entity1)
             collisions = collision;
     }
-    return std::find(collisions.collided.begin(), collisions.collided.end(), entity2) ==
-        std::end(collisions.collided);
+    return std::any_of(collisions.collided.cbegin(), collisions.collided.cend(),
+                       [entity2](std::size_t entity) { return entity2 == entity; });
 }
 
 /* Exception */

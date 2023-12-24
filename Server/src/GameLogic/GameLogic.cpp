@@ -47,9 +47,6 @@ void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager &physi
         for (auto entity2 : m_entities) {
             if (entity1 == entity2 || !tags[entity2].has_value())
                 continue;
-            if (tags[entity2]->tag.find("Player") != std::string::npos &&
-                physics_manager.is_collided(entity1, entity2))
-                std::cout << "Hit With Another Player" << std::endl;
         }
     }
 }
@@ -68,8 +65,16 @@ void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physic
                 tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
                 continue;
             if (tags[entity2]->tag.find("Bullet") != std::string::npos &&
-                physics_manager.is_collided(entity2, entity1))
-                std::cout << "HIT" << std::endl;
+                physics_manager.is_collided(entity1, entity2)) {
+                ntw::Communication destroy1{.type = ntw::Destruction, .args = {}};
+                destroy1.add_param(entity1);
+                ntw::Communication destroy2{.type = ntw::Destruction, .args = {}};
+                destroy2.add_param(entity2);
+                rserver::Manager::send_to_all(destroy1, players_manager, m_socket);
+                rserver::Manager::send_to_all(destroy2, players_manager, m_socket);
+                manager.delete_entity(entity1);
+                manager.delete_entity(entity2);
+            }
         }
     }
 }
