@@ -124,7 +124,8 @@ jobs:
           vcpkg install dlfcn-win32
       - name: Build project with msvc
         run: |
-          cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DASIO_STANDALONE=true
+          echo $env:VCPKG_ROOT
+          cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DASIO_STANDALONE=true --preset debug
           ninja -C build
         timeout-minutes: 10
 
