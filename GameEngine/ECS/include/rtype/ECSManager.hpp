@@ -71,12 +71,16 @@ namespace rtype
             void apply_system(float delta_time)
             {
                 m_system_manager.update(m_component_manager, delta_time);
-                //    m_physics_manager.check_collisions(m_component_manager);
             }
 
             bool is_entity_used(std::size_t entity)
             {
                 return m_entity_manager.is_entity_used(entity);
+            }
+
+            std::vector<std::size_t> get_used_entity()
+            {
+                return m_entity_manager.get_used_entity();
             }
 
         private:

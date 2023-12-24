@@ -17,10 +17,10 @@
     #define ENDL "\r\n"
 #endif
 
-namespace rserver
+namespace rclient
 {
 
     constexpr int SUCCESS{0};
     constexpr int FAILURE{84};
 
-} // namespace rserver
+} // namespace rclient

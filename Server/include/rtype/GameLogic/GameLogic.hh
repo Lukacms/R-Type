@@ -14,16 +14,21 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/PlayersManager.hh>
+#include <shared_mutex>
 #include <vector>
 
 namespace rserver
 {
+    const constexpr int MAX_POSITION_X{900};
+    const constexpr int MAX_POSITION_Y{700};
+    const constexpr int MIN_POSITION{-200};
+
     class GameLogic
     {
         public:
-            explicit GameLogic(asio::ip::udp::socket &socket);
-            GameLogic(GameLogic const &to_copy) = default;
-            GameLogic(GameLogic &&to_move) = default;
+            explicit GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
+            GameLogic(GameLogic const &to_copy) = delete;
+            GameLogic(GameLogic &&to_move) = delete;
             ~GameLogic() = default;
 
             GameLogic &operator=(GameLogic const &to_copy) = delete;
@@ -33,6 +38,9 @@ namespace rserver
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
                            float delta_time);
             void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
+            void destroy_too_far_entities(rserver::PlayersManager &players_manager,
+                                          rtype::ECSManager &manager);
+            void spawn_enemy(rtype::ECSManager &manager);
 
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,
@@ -48,5 +56,8 @@ namespace rserver
         private:
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
+            std::shared_mutex &m_ecs_mutex;
+            std::chrono::time_point<std::chrono::steady_clock> m_start_enemy{
+                std::chrono::steady_clock::now()};
     };
 } // namespace rserver

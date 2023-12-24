@@ -100,8 +100,8 @@ template <typename TComponent> class SparseArray : public ISparseArray
 
         void remove(size_t pos) override
         {
-            if (pos >= m_data.size())
-                throw std::exception{};
+            if (pos > m_data.size())
+                return;
             m_data[pos] = std::nullopt;
         }
 

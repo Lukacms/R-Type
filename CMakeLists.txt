@@ -149,7 +149,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb3")
 elseif(CMAKE_BUILD_TYPE MATCHES "tsan")
   set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread")
+    "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
 endif()
 
 # Clang-tidy

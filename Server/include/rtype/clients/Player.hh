@@ -11,7 +11,7 @@
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
-#include <mutex>
+#include <shared_mutex>
 #include <string_view>
 
 namespace rserver
@@ -28,12 +28,13 @@ namespace rserver
     };
 
     constexpr float POSITION_CHANGE{1.0};
+    constexpr float OFFSET_Y_BULLET{11};
     constexpr float PLAYER_SPEED{1000};
 
     class Player
     {
         public:
-            std::mutex mutex{};
+            std::shared_mutex mutex{};
             /* constructor / destructor */
             Player(asio::ip::udp::endpoint p_endpoint);
             Player(Player const &to_copy) = delete;

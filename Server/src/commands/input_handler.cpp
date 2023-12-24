@@ -29,16 +29,16 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
         throw ManagerException{WRONG_ARGUMENTS.data()};
     }
     if (args[0][0] == '4') {
-        std::unique_lock<std::mutex> lock{this->ecs_mutex};
+        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
         size_t bullet_id{ServerEntityFactory::create("Bullet", this->ecs.get_class())};
         auto &transform_bullet{
             this->ecs.get_class().get_component<rtype::TransformComponent>(bullet_id)};
         transform_bullet.position_x = component.position_x + POSITION_CHANGE;
-        transform_bullet.position_y = component.position_y;
+        transform_bullet.position_y = component.position_y + OFFSET_Y_BULLET;
         return;
     }
     component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
     component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
-    DEBUG(("pos x: %f, pos_y: %f\n", static_cast<double>(component.position_x),
-           static_cast<double>(component.position_y)));
+    /*DEBUG(("pos x: %f, pos_y: %f\n", static_cast<double>(component.position_x),
+           static_cast<double>(component.position_y)));*/
 }

@@ -41,6 +41,7 @@ void rtype::EntityManager::delete_entity(size_t entity)
     for (auto iterator = m_used.cbegin(); iterator != m_used.cend(); iterator += 1) {
         if (*iterator == entity) {
             iterator = m_used.erase(iterator);
+            return;
         }
     }
 }
@@ -51,4 +52,9 @@ bool rtype::EntityManager::is_entity_used(std::size_t entity)
         if (used == entity)
             return true;
     return false;
+}
+
+std::vector<size_t> &rtype::EntityManager::get_used_entity()
+{
+    return m_used;
 }

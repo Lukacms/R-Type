@@ -5,11 +5,29 @@
 ** main
 */
 
-#include <chrono>
+#include <cstddef>
+#include <rtype.hh>
 #include <rtype/Client.hh>
+#include <rtype/config/ArgsConfig.hh>
 
-int main()
+static int display_help()
 {
-    rclient::Client client{};
-    return client.client_run();
+    for (auto const &str : rclient::HELP_MSG) {
+        std::cout << str << ENDL;
+    }
+    return rclient::SUCCESS;
+}
+
+int main(int argc, const char *argv[])
+{
+    try {
+        rclient::Arguments infos{
+            rclient::ArgsConfig::parse_args(argc, std::span(argv, static_cast<std::size_t>(argc)))};
+        if (infos.help)
+            return display_help();
+        return rclient::Client::launch(infos);
+    } catch (rclient::ArgsConfig::ArgsException &e) {
+        std::cout << e.what() << ENDL;
+        return rclient::FAILURE;
+    }
 }
