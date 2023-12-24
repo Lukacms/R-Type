@@ -40,7 +40,7 @@ static const std::vector<rserver::CommandHandler> HANDLER{
  */
 rserver::Manager::Manager(asio::ip::port_type port)
     : udp_socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}},
-      logic{this->udp_socket}
+      logic{this->udp_socket, this->ecs_mutex}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
     this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
@@ -74,7 +74,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
  * @param to_move - Manager &&
  */
 rserver::Manager::Manager(rserver::Manager &&to_move)
-    : udp_socket{std::move(to_move.udp_socket)}, logic{to_move.udp_socket}
+    : udp_socket{std::move(to_move.udp_socket)}, logic{to_move.udp_socket, to_move.ecs_mutex}
 {
 }
 

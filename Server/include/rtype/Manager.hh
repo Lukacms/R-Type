@@ -8,6 +8,7 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
+#include <shared_mutex>
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
@@ -100,7 +101,7 @@ namespace rserver
             ThreadPool threads{};
             GameLogic logic;
             dl::DlLoader<rtype::ECSManager> ecs{};
-            std::mutex ecs_mutex{};
+            std::shared_mutex ecs_mutex{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
 
             /* methods */

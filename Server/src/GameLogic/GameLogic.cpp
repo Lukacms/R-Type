@@ -9,7 +9,8 @@
 #include <rtype/Manager.hh>
 #include <rtype/clients/PlayersManager.hh>
 
-rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket) : m_socket{socket}
+rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)
+    : m_socket{socket}, m_ecs_mutex{ecs_mutex}
 {
 }
 
@@ -126,7 +127,9 @@ void rserver::GameLogic::destroy_too_far_entities(rserver::PlayersManager &playe
 void rserver::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
     auto update = std::chrono::steady_clock::now();
+
     if (std::chrono::duration_cast<std::chrono::seconds>(update - m_start_enemy).count() > 2) {
+        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
         rserver::ServerEntityFactory::create("BasicEnemy", manager);
         m_start_enemy = update;
     }

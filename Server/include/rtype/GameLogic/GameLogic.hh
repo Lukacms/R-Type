@@ -8,6 +8,7 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/PlayersManager.hh>
+#include <shared_mutex>
 #include <vector>
 
 namespace rserver
@@ -19,7 +20,7 @@ namespace rserver
     class GameLogic
     {
         public:
-            explicit GameLogic(asio::ip::udp::socket &socket);
+            explicit GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
             GameLogic(GameLogic const &to_copy) = delete;
             GameLogic(GameLogic &&to_move) = delete;
             ~GameLogic() = default;
@@ -49,6 +50,7 @@ namespace rserver
         private:
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
+            std::shared_mutex &m_ecs_mutex;
             std::chrono::time_point<std::chrono::steady_clock> m_start_enemy{
                 std::chrono::steady_clock::now()};
     };
