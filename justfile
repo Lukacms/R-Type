@@ -36,6 +36,10 @@ windows:
     cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DASIO_STANDALONE=true --preset debug &&\
     ninja -C {{ build_folder }}
 
+benchmarks:
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DRTYPE_BUILD_BENCHMARKS=true &&\
+    ninja -C {{ build_folder }}
+
 clean:
     @rm -rf {{ names }}
 

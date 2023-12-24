@@ -122,5 +122,5 @@ void rclient::NetworkManager::manage_entity(rclient::NetworkManager &network_man
     if (!ecs_manager.is_entity_used(std::stoul(arguments[0])))
         rclient::NetworkManager::create_entity(network_manager, ecs_manager, communication);
     rclient::NetworkManager::move_entity(network_manager, ecs_manager, communication);
-    std::cout << "NEW X : " << arguments[2] << " NEW Y : " << arguments[3] << std::endl;
+    DEBUG(("New X: %s, New Y: %s%s", arguments[2], arguments[3], ENDL));
 }

@@ -8,6 +8,12 @@
 #include <rtype/EntityManager.hh>
 #include <rtype/SystemManager.hh>
 
+#ifdef NDEBUG
+    #define DEBUG(x)
+#else
+    #define DEBUG(x) printf x
+#endif
+
 namespace rtype
 {
     void movement_system(ComponentManager &registry, float);

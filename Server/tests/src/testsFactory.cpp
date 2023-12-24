@@ -50,7 +50,7 @@ TEST(ServerEntityFactory, constructor_no_throw)
     ecs.get_class().register_component(boxes);
     ecs.get_class().register_component(tags);
     ecs.get_class().register_component(healths);
-    EXPECT_NO_THROW(rserver::ServerEntityFactory::create("Enemy", ecs.get_class()));
+    EXPECT_NO_THROW(rserver::ServerEntityFactory::create("BasicEnemy", ecs.get_class()));
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("Player", ecs.get_class()));
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()));
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("Bullet", ecs.get_class()));
