@@ -23,7 +23,6 @@ int main(int argc, const char *argv[])
     try {
         rclient::Arguments infos{
             rclient::ArgsConfig::parse_args(argc, std::span(argv, static_cast<std::size_t>(argc)))};
-
         if (infos.help)
             return display_help();
         return rclient::Client::launch(infos);
