@@ -12,9 +12,10 @@
 
 namespace rserver
 {
-    const constexpr int MAX_POSITION_X{700};
-    const constexpr int MAX_POSITION_Y{900};
-    const constexpr int MIN_POSITION{-100};
+    const constexpr int MAX_POSITION_X{900};
+    const constexpr int MAX_POSITION_Y{700};
+    const constexpr int MIN_POSITION{-200};
+
     class GameLogic
     {
         public:
@@ -30,7 +31,10 @@ namespace rserver
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
                            float delta_time);
             void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
-            void destroy_too_far_entities(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
+            void destroy_too_far_entities(rserver::PlayersManager &players_manager,
+                                          rtype::ECSManager &manager);
+            void spawn_enemy(rtype::ECSManager &manager);
+
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,
                                      rserver::PlayersManager &players_manager,
@@ -45,6 +49,7 @@ namespace rserver
         private:
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
-            std::shared_mutex m_system_mutex{};
+            std::chrono::time_point<std::chrono::steady_clock> m_start_enemy{
+                std::chrono::steady_clock::now()};
     };
 } // namespace rserver

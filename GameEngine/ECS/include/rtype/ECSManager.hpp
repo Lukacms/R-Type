@@ -78,6 +78,11 @@ namespace rtype
                 return m_entity_manager.is_entity_used(entity);
             }
 
+            std::vector<std::size_t> get_used_entity()
+            {
+                return m_entity_manager.get_used_entity();
+            }
+
         private:
             ComponentManager m_component_manager{};
             SystemManager m_system_manager{};

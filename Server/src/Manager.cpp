@@ -147,9 +147,9 @@ void rserver::Manager::run_game_logic()
                                         .count()) > 0.01) {
                 logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
                                 delta_time);
+                ecs.get_class().apply_system(delta_time);
                 timer = std::chrono::steady_clock::now();
             }
-            ecs.get_class().apply_system(delta_time);
             start = std::chrono::steady_clock::now();
         }
     });

@@ -3,9 +3,9 @@
 //
 
 #include <exception>
-#include <rtype/ComponentManager.hpp>
 #include <string_view>
 #include <vector>
+#include <rtype/ECSManager.hpp>
 
 namespace rtype
 {
@@ -27,7 +27,7 @@ namespace rtype
             PhysicsManager &operator=(PhysicsManager const &to_copy) = default;
             PhysicsManager &operator=(PhysicsManager &&to_move) = default;
 
-            void check_collisions(ComponentManager &component_manager);
+            void check_collisions(ECSManager &ecs_manager);
             [[nodiscard]] std::vector<std::size_t> get_collision(std::size_t entity) const;
             [[nodiscard]] bool is_collided(std::size_t entity1, std::size_t entity2) const;
 

@@ -25,6 +25,7 @@ namespace rserver
     };
 
     constexpr float POSITION_CHANGE{1.0};
+    constexpr float OFFSET_Y_BULLET{11};
     constexpr float PLAYER_SPEED{1000};
 
     class Player

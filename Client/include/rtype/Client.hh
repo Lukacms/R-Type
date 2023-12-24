@@ -51,7 +51,6 @@ namespace rclient
             void set_network_infos(Arguments &infos);
             void configure_network();
 
-            void send_client_input();
             void check_input();
 
         private:

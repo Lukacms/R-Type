@@ -98,7 +98,6 @@ void rclient::Client::client_game(std::chrono::time_point<std::chrono::steady_cl
     if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                 std::chrono::steady_clock::now() - start)
                                 .count()) > 16) {
-        // send_client_input();
         start = std::chrono::steady_clock::now();
     }
 }
@@ -108,14 +107,6 @@ void rclient::Client::configure_network()
     m_network = std::make_unique<NetworkManager>(m_host, m_port);
     m_state = STATE::Game;
     this->threads.add_job([this]() { this->m_network->fetch_messages(this->m_ecs.get_class()); });
-}
-
-void rclient::Client::send_client_input()
-{
-    for (auto const &message : m_to_send) {
-        m_network->send_message(message);
-    }
-    m_to_send.clear();
 }
 
 void rclient::Client::check_input()
@@ -147,7 +138,7 @@ void rclient::Client::check_input()
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::W) &&
         static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                 std::chrono::steady_clock::now() - m_timer_shoot)
-                                .count()) > 60) {
+                                .count()) > 250) {
         ntw::Communication to_send{};
         to_send.type = ntw::Input;
         to_send.add_param(4);

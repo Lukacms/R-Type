@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <iostream>
+#include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TagComponent.hh>
@@ -18,7 +19,7 @@ size_t rclient::ClientEntityFactory::create(std::size_t entity, const std::strin
 {
     std::size_t new_entity = ecs_manager.create_entity(entity);
 
-    if (type == "Enemy") {
+    if (type == "BasicEnemy") {
         return create_enemy(new_entity, ecs_manager);
     }
     if (type == "Player") {
@@ -43,13 +44,12 @@ size_t rclient::ClientEntityFactory::create_enemy(std::size_t entity,
 
     health.insert_at(entity, rtype::HealthComponent{100, 100});
     transform.insert_at(entity, rtype::TransformComponent{});
-    tag.insert_at(entity, rtype::TagComponent{"Enemy"});
-    rtype::SpriteComponent tmp{};
-    /*tmp.texture.loadFromFile("Client/assets/elements/014.png");
-    tmp.sprite.setTexture(tmp.texture);*/
-    sf::IntRect rect(0, 0, 32, 32);
-    tmp.sprite.setTextureRect(rect);
-    sprite.insert_at(entity, rtype::SpriteComponent{tmp});
+    tag.insert_at(entity, rtype::TagComponent{"BasicEnemy"});
+    sprite.insert_at(entity, rtype::SpriteComponent{});
+    sprite[entity]->texture_path = "./Client/assets/BasicEnemy.png";
+    sprite[entity]->sprite.setTextureRect({0, 0, 33, 15});
+    sprite[entity]->sprite.setOrigin(16.5, 7.5);
+    sprite[entity]->sprite.setScale(-2, 2);
     return entity;
 }
 
@@ -60,15 +60,16 @@ size_t rclient::ClientEntityFactory::create_player(std::size_t entity,
     auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
     auto &sprite{ecs_manager.get_components<rtype::SpriteComponent>()};
+    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
 
     health.insert_at(entity, rtype::HealthComponent{100, 100});
     transform.insert_at(entity, rtype::TransformComponent{});
     tag.insert_at(entity, rtype::TagComponent{"Player"});
-    rtype::SpriteComponent tmp;
-    sprite.insert_at(entity, rtype::SpriteComponent{tmp});
+    sprite.insert_at(entity, rtype::SpriteComponent{});
     sprite[entity]->texture_path = "./Client/assets/Spaceship.png";
     sprite[entity]->sprite.setTextureRect({0, 0, 33, 15});
     sprite[entity]->sprite.setScale(2, 2);
+    collider.insert_at(entity, {66, 30});
     return entity;
 }
 
@@ -79,6 +80,7 @@ size_t rclient::ClientEntityFactory::create_other_player(std::size_t entity,
     auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
     auto &sprite{ecs_manager.get_components<rtype::SpriteComponent>()};
+    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
 
     health.insert_at(entity, rtype::HealthComponent{100, 100});
     transform.insert_at(entity, rtype::TransformComponent{});
@@ -89,6 +91,7 @@ size_t rclient::ClientEntityFactory::create_other_player(std::size_t entity,
     sf::IntRect rect(0, 0, 32, 32);
     tmp.sprite.setTextureRect(rect);
     sprite.insert_at(entity, rtype::SpriteComponent{tmp});
+    collider.insert_at(entity, {66, 30});
     return entity;
 }
 
@@ -98,12 +101,13 @@ size_t rclient::ClientEntityFactory::create_bullet(std::size_t entity,
     auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
     auto &sprite{ecs_manager.get_components<rtype::SpriteComponent>()};
+    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
 
     transform.insert_at(entity, rtype::TransformComponent{});
     tag.insert_at(entity, rtype::TagComponent{"Bullet"});
-    rtype::SpriteComponent tmp;
-    sprite.insert_at(entity, rtype::SpriteComponent{tmp});
+    sprite.insert_at(entity, rtype::SpriteComponent{});
     sprite[entity]->texture_path = "./Client/assets/PlayerShoot.png";
     sprite[entity]->sprite.setScale(2, 2);
+    collider.insert_at(entity, {66, 30});
     return entity;
 }
