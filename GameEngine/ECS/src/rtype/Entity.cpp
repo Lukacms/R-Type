@@ -4,11 +4,11 @@
 
 #include <rtype/Entity.hh>
 
-Entity::Entity(std::size_t &&index) : m_id{std::move(index)}
+rtype::Entity::Entity(std::size_t &&index) : m_id{std::move(index)}
 {
 }
 
-Entity::operator std::size_t() const
+rtype::Entity::operator std::size_t() const
 {
     return m_id;
 }

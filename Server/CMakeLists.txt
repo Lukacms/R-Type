@@ -14,6 +14,7 @@ add_library(rtype-server-interface INTERFACE)
 # link the library
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD_REQUIRED ON)
+target_include_directories(rtype-server-interface INTERFACE include ../RType-Utils/include/ ../GameEngine/ECS/include ../GameEngine/Physics/include)
 target_link_libraries(
     rtype-server-interface INTERFACE
     r-type-ecs
@@ -40,8 +41,6 @@ add_library(
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
 target_compile_options(rtype-server-core PRIVATE ${WARNING_FLAGS})
-target_include_directories(rtype-server-core PUBLIC include ../RType-Utils/include/ ../GameEngine/ECS/include ../GameEngine/Physics/include)
-set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-core PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-server-core PRIVATE

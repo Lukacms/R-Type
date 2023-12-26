@@ -2,6 +2,8 @@
 // Created by kane on 12/12/23.
 //
 
+#pragma once
+
 #include <exception>
 #include <rtype/ECSManager.hpp>
 #include <string_view>

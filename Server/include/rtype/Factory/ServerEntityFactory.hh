@@ -5,6 +5,8 @@
 ** ServerEntityFactory
 */
 
+#pragma once
+
 #include <exception>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>

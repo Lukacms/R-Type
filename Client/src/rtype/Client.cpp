@@ -28,11 +28,11 @@ rclient::Client::Client(unsigned int width, unsigned int height, const std::stri
     m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
         unsigned int width, unsigned int height, const std::string &title)>(
         "./libs/r-type-graphics.so", "entrypoint", width, height, title);
-    SparseArray<rtype::SpriteComponent> sprites{};
-    SparseArray<rtype::TransformComponent> transforms{};
-    SparseArray<rtype::TagComponent> tags{};
-    SparseArray<rtype::BoxColliderComponent> colliders{};
-    SparseArray<rtype::HealthComponent> health{};
+    rtype::SparseArray<rtype::SpriteComponent> sprites{};
+    rtype::SparseArray<rtype::TransformComponent> transforms{};
+    rtype::SparseArray<rtype::TagComponent> tags{};
+    rtype::SparseArray<rtype::BoxColliderComponent> colliders{};
+    rtype::SparseArray<rtype::HealthComponent> health{};
 
     m_ecs.get_class().register_component(sprites);
     m_ecs.get_class().register_component(transforms);

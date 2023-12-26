@@ -2,6 +2,8 @@
 // Created by kane on 14/12/23.
 //
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>

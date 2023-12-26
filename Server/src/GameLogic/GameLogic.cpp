@@ -43,7 +43,8 @@ void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager & /* p
                                                     rtype::ECSManager &manager)
 {
     try {
-        SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
+        rtype::SparseArray<rtype::TagComponent> &tags =
+            manager.get_components<rtype::TagComponent>();
 
         for (auto entity1 : m_entities) {
             if (!tags[entity1].has_value() || tags[entity1]->tag != "Player")
@@ -62,7 +63,7 @@ void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physic
                                                    rserver::PlayersManager &players_manager,
                                                    rtype::ECSManager &manager)
 {
-    SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
+    rtype::SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
     for (const auto entity1 : m_entities) {
         if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
@@ -89,9 +90,9 @@ void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physic
 void rserver::GameLogic::send_entity(rserver::PlayersManager &players_manager,
                                      rtype::ECSManager &manager)
 {
-    SparseArray<rtype::TransformComponent> &transforms =
+    rtype::SparseArray<rtype::TransformComponent> &transforms =
         manager.get_components<rtype::TransformComponent>();
-    SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
+    rtype::SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
     for (size_t entity = 0; entity < transforms.size(); entity += 1) {
         ntw::Communication entity_descriptor{ntw::Entity, {}};

@@ -5,6 +5,8 @@
 ** EntityManager
 */
 
+#pragma once
+
 #include <cstddef>
 #include <exception>
 #include <string>

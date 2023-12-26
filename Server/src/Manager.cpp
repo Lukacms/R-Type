@@ -45,10 +45,10 @@ rserver::Manager::Manager(asio::ip::port_type port)
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
     this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
 
-    SparseArray<rtype::TransformComponent> transform{};
-    SparseArray<rtype::BoxColliderComponent> boxes{};
-    SparseArray<rtype::TagComponent> tags{};
-    SparseArray<rtype::HealthComponent> healths{};
+    rtype::SparseArray<rtype::TransformComponent> transform{};
+    rtype::SparseArray<rtype::BoxColliderComponent> boxes{};
+    rtype::SparseArray<rtype::TagComponent> tags{};
+    rtype::SparseArray<rtype::HealthComponent> healths{};
     std::function<void(rtype::ComponentManager &, float)> transform_system =
         &rtype::transform_system;
 
