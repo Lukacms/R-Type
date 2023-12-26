@@ -4,7 +4,7 @@
 
 #include <rtype/Entity.hh>
 
-Entity::Entity(std::size_t id) : m_id{id}
+Entity::Entity(std::size_t &&index) : m_id{std::move(index)}
 {
 }
 

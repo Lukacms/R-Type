@@ -32,6 +32,7 @@ namespace rtype
                                  SparseArray<rtype::TransformComponent> transforms);
             void draw(sf::Sprite &sprite, rtype::TransformComponent transform);
             void display();
+            void close_window();
             void clear();
             bool is_input_pressed(sf::Keyboard::Key key);
             [[nodiscard]] bool is_window_open();

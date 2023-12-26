@@ -1,9 +1,11 @@
-//
-// Created by kane on 06/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** EntityManager
+*/
 
 #include <rtype/EntityManager.hh>
-#include <stdexcept>
 
 rtype::EntityManager::EntityManager()
 {
@@ -30,7 +32,7 @@ size_t rtype::EntityManager::create_entity(size_t entity)
             m_queue.erase(m_queue.begin() + static_cast<long>(i));
         }
     if (!exist)
-        throw std::runtime_error("entity already assign");
+        throw EntityException("Entity already assigned.");
     m_used.emplace_back(entity);
     return entity;
 }
@@ -57,4 +59,15 @@ bool rtype::EntityManager::is_entity_used(std::size_t entity)
 std::vector<size_t> &rtype::EntityManager::get_used_entity()
 {
     return m_used;
+}
+
+/* exception */
+rtype::EntityManager::EntityException::EntityException(std::string &&perror)
+    : error_msg{std::move(perror)}
+{
+}
+
+const char *rtype::EntityManager::EntityException::what() const noexcept
+{
+    return this->error_msg.c_str();
 }

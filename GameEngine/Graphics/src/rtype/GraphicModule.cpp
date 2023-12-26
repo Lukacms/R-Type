@@ -26,7 +26,7 @@ void rtype::GraphicModule::draw_components(SparseArray<rtype::SpriteComponent> s
     }
 }
 
-void rtype::GraphicModule::draw(sf::Sprite &sprite, TransformComponent transform)
+void rtype::GraphicModule::draw(sf::Sprite &sprite, TransformComponent /* transform */)
 {
     m_window.draw(sprite);
 }
@@ -44,6 +44,11 @@ void rtype::GraphicModule::clear()
 bool rtype::GraphicModule::is_window_open()
 {
     return m_window.isOpen();
+}
+
+void rtype::GraphicModule::close_window()
+{
+    m_window.close();
 }
 
 bool rtype::GraphicModule::is_input_pressed(sf::Keyboard::Key key)

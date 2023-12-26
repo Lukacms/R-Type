@@ -5,6 +5,7 @@
 ** GameLogic
 */
 
+#include <rtype.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
@@ -19,7 +20,7 @@ rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &
 
 void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                    rserver::PlayersManager &players_manager,
-                                   rtype::ECSManager &manager, float delta_time)
+                                   rtype::ECSManager &manager, float /* delta_time */)
 {
     m_entities = manager.get_used_entity();
 
@@ -38,19 +39,23 @@ void rserver::GameLogic::collision_responses(rtype::PhysicsManager &physics_mana
     enemy_collision_responses(physics_manager, players_manager, manager);
 }
 
-void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager &physics_manager,
-                                                    rserver::PlayersManager &players_manager,
+void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager & /* physics_manager */,
+                                                    rserver::PlayersManager & /* players_manager */,
                                                     rtype::ECSManager &manager)
 {
-    SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
+    try {
+        SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
-    for (auto entity1 : m_entities) {
-        if (!tags[entity1].has_value() || tags[entity1]->tag != "Player")
-            continue;
-        for (auto entity2 : m_entities) {
-            if (entity1 == entity2 || !tags[entity2].has_value())
+        for (auto entity1 : m_entities) {
+            if (!tags[entity1].has_value() || tags[entity1]->tag != "Player")
                 continue;
+            for (auto entity2 : m_entities) {
+                if (entity1 == entity2 || !tags[entity2].has_value())
+                    continue;
+            }
         }
+    } catch (rtype::ECSManager::ECSException &e) {
+        DEBUG(("Exception in player_collision_responses: %s%s", e.what(), ENDL));
     }
 }
 

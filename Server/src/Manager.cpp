@@ -48,13 +48,14 @@ rserver::Manager::Manager(asio::ip::port_type port)
     SparseArray<rtype::BoxColliderComponent> boxes{};
     SparseArray<rtype::TagComponent> tags{};
     SparseArray<rtype::HealthComponent> healths{};
-    std::function<void(ComponentManager &, float)> transform_system = &rtype::transform_system;
+    std::function<void(rtype::ComponentManager &, float)> transform_system =
+        &rtype::transform_system;
 
     try {
         this->udp_socket.non_blocking(true);
         /* should set timeout on non-blocking, but doesn't seems to be working */
-        this->udp_socket.set_option(
-            asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>{TIMEOUT_MS});
+        /* this->udp_socket.set_option(
+            asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>{TIMEOUT_MS}); */
         std::signal(SIGINT, Manager::handle_disconnection);
     } catch (std::exception & /* e */) {
         DEBUG(("This instance will stay blocking, clean <CTRL-C> will not work.\n"));
@@ -112,6 +113,7 @@ void rserver::Manager::launch(asio::ip::port_type port)
 {
     try {
         Manager manager{port};
+
         manager.run_game_logic();
         manager.start_receive();
     } catch (std::exception &e) {
@@ -137,6 +139,7 @@ void rserver::Manager::run_game_logic()
     this->threads.add_job([this]() {
         auto start = std::chrono::steady_clock::now();
         auto timer = std::chrono::steady_clock::now();
+
         while (RUNNING) {
             auto update = std::chrono::steady_clock::now();
             float delta_time = static_cast<float>(

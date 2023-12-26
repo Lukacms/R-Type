@@ -7,7 +7,7 @@
 class Entity
 {
     public:
-        Entity(std::size_t index);
+        Entity(std::size_t &&index);
         ~Entity() = default;
         Entity(const Entity &) = default;
         Entity(Entity &&) = default;

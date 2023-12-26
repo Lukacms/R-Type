@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <exception>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/EntityManager.hh>
 #include <rtype/SystemManager.hh>
@@ -33,12 +34,20 @@ namespace rtype
 
             Entity create_entity()
             {
-                return m_entity_manager.create_entity();
+                try {
+                    return m_entity_manager.create_entity();
+                } catch (EntityManager::EntityException &e) {
+                    throw ECSManager::ECSException(e.what());
+                }
             }
 
             Entity create_entity(std::size_t entity)
             {
-                return m_entity_manager.create_entity(entity);
+                try {
+                    return m_entity_manager.create_entity(entity);
+                } catch (EntityManager::EntityException &e) {
+                    throw ECSManager::ECSException(e.what());
+                }
             }
 
             void delete_entity(size_t entity)
@@ -49,7 +58,11 @@ namespace rtype
 
             template <class TComponent> void remove_component(size_t entity)
             {
-                m_component_manager.remove_component<TComponent>(entity);
+                try {
+                    m_component_manager.remove_component<TComponent>(entity);
+                } catch (ComponentManager::ComponentException &e) {
+                    throw ECSManager::ECSException(e.what());
+                }
             }
 
             template <class TComponent>
@@ -60,12 +73,20 @@ namespace rtype
 
             template <class TComponent> SparseArray<TComponent> &get_components()
             {
-                return m_component_manager.get_components<TComponent>();
+                try {
+                    return m_component_manager.get_components<TComponent>();
+                } catch (ComponentManager::ComponentException &e) {
+                    throw ECSManager::ECSException(e.what());
+                }
             }
 
             template <class TComponent> TComponent &get_component(size_t entity)
             {
-                return m_component_manager.get_components<TComponent>()[entity].value();
+                try {
+                    return m_component_manager.get_components<TComponent>()[entity].value();
+                } catch (ComponentManager::ComponentException &e) {
+                    throw ECSManager::ECSException(e.what());
+                }
             }
 
             std::function<void(ComponentManager &, float)> &
@@ -88,6 +109,28 @@ namespace rtype
             {
                 return m_entity_manager.get_used_entity();
             }
+
+            class ECSException : public std::exception
+            {
+                public:
+                    ECSException(std::string &&perror) : error_msg{std::move(perror)}
+                    {
+                    }
+
+                    ECSException(ECSException const &to_copy) = default;
+                    ECSException(ECSException &&to_move) = default;
+                    ~ECSException() override = default;
+                    ECSException &operator=(ECSException const &to_copy) = default;
+                    ECSException &operator=(ECSException &&to_move) = default;
+
+                    [[nodiscard]] const char *what() const noexcept override
+                    {
+                        return this->error_msg.c_str();
+                    }
+
+                private:
+                    std::string error_msg{};
+            };
 
         private:
             ComponentManager m_component_manager{};

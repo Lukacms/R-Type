@@ -20,8 +20,6 @@ using asio::ip::udp;
 namespace rclient
 {
 
-    static volatile std::atomic_int RUNNING{1};
-
     class NetworkManager
     {
         public:
