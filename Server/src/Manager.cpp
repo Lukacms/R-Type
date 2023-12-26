@@ -28,6 +28,7 @@ static volatile std::atomic_int RUNNING = 1;
  */
 static const std::vector<rserver::CommandHandler> HANDLER{
     {.type = ntw::Input, .handler = &rserver::Manager::input_handler},
+    {.type = ntw::End, .handler = &rserver::Manager::end_handler},
 };
 
 /* constructors and destructors */
@@ -132,7 +133,6 @@ void rserver::Manager::run()
 /**
  * @brief method to run game logic
  *  the game logic has to be on another thread, as the asio context run is an infinite loop
- * TODO
  */
 void rserver::Manager::run_game_logic()
 {
@@ -146,7 +146,7 @@ void rserver::Manager::run_game_logic()
                 std::chrono::duration_cast<std::chrono::milliseconds>(update - start).count());
             if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                         std::chrono::steady_clock::now() - timer)
-                                        .count()) > 0.01) {
+                                        .count()) > TIMER) {
                 logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
                                 delta_time);
                 ecs.get_class().apply_system(delta_time);
@@ -194,8 +194,8 @@ void rserver::Manager::start_receive()
     while (RUNNING) {
         try {
             this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
-            DEBUG(("port upon recieving %d\n", this->endpoint.port()));
-            DEBUG(("arguments here: %s\n", commn.args.data()));
+            // DEBUG(("port upon recieving %d\n", this->endpoint.port()));
+            // DEBUG(("arguments here: %s\n", commn.args.data()));
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
                     [commn, this]() { this->command_manager(commn, this->endpoint); });

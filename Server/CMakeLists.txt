@@ -35,6 +35,7 @@ add_library(
     src/Factory/ServerEntityFactory.cpp
     src/commands/input_handler.cpp
     src/commands/add_new_player.cpp
+    src/commands/end_handler.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)

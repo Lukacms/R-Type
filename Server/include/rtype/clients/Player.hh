@@ -39,7 +39,7 @@ namespace rserver
             Player(asio::ip::udp::endpoint p_endpoint);
             Player(Player const &to_copy) = delete;
             Player(Player &&to_move);
-            ~Player() = default;
+            ~Player();
 
             /* operator overload */
             Player &operator=(Player const &to_copy) = delete;

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <asio/registered_buffer.hpp>
 #include <rtype/clients/PlayersManager.hh>
+#include <shared_mutex>
 #include <vector>
 
 rserver::Player &rserver::PlayersManager::get_by_id(asio::ip::port_type const &port)
@@ -43,6 +44,20 @@ std::size_t rserver::PlayersManager::length() const
 const std::vector<rserver::Player> &rserver::PlayersManager::get_all_players() const
 {
     return this->players;
+}
+
+void rserver::PlayersManager::remove_player(rserver::Player &player)
+{
+    for (auto to_erase{this->players.begin()}; to_erase < this->players.end(); to_erase++) {
+        {
+            std::shared_lock<std::shared_mutex> lock{to_erase->mutex};
+
+            if (to_erase->get_port() == player.get_port()) {
+                this->players.erase(to_erase);
+                break;
+            }
+        }
+    }
 }
 
 /* exception */

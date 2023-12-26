@@ -6,11 +6,21 @@
 */
 
 #include <exception>
+#include <rtype/Components/BoxColliderComponent.hh>
+#include <rtype/Components/HealthComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <string_view>
 
 namespace rserver
 {
+    constexpr rtype::HealthComponent BASIC_HEALTH{100, 100};
+    constexpr rtype::BoxColliderComponent BASIC_COLLIDER{33, 15};
+    constexpr rtype::BoxColliderComponent COLLIDER_BULLET{33, 15};
+    constexpr rtype::TransformComponent TRANS_PLAYER{300, 400, 0, 0, 2, 2};
+    constexpr rtype::TransformComponent TRANS_ENEMY{850, 300, static_cast<float>(-0.1), 0, 2, 2};
+    constexpr rtype::TransformComponent TRANS_BULLET{0, 0, 0, 0, 2, 2};
+
     class ServerEntityFactory
     {
 

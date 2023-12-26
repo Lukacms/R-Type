@@ -44,7 +44,7 @@ rclient::Client::Client(unsigned int width, unsigned int height, const std::stri
 
 rclient::Client::~Client()
 {
-    m_network->send_message({.type = ntw::End});
+    m_network->send_message({.type = ntw::End, .args = {}});
     if (m_graphical_module.get_class().is_window_open()) {
         m_graphical_module.get_class().close_window();
     }

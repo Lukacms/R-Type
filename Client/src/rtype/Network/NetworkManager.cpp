@@ -97,8 +97,8 @@ void rclient::NetworkManager::move_entity(rclient::NetworkManager & /* network_m
     auto &transform = ecs_manager.get_component<rtype::TransformComponent>(
         static_cast<size_t>(std::stoi(arguments[0])));
 
-    transform.position_x = static_cast<float>(std::stof(arguments[2]));
-    transform.position_y = static_cast<float>(std::stof(arguments[3]));
+    transform.position_x = std::stof(arguments[2]);
+    transform.position_y = std::stof(arguments[3]);
 }
 
 void rclient::NetworkManager::end_game(rclient::NetworkManager & /* network_manager */,
@@ -108,9 +108,9 @@ void rclient::NetworkManager::end_game(rclient::NetworkManager & /* network_mana
     // Find how to pass the game State;
 }
 
-void rclient::NetworkManager::delete_entity(
-    rclient::NetworkManager &network_manager __attribute_maybe_unused__,
-    rtype::ECSManager &ecs_manager, ntw::Communication &communication)
+void rclient::NetworkManager::delete_entity(rclient::NetworkManager & /* network_manager */,
+                                            rtype::ECSManager &ecs_manager,
+                                            ntw::Communication &communication)
 {
     std::vector<std::string> arguments = communication.deserialize();
 

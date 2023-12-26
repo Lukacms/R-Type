@@ -5,6 +5,8 @@
 ** transform_component
 */
 
+#pragma once
+
 namespace rtype
 {
     struct TransformComponent {

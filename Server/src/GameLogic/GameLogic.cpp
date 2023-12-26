@@ -7,7 +7,6 @@
 
 #include <rtype.hh>
 #include <rtype/Components/TagComponent.hh>
-#include <rtype/Components/TransformComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
 #include <rtype/GameLogic/GameLogic.hh>
 #include <rtype/Manager.hh>
