@@ -52,6 +52,8 @@ namespace rserver
             [[nodiscard]] asio::ip::port_type get_port() const;
             [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
             [[nodiscard]] const std::size_t &get_entity_value() const;
+            [[nodiscard]] const PlayerStatus &get_status() const;
+            void set_status(const PlayerStatus &new_status);
             void set_entity_value(std::size_t const &value);
             void lock();
             void unlock();

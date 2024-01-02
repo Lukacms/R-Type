@@ -24,8 +24,7 @@ target_link_libraries(
 
 # add library with all of the source file, execpt for the main
 add_library(
-    rtype-server-core
-    SHARED
+    rtype-server-core SHARED
     src/Manager.cpp
     src/utils.cpp
     src/config/ArgsParser.cpp
@@ -39,6 +38,7 @@ add_library(
     src/commands/input_handler.cpp
     src/commands/add_new_player.cpp
     src/commands/end_handler.cpp
+    src/commands/lobby_handler.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)

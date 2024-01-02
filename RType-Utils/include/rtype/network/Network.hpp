@@ -32,6 +32,7 @@ namespace ntw
         Position,    // Send the position of an entity : Position [Id] [x] [y]
         Input,  // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
         Entity, // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
+        Room,   // Send infos about a room [id] [nb_player] [status]
     };
 
 #pragma pack(push, 1)
@@ -40,7 +41,7 @@ namespace ntw
         public:
             /* variables */
             NetworkType type{NetworkType::None};
-            std::array<char, MAX_SIZE> args;
+            std::array<char, MAX_SIZE> args{};
 
             /* methods */
             template <typename TType> void add_param(TType param)

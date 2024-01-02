@@ -31,6 +31,7 @@ namespace rserver::game
                           std::shared_mutex &ecs, asio::ip::udp::socket &socket);
             void leave_room_with_id(Player &player, const std::size_t &room_id);
             [[nodiscard]] Room &get_room_by_id(const std::size_t &room_id);
+            [[nodiscard]] const std::vector<Room> &get_rooms() const;
 
         private:
             std::vector<rserver::game::Room> rooms{};

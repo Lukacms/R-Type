@@ -43,8 +43,8 @@ void rserver::game::RoomsManager::add_room(rserver::Player &first_player,
                                            const std::size_t &nb_threads, std::shared_mutex &ecs,
                                            asio::ip::udp::socket &socket)
 {
-    if (this->rooms.size() >= (nb_threads - 1))
-        throw Room::RoomException("");
+    if (this->rooms.size() >= (nb_threads - 2))
+        throw Room::RoomException("No room available.");
     auto &new_room{this->rooms.emplace_back(ecs, socket, this->manager, this->last_id)};
     this->last_id++;
     try {
@@ -74,4 +74,9 @@ rserver::game::Room &rserver::game::RoomsManager::get_room_by_id(const std::size
         }
     }
     throw Room::RoomException("No room found with this id.");
+}
+
+const std::vector<rserver::game::Room> &rserver::game::RoomsManager::get_rooms() const
+{
+    return this->rooms;
 }

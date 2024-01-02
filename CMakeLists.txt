@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # change library prefix to none
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
+
 # executables will be at the root of the folder
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 

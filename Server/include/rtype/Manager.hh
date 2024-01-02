@@ -58,10 +58,20 @@ namespace rserver
             /* methods */
             void run();
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
-            static void send_message(ntw::Communication &to_send, const Player &client,
+            static void send_message(const ntw::Communication &to_send, const Player &client,
                                      asio::ip::udp::socket &udp_socket);
-            static void send_message(ntw::Communication to_send, const Player &client,
-                                     asio::ip::udp::socket &udp_socket);
+            /**
+             * @brief Send a message to all player that have the same status at the one given in
+             * param
+             *
+             * @param to_send Communication - message
+             * @param players PlayersManager - all players
+             * @param udp_socket udp::socket - socket to send from
+             * @param status PlayerStatus - status required for the player to have
+             */
+            static void send_message(const ntw::Communication &to_send,
+                                     const PlayersManager &players,
+                                     asio::ip::udp::socket &udp_socket, const PlayerStatus &status);
             static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket);
             void run_game_logic();
@@ -100,13 +110,16 @@ namespace rserver
             asio::ip::udp::socket udp_socket;
             asio::ip::udp::endpoint endpoint{};
 
+            /* main variables */
             PlayersManager players{};
             ThreadPool threads{};
             game::RoomsManager rooms{this->players};
             game::GameLogic logic;
             dl::DlLoader<rtype::ECSManager> ecs{};
-            std::shared_mutex ecs_mutex{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
+
+            /* utils */
+            std::shared_mutex ecs_mutex{};
 
             /* methods */
             static void handle_disconnection(int);
@@ -114,6 +127,7 @@ namespace rserver
                                  asio::ip::udp::endpoint &client);
             void refuse_client(asio::ip::udp::endpoint &client);
             void add_new_player(asio::ip::udp::endpoint &client);
+            void lobby_handler();
     };
 
     struct CommandHandler {

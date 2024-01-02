@@ -17,6 +17,7 @@
 #include <rtype/Manager.hh>
 #include <rtype/SparseArray.hpp>
 #include <rtype/network/Network.hpp>
+#include <rtype/utils/Clock.hh>
 
 /**
  * @brief used to handle sigint, is atomic to be modified between the threads
@@ -75,7 +76,9 @@ rserver::Manager::Manager(asio::ip::port_type port)
  * @param to_move - Manager &&
  */
 rserver::Manager::Manager(rserver::Manager &&to_move)
-    : udp_socket{std::move(to_move.udp_socket)}, logic{to_move.udp_socket, to_move.ecs_mutex}
+    : udp_socket{std::move(to_move.udp_socket)}, threads{std::move(to_move.threads)},
+      rooms{std::move(to_move.rooms)}, logic{to_move.udp_socket, to_move.ecs_mutex},
+      ecs{std::move(to_move.ecs)}, physics{std::move(to_move.physics)}
 {
 }
 
@@ -99,6 +102,11 @@ rserver::Manager::~Manager()
 rserver::Manager &rserver::Manager::operator=(Manager &&to_move)
 {
     this->udp_socket = std::move(to_move.udp_socket);
+    this->endpoint = std::move(to_move.endpoint);
+    this->players = std::move(to_move.players);
+    this->threads = std::move(to_move.threads);
+    this->ecs = std::move(to_move.ecs);
+    this->physics = std::move(to_move.physics);
 
     return *this;
 }
@@ -165,13 +173,7 @@ void rserver::Manager::run_game_logic()
  * @param client - Player - containing udp endpoint to send message to
  * @param udp_socket - socket - udp::socket to send message from
  */
-void rserver::Manager::send_message(ntw::Communication &to_send, const Player &client,
-                                    asio::ip::udp::socket &udp_socket)
-{
-    udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
-}
-
-void rserver::Manager::send_message(ntw::Communication to_send, const Player &client,
+void rserver::Manager::send_message(const ntw::Communication &to_send, const Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
     udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
@@ -192,19 +194,35 @@ void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &
     }
 }
 
+void rserver::Manager::send_message(const ntw::Communication &to_send,
+                                    const PlayersManager &players,
+                                    asio::ip::udp::socket &udp_socket, const PlayerStatus &status)
+{
+    for (const auto &client : players.get_all_players()) {
+        if (client.get_status() == status) {
+            udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+        }
+    }
+}
+
 /* async udp methods */
 void rserver::Manager::start_receive()
 {
     ntw::Communication commn{};
+    rtype::utils::Clock clock{};
 
     while (RUNNING) {
         try {
             this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
-            // DEBUG(("port upon recieving %d\n", this->endpoint.port()));
+            DEBUG(("port upon recieving %d\n", this->endpoint.port()));
             // DEBUG(("arguments here: %s\n", commn.args.data()));
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
                     [commn, this]() { this->command_manager(commn, this->endpoint); });
+            if (clock.get_elapsed_time_in_ms() > game::TIMER) {
+                this->lobby_handler();
+                clock.reset();
+            }
         } catch (std::exception & /* e */) {
             // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
         }
@@ -223,10 +241,8 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
         {
             std::shared_lock<std::shared_mutex> lock{player.mutex};
             for (const auto &handle : HANDLER) {
-                if (handle.type == communication.type) {
-                    handle.handler(*this, player, args);
-                    return;
-                }
+                if (handle.type == communication.type)
+                    return handle.handler(*this, player, args);
             }
         }
     } catch (PlayersManager::PlayersException & /* e */) {
@@ -242,7 +258,7 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
 
 void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
 {
-    ntw::Communication communication{.type = ntw::NetworkType::Refusal, .args = {}};
+    ntw::Communication communication{ntw::NetworkType::Refusal};
 
     this->udp_socket.send_to(asio::buffer(&communication, sizeof(communication)), client);
 }

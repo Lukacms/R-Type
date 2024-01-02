@@ -54,6 +54,7 @@ void rserver::game::Room::del_player(rserver::Player &to_del)
 {
     for (auto player{this->players.begin()}; player != this->players.end(); player++) {
         if (to_del.get_port() == *player) {
+            to_del.set_status(PlayerStatus::Lobby);
             this->players.erase(player);
             return;
         }

@@ -54,6 +54,16 @@ const std::size_t &rserver::Player::get_entity_value() const
     return this->entity_value;
 }
 
+const rserver::PlayerStatus &rserver::Player::get_status() const
+{
+    return this->status;
+}
+
+void rserver::Player::set_status(const PlayerStatus &new_status)
+{
+    this->status = new_status;
+}
+
 void rserver::Player::set_entity_value(std::size_t const &value)
 {
     this->entity_value = value;
