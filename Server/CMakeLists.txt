@@ -33,6 +33,8 @@ add_library(
     src/clients/PlayersManager.cpp
     src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
+    src/GameLogic/Room.cpp
+    src/GameLogic/RoomsManager.cpp
     src/Factory/ServerEntityFactory.cpp
     src/commands/input_handler.cpp
     src/commands/add_new_player.cpp

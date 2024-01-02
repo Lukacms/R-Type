@@ -146,7 +146,7 @@ void rserver::Manager::run_game_logic()
                 std::chrono::duration_cast<std::chrono::milliseconds>(update - start).count());
             if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                         std::chrono::steady_clock::now() - timer)
-                                        .count()) > TIMER) {
+                                        .count()) > game::TIMER) {
                 logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
                                 delta_time);
                 ecs.get_class().apply_system(delta_time);
@@ -166,6 +166,12 @@ void rserver::Manager::run_game_logic()
  * @param udp_socket - socket - udp::socket to send message from
  */
 void rserver::Manager::send_message(ntw::Communication &to_send, const Player &client,
+                                    asio::ip::udp::socket &udp_socket)
+{
+    udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+}
+
+void rserver::Manager::send_message(ntw::Communication to_send, const Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
     udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());

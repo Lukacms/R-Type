@@ -8,19 +8,19 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
-#include <shared_mutex>
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
 #include <exception>
 #include <rtype/ECSManager.hpp>
-#include <rtype/GameLogic/GameLogic.hh>
+#include <rtype/GameLogic/RoomsManager.hh>
 #include <rtype/SparseArray.hpp>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/clients/ThreadPool.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/network/Network.hpp>
+#include <shared_mutex>
 #include <string_view>
 #include <vector>
 
@@ -59,6 +59,8 @@ namespace rserver
             void run();
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
             static void send_message(ntw::Communication &to_send, const Player &client,
+                                     asio::ip::udp::socket &udp_socket);
+            static void send_message(ntw::Communication to_send, const Player &client,
                                      asio::ip::udp::socket &udp_socket);
             static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket);
@@ -100,7 +102,8 @@ namespace rserver
 
             PlayersManager players{};
             ThreadPool threads{};
-            GameLogic logic;
+            game::RoomsManager rooms{this->players};
+            game::GameLogic logic;
             dl::DlLoader<rtype::ECSManager> ecs{};
             std::shared_mutex ecs_mutex{};
             dl::DlLoader<rtype::PhysicsManager> physics{};

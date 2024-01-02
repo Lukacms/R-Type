@@ -12,14 +12,19 @@
 #include <rtype/Manager.hh>
 #include <rtype/clients/PlayersManager.hh>
 
-rserver::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)
+rserver::game::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)
     : m_socket{socket}, m_ecs_mutex{ecs_mutex}
 {
 }
 
-void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
-                                   rserver::PlayersManager &players_manager,
-                                   rtype::ECSManager &manager, float /* delta_time */)
+rserver::game::GameLogic::GameLogic(rserver::game::GameLogic &&to_move)
+    : m_socket{to_move.m_socket}, m_ecs_mutex{to_move.m_ecs_mutex}
+{
+}
+
+void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
+                                         rserver::PlayersManager &players_manager,
+                                         rtype::ECSManager &manager, float /* delta_time */)
 {
     m_entities = manager.get_used_entity();
 
@@ -30,17 +35,17 @@ void rserver::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
     spawn_enemy(manager);
 }
 
-void rserver::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
-                                             rserver::PlayersManager &players_manager,
-                                             rtype::ECSManager &manager)
+void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
+                                                   rserver::PlayersManager &players_manager,
+                                                   rtype::ECSManager &manager)
 {
     player_collision_responses(physics_manager, players_manager, manager);
     enemy_collision_responses(physics_manager, players_manager, manager);
 }
 
-void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager & /* physics_manager */,
-                                                    rserver::PlayersManager & /* players_manager */,
-                                                    rtype::ECSManager &manager)
+void rserver::game::GameLogic::player_collision_responses(
+    rtype::PhysicsManager & /* physics_manager */, rserver::PlayersManager & /* players_manager */,
+    rtype::ECSManager &manager)
 {
     try {
         rtype::SparseArray<rtype::TagComponent> &tags =
@@ -59,9 +64,9 @@ void rserver::GameLogic::player_collision_responses(rtype::PhysicsManager & /* p
     }
 }
 
-void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physics_manager,
-                                                   rserver::PlayersManager &players_manager,
-                                                   rtype::ECSManager &manager)
+void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physics_manager,
+                                                         rserver::PlayersManager &players_manager,
+                                                         rtype::ECSManager &manager)
 {
     rtype::SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
@@ -87,8 +92,8 @@ void rserver::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physic
     }
 }
 
-void rserver::GameLogic::send_entity(rserver::PlayersManager &players_manager,
-                                     rtype::ECSManager &manager)
+void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_manager,
+                                           rtype::ECSManager &manager)
 {
     rtype::SparseArray<rtype::TransformComponent> &transforms =
         manager.get_components<rtype::TransformComponent>();
@@ -106,8 +111,8 @@ void rserver::GameLogic::send_entity(rserver::PlayersManager &players_manager,
     }
 }
 
-void rserver::GameLogic::destroy_too_far_entities(rserver::PlayersManager &players_manager,
-                                                  rtype::ECSManager &manager)
+void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager &players_manager,
+                                                        rtype::ECSManager &manager)
 {
     auto &transforms = manager.get_components<rtype::TransformComponent>();
     auto &tag = manager.get_components<rtype::TagComponent>();
@@ -137,7 +142,7 @@ void rserver::GameLogic::destroy_too_far_entities(rserver::PlayersManager &playe
     }
 }
 
-void rserver::GameLogic::spawn_enemy(rtype::ECSManager &manager)
+void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
     auto update = std::chrono::steady_clock::now();
 
