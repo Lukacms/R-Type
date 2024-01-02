@@ -12,7 +12,7 @@
 /* constructor / destructor */
 rserver::Player::Player(asio::ip::udp::endpoint p_endpoint) : endpoint{std::move(p_endpoint)}
 {
-    DEBUG(("%s%s%d%s", INFOS, NEW_CLIENT, this->endpoint, ENDL));
+    DEBUG(("%s%s%d%s", INFOS.data(), NEW_CLIENT.data(), this->endpoint.port(), ENDL));
 }
 
 rserver::Player::Player(rserver::Player &&to_move)
