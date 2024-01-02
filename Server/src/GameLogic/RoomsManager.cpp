@@ -21,7 +21,7 @@ rserver::game::RoomsManager::RoomsManager(rserver::game::RoomsManager &&to_move)
 void rserver::game::RoomsManager::join_random_room(rserver::Player &player)
 {
     for (auto &room : this->rooms) {
-        if (room.get_status() != Waiting || room.get_nb_players() >= 4)
+        if (room.get_status() != RoomStatus::Waiting || room.get_nb_players() >= 4)
             continue;
         return room.add_player(player);
     }

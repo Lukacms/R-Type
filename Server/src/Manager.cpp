@@ -27,8 +27,8 @@ static volatile std::atomic_int RUNNING = 1;
  * @brief array of method pointers to handle commands recieved from client
  */
 static const std::vector<rserver::CommandHandler> HANDLER{
-    {.type = ntw::Input, .handler = &rserver::Manager::input_handler},
-    {.type = ntw::End, .handler = &rserver::Manager::end_handler},
+    {.type = ntw::NetworkType::Input, .handler = &rserver::Manager::input_handler},
+    {.type = ntw::NetworkType::End, .handler = &rserver::Manager::end_handler},
 };
 
 /* constructors and destructors */
@@ -242,7 +242,7 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
 
 void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
 {
-    ntw::Communication communication{.type = ntw::Refusal, .args = {}};
+    ntw::Communication communication{.type = ntw::NetworkType::Refusal, .args = {}};
 
     this->udp_socket.send_to(asio::buffer(&communication, sizeof(communication)), client);
 }

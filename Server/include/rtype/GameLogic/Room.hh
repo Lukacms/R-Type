@@ -20,7 +20,7 @@ namespace rserver::game
     constexpr int MAX_ROOMS{100};
     constexpr int MAX_PLAYERS{4};
 
-    enum RoomStatus { Waiting, InGame };
+    enum class RoomStatus { Waiting, InGame };
 
     class Room
     {
@@ -64,7 +64,7 @@ namespace rserver::game
             GameLogic logic{socket, ecs_mutex};
             std::vector<asio::ip::port_type> players{};
             PlayersManager &manager;
-            RoomStatus status{Waiting};
+            RoomStatus status{RoomStatus::Waiting};
     };
 
 } // namespace rserver::game

@@ -17,10 +17,10 @@
 using asio::ip::udp;
 
 static const std::vector<rclient::CommandHandler> HANDLER{
-    {ntw::Entity, {rclient::NetworkManager::manage_entity}},
-    {ntw::Destruction, {rclient::NetworkManager::delete_entity}},
-    {ntw::Position, {rclient::NetworkManager::move_entity}},
-    {ntw::End, {rclient::NetworkManager::end_game}},
+    {ntw::NetworkType::Entity, {rclient::NetworkManager::manage_entity}},
+    {ntw::NetworkType::Destruction, {rclient::NetworkManager::delete_entity}},
+    {ntw::NetworkType::Position, {rclient::NetworkManager::move_entity}},
+    {ntw::NetworkType::End, {rclient::NetworkManager::end_game}},
 };
 
 rclient::NetworkManager::NetworkManager(const std::string &host, const std::string &port)

@@ -20,7 +20,7 @@ namespace ntw
     constexpr int MAX_SIZE{128};
     constexpr std::string_view DELIMITORS{" "};
 
-    enum NetworkType {
+    enum class NetworkType {
         None,        // Nothing : None
         Start,       // Start the game : Start
         Connection,  // client trying to join a server's game : Connection
@@ -39,7 +39,7 @@ namespace ntw
     struct Communication {
         public:
             /* variables */
-            NetworkType type{None};
+            NetworkType type{NetworkType::None};
             std::array<char, MAX_SIZE> args;
 
             /* methods */

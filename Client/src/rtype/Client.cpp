@@ -44,7 +44,7 @@ rclient::Client::Client(unsigned int width, unsigned int height, const std::stri
 
 rclient::Client::~Client()
 {
-    m_network->send_message({.type = ntw::End, .args = {}});
+    m_network->send_message({.type = ntw::NetworkType::End, .args = {}});
     if (m_graphical_module.get_class().is_window_open()) {
         m_graphical_module.get_class().close_window();
     }
@@ -105,7 +105,7 @@ void rclient::Client::client_game(std::chrono::time_point<std::chrono::steady_cl
     check_input();
     if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                 std::chrono::steady_clock::now() - start)
-                                .count()) > 16 &&
+                                .count()) > GAME_TIMEOUT &&
         RUNNING) {
         start = std::chrono::steady_clock::now();
     }
@@ -126,34 +126,34 @@ void rclient::Client::check_input()
 {
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Up)) {
         ntw::Communication to_send{};
-        to_send.type = ntw::Input;
+        to_send.type = ntw::NetworkType::Input;
         to_send.add_param(0);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Right)) {
         ntw::Communication to_send{};
-        to_send.type = ntw::Input;
+        to_send.type = ntw::NetworkType::Input;
         to_send.add_param(1);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Down)) {
         ntw::Communication to_send{};
-        to_send.type = ntw::Input;
+        to_send.type = ntw::NetworkType::Input;
         to_send.add_param(2);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Left)) {
         ntw::Communication to_send{};
-        to_send.type = ntw::Input;
+        to_send.type = ntw::NetworkType::Input;
         to_send.add_param(3);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::W) &&
         static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                 std::chrono::steady_clock::now() - m_timer_shoot)
-                                .count()) > 250) {
+                                .count()) > BULLET_TIMEOUT) {
         ntw::Communication to_send{};
-        to_send.type = ntw::Input;
+        to_send.type = ntw::NetworkType::Input;
         to_send.add_param(4);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
         m_timer_shoot = std::chrono::steady_clock::now();

@@ -21,6 +21,8 @@ namespace rserver
     constexpr std::string_view MOVE_CLIENT{"Moved client to new instance, with ip "};
     constexpr std::string_view DEL_CLIENT{"Client will be deleted, with ip "};
 
+    enum class PlayerStatus { Lobby, Room, Game };
+
     struct Vector2f {
         public:
             float pos_x{0.0};
@@ -57,6 +59,7 @@ namespace rserver
         private:
             asio::ip::udp::endpoint endpoint;
             std::size_t entity_value{};
+            PlayerStatus status{PlayerStatus::Lobby};
     };
 
 } // namespace rserver

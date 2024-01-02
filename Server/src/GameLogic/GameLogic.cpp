@@ -79,9 +79,9 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
                 continue;
             if (tags[entity2]->tag.find("Bullet") != std::string::npos &&
                 physics_manager.is_collided(entity1, entity2)) {
-                ntw::Communication destroy1{.type = ntw::Destruction, .args = {}};
+                ntw::Communication destroy1{.type = ntw::NetworkType::Destruction, .args = {}};
                 destroy1.add_param(entity1);
-                ntw::Communication destroy2{.type = ntw::Destruction, .args = {}};
+                ntw::Communication destroy2{.type = ntw::NetworkType::Destruction, .args = {}};
                 destroy2.add_param(entity2);
                 rserver::Manager::send_to_all(destroy1, players_manager, m_socket);
                 rserver::Manager::send_to_all(destroy2, players_manager, m_socket);
@@ -100,7 +100,7 @@ void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_mana
     rtype::SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
 
     for (size_t entity = 0; entity < transforms.size(); entity += 1) {
-        ntw::Communication entity_descriptor{ntw::Entity, {}};
+        ntw::Communication entity_descriptor{ntw::NetworkType::Entity, {}};
         if (!transforms[entity].has_value())
             continue;
         entity_descriptor.add_param(entity);
@@ -127,14 +127,14 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
             continue;
         if (transforms[entity]->position_x < MIN_POSITION ||
             transforms[entity]->position_x > MAX_POSITION_X) {
-            ntw::Communication send{.type = ntw::Destruction, .args = {}};
+            ntw::Communication send{.type = ntw::NetworkType::Destruction, .args = {}};
             manager.delete_entity(entity);
             send.add_param(entity);
             Manager::send_to_all(send, players_manager, m_socket);
         }
         if (transforms[entity]->position_y < MIN_POSITION ||
             transforms[entity]->position_y > MAX_POSITION_Y) {
-            ntw::Communication send{.type = ntw::Destruction, .args = {}};
+            ntw::Communication send{.type = ntw::NetworkType::Destruction, .args = {}};
             manager.delete_entity(entity);
             send.add_param(entity);
             Manager::send_to_all(send, players_manager, m_socket);
