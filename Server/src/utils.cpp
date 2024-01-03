@@ -21,21 +21,6 @@ bool rserver::is_number(std::string const &str)
 }
 
 /**
- * @brief get a number from a string. Will put it in size_t, so the number must be positive
- *
- * @param str - string
- * @return size_t
- */
-std::size_t rserver::get_number(std::string const &str)
-{
-    std::size_t dest = 0;
-    std::stringstream strs{str};
-
-    strs >> dest;
-    return dest;
-}
-
-/**
  * @brief Split a string into a vector of string depending on the delimitors given
  *
  * @param src - string - to split

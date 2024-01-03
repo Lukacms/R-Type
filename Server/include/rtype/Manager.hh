@@ -83,6 +83,7 @@ namespace rserver
             /* They have to be public to be called */
             void input_handler(Player &, std::vector<std::string> &);
             void end_handler(Player &, std::vector<std::string> &);
+            void room_handler(Player &, std::vector<std::string> &);
 
             /* exception */
             class ManagerException : public std::exception

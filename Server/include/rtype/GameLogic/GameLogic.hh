@@ -8,6 +8,7 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
+#include "rtype/utils/Clock.hh"
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
@@ -58,7 +59,6 @@ namespace rserver::game
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
             std::shared_mutex &m_ecs_mutex;
-            std::chrono::time_point<std::chrono::steady_clock> m_start_enemy{
-                std::chrono::steady_clock::now()};
+            rtype::utils::Clock m_clock{};
     };
 } // namespace rserver::game

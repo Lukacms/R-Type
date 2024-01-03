@@ -28,8 +28,9 @@ static volatile std::atomic_int RUNNING = 1;
  * @brief array of method pointers to handle commands recieved from client
  */
 static const std::vector<rserver::CommandHandler> HANDLER{
-    {.type = ntw::NetworkType::Input, .handler = &rserver::Manager::input_handler},
-    {.type = ntw::NetworkType::End, .handler = &rserver::Manager::end_handler},
+    {ntw::NetworkType::Input, &rserver::Manager::input_handler},
+    {ntw::NetworkType::End, &rserver::Manager::end_handler},
+    {ntw::NetworkType::Room, &rserver::Manager::room_handler},
 };
 
 /* constructors and destructors */
@@ -145,20 +146,18 @@ void rserver::Manager::run()
 void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
+        rtype::utils::Clock clock{};
         auto start = std::chrono::steady_clock::now();
-        auto timer = std::chrono::steady_clock::now();
 
         while (RUNNING) {
             auto update = std::chrono::steady_clock::now();
             float delta_time = static_cast<float>(
                 std::chrono::duration_cast<std::chrono::milliseconds>(update - start).count());
-            if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                                        std::chrono::steady_clock::now() - timer)
-                                        .count()) > game::TIMER) {
+            if (clock.get_elapsed_time_in_s() > game::TIMER) {
                 logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
                                 delta_time);
                 ecs.get_class().apply_system(delta_time);
-                timer = std::chrono::steady_clock::now();
+                clock.reset();
             }
             start = std::chrono::steady_clock::now();
         }

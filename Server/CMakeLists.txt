@@ -39,6 +39,7 @@ add_library(
     src/commands/add_new_player.cpp
     src/commands/end_handler.cpp
     src/commands/lobby_handler.cpp
+    src/commands/room_handler.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
