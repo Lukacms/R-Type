@@ -6,12 +6,13 @@ add_library(
     r-type-graphics SHARED
     src/rtype/GraphicModule.cpp
     src/rtype/InputManager.cpp
+    src/rtype/Systems/AnimationSystem.cpp
     src/rtype/EntryPoint.cpp
 )
 
 target_compile_features(r-type-graphics PRIVATE cxx_std_20)
 target_compile_options(r-type-graphics PRIVATE ${WARNING_FLAGS})
-target_include_directories(r-type-graphics PRIVATE ./include ../ECS/include ${CMAKE_BINARY_DIR}/_deps/sfml-src/include)
+target_include_directories(r-type-graphics PRIVATE ./include ../ECS/include ${CMAKE_BINARY_DIR}/_deps/sfml-src/include ../../RType-Utils/include ../../GameEngine/Graphics/include)
 set_property(TARGET r-type-graphics PROPERTY CXX_STANDARD 20)
 set_property(TARGET r-type-graphics PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
@@ -19,6 +20,7 @@ target_link_libraries(
     r-type-ecs-interface
     r-type-graphics-interface
     r-type-ecs
+    r-type-utils
     sfml-window
     sfml-graphics
     sfml-system
@@ -34,6 +36,7 @@ target_link_libraries(
     r-type-graphics-interface INTERFACE
     r-type-graphics
     r-type-ecs
+    r-type-utils
     sfml-window
     sfml-graphics
     sfml-system

@@ -7,12 +7,23 @@
 
 #pragma once
 
+#include <SFML/Graphics/Texture.hpp>
 #include <array>
+#include <exception>
+#include <rtype/Components/BoxColliderComponent.hh>
+#include <rtype/Components/HealthComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <vector>
+#include <rtype/Components/AnimationComponent.hh>
 
 namespace rclient
 {
+
+    constexpr rtype::HealthComponent BASIC_HEALTH{100, 100};
+    constexpr rtype::BoxColliderComponent BASIC_COLLIDER{66, 30};
+    const rtype::TextureRect TEXTURERECT_SHIP{0, 0, 33, 15};
+    const rtype::TextureRect TEXTURERECT_OTHER_PLAYER{0, 0, 32, 32};
+    const sf::Vector2f ORIGIN_ENEMY{16.5, 7.5};
 
     class ClientEntityFactory
     {
@@ -28,6 +39,22 @@ namespace rclient
 
             static size_t create(std::size_t entity, const std::string &type,
                                  rtype::ECSManager &ecs_manager);
+
+            class FactoryException : public std::exception
+            {
+                public:
+                    FactoryException(std::string &&perror);
+                    FactoryException(FactoryException const &to_copy) = default;
+                    FactoryException(FactoryException &&to_move) = default;
+                    ~FactoryException() override = default;
+                    FactoryException &operator=(FactoryException const &to_copy) = default;
+                    FactoryException &operator=(FactoryException &&to_move) = default;
+
+                    [[nodiscard]] const char *what() const noexcept override;
+
+                private:
+                    std::string error_msg;
+            };
 
         private:
             static size_t create_enemy(std::size_t entity, rtype::ECSManager &ecs_manager);

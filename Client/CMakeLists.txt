@@ -6,7 +6,7 @@
 project(r-type_client)
 
 # include directories
-include_directories(include/)
+include_directories(./include/)
 
 # if shared libraries need to have template files
 add_library(rtype-client-interface INTERFACE)

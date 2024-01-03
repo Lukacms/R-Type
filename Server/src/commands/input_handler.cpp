@@ -39,7 +39,6 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
            static_cast<double>(component.position_y)));*/
 }
 
-
 /**
  * @brief Create bullet according to the level of the player
  */

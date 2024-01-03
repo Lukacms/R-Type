@@ -25,9 +25,11 @@ namespace rclient
         Game,
     };
 
-    const constexpr int STANDARD_WIDTH{800};
-    const constexpr int STANDARD_HEIGHT{600};
-    const constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
+    constexpr int STANDARD_WIDTH{800};
+    constexpr int STANDARD_HEIGHT{600};
+    constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
+    constexpr double BULLET_TIMEOUT{250.0};
+    constexpr double GAME_TIMEOUT{250.0};
 
     class Client
     {

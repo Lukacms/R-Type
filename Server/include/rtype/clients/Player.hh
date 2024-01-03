@@ -21,6 +21,8 @@ namespace rserver
     constexpr std::string_view MOVE_CLIENT{"Moved client to new instance, with ip "};
     constexpr std::string_view DEL_CLIENT{"Client will be deleted, with ip "};
 
+    enum class PlayerStatus { Lobby, Room, Game };
+
     struct Vector2f {
         public:
             float pos_x{0.0};
@@ -39,7 +41,7 @@ namespace rserver
             Player(asio::ip::udp::endpoint p_endpoint);
             Player(Player const &to_copy) = delete;
             Player(Player &&to_move);
-            ~Player() = default;
+            ~Player();
 
             /* operator overload */
             Player &operator=(Player const &to_copy) = delete;
@@ -50,6 +52,8 @@ namespace rserver
             [[nodiscard]] asio::ip::port_type get_port() const;
             [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
             [[nodiscard]] const std::size_t &get_entity_value() const;
+            [[nodiscard]] const PlayerStatus &get_status() const;
+            void set_status(const PlayerStatus &new_status);
             void set_entity_value(std::size_t const &value);
             void level_up();
             std::size_t get_level();
@@ -59,6 +63,7 @@ namespace rserver
         private:
             asio::ip::udp::endpoint endpoint;
             std::size_t entity_value{};
+            PlayerStatus status{PlayerStatus::Lobby};
             std::size_t level{1};
     };
 

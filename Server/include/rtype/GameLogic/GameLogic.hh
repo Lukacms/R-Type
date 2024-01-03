@@ -17,18 +17,19 @@
 #include <shared_mutex>
 #include <vector>
 
-namespace rserver
+namespace rserver::game
 {
     const constexpr int MAX_POSITION_X{900};
     const constexpr int MAX_POSITION_Y{700};
     const constexpr int MIN_POSITION{-200};
+    constexpr double TIMER{0.01};
 
     class GameLogic
     {
         public:
             explicit GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
             GameLogic(GameLogic const &to_copy) = delete;
-            GameLogic(GameLogic &&to_move) = delete;
+            GameLogic(GameLogic &&to_move);
             ~GameLogic() = default;
 
             GameLogic &operator=(GameLogic const &to_copy) = delete;
@@ -61,4 +62,4 @@ namespace rserver
             std::chrono::time_point<std::chrono::steady_clock> m_start_enemy{
                 std::chrono::steady_clock::now()};
     };
-} // namespace rserver
+} // namespace rserver::game

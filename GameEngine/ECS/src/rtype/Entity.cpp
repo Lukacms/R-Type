@@ -1,14 +1,17 @@
-//
-// Created by kane on 27/11/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** Entity
+*/
 
 #include <rtype/Entity.hh>
 
-Entity::Entity(std::size_t id) : m_id{id}
+rtype::Entity::Entity(std::size_t &&index) : m_id{std::move(index)}
 {
 }
 
-Entity::operator std::size_t() const
+rtype::Entity::operator std::size_t() const
 {
     return m_id;
 }

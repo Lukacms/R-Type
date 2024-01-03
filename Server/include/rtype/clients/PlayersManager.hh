@@ -34,6 +34,7 @@ namespace rserver
             rserver::Player &add_player(asio::ip::udp::endpoint &endpoint);
             [[nodiscard]] std::size_t length() const;
             [[nodiscard]] const std::vector<Player> &get_all_players() const;
+            void remove_player(Player &player);
 
             // void delete_player(asio::ip::udp::endpoint &endpoint);
 

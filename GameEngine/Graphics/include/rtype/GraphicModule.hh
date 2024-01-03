@@ -2,11 +2,14 @@
 // Created by kane on 14/12/23.
 //
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/InputManager.hpp>
 #include <rtype/SparseArray.hpp>
+#include <rtype/ECSManager.hpp>
 
 namespace rtype
 {
@@ -14,6 +17,8 @@ namespace rtype
     const constexpr int STANDARD_WIDTH{800};
     const constexpr int STANDARD_HEIGHT{600};
     const constexpr char *STANDARD_TITLE{"R-TYPE"};
+
+    void animation_system(ComponentManager &registry, float /* delta_time */);
 
     class GraphicModule
     {
@@ -32,6 +37,7 @@ namespace rtype
                                  SparseArray<rtype::TransformComponent> transforms);
             void draw(sf::Sprite &sprite, rtype::TransformComponent transform);
             void display();
+            void close_window();
             void clear();
             bool is_input_pressed(sf::Keyboard::Key key);
             [[nodiscard]] bool is_window_open();

@@ -15,6 +15,11 @@ rserver::Player::Player(asio::ip::udp::endpoint p_endpoint) : endpoint{std::move
     DEBUG(("%s%s%d%s", INFOS.data(), NEW_CLIENT.data(), this->endpoint.port(), ENDL));
 }
 
+rserver::Player::~Player()
+{
+    DEBUG(("%s%d%s", DEL_CLIENT.data(), this->endpoint.port(), ENDL));
+}
+
 rserver::Player::Player(rserver::Player &&to_move)
     : endpoint{std::move(to_move.endpoint)}, entity_value{std::move(to_move.entity_value)}
 {
@@ -47,6 +52,16 @@ asio::ip::udp::endpoint rserver::Player::get_endpoint() const
 const std::size_t &rserver::Player::get_entity_value() const
 {
     return this->entity_value;
+}
+
+const rserver::PlayerStatus &rserver::Player::get_status() const
+{
+    return this->status;
+}
+
+void rserver::Player::set_status(const PlayerStatus &new_status)
+{
+    this->status = new_status;
 }
 
 void rserver::Player::set_entity_value(std::size_t const &value)
