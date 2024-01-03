@@ -66,6 +66,7 @@ int rclient::Client::client_run()
             m_ecs.get_class().get_components<rtype::TransformComponent>());
         m_graphical_module.get_class().display();
     }
+    RUNNING = 0;
     return rclient::SUCCESS;
 }
 
@@ -158,7 +159,7 @@ void rclient::Client::check_input()
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
         m_timer_shoot = std::chrono::steady_clock::now();
     }
-    /* if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Q)) {
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Q)) {
         RUNNING = 0;
-    } */
+    }
 }
