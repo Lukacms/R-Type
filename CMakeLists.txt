@@ -60,6 +60,14 @@ FetchContent_MakeAvailable(sfml)
 
 message("Finished loading sfml")
 
+# Loading nlohmann/json library
+FetchContent_Declare(json
+    URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz
+    DOWNLOAD_EXTRACT_TIMESTAMP true)
+FetchContent_MakeAvailable(json)
+
+message("Finished loading json")
+
 # Warning flags
 set(GCC_WARNING_FLAGS
     -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches
