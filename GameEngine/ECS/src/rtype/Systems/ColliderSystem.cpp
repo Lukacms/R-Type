@@ -1,6 +1,9 @@
-//
-// Created by kane on 11/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** Systems
+** File description:
+** ColliderSystem
+*/
 
 #include <iostream>
 #include <rtype/Components/BoxColliderComponent.hh>

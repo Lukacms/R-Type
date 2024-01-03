@@ -1,6 +1,9 @@
-//
-// Created by kane on 27/11/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** Entity
+*/
 
 #include <rtype/Entity.hh>
 

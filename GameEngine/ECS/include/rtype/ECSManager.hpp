@@ -1,6 +1,9 @@
-//
-// Created by kane on 06/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** ECSManager
+*/
 
 #pragma once
 
