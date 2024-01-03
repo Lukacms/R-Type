@@ -35,7 +35,7 @@ bool rserver::is_number(std::string const &str)
 std::vector<std::string> rserver::split_delimitor(std::string &src, const std::string &del)
 {
     std::vector<std::string> dest{};
-    size_t pos = 0;
+    size_t pos{0};
 
     while ((pos = src.find_first_of(del)) != std::string::npos) {
         dest.emplace_back(src.substr(0, pos));
@@ -58,7 +58,7 @@ std::vector<std::string> rserver::split_delimitor(std::string &src, const std::s
 std::vector<std::string> rserver::split_delimitor(std::string src, const std::string &del)
 {
     std::vector<std::string> dest{};
-    std::size_t pos = 0;
+    size_t pos{0};
 
     while ((pos = src.find_first_of(del)) != std::string::npos) {
         dest.emplace_back(src.substr(0, pos));

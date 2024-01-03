@@ -23,7 +23,7 @@
  * @brief used to handle sigint, is atomic to be modified between the threads
  * The only downside of this variable is that it can't be put in a header file, it will not work
  */
-static volatile std::atomic_int RUNNING = 1;
+static volatile std::atomic_int RUNNING{1};
 
 /**
  * @brief array of method pointers to handle commands recieved from client
@@ -161,6 +161,8 @@ void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
     for (auto &room : this->rooms.get_rooms()) {
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
+        else
+            room.check_wait_timeout();
     }
 }
 

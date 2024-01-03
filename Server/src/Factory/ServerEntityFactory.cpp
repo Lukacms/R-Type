@@ -30,7 +30,7 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
 
 size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager)
 {
-    size_t entity = ecs_manager.create_entity();
+    size_t entity{ecs_manager.create_entity()};
     auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
     auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
@@ -45,7 +45,7 @@ size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager
 
 size_t rserver::ServerEntityFactory::create_player(rtype::ECSManager &ecs_manager)
 {
-    size_t entity = ecs_manager.create_entity();
+    size_t entity{ecs_manager.create_entity()};
     auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
     auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
@@ -60,7 +60,7 @@ size_t rserver::ServerEntityFactory::create_player(rtype::ECSManager &ecs_manage
 
 size_t rserver::ServerEntityFactory::create_other_player(rtype::ECSManager &ecs_manager)
 {
-    size_t entity = ecs_manager.create_entity();
+    size_t entity{ecs_manager.create_entity()};
     auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
     auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
@@ -75,7 +75,7 @@ size_t rserver::ServerEntityFactory::create_other_player(rtype::ECSManager &ecs_
 
 size_t rserver::ServerEntityFactory::create_bullet(rtype::ECSManager &ecs_manager)
 {
-    size_t entity = ecs_manager.create_entity();
+    size_t entity{ecs_manager.create_entity()};
     auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
     auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
