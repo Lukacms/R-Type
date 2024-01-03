@@ -58,7 +58,7 @@ bool rtype::GraphicModule::is_input_pressed(sf::Keyboard::Key key)
 
 void rtype::GraphicModule::update()
 {
-    sf::Event evt;
+    sf::Event evt{};
 
     m_input.update();
     while (m_window.pollEvent(evt)) {

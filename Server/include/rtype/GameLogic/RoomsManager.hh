@@ -28,10 +28,10 @@ namespace rserver::game
             void join_random_room(Player &player);
             void join_room(Player &player, const std::size_t &room_id);
             void add_room(Player &first_player, const std::size_t &nb_threads,
-                          std::shared_mutex &ecs, asio::ip::udp::socket &socket);
+                          asio::ip::udp::socket &socket);
             void leave_room_with_id(Player &player, const std::size_t &room_id);
             [[nodiscard]] Room &get_room_by_id(const std::size_t &room_id);
-            [[nodiscard]] const std::vector<Room> &get_rooms() const;
+            [[nodiscard]] std::vector<Room> &get_rooms();
 
         private:
             std::vector<rserver::game::Room> rooms{};

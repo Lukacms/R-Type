@@ -44,4 +44,4 @@ clean:
     @rm -rf {{ names }}
 
 fclean: clean
-    @rm -rf build Testing libs
+    @rm -rf build tests libs

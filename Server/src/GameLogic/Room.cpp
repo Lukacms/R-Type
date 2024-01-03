@@ -10,17 +10,18 @@
 #include <rtype/Manager.hh>
 
 /* constructors / destructors */
-rserver::game::Room::Room(std::shared_mutex &pecs, asio::ip::udp::socket &psocket,
-                          PlayersManager &pmanager, std::size_t pid)
-    : socket{psocket}, ecs_mutex{pecs}, id{std::move(pid)}, logic{socket, ecs_mutex},
-      manager{pmanager}
+rserver::game::Room::Room(asio::ip::udp::socket &psocket, PlayersManager &pmanager, std::size_t pid)
+    : socket{psocket}, id{std::move(pid)}, logic{socket, ecs_mutex}, manager{pmanager}
 {
+    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
+    this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
+    init_ecs(this->ecs.get_class());
     DEBUG(("New game room created%s", ENDL));
 }
 
 rserver::game::Room::Room(rserver::game::Room &&to_move)
-    : socket{to_move.socket}, ecs_mutex{to_move.ecs_mutex}, id{std::move(to_move.id)},
-      logic{std::move(to_move.logic)}, manager{to_move.manager}, status{std::move(to_move.status)}
+    : socket{to_move.socket}, id{std::move(to_move.id)}, logic{std::move(to_move.logic)},
+      manager{to_move.manager}, status{std::move(to_move.status)}
 {
 }
 
@@ -35,7 +36,7 @@ void rserver::game::Room::add_player(Player &new_player)
     if (this->status != RoomStatus::Waiting)
         throw RoomException("Can't add player. Room is in a game.");
     if (this->players.size() >= MAX_PLAYERS)
-        throw RoomException("Already max number of p>layers");
+        throw RoomException("Already max number of players");
     this->players.emplace_back(new_player.get_port());
     // Manager::send_message({}, new_player.get(), this->socket);
 }
@@ -56,6 +57,8 @@ void rserver::game::Room::del_player(rserver::Player &to_del)
         if (to_del.get_port() == *player) {
             to_del.set_status(PlayerStatus::Lobby);
             this->players.erase(player);
+            if (this->players.size() < 2)
+                this->status = RoomStatus::Lounge;
             return;
         }
     }
@@ -65,6 +68,17 @@ void rserver::game::Room::del_player(rserver::Player &to_del)
 std::size_t rserver::game::Room::get_id() const
 {
     return this->id;
+}
+
+rserver::game::GameLogic &rserver::game::Room::get_logic()
+{
+    return this->logic;
+}
+
+void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
+{
+    this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
+                          static_cast<float>(delta.get_elapsed_time_in_s()));
 }
 
 /* exception */

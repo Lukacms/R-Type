@@ -21,6 +21,7 @@
 
 /**
  * @brief used to handle sigint, is atomic to be modified between the threads
+ * The only downside of this variable is that it can't be put in a header file, it will not work
  */
 static volatile std::atomic_int RUNNING = 1;
 
@@ -47,13 +48,6 @@ rserver::Manager::Manager(asio::ip::port_type port)
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
     this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
 
-    rtype::SparseArray<rtype::TransformComponent> transform{};
-    rtype::SparseArray<rtype::BoxColliderComponent> boxes{};
-    rtype::SparseArray<rtype::TagComponent> tags{};
-    rtype::SparseArray<rtype::HealthComponent> healths{};
-    std::function<void(rtype::ComponentManager &, float)> transform_system =
-        &rtype::transform_system;
-
     try {
         this->udp_socket.non_blocking(true);
         /* should set timeout on non-blocking, but doesn't seems to be working */
@@ -63,11 +57,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
     } catch (std::exception & /* e */) {
         DEBUG(("This instance will stay blocking, clean <CTRL-C> will not work.\n"));
     }
-    this->ecs.get_class().register_component(transform);
-    this->ecs.get_class().register_component(boxes);
-    this->ecs.get_class().register_component(tags);
-    this->ecs.get_class().register_component(healths);
-    this->ecs.get_class().add_system(transform_system);
+    init_ecs(this->ecs.get_class());
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
 }
 
@@ -88,7 +78,12 @@ rserver::Manager::Manager(rserver::Manager &&to_move)
  */
 rserver::Manager::~Manager()
 {
+    ntw::Communication commn{ntw::NetworkType::End};
+
     this->threads.stop();
+    for (const auto &player : this->players.get_all_players()) {
+        Manager::send_message(commn, player, this->udp_socket);
+    }
     DEBUG(("Finished server%s", ENDL));
 }
 
@@ -124,19 +119,10 @@ void rserver::Manager::launch(asio::ip::port_type port)
     try {
         Manager manager{port};
 
-        manager.run_game_logic();
         manager.start_receive();
     } catch (std::exception &e) {
         std::cout << e.what() << ENDL;
     }
-}
-
-/**
- * @brief call the method `run` on asio::udp::context. It blocks until all works has finished
- */
-void rserver::Manager::run()
-{
-    this->context.run();
 }
 
 /**
@@ -147,21 +133,35 @@ void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
         rtype::utils::Clock clock{};
-        auto start = std::chrono::steady_clock::now();
+        rtype::utils::Clock delta{};
 
         while (RUNNING) {
-            auto update = std::chrono::steady_clock::now();
-            float delta_time = static_cast<float>(
-                std::chrono::duration_cast<std::chrono::milliseconds>(update - start).count());
             if (clock.get_elapsed_time_in_s() > game::TIMER) {
-                logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
-                                delta_time);
-                ecs.get_class().apply_system(delta_time);
+                logic.game_loop(this->physics.get_class(), this->players, this->ecs.get_class(),
+                                static_cast<float>(delta.get_elapsed_time_in_s()));
+                this->run_all_rooms_logics(delta);
+                ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_s()));
                 clock.reset();
             }
-            start = std::chrono::steady_clock::now();
+            delta.reset();
         }
     });
+}
+
+/**
+ * @brief Assuming that it was called in @run_game_logic, when the clock is set, it launches the
+ * game logic of all the rooms that running their game (not in waiting mode)
+ *
+ * @param delta - Clock -> the game logic seems to need delta time
+ */
+void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
+{
+    std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
+
+    for (auto &room : this->rooms.get_rooms()) {
+        if (room.get_status() == game::RoomStatus::InGame)
+            room.run_game_logic(delta);
+    }
 }
 
 /* send data to clients */
@@ -210,6 +210,7 @@ void rserver::Manager::start_receive()
     ntw::Communication commn{};
     rtype::utils::Clock clock{};
 
+    this->run_game_logic();
     while (RUNNING) {
         try {
             this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);

@@ -196,6 +196,7 @@ add_subdirectory(Server)
 add_subdirectory(Client)
 
 if (RTYPE_BUILD_TESTS)
+    message("${BoldYellow}Building tests${ColourReset}")
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/tests)
     FetchContent_Declare(
         googletest

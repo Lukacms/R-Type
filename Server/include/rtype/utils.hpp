@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <rtype/ECSManager.hpp>
 #include <sstream>
 #include <string>
 #include <type_traits>
@@ -19,6 +20,7 @@ namespace rserver
     bool is_number(std::string const &str);
     std::vector<std::string> split_delimitor(std::string &src, const std::string &del);
     std::vector<std::string> split_delimitor(std::string src, const std::string &del);
+    void init_ecs(rtype::ECSManager &to_load);
 
     /**
      * @brief Get a number from a string
