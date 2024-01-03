@@ -5,6 +5,8 @@
 ** client
 */
 
+#include "SFML/Graphics/Sprite.hpp"
+#include <array>
 #include <atomic>
 #include <csignal>
 #include <iostream>
@@ -71,6 +73,8 @@ int rclient::Client::client_run()
 int rclient::Client::launch(Arguments &infos)
 {
     try {
+        Menu menu{STANDARD_WIDTH, STANDARD_HEIGHT, STANDARD_TITLE.data()};
+        menu.launch();
         Client client{};
 
         client.set_network_infos(infos);
@@ -88,7 +92,6 @@ void rclient::Client::set_network_infos(rclient::Arguments &infos)
 
 void rclient::Client::client_menu()
 {
-    // if (action in order to change the scene);
     configure_network();
 }
 
