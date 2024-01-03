@@ -8,6 +8,7 @@
 #pragma once
 
 #include <chrono>
+#include <functional>
 #include <rtype/GraphicModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 
@@ -31,14 +32,14 @@ namespace rclient
     class Menu
     {
         public:
-            explicit Menu(unsigned int width, unsigned int height, const std::string &title);
+            explicit Menu(unsigned int width, unsigned int height);
             Menu(Menu const &to_copy) = delete;
             Menu(Menu &&to_move) = delete;
             ~Menu() = default;
             Menu &operator=(Menu const &to_copy) = delete;
             Menu &operator=(Menu &&to_move) = delete;
 
-            void launch();
+            void launch(dl::DlLoader<rtype::GraphicModule> &graphical_module);
 
         private:
             bool m_changing_scene{false};
@@ -48,7 +49,6 @@ namespace rclient
             unsigned int m_height{};
 
             std::chrono::time_point<std::chrono::steady_clock> m_timer_menu;
-            dl::DlLoader<rtype::GraphicModule> m_graphical_module;
             std::array<std::chrono::time_point<std::chrono::steady_clock>, 3> m_clocks{};
             sf::Texture m_texture{};
             std::array<rtype::TransformComponent, 2> m_transforms{};
@@ -58,7 +58,7 @@ namespace rclient
             sf::Sprite m_sprite{};
             sf::Text m_text{};
 
-            void draw();
+            void draw(dl::DlLoader<rtype::GraphicModule> &graphical_module);
             void animate();
             void cut_scene_handling();
     };

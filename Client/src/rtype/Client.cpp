@@ -23,6 +23,7 @@ static void handle_sigint(int /* unused */)
 
 /* ctor / dtor */
 rclient::Client::Client(unsigned int width, unsigned int height, const std::string &title)
+    : m_menu{width, height}
 {
     m_ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
     m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
@@ -73,8 +74,6 @@ int rclient::Client::client_run()
 int rclient::Client::launch(Arguments &infos)
 {
     try {
-        Menu menu{STANDARD_WIDTH, STANDARD_HEIGHT, STANDARD_TITLE.data()};
-        menu.launch();
         Client client{};
 
         client.set_network_infos(infos);
@@ -92,6 +91,7 @@ void rclient::Client::set_network_infos(rclient::Arguments &infos)
 
 void rclient::Client::client_menu()
 {
+    m_menu.launch(m_graphical_module);
     configure_network();
 }
 

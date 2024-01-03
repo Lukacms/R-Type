@@ -7,12 +7,8 @@
 
 #include <rtype/Menu.hh>
 
-rclient::Menu::Menu(unsigned int width, unsigned int height, const std::string &title)
-    : m_width(width), m_height(height)
+rclient::Menu::Menu(unsigned int width, unsigned int height) : m_width(width), m_height(height)
 {
-    m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
-        unsigned int width, unsigned int height, const std::string &title)>(
-        "./libs/r-type-graphics.so", "entrypoint", width, height, title);
     for (size_t i{0}; i < 3; i++) {
         m_clocks[i] = std::chrono::steady_clock::now();
     }
@@ -30,13 +26,13 @@ rclient::Menu::Menu(unsigned int width, unsigned int height, const std::string &
                        static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
 }
 
-void rclient::Menu::launch()
+void rclient::Menu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
 
 {
     bool start_cut_scene{false};
-    while (m_graphical_module.get_class().is_window_open() && !m_changing_scene) {
-        m_graphical_module.get_class().update();
-        if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Enter)) {
+    while (graphical_module.get_class().is_window_open() && !m_changing_scene) {
+        graphical_module.get_class().update();
+        if (graphical_module.get_class().is_input_pressed(sf::Keyboard::Enter)) {
             start_cut_scene = true;
             m_timer_menu = std::chrono::steady_clock::now();
         }
@@ -44,14 +40,13 @@ void rclient::Menu::launch()
             m_changing_scene = true;
         }
         animate();
-        draw();
+        draw(graphical_module);
     }
-    m_graphical_module.get_class().close();
 }
 
-void rclient::Menu::draw()
+void rclient::Menu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
 {
-    m_graphical_module.get_class().clear();
+    graphical_module.get_class().clear();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)
             m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
@@ -60,12 +55,12 @@ void rclient::Menu::draw()
         m_texture.loadFromFile(m_paths[i]);
         m_sprite.setPosition(m_transforms[i].position_x, m_transforms[i].position_y);
         m_sprite.setTexture(m_texture);
-        m_graphical_module.get_class().draw(m_sprite, {});
+        graphical_module.get_class().draw(m_sprite, {});
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    m_graphical_module.get_class().draw(m_text);
-    m_graphical_module.get_class().display();
+    graphical_module.get_class().draw(m_text);
+    graphical_module.get_class().display();
 }
 
 void rclient::Menu::animate() // NOLINT
