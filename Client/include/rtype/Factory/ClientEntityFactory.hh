@@ -10,11 +10,11 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <array>
 #include <exception>
+#include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <vector>
-#include <rtype/Components/AnimationComponent.hh>
 
 namespace rclient
 {

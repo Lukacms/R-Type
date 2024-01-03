@@ -42,7 +42,7 @@ void rclient::NetworkManager::fetch_messages(rtype::ECSManager &manager)
 
     try {
         m_socket.receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint);
-        //DEBUG(("Arguments upon recieve: %s\n", comm.args.data()));
+        // DEBUG(("Arguments upon recieve: %s\n", comm.args.data()));
         m_queue.emplace_back(comm);
         if (sender_endpoint.port() > 0)
             this->manage_message(manager);
@@ -126,5 +126,5 @@ void rclient::NetworkManager::manage_entity(rclient::NetworkManager &network_man
     if (!ecs_manager.is_entity_used(std::stoul(arguments[0])))
         rclient::NetworkManager::create_entity(network_manager, ecs_manager, communication);
     rclient::NetworkManager::move_entity(network_manager, ecs_manager, communication);
-    //DEBUG(("New X: %s, New Y: %s%s", arguments[3].c_str(), arguments[3].c_str(), ENDL));
+    // DEBUG(("New X: %s, New Y: %s%s", arguments[3].c_str(), arguments[3].c_str(), ENDL));
 }

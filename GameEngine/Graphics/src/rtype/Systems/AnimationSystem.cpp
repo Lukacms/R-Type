@@ -5,10 +5,10 @@
 ** AnimationSystem
 */
 
+#include <iostream>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/SpriteComponent.hh>
-#include <iostream>
 
 namespace rtype
 {
@@ -17,7 +17,8 @@ namespace rtype
         auto &animations = registry.get_components<AnimationComponent>();
         auto &sprites = registry.get_components<SpriteComponent>();
 
-        for (std::size_t entity = 0; entity < animations.size() && entity < sprites.size(); entity += 1) {
+        for (std::size_t entity = 0; entity < animations.size() && entity < sprites.size();
+             entity += 1) {
             if (!animations[entity].has_value() || !sprites[entity].has_value())
                 continue;
             for (auto &clip : animations[entity]->animation_clips) {

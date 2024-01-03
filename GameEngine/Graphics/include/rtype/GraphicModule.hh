@@ -7,9 +7,9 @@
 #include <SFML/Graphics.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
+#include <rtype/ECSManager.hpp>
 #include <rtype/InputManager.hpp>
 #include <rtype/SparseArray.hpp>
-#include <rtype/ECSManager.hpp>
 
 namespace rtype
 {

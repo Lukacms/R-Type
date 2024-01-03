@@ -8,11 +8,11 @@
 #include <atomic>
 #include <csignal>
 #include <rtype.hh>
+#include <rtype/Client.hh>
 #include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
-#include <rtype/Client.hh>
 #include <rtype/GraphicModule.hh>
 
 static volatile std::atomic_int RUNNING{1};
@@ -35,7 +35,8 @@ rclient::Client::Client(unsigned int width, unsigned int height, const std::stri
     rtype::SparseArray<rtype::BoxColliderComponent> colliders{};
     rtype::SparseArray<rtype::HealthComponent> health{};
     rtype::SparseArray<rtype::AnimationComponent> animation{};
-    std::function<void(rtype::ComponentManager &, float)> animation_system{&rtype::animation_system};
+    std::function<void(rtype::ComponentManager &, float)> animation_system{
+        &rtype::animation_system};
 
     m_ecs.get_class().register_component(sprites);
     m_ecs.get_class().register_component(transforms);

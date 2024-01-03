@@ -21,7 +21,9 @@ void rtype::GraphicModule::draw_components(SparseArray<rtype::SpriteComponent> s
         texture.loadFromFile(sprites[index]->texture_path);
         sprites[index]->sprite.setPosition(transforms[index]->position_x,
                                            transforms[index]->position_y);
-        sprites[index]->sprite.setTextureRect({sprites[index]->rectangle.x, sprites[index]->rectangle.y, sprites[index]->rectangle.width, sprites[index]->rectangle.height});
+        sprites[index]->sprite.setTextureRect(
+            {sprites[index]->rectangle.x, sprites[index]->rectangle.y,
+             sprites[index]->rectangle.width, sprites[index]->rectangle.height});
         sprites[index]->sprite.setTexture(texture);
         m_window.draw(sprites[index]->sprite);
     }

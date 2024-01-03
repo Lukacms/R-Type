@@ -5,8 +5,6 @@
 ** factory source file
 */
 
-#include <SFML/Graphics/Texture.hpp>
-#include <iostream>
 #include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
