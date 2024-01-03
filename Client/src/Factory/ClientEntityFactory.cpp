@@ -31,6 +31,10 @@ size_t rclient::ClientEntityFactory::create(std::size_t entity, const std::strin
     if (type == "Bullet") {
         return create_bullet(new_entity, ecs_manager);
     }
+    if (type == "Upgrade") {
+        std::cout << "UPGRADE HERE" << std::endl;
+        return create_upgrade(new_entity, ecs_manager);
+    }
     throw std::runtime_error("Unknown entity type");
 }
 
@@ -109,5 +113,22 @@ size_t rclient::ClientEntityFactory::create_bullet(std::size_t entity,
     sprite[entity]->texture_path = "./Client/assets/PlayerShoot.png";
     sprite[entity]->sprite.setScale(2, 2);
     collider.insert_at(entity, {66, 30});
+    return entity;
+}
+
+size_t rclient::ClientEntityFactory::create_upgrade(std::size_t entity, rtype::ECSManager &ecs_manager)
+{
+    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
+    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
+    auto &sprites{ecs_manager.get_components<rtype::SpriteComponent>()};
+    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
+
+    collider.insert_at(entity, rtype::BoxColliderComponent{});
+    tag.insert_at(entity, rtype::TagComponent{"Upgrade"});
+    transform.insert_at(entity, rtype::TransformComponent{});
+    sprites.insert_at(entity, rtype::SpriteComponent{});
+    sprites[entity]->texture_path = "./Client/assets/Upgrade.png";
+    sprites[entity]->sprite.setScale(2, 2);
+    sprites[entity]->sprite.setTextureRect({0, 0, 18, 18});
     return entity;
 }

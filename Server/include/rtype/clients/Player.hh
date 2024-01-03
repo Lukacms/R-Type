@@ -51,12 +51,15 @@ namespace rserver
             [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
             [[nodiscard]] const std::size_t &get_entity_value() const;
             void set_entity_value(std::size_t const &value);
+            void level_up();
+            std::size_t get_level();
             void lock();
             void unlock();
 
         private:
             asio::ip::udp::endpoint endpoint;
             std::size_t entity_value{};
+            std::size_t level{1};
     };
 
 } // namespace rserver

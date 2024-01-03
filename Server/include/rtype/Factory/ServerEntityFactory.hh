@@ -45,5 +45,6 @@ namespace rserver
             static size_t create_player(rtype::ECSManager &ecs_manager);
             static size_t create_other_player(rtype::ECSManager &ecs_manager);
             static size_t create_bullet(rtype::ECSManager &ecs_manager);
+            static size_t create_upgrade(rtype::ECSManager &ecs_manager);
     };
 } // namespace rserver

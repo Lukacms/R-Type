@@ -34,5 +34,6 @@ namespace rclient
             static size_t create_player(std::size_t entity, rtype::ECSManager &ecs_manager);
             static size_t create_other_player(std::size_t entity, rtype::ECSManager &ecs_manager);
             static size_t create_bullet(std::size_t entity, rtype::ECSManager &ecs_manager);
+            static size_t create_upgrade(std::size_t entity, rtype::ECSManager &ecs_manager);
     };
 } // namespace rclient

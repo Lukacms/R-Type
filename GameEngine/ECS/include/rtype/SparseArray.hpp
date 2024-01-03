@@ -102,7 +102,7 @@ template <typename TComponent> class SparseArray : public ISparseArray
         {
             if (pos > m_data.size())
                 return;
-            m_data[pos] = std::nullopt;
+            m_data[pos].reset();
         }
 
         size_type get_index(value_type const &value) const

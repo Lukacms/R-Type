@@ -63,3 +63,14 @@ void rserver::Player::unlock()
 {
     this->mutex.unlock();
 }
+
+void rserver::Player::level_up()
+{
+    if (this->level < 3)
+        this->level += 1;
+}
+
+std::size_t rserver::Player::get_level()
+{
+    return this->level;
+}

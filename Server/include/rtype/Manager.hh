@@ -110,6 +110,7 @@ namespace rserver
                                  asio::ip::udp::endpoint &client);
             void refuse_client(asio::ip::udp::endpoint &client);
             void add_new_player(asio::ip::udp::endpoint &client);
+            void shoot_according_level(Player &);
     };
 
     struct CommandHandler {
