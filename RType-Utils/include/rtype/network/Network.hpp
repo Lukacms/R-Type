@@ -31,8 +31,9 @@ namespace ntw
         Creation,    // Create a new entity : Creation [Id] [Type]
         Destruction, // Destruct one entity : Destruction [Id]
         Position,    // Send the position of an entity : Position [Id] [x] [y]
-        Input,  // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
-        Entity, // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
+        Entity,      // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
+        ToGame,      // Client passing from waiting mode to game
+        Input, // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
         Room, // Server -> send infos about room [id] [nb_player] [status], Client -> join room [id]
     };
 

@@ -38,6 +38,11 @@ void rserver::game::Room::add_player(Player &new_player)
     if (this->players.size() >= MAX_PLAYERS)
         throw RoomException("Already max number of players");
     this->players.emplace_back(new_player.get_port());
+    if (this->players.size() == 2) {
+        this->status = RoomStatus::Waiting;
+        this->timeout_connect.reset();
+    } else if (this->players.size() == MAX_PLAYERS)
+        this->status = RoomStatus::InGame;
     // Manager::send_message({}, new_player.get(), this->socket);
 }
 
@@ -79,6 +84,28 @@ void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 {
     this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
                           static_cast<float>(delta.get_elapsed_time_in_s()));
+}
+
+void rserver::game::Room::check_wait_timeout()
+{
+    if (this->status != RoomStatus::Waiting)
+        return;
+    if (this->timeout_connect.get_elapsed_time_in_s() > TIMEOUT_WAITING) {
+        this->status = RoomStatus::InGame;
+        for (auto pid : this->players) {
+            Manager::send_message({ntw::NetworkType::ToGame}, this->manager.get_by_id(pid),
+                                  this->socket);
+        }
+    }
+}
+
+bool rserver::game::Room::has_player(const Player &player)
+{
+    for (auto &port : this->players) { // NOLINT
+        if (port == player.get_port())
+            return true;
+    }
+    return false;
 }
 
 /* exception */
