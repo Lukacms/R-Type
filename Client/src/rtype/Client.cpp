@@ -148,4 +148,8 @@ void rclient::Client::check_input()
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
         m_timer_shoot = std::chrono::steady_clock::now();
     }
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Escape)) {
+        PauseMenu pause_menu(STANDARD_WIDTH, STANDARD_HEIGHT);
+        pause_menu.launch(m_graphical_module);
+    }
 }
