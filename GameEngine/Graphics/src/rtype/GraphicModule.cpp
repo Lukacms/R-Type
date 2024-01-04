@@ -31,6 +31,11 @@ void rtype::GraphicModule::draw(sf::Sprite &sprite, TransformComponent /* transf
     m_window.draw(sprite);
 }
 
+void rtype::GraphicModule::draw(sf::Text &text)
+{
+    m_window.draw(text);
+}
+
 void rtype::GraphicModule::display()
 {
     m_window.display();
@@ -65,4 +70,9 @@ void rtype::GraphicModule::update()
         if (evt.type == sf::Event::Closed)
             m_window.close();
     }
+}
+
+void rtype::GraphicModule::close()
+{
+    m_window.close();
 }
