@@ -9,11 +9,9 @@
 #include <csignal>
 #include <rtype.hh>
 #include <rtype/Client.hh>
-#include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
-#include <rtype/GraphicModule.hh>
 
 static volatile std::atomic_int RUNNING{1};
 
@@ -29,6 +27,7 @@ rclient::Client::Client(unsigned int width, unsigned int height, const std::stri
     m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
         unsigned int width, unsigned int height, const std::string &title)>(
         "./libs/r-type-graphics.so", "entrypoint", width, height, title);
+    m_audio_module.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so", "entrypoint");
     rtype::SparseArray<rtype::SpriteComponent> sprites{};
     rtype::SparseArray<rtype::TransformComponent> transforms{};
     rtype::SparseArray<rtype::TagComponent> tags{};
@@ -62,9 +61,11 @@ rclient::Client::~Client()
 int rclient::Client::client_run()
 {
     auto start = std::chrono::steady_clock::now();
+    m_audio_module.get_class().play_music("Voyage1970");
 
     while ((m_graphical_module.get_class().is_window_open()) && RUNNING) {
         m_graphical_module.get_class().update();
+        m_audio_module.get_class().update();
         m_state == STATE::Menu ? client_menu() : client_game(start);
         m_graphical_module.get_class().clear();
         m_graphical_module.get_class().draw_components(
@@ -72,6 +73,7 @@ int rclient::Client::client_run()
             m_ecs.get_class().get_components<rtype::TransformComponent>());
         m_graphical_module.get_class().display();
     }
+    RUNNING = 0;
     return rclient::SUCCESS;
 }
 
@@ -162,6 +164,7 @@ void rclient::Client::check_input()
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(4);
+        m_audio_module.get_class().play_sfx("Shoot");
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
         m_timer_shoot = std::chrono::steady_clock::now();
     }

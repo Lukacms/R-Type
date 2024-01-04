@@ -18,6 +18,7 @@ target_link_libraries(
     rtype-client-interface INTERFACE
     asio::asio
     r-type-utils
+    r-type-audio
     r-type-graphics-interface
 )
 
@@ -40,7 +41,8 @@ target_include_directories(
     PUBLIC
     ../GameEngine/ECS/include/
     ../GameEngine/Graphics/include/
-    ../GameEngine/Physics/include
+    ../GameEngine/Physics/include/
+    ../GameEngine/Audio/include/
     ../RType-Utils/include/
     ${CMAKE_BINARY_DIR}/_deps/sfml-src/include
 )

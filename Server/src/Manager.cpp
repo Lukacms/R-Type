@@ -145,22 +145,18 @@ void rserver::Manager::run()
 void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
-        auto start = std::chrono::steady_clock::now();
-        auto timer = std::chrono::steady_clock::now();
+        rtype::utils::Clock timer{};
+        rtype::utils::Clock delta_time{};
 
         while (RUNNING) {
-            auto update = std::chrono::steady_clock::now();
-            float delta_time = static_cast<float>(
-                std::chrono::duration_cast<std::chrono::milliseconds>(update - start).count());
-            if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                                        std::chrono::steady_clock::now() - timer)
-                                        .count()) > game::TIMER) {
+            if (timer.get_elapsed_time_in_ms() > game::TIMER) {
                 logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
-                                delta_time);
-                ecs.get_class().apply_system(delta_time);
-                timer = std::chrono::steady_clock::now();
+                                static_cast<float>(delta_time.get_elapsed_time_in_ms()));
+                ecs.get_class().apply_system(
+                    static_cast<float>(delta_time.get_elapsed_time_in_ms()));
+                timer.reset();
+                delta_time.reset();
             }
-            start = std::chrono::steady_clock::now();
         }
     });
 }

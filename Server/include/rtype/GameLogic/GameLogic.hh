@@ -22,7 +22,7 @@ namespace rserver::game
     const constexpr int MAX_POSITION_X{900};
     const constexpr int MAX_POSITION_Y{700};
     const constexpr int MIN_POSITION{-200};
-    constexpr double TIMER{0.01};
+    constexpr double TIMER{10};
 
     class GameLogic
     {

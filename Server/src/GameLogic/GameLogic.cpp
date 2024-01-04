@@ -155,9 +155,12 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
     auto update = std::chrono::steady_clock::now();
 
-    if (std::chrono::duration_cast<std::chrono::seconds>(update - m_start_enemy).count() > 2) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(update - m_start_enemy).count() > 200) {
         std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
-        rserver::ServerEntityFactory::create("BasicEnemy", manager);
+        auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
+        auto &transform = manager.get_component<rtype::TransformComponent>(entity);
+        transform.position_y = std::rand() % 550;
+        transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
         m_start_enemy = update;
     }
 }
@@ -165,10 +168,10 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 void rserver::game::GameLogic::spawn_upgrade(std::size_t entity_to_follow,
                                              rtype::ECSManager &manager)
 {
-    int success = std::rand() % 10;
+    int success = std::rand() % 50;
     auto &transforms = manager.get_components<rtype::TransformComponent>();
 
-    if (transforms[entity_to_follow].has_value()) {
+    if (transforms[entity_to_follow].has_value() && success == 0) {
         std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
         std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
         transforms[entity] = {transforms[entity_to_follow]};

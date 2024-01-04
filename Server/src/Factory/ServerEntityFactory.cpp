@@ -102,7 +102,7 @@ size_t rserver::ServerEntityFactory::create_upgrade(rtype::ECSManager &ecs_manag
     collider.insert_at(entity, rtype::BoxColliderComponent{36, 36});
     tag.insert_at(entity, rtype::TagComponent{"Upgrade"});
     transform.insert_at(entity, rtype::TransformComponent{0, 0, 0, 0, 2, 2});
-    transform[entity]->velocity_x = -0.1;
+    transform[entity]->velocity_x = -5;
     return entity;
 }
 
