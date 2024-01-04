@@ -119,7 +119,7 @@ jobs:
           cmake .. -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang-17 -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_CXX_COMPILER_LAUNCHER=ccache $CMAKE_OPTIONS
           ninja
       shell: bash
-      timeout-minutes: 3
+      timeout-minutes: 5
 
     - name: Check executable files exists
       run: |

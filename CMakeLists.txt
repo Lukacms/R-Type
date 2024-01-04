@@ -63,7 +63,7 @@ message("Finished loading sfml")
 # Warning flags
 set(GCC_WARNING_FLAGS
     -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches
-    -Wlogical-op -Wnull-dereference -Wuseless-cast -Wno-pragmas)
+    -Wlogical-op -Wno-null-dereference -Wuseless-cast -Wno-pragmas)
 
 set(CLANG_WARNING_FLAGS
     -Weverything
@@ -79,7 +79,10 @@ set(CLANG_WARNING_FLAGS
     -Wno-global-constructors
     -Wno-implicit-int-float-conversion
     -Wno-return-std-move
+    -Wno-documentation
+    -Wno-deprecated-copy-with-user-provided-dtor
     -Wno-return-type-c-linkage
+    -Wno-suggest-destructor-override
     -Wno-signed-enum-bitfield
     -Wno-weak-vtables)
 
@@ -107,9 +110,6 @@ set(WARNING_FLAGS
     -Wformat=2
     -Wno-effc++
     -Wno-suggest-override
-    -Wno-suggest-destructor-override
-    -Wno-documentation
-    -Wno-deprecated-copy-with-user-provided-dtor
     -Wno-null-dereference
     -Wno-zero-as-null-pointer-constant
     -Wno-padded

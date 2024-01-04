@@ -9,21 +9,22 @@ name_tests_client   :=  "tests/tests-r-type_client"
 build_folder    :=  "build"
 
 basic_options   := '-DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+no_release  :=  '-DUSE_CLANG_TIDY=false -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ '
 
 release:
-    cmake -B {{ build_folder }} -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ {{ basic_options }} &&\
-    cmake --build {{ build_folder }} --config Release
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DUSE_CLANG_TIDY=true -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ {{ basic_options }} &&\
+    ninja -C {{ build_folder }}
 
 debug:
-    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ {{ basic_options }} &&\
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Debug {{ no_release }} {{ basic_options }} &&\
     ninja -C {{ build_folder }}
 
 ninja:
-    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=None -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ {{ basic_options }} &&\
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=None {{ no_release }} {{ basic_options }} &&\
     ninja -C {{ build_folder }}
 
 tsan:
-    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=tsan -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ {{ basic_options }} &&\
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=tsan {{ no_release }} {{ basic_options }} &&\
     ninja -C {{ build_folder }}
 
 clean_tests:
@@ -39,7 +40,7 @@ windows:
     ninja -C {{ build_folder }}
 
 benchmarks:
-    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ {{ basic_options }} -DRTYPE_BUILD_BENCHMARKS=true &&\
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release {{ no_release }} {{ basic_options }} -DRTYPE_BUILD_BENCHMARKS=true &&\
     ninja -C {{ build_folder }}
 
 clean:
