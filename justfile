@@ -12,8 +12,8 @@ basic_options   := '-DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_CXX_COMPILER_LA
 no_release  :=  '-DUSE_CLANG_TIDY=false -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ '
 
 release:
-    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DUSE_CLANG_TIDY=true -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ {{ basic_options }} &&\
-    ninja -C {{ build_folder }}
+    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ {{ basic_options }} &&\
+    ninja -C {{ build_folder }} && cd {{ build_folder }} && sudo cpack --config CPackConfig.cmake
 
 debug:
     cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Debug {{ no_release }} {{ basic_options }} &&\

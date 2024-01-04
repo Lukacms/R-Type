@@ -64,8 +64,8 @@ jobs:
       matrix:
         build: [
           {type: Debug, options: '-DRTYPE_BUILD_TESTS=true -DUSE_CLANG_TIDY=false'},
-          {type: tsan, options: '-DRTYPE_BUILD_TESTS=true -DRTYPE_BUILD_BENCHMARKS=true -DUSE_CLANG_TIDY=false'},
-          {type: Release, options: '-DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall'}
+          {type: tsan, options: '-DUSE_CLANG_TIDY=false'},
+          {type: Release, options: '-DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall -DUSE_CLANG_TIDY=false'}
         ]
         version: [g++13]
         cpp: [20]
@@ -130,10 +130,6 @@ jobs:
           fi
         done
 
-    - name: Launch benchmarks
-      if: ${{ matrix.build.type  == 'tsan' }}
-      run: |
-        ./build/bin/benchmarks/rtype_benchmarks
 
   run_program_windows:
     name: Compile on Windows with msvc

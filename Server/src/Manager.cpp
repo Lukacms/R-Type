@@ -216,7 +216,7 @@ void rserver::Manager::start_receive()
     while (RUNNING) {
         try {
             this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
-            DEBUG(("port upon recieving %d\n", this->endpoint.port()));
+            DEBUG(("port upon receiving %d\n", this->endpoint.port()));
             // DEBUG(("arguments here: %s\n", commn.args.data()));
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
