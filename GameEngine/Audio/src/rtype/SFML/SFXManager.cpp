@@ -18,7 +18,7 @@ rtype::SFXManager::SFXManager()
         throw std::exception();
     auto sfx = nlohmann::json::parse(sfx_file);
 
-    for (const auto &[key, value]: sfx.items()) {
+    for (const auto &[key, value] : sfx.items()) {
         auto &buffer = m_buffers.emplace_back(key, sf::SoundBuffer{});
         buffer.sound_buffer.loadFromFile(static_cast<std::string>(value));
     }
@@ -37,7 +37,6 @@ void rtype::SFXManager::play_sound(const std::string &name)
     }
 }
 
-
 void rtype::SFXManager::set_volume(float volume)
 {
     if (volume >= 0 || volume < 100)
@@ -46,7 +45,7 @@ void rtype::SFXManager::set_volume(float volume)
 
 void rtype::SFXManager::update()
 {
-    for (auto iterator = m_sounds.cbegin(); iterator != m_sounds.cend(); iterator ++) {
+    for (auto iterator = m_sounds.cbegin(); iterator != m_sounds.cend(); iterator++) {
         if (iterator->getStatus() == sf::Sound::Stopped)
             iterator = m_sounds.erase(iterator);
     }

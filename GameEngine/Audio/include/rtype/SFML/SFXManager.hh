@@ -18,8 +18,8 @@ namespace rtype
     constexpr std::string_view SFX_FILEPATH{"./Client/configs/SFX.json"};
 
     struct Buffer {
-        std::string name;
-        sf::SoundBuffer sound_buffer;
+            std::string name;
+            sf::SoundBuffer sound_buffer;
     };
 
     class SFXManager

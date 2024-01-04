@@ -34,6 +34,5 @@ namespace rtype
         private:
             rtype::SFXManager m_sfx{};
             rtype::BGMManager m_bgm{};
-
     };
 } // namespace rtype

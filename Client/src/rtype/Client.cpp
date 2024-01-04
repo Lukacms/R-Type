@@ -9,6 +9,7 @@
 #include <csignal>
 #include <rtype.hh>
 #include <rtype/Client.hh>
+#include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
@@ -24,10 +25,11 @@ static void handle_sigint(int /* unused */)
 rclient::Client::Client(unsigned int width, unsigned int height, const std::string &title)
 {
     m_ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
-    m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
+    m_graphical_module.init_class<std::unique_ptr<rtype::SFMLGraphicModule>(
         unsigned int width, unsigned int height, const std::string &title)>(
         "./libs/r-type-graphics.so", "entrypoint", width, height, title);
-    m_audio_module.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so", "entrypoint");
+    m_audio_module.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so",
+                                                                      "entrypoint");
     rtype::SparseArray<rtype::SpriteComponent> sprites{};
     rtype::SparseArray<rtype::TransformComponent> transforms{};
     rtype::SparseArray<rtype::TagComponent> tags{};
@@ -133,31 +135,31 @@ void rclient::Client::configure_network()
 
 void rclient::Client::check_input()
 {
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Up)) {
+    if (m_graphical_module.get_class().is_input_pressed(rtype::Keys::UP)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(0);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Right)) {
+    if (m_graphical_module.get_class().is_input_pressed(rtype::Keys::RIGHT)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(1);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Down)) {
+    if (m_graphical_module.get_class().is_input_pressed(rtype::Keys::DOWN)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(2);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Left)) {
+    if (m_graphical_module.get_class().is_input_pressed(rtype::Keys::LEFT)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(3);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
     }
-    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::W) &&
+    if (m_graphical_module.get_class().is_input_pressed(rtype::Keys::W) &&
         static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
                                 std::chrono::steady_clock::now() - m_timer_shoot)
                                 .count()) > BULLET_TIMEOUT) {

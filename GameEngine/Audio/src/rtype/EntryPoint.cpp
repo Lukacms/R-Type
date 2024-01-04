@@ -4,8 +4,8 @@
 
 #pragma GCC diagnostic ignored "-Wreturn-type-c-linkage"
 
-#include <rtype/SFML/SFMLAudioModule.hh>
 #include <memory>
+#include <rtype/SFML/SFMLAudioModule.hh>
 
 extern "C" {
 std::unique_ptr<rtype::IAudioModule> entrypoint()

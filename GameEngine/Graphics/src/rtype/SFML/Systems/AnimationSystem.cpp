@@ -5,10 +5,10 @@
 ** AnimationSystem
 */
 
+#include "rtype/ComponentManager.hpp"
+#include "rtype/Components/AnimationComponent.hh"
+#include "rtype/Components/SpriteComponent.hh"
 #include <iostream>
-#include <rtype/ComponentManager.hpp>
-#include <rtype/Components/AnimationComponent.hh>
-#include <rtype/Components/SpriteComponent.hh>
 
 namespace rtype
 {

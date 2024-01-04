@@ -7,8 +7,6 @@
 
 #pragma once
 
-
 #include <nlohmann/json.hpp>
 
 using njson = nlohmann::json;
-

@@ -13,11 +13,10 @@ rtype::BGMManager::BGMManager()
         throw std::exception();
     auto bgm = nlohmann::json::parse(bgm_file);
 
-    for (const auto &[key, value]: bgm.items())
+    for (const auto &[key, value] : bgm.items())
         m_bgm.emplace_back(key, static_cast<std::string>(value));
     m_current_music.setLoop(true);
 }
-
 
 rtype::BGMManager::~BGMManager()
 {

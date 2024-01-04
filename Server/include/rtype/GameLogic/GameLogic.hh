@@ -14,6 +14,7 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/PlayersManager.hh>
+#include <rtype/utils/Clock.hh>
 #include <shared_mutex>
 #include <vector>
 
@@ -59,6 +60,7 @@ namespace rserver::game
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
             std::shared_mutex &m_ecs_mutex;
+            rtype::utils::Clock m_enemy_clock{};
             std::chrono::time_point<std::chrono::steady_clock> m_start_enemy{
                 std::chrono::steady_clock::now()};
     };

@@ -6,8 +6,10 @@
 
 #include <string>
 
-namespace rtype {
-    class IAudioModule {
+namespace rtype
+{
+    class IAudioModule
+    {
         public:
             IAudioModule() = default;
             virtual ~IAudioModule() = default;
@@ -19,7 +21,7 @@ namespace rtype {
             virtual void play_music(const std::string &name) = 0;
             virtual void play_sfx(const std::string &name) = 0;
             virtual void set_volume_music(float volume) = 0;
-            virtual void set_volume_sfx(float volume)= 0;
+            virtual void set_volume_sfx(float volume) = 0;
             virtual void update() = 0;
     };
-}
+} // namespace rtype

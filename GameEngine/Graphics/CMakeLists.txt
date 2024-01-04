@@ -4,9 +4,9 @@
 
 add_library(
     r-type-graphics SHARED
-    src/rtype/GraphicModule.cpp
-    src/rtype/InputManager.cpp
-    src/rtype/Systems/AnimationSystem.cpp
+        src/rtype/SFML/SFMLGraphicModule.cpp
+        src/rtype/SFML/InputManager.cpp
+        src/rtype/SFML/Systems/AnimationSystem.cpp
     src/rtype/EntryPoint.cpp
 )
 

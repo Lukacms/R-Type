@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <rtype/Components/AnimationComponent.hh>
+#include "SFML/Graphics.hpp"
+#include "rtype/utils/Vector2D.hh"
 
 namespace rtype
 {
     struct SpriteComponent {
-            sf::Sprite sprite{};
-            TextureRect rectangle{};
+            rtype::utils::TextureRect rectangle{};
             std::string texture_path{};
+            rtype::utils::Vector2D<float> origin{};
     };
 } // namespace rtype

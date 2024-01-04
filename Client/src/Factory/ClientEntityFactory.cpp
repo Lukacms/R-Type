@@ -55,8 +55,9 @@ size_t rclient::ClientEntityFactory::create_enemy(std::size_t entity,
         sprite.insert_at(entity, rtype::SpriteComponent{});
         sprite[entity]->texture_path = "./Client/assets/BasicEnemy.png";
         sprite[entity]->rectangle = TEXTURERECT_SHIP;
-        sprite[entity]->sprite.setOrigin(ORIGIN_ENEMY.x, ORIGIN_ENEMY.y);
-        sprite[entity]->sprite.setScale(-2, 2);
+        sprite[entity]->origin = {ORIGIN_ENEMY.x, ORIGIN_ENEMY.y};
+        transform[entity]->scale_x = -2;
+        transform[entity]->scale_y = 2;
         return entity;
     } catch (rtype::ECSManager::ECSException &e) {
         throw FactoryException(e.what());
@@ -79,7 +80,8 @@ size_t rclient::ClientEntityFactory::create_player(std::size_t entity,
         sprite.insert_at(entity, rtype::SpriteComponent{});
         sprite[entity]->texture_path = "./Client/assets/Spaceship.png";
         sprite[entity]->rectangle = TEXTURERECT_SHIP;
-        sprite[entity]->sprite.setScale(2, 2);
+        transform[entity]->scale_x = 2;
+        transform[entity]->scale_y = 2;
         collider.insert_at(entity, BASIC_COLLIDER);
         return entity;
     } catch (rtype::ECSManager::ECSException &e) {
@@ -123,7 +125,9 @@ size_t rclient::ClientEntityFactory::create_bullet(std::size_t entity,
         tag.insert_at(entity, rtype::TagComponent{"Bullet"});
         sprite.insert_at(entity, rtype::SpriteComponent{});
         sprite[entity]->texture_path = "./Client/assets/PlayerShoot.png";
-        sprite[entity]->sprite.setScale(2, 2);
+        transform[entity]->scale_x = 2;
+        transform[entity]->scale_y = 2;
+        sprite[entity]->rectangle = {0, 0, 31, 6};
         collider.insert_at(entity, BASIC_COLLIDER);
         return entity;
     } catch (rtype::ECSManager::ECSException &e) {
@@ -147,7 +151,8 @@ size_t rclient::ClientEntityFactory::create_upgrade(std::size_t entity,
         sprites.insert_at(entity, rtype::SpriteComponent{});
         animations.insert_at(entity, rtype::AnimationComponent{});
         sprites[entity]->texture_path = "./Client/assets/Upgrade.png";
-        sprites[entity]->sprite.setScale(2, 2);
+        transform[entity]->scale_x = 2;
+        transform[entity]->scale_y = 2;
         sprites[entity]->rectangle = {0, 0, 17, 17};
         animations[entity]->current_animation = "Idle";
         animations[entity]->animation_clips.push_back({.animation_name = "Idle",

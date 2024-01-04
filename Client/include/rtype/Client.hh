@@ -7,10 +7,10 @@
 
 #pragma once
 
+#include "rtype/SFML/SFMLGraphicModule.hh"
 #include <memory>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/ECSManager.hpp>
-#include <rtype/GraphicModule.hh>
 #include <rtype/IAudioModule.hh>
 #include <rtype/Network/NetworkManager.hh>
 #include <rtype/Network/ThreadPool.hh>
@@ -58,7 +58,7 @@ namespace rclient
 
         private:
             dl::DlLoader<rtype::ECSManager> m_ecs;
-            dl::DlLoader<rtype::GraphicModule> m_graphical_module;
+            dl::DlLoader<rtype::IGraphicModule> m_graphical_module;
             dl::DlLoader<rtype::IAudioModule> m_audio_module;
 
             STATE m_state{STATE::Menu};

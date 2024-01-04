@@ -7,23 +7,17 @@
 
 #pragma once
 
-#include <rtype/utils/Clock.hh>
+#include "rtype/utils/Clock.hh"
+#include "rtype/utils/Vector2D.hh"
 #include <vector>
 
 namespace rtype
 {
-    struct TextureRect {
-            int x{0};
-            int y{0};
-            int width{0};
-            int height{0};
-    };
-
     struct AnimationClip {
             std::string animation_name;
             bool is_loop{false};
             double time_after_change;
-            std::vector<TextureRect> texture_rects;
+            std::vector<rtype::utils::TextureRect> texture_rects;
     };
 
     struct AnimationComponent {

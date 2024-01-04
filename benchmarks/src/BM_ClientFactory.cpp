@@ -5,10 +5,10 @@
 ** BM_ServerFactory
 */
 
+#include <rtype/Components/SpriteComponent.hh>
 #include <benchmark/benchmark.h>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
-#include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>

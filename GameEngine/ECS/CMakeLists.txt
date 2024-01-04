@@ -10,8 +10,7 @@ add_library(r-type-ecs SHARED
     src/rtype/SystemManager.cpp
     src/rtype/Systems/TransformSystem.cpp
     src/rtype/EntityManager.cpp
-    src/rtype/Systems/ColliderSystem.cpp
-    src/rtype/EntryPoint.cpp
+        src/rtype/EntryPoint.cpp
 )
 
 target_include_directories(r-type-ecs PRIVATE include)

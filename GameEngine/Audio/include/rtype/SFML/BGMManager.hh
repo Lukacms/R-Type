@@ -9,10 +9,10 @@
 
 #include <SFML/Audio.hpp>
 #include <list>
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace rtype
 {
@@ -21,8 +21,8 @@ namespace rtype
     constexpr float BGM_STANDARD_VOLUME{25.F};
 
     struct BGM {
-        std::string name{};
-        std::string filepath{};
+            std::string name{};
+            std::string filepath{};
     };
 
     class BGMManager

@@ -153,15 +153,13 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
 
 void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
-    auto update = std::chrono::steady_clock::now();
-
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(update - m_start_enemy).count() > 200) {
+    if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
         std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
         auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
         auto &transform = manager.get_component<rtype::TransformComponent>(entity);
         transform.position_y = std::rand() % 550;
         transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
-        m_start_enemy = update;
+        m_enemy_clock.reset();
     }
 }
 
