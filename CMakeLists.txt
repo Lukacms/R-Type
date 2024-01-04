@@ -213,6 +213,7 @@ if (RTYPE_BUILD_TESTS)
 endif()
 
 if (RTYPE_BUILD_BENCHMARKS)
+    message("${BoldYellow}Building benchmarks${ColourReset}")
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY "https://github.com/google/googletest.git"

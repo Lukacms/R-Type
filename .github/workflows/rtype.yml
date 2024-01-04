@@ -62,8 +62,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build-type: [Debug, tsan, Release]
-        cmake_options: ["-DRTYPE_BUILD_TESTS=true -DUSE_CLANG_TIDY=false", "-DRTYPE_BUILD_TESTS=true -DRTYPE_BUILD_BENCHMARKS=true -DUSE_CLANG_TIDY=false", "-DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall"]
+        build: [
+          {type: Debug, options: '-DRTYPE_BUILD_TESTS=true -DUSE_CLANG_TIDY=false'},
+          {type: tsan, options: '-DRTYPE_BUILD_TESTS=true -DRTYPE_BUILD_BENCHMARKS=true -DUSE_CLANG_TIDY=false'},
+          {type: Release, options: '-DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall'}
+        ]
         version: [g++13]
         cpp: [20]
     steps:
@@ -91,8 +94,8 @@ jobs:
           .ccache
           .ctcache
           ctcache
-        key: clcache-${{ env.CLCACHE_VERSION }}-${{ matrix.build-type }}-${{ github.run_id }}
-        restore-keys: clcache-${{ env.CLCACHE_VERSION }}-${{ matrix.build-type }}
+        key: clcache-${{ env.CLCACHE_VERSION }}-${{ matrix.build.type }}-${{ github.run_id }}
+        restore-keys: clcache-${{ env.CLCACHE_VERSION }}-${{ matrix.build.type }}
 
     - name: Configure compiler cache (ccache)
       run: |
@@ -109,8 +112,8 @@ jobs:
 
     - name: Compilation test
       env:
-        BUILD_TYPE: ${{ matrix.build-type }}
-        CMAKE_OPTIONS: ${{ matrix.cmake-options }}
+        BUILD_TYPE: ${{ matrix.build.type }}
+        CMAKE_OPTIONS: ${{ matrix.build.options }}
       run: |
           mkdir -p build && cd build
           cmake .. -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang-17 -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_CXX_COMPILER_LAUNCHER=ccache $CMAKE_OPTIONS
@@ -128,7 +131,7 @@ jobs:
         done
 
     - name: Launch benchmarks
-      if: ${{ matrix.build-type  == 'tsan' }}
+      if: ${{ matrix.build.type  == 'tsan' }}
       run: |
         ./build/bin/benchmarks/rtype_benchmarks
 
