@@ -134,9 +134,6 @@ rclient::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     m_quit.setFillColor(sf::Color::White);
     m_quit.setOrigin(m_quit.getGlobalBounds().width / 2, 0);
 
-    m_audio_manager.loadSound("test", "./Client/assets/sounds/Spider-Dance.wav");
-    m_audio_manager.playSound("test");
-
     m_transforms[0].scale_x = static_cast<float>(width) / MENU_BG_WIDTH;
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
     m_transforms[1].position_x = m_width / MIDLE_DIV;
