@@ -147,12 +147,12 @@ set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}
   "Choose the type of build, options are: None Debug Release tsan"
   FORCE)
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb3")
-elseif(CMAKE_BUILD_TYPE MATCHES "tsan")
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
-endif()
+elseif (CMAKE_BUILD_TYPE MATCHES "tsan")
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
+endif ()
 
 # Clang-tidy
 if(USE_CLANG_TIDY)
