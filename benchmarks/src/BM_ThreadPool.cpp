@@ -17,10 +17,10 @@ static void bm_thread_pool(benchmark::State &state)
     rserver::ThreadPool pool{};
     auto res{0};
 
-    auto lamda = [&res]() mutable {
+    auto lamda{[&res]() mutable {
         int add{rand() % 100}; // NOLINT
         res += add;
-    };
+    }};
 
     for (auto _ : state) { // NOLINT
         pool.add_job(lamda);

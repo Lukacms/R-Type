@@ -13,7 +13,7 @@ TEST(Network, default_communication_values)
 {
     ntw::Communication commn{};
 
-    EXPECT_EQ(commn.type, ntw::None);
+    EXPECT_EQ(commn.type, ntw::NetworkType::None);
 }
 
 TEST(Network, add_two_int)

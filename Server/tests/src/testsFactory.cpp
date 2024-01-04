@@ -28,22 +28,23 @@ TEST(ServerEntityFactory, constructor_without_register)
     dl::DlLoader<rtype::ECSManager> ecs{};
 
     ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
-    EXPECT_THROW(rserver::ServerEntityFactory::create("Enemy", ecs.get_class()), std::out_of_range);
+    EXPECT_THROW(rserver::ServerEntityFactory::create("BasicEnemy", ecs.get_class()),
+                 rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("Player", ecs.get_class()),
-                 std::out_of_range);
+                 rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()),
-                 std::out_of_range);
+                 rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("Bullet", ecs.get_class()),
-                 std::out_of_range);
+                 rtype::ECSManager::ECSException);
 }
 
 TEST(ServerEntityFactory, constructor_no_throw)
 {
     dl::DlLoader<rtype::ECSManager> ecs{};
-    SparseArray<rtype::BoxColliderComponent> boxes{};
-    SparseArray<rtype::TransformComponent> transform{};
-    SparseArray<rtype::TagComponent> tags{};
-    SparseArray<rtype::HealthComponent> healths{};
+    rtype::SparseArray<rtype::BoxColliderComponent> boxes{};
+    rtype::SparseArray<rtype::TransformComponent> transform{};
+    rtype::SparseArray<rtype::TagComponent> tags{};
+    rtype::SparseArray<rtype::HealthComponent> healths{};
     ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
 
     ecs.get_class().register_component(transform);

@@ -14,7 +14,7 @@ TEST(ThreadPool, constructing_pool_one_thread)
     rserver::ThreadPool pool{1};
 
     EXPECT_FALSE(pool.is_busy());
-    pool.add_job([]() { sleep(10); });
+    pool.add_job([]() { sleep(10); }); // NOLINT
     EXPECT_TRUE(pool.is_busy());
     pool.stop();
 }

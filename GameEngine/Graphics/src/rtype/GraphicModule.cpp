@@ -26,7 +26,7 @@ void rtype::GraphicModule::draw_components(SparseArray<rtype::SpriteComponent> s
     }
 }
 
-void rtype::GraphicModule::draw(sf::Sprite &sprite, TransformComponent transform)
+void rtype::GraphicModule::draw(sf::Sprite &sprite, TransformComponent /* transform */)
 {
     m_window.draw(sprite);
 }
@@ -51,6 +51,11 @@ bool rtype::GraphicModule::is_window_open()
     return m_window.isOpen();
 }
 
+void rtype::GraphicModule::close_window()
+{
+    m_window.close();
+}
+
 bool rtype::GraphicModule::is_input_pressed(sf::Keyboard::Key key)
 {
     return m_input.is_key_pressed(key);
@@ -58,7 +63,7 @@ bool rtype::GraphicModule::is_input_pressed(sf::Keyboard::Key key)
 
 void rtype::GraphicModule::update()
 {
-    sf::Event evt;
+    sf::Event evt{};
 
     m_input.update();
     while (m_window.pollEvent(evt)) {

@@ -12,7 +12,7 @@
 /* constructors / destructors */
 rserver::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(p_nb_threads)}
 {
-    for (u_int i = 0; i < this->nb_threads; i++) {
+    for (u_int i{0}; i < this->nb_threads; i++) {
         this->threads.emplace_back(&ThreadPool::thread_loop, this);
     }
 }

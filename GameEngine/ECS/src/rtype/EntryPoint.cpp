@@ -1,6 +1,9 @@
-//
-// Created by kane on 15/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** EntryPoint
+*/
 
 #pragma GCC diagnostic ignored "-Wreturn-type-c-linkage"
 

@@ -12,6 +12,9 @@ on:
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2026/B-CPP-500-BDX-5-2-rtype-luka.camus.git"
   EXECUTABLE: "r-type_server,r-type_client"
+  CLCACHE_VERSION: v1
+  CLCACHE_MAX_SIZE: 500M
+
 
 jobs:
   check_repository_cleanliness:
@@ -55,11 +58,17 @@ jobs:
     name: Run cmake on ubuntu
     needs: check_status_repos
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
+        build: [
+          {type: Debug, options: '-DRTYPE_BUILD_TESTS=true -DUSE_CLANG_TIDY=false'},
+          {type: tsan, options: '-DRTYPE_BUILD_TESTS=true -DRTYPE_BUILD_BENCHMARKS=true -DUSE_CLANG_TIDY=false'},
+          {type: Release, options: '-DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall'}
+        ]
         version: [g++13]
-        cpp: [17, 20]
+        cpp: [20]
     steps:
     - uses: actions/checkout@v3
       with:
@@ -78,6 +87,23 @@ jobs:
           clang++ --version
           clang-tidy --version
 
+    - name: Cache build caches
+      uses: actions/cache@v3
+      with:
+        path: |
+          .ccache
+          .ctcache
+          ctcache
+        key: clcache-${{ env.CLCACHE_VERSION }}-${{ matrix.build.type }}-${{ github.run_id }}
+        restore-keys: clcache-${{ env.CLCACHE_VERSION }}-${{ matrix.build.type }}
+
+    - name: Configure compiler cache (ccache)
+      run: |
+        ccache --set-config=cache_dir=$GITHUB_WORKSPACE/.ccache
+        ccache --set-config=max_size=$CLCACHE_MAX_SIZE
+        ccache --set-config=compression=true
+        ccache --show-config
+
     - name: Install newer Clang
       run: |
        wget https://apt.llvm.org/llvm.sh
@@ -85,12 +111,15 @@ jobs:
        sudo ./llvm.sh 17
 
     - name: Compilation test
+      env:
+        BUILD_TYPE: ${{ matrix.build.type }}
+        CMAKE_OPTIONS: ${{ matrix.build.options }}
       run: |
           mkdir -p build && cd build
-          cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-17 -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_EXPORT_COMPILE_COMMANDS=true
+          cmake .. -GNinja -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_C_COMPILER=clang-17 -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_CXX_COMPILER_LAUNCHER=ccache $CMAKE_OPTIONS
           ninja
       shell: bash
-      timeout-minutes: 3
+      timeout-minutes: 5
 
     - name: Check executable files exists
       run: |
@@ -100,6 +129,11 @@ jobs:
             exit 1
           fi
         done
+
+    - name: Launch benchmarks
+      if: ${{ matrix.build.type  == 'tsan' }}
+      run: |
+        ./build/bin/benchmarks/rtype_benchmarks
 
   run_program_windows:
     name: Compile on Windows with msvc
@@ -164,6 +198,12 @@ jobs:
         ninja -C build
       shell: bash
       timeout-minutes: 5
+
+    - name: Run tests
+      run: |
+        ./tests/tests-r-type-utils
+        ./tests/tests-r-type_server
+        ./tests/tests-r-type_client
 
   push_to_mirror:
     if: ${{ github.event_name == 'push' }}

@@ -5,6 +5,8 @@
 ** sprite_component
 */
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
 struct SpriteComponent {

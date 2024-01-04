@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # change library prefix to none
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
+
 # executables will be at the root of the folder
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
@@ -62,7 +63,7 @@ message("Finished loading sfml")
 # Warning flags
 set(GCC_WARNING_FLAGS
     -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches
-    -Wlogical-op -Wnull-dereference -Wuseless-cast -Wno-pragmas)
+    -Wlogical-op -Wno-null-dereference -Wuseless-cast -Wno-pragmas)
 
 set(CLANG_WARNING_FLAGS
     -Weverything
@@ -78,7 +79,10 @@ set(CLANG_WARNING_FLAGS
     -Wno-global-constructors
     -Wno-implicit-int-float-conversion
     -Wno-return-std-move
+    -Wno-documentation
+    -Wno-deprecated-copy-with-user-provided-dtor
     -Wno-return-type-c-linkage
+    -Wno-suggest-destructor-override
     -Wno-signed-enum-bitfield
     -Wno-weak-vtables)
 
@@ -106,9 +110,6 @@ set(WARNING_FLAGS
     -Wformat=2
     -Wno-effc++
     -Wno-suggest-override
-    -Wno-suggest-destructor-override
-    -Wno-documentation
-    -Wno-deprecated-copy-with-user-provided-dtor
     -Wno-null-dereference
     -Wno-zero-as-null-pointer-constant
     -Wno-padded
@@ -146,12 +147,12 @@ set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}
   "Choose the type of build, options are: None Debug Release tsan"
   FORCE)
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb3")
-elseif(CMAKE_BUILD_TYPE MATCHES "tsan")
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
-endif()
+elseif (CMAKE_BUILD_TYPE MATCHES "tsan")
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
+endif ()
 
 # Clang-tidy
 if(USE_CLANG_TIDY)
@@ -195,6 +196,7 @@ add_subdirectory(Server)
 add_subdirectory(Client)
 
 if (RTYPE_BUILD_TESTS)
+    message("${BoldYellow}Building tests${ColourReset}")
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/tests)
     FetchContent_Declare(
         googletest
@@ -211,6 +213,7 @@ if (RTYPE_BUILD_TESTS)
 endif()
 
 if (RTYPE_BUILD_BENCHMARKS)
+    message("${BoldYellow}Building benchmarks${ColourReset}")
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY "https://github.com/google/googletest.git"

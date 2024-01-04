@@ -20,18 +20,21 @@ namespace ntw
     constexpr int MAX_SIZE{128};
     constexpr std::string_view DELIMITORS{" "};
 
-    enum NetworkType {
+    enum class NetworkType {
         None,        // Nothing : None
         Start,       // Start the game : Start
         Connection,  // client trying to join a server's game : Connection
         Refusal,     // 1 client cannot join a server's game : Refusal
         Ok,          // Everything is good : Ok
+        Ko,          // Something went wrong
         End,         // End the game for one player : End
         Creation,    // Create a new entity : Creation [Id] [Type]
         Destruction, // Destruct one entity : Destruction [Id]
         Position,    // Send the position of an entity : Position [Id] [x] [y]
-        Input,  // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
-        Entity, // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
+        Entity,      // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
+        ToGame,      // Client passing from waiting mode to game
+        Input, // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
+        Room, // Server -> send infos about room [id] [nb_player] [status], Client -> join room [id]
     };
 
 #pragma pack(push, 1)
@@ -39,8 +42,8 @@ namespace ntw
     struct Communication {
         public:
             /* variables */
-            NetworkType type{None};
-            std::array<char, MAX_SIZE> args;
+            NetworkType type{NetworkType::None};
+            std::array<char, MAX_SIZE> args{};
 
             /* methods */
             template <typename TType> void add_param(TType param)

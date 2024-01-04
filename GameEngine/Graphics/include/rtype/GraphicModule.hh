@@ -2,6 +2,8 @@
 // Created by kane on 14/12/23.
 //
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
@@ -33,6 +35,7 @@ namespace rtype
             void draw(sf::Sprite &sprite, rtype::TransformComponent transform);
             void draw(sf::Text &text);
             void display();
+            void close_window();
             void clear();
             void close();
             bool is_input_pressed(sf::Keyboard::Key key);

@@ -37,7 +37,7 @@ To build the project, follow the steps below:
 # ⚠️ The following system packages installation commands may change depending on 
 # your OS. Below example is for Ubuntu 20.04
 sudo apt-get update -qq
-sudo apt-get install -y cmake clang ninja-build just
+sudo apt-get install -y cmake clang ninja-build just ccache
 
 # Have to install some libraries required for some libraries, such as SFML
 sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev
@@ -45,9 +45,6 @@ sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libf
 # clone the repository
 git clone git@github.com:Lukacms/R-Type.git
 cd R-Type
-
-# clone git submodules
-git submodule update --init --recursive
 
 just ninja # clangd
 just release # g++

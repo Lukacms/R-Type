@@ -1,7 +1,11 @@
-//
-// Created by kane on 12/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** PhysicsManager
+*/
 
+#include <algorithm>
 #include <iostream>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
