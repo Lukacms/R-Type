@@ -33,9 +33,11 @@ namespace rtype
             void draw_components(SparseArray<SpriteComponent> sprites,
                                  SparseArray<rtype::TransformComponent> transforms);
             void draw(sf::Sprite &sprite, rtype::TransformComponent transform);
+            void draw(sf::Text &text);
             void display();
             void close_window();
             void clear();
+            void close();
             bool is_input_pressed(sf::Keyboard::Key key);
             [[nodiscard]] bool is_window_open();
 

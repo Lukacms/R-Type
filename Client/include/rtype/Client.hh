@@ -10,7 +10,7 @@
 #include <memory>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/ECSManager.hpp>
-#include <rtype/GraphicModule.hh>
+#include <rtype/Menu.hh>
 #include <rtype/Network/NetworkManager.hh>
 #include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
@@ -59,7 +59,10 @@ namespace rclient
             dl::DlLoader<rtype::ECSManager> m_ecs;
             dl::DlLoader<rtype::GraphicModule> m_graphical_module;
 
+            Menu m_menu;
+
             STATE m_state{STATE::Menu};
+
             std::chrono::time_point<std::chrono::steady_clock> m_timer_shoot;
 
             std::unique_ptr<rclient::NetworkManager> m_network{nullptr};

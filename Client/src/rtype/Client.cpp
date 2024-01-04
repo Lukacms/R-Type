@@ -5,6 +5,8 @@
 ** client
 */
 
+#include "SFML/Graphics/Sprite.hpp"
+#include <array>
 #include <atomic>
 #include <csignal>
 #include <iostream>
@@ -23,6 +25,7 @@ static void handle_sigint(int /* unused */)
 
 /* ctor / dtor */
 rclient::Client::Client(unsigned int width, unsigned int height, const std::string &title)
+    : m_menu{width, height}
 {
     m_ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
     m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
@@ -97,7 +100,7 @@ void rclient::Client::set_network_infos(rclient::Arguments &infos)
 
 void rclient::Client::client_menu()
 {
-    // if (action in order to change the scene);
+    m_menu.launch(m_graphical_module);
     configure_network();
 }
 
@@ -158,6 +161,10 @@ void rclient::Client::check_input()
         to_send.add_param(4);
         this->threads.add_job([to_send, this]() { m_network->send_message(to_send); });
         m_timer_shoot = std::chrono::steady_clock::now();
+    }
+    if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Escape)) {
+        PauseMenu pause_menu(STANDARD_WIDTH, STANDARD_HEIGHT);
+        pause_menu.launch(m_graphical_module);
     }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Q)) {
         RUNNING = 0;
