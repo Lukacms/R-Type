@@ -5,7 +5,6 @@
 ** client
 */
 
-#include "SFML/Graphics/Sprite.hpp"
 #include <array>
 #include <atomic>
 #include <csignal>
@@ -15,6 +14,8 @@
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
+#include <rtype/scenes/Menu.hh>
+#include <rtype/scenes/PauseMenu.hh>
 
 static volatile std::atomic_int RUNNING{1};
 

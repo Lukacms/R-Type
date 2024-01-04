@@ -10,11 +10,11 @@
 #include <memory>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/ECSManager.hpp>
-#include <rtype/Menu.hh>
 #include <rtype/Network/NetworkManager.hh>
 #include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <rtype/scenes/Menu.hh>
 #include <string_view>
 
 namespace rclient

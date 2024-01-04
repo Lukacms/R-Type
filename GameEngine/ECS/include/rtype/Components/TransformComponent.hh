@@ -10,6 +10,7 @@
 namespace rtype
 {
     struct TransformComponent {
+        public:
             float position_x{0};
             float position_y{0};
             float velocity_x{0};

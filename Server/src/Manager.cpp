@@ -248,11 +248,7 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
             }
         }
     } catch (PlayersManager::PlayersException & /* e */) {
-        if (this->players.length() >= 4) {
-            this->refuse_client(client);
-        } else {
-            this->add_new_player(client);
-        }
+        this->add_new_player(client);
     } catch (ManagerException &e) {
         DEBUG(("Exception while handling commands: %s\n", e.what()));
     }

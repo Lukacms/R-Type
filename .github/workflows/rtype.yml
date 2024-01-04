@@ -64,8 +64,8 @@ jobs:
       matrix:
         build: [
           {type: Debug, options: '-DRTYPE_BUILD_TESTS=true -DUSE_CLANG_TIDY=false'},
-          {type: tsan, options: '-DUSE_CLANG_TIDY=false'},
-          {type: Release, options: '-DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall -DUSE_CLANG_TIDY=false'}
+          {type: tsan, options: '-DUSE_CLANG_TIDY=false -DRTYPE_BUILD_BENCHMARKS=true'},
+          {type: Release, options: '-DWARNING_FLAGS=-Wall -DUSE_CLANG_TIDY=false'}
         ]
         version: [g++13]
         cpp: [20]

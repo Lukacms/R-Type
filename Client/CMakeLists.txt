@@ -27,11 +27,12 @@ add_library(
     rtype-client-core
     SHARED
     src/rtype/Client.cpp
-    src/rtype/Menu.cpp
     src/rtype/config/ArgsConfig.cpp
     src/rtype/Network/NetworkManager.cpp
     src/rtype/Network/ThreadPool.cpp
     src/Factory/ClientEntityFactory.cpp
+    src/rtype/scenes/Menu.cpp
+    src/rtype/scenes/PauseMenu.cpp
 )
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)
