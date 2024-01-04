@@ -62,13 +62,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - build-type: Debug
-            cmake_options: -DRTYPE_BUILD_TESTS=true -DUSE_CLANG_TIDY=false
-          - build-type: tsan
-            cmake_options: -DRTYPE_BUILD_TESTS=true -DRTYPE_BUILD_BENCHMARKS=true -DUSE_CLANG_TIDY=false
-          - build-type: Release
-            cmake_options: -DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall
+        build-type: [Debug, tsan, Release]
+        cmake_options: ["-DRTYPE_BUILD_TESTS=true -DUSE_CLANG_TIDY=false", "-DRTYPE_BUILD_TESTS=true -DRTYPE_BUILD_BENCHMARKS=true -DUSE_CLANG_TIDY=false", "-DUSE_CLANG_TIDY=true -DWARNING_FLAGS=-Wall"]
         version: [g++13]
         cpp: [20]
     steps:
