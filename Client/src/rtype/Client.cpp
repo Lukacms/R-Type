@@ -165,6 +165,7 @@ void rclient::Client::check_input()
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Escape)) {
         PauseMenu pause_menu(STANDARD_WIDTH, STANDARD_HEIGHT);
         pause_menu.launch(m_graphical_module);
+    }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Q)) {
         RUNNING = 0;
     }
