@@ -4,5 +4,8 @@
   },
   "scripts": {
     "prepare": "husky install"
+  },
+  "dependencies": {
+    "glob": "^10.3.10"
   }
 }
