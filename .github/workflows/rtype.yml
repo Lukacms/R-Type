@@ -232,7 +232,7 @@ jobs:
       run: |
           sudo apt-get update -qq
           sudo apt-get install -y doxygen
-          npm ci
+          npm i
 
     - name: generate doxygen mans
       run: doxygen assets/scripts/doxygen
