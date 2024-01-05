@@ -7,7 +7,7 @@
 
 #include <rtype/scenes/PauseMenu.hh>
 
-rclient::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
+rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     : m_width(width), m_height(height)
 {
     for (size_t i{0}; i < 3; i++) {
@@ -52,7 +52,7 @@ rclient::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
                        static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
 }
 
-void rclient::PauseMenu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
+void rclient::scenes::PauseMenu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
 
 {
     bool start_cut_scene{false};
@@ -84,7 +84,7 @@ void rclient::PauseMenu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_mo
     }
 }
 
-void rclient::PauseMenu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
+void rclient::scenes::PauseMenu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
 {
     graphical_module.get_class().clear();
     for (size_t i{0}; i < 2; i++) {

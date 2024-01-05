@@ -12,7 +12,7 @@
 #include <rtype/GraphicModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 
-namespace rclient
+namespace rclient::scenes
 {
     static const constexpr int PLAY_FONT_SIZE{28};
     static const constexpr int LOGO_ORIGIN_X{250};
@@ -63,4 +63,4 @@ namespace rclient
             void cut_scene_handling();
     };
 
-} // namespace rclient
+} // namespace rclient::scenes

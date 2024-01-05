@@ -7,7 +7,8 @@
 
 #include <rtype/scenes/Menu.hh>
 
-rclient::Menu::Menu(unsigned int width, unsigned int height) : m_width(width), m_height(height)
+rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
+    : m_width(width), m_height(height)
 {
     for (size_t i{0}; i < 3; i++) {
         m_clocks[i] = std::chrono::steady_clock::now();
@@ -26,7 +27,7 @@ rclient::Menu::Menu(unsigned int width, unsigned int height) : m_width(width), m
                        static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
 }
 
-void rclient::Menu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
+void rclient::scenes::Menu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
 
 {
     bool start_cut_scene{false};
@@ -44,7 +45,7 @@ void rclient::Menu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
     }
 }
 
-void rclient::Menu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
+void rclient::scenes::Menu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
 {
     graphical_module.get_class().clear();
     for (size_t i{0}; i < 2; i++) {
@@ -63,7 +64,7 @@ void rclient::Menu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
     graphical_module.get_class().display();
 }
 
-void rclient::Menu::animate() // NOLINT
+void rclient::scenes::Menu::animate() // NOLINT
 {
     auto now = std::chrono::steady_clock::now();
 
@@ -99,6 +100,6 @@ void rclient::Menu::animate() // NOLINT
     }
 }
 
-void rclient::Menu::cut_scene_handling()
+void rclient::scenes::Menu::cut_scene_handling()
 {
 }

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/ECSManager.hpp>
@@ -14,28 +15,32 @@
 #include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <rtype/scenes/Lounge.hh>
 #include <rtype/scenes/Menu.hh>
+#include <rtype/utils/Clock.hh>
 #include <string_view>
 
 namespace rclient
 {
 
-    enum class STATE {
-        Menu,
-        Game,
-    };
-
     constexpr int STANDARD_WIDTH{800};
     constexpr int STANDARD_HEIGHT{600};
     constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
     constexpr double BULLET_TIMEOUT{250.0};
-    constexpr double GAME_TIMEOUT{250.0};
+    constexpr double GAME_TIMEOUT{10.0};
+
+    enum class State {
+        Menu,
+        Lounge,
+        Game,
+        Pause,
+    };
 
     class Client
     {
         public:
-            explicit Client(unsigned int width = STANDARD_WIDTH,
-                            unsigned int height = STANDARD_HEIGHT,
+            explicit Client(unsigned int &&width = STANDARD_WIDTH,
+                            unsigned int &&height = STANDARD_HEIGHT,
                             const std::string &title = STANDARD_TITLE.data());
             ~Client();
             Client(const Client &) = delete;
@@ -48,7 +53,8 @@ namespace rclient
             // Methods for running client
             int client_run();
             void client_menu();
-            void client_game(std::chrono::time_point<std::chrono::steady_clock> &start);
+            void client_game(rtype::utils::Clock &clock);
+            void client_lounge(rtype::utils::Clock &clock);
 
             void set_network_infos(Arguments &infos);
             void configure_network();
@@ -59,9 +65,9 @@ namespace rclient
             dl::DlLoader<rtype::ECSManager> m_ecs;
             dl::DlLoader<rtype::GraphicModule> m_graphical_module;
 
-            Menu m_menu;
-
-            STATE m_state{STATE::Menu};
+            State m_state{State::Menu};
+            scenes::Menu m_menu;
+            scenes::Lounge m_lounge;
 
             std::chrono::time_point<std::chrono::steady_clock> m_timer_shoot;
 
@@ -71,4 +77,12 @@ namespace rclient
             std::string m_port;
             std::deque<ntw::Communication> m_to_send{};
     };
+
+    struct DisplayHandler {
+        public:
+            /* variables */
+            State state{};
+            std::function<void(Client &, rtype::utils::Clock &)> handler;
+    };
+
 } // namespace rclient

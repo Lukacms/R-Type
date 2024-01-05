@@ -13,7 +13,7 @@
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/scenes/Menu.hh>
 
-namespace rclient
+namespace rclient::scenes
 {
 
     class PauseMenu
@@ -52,4 +52,4 @@ namespace rclient
             void cut_scene_handling();
     };
 
-} // namespace rclient
+} // namespace rclient::scenes

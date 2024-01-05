@@ -16,6 +16,8 @@
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/scenes/Menu.hh>
 #include <rtype/scenes/PauseMenu.hh>
+#include <rtype/utils/Clock.hh>
+#include <vector>
 
 static volatile std::atomic_int RUNNING{1};
 
@@ -24,9 +26,22 @@ static void handle_sigint(int /* unused */)
     RUNNING = 0;
 }
 
+static const std::vector<rclient::DisplayHandler> DISPLAYS{
+    {rclient::State::Menu,
+     [](rclient::Client &client, rtype::utils::Clock &) -> void {
+         client.client_menu();
+     }},
+    {rclient::State::Game,
+     [](rclient::Client &client, rtype::utils::Clock &clock) -> void {
+         client.client_game(clock);
+     }},
+    {rclient::State::Lounge, [](rclient::Client &client, rtype::utils::Clock &clock) -> void {
+         client.client_lounge(clock);
+     }}};
+
 /* ctor / dtor */
-rclient::Client::Client(unsigned int width, unsigned int height, const std::string &title)
-    : m_menu{width, height}
+rclient::Client::Client(unsigned int &&width, unsigned int &&height, const std::string &title)
+    : m_menu{width, height}, m_lounge{width, height}
 {
     m_ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
     m_graphical_module.init_class<std::unique_ptr<rtype::GraphicModule>(
@@ -59,16 +74,14 @@ rclient::Client::~Client()
 /* methods */
 int rclient::Client::client_run()
 {
-    auto start = std::chrono::steady_clock::now();
+    rtype::utils::Clock clock{};
 
     while ((m_graphical_module.get_class().is_window_open()) && RUNNING) {
         m_graphical_module.get_class().update();
-        m_state == STATE::Menu ? client_menu() : client_game(start);
-        m_graphical_module.get_class().clear();
-        m_graphical_module.get_class().draw_components(
-            m_ecs.get_class().get_components<rtype::SpriteComponent>(),
-            m_ecs.get_class().get_components<rtype::TransformComponent>());
-        m_graphical_module.get_class().display();
+        for (auto handler : DISPLAYS) {
+            if (handler.state == m_state)
+                handler.handler(*this, clock);
+        }
     }
     RUNNING = 0;
     return rclient::SUCCESS;
@@ -99,27 +112,35 @@ void rclient::Client::set_network_infos(rclient::Arguments &infos)
     m_port = infos.port;
 }
 
+/* display functions */
 void rclient::Client::client_menu()
 {
     m_menu.launch(m_graphical_module);
     configure_network();
 }
 
-void rclient::Client::client_game(std::chrono::time_point<std::chrono::steady_clock> &start)
+void rclient::Client::client_game(rtype::utils::Clock &clock)
 {
     check_input();
-    if (static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(
-                                std::chrono::steady_clock::now() - start)
-                                .count()) > GAME_TIMEOUT &&
-        RUNNING) {
-        start = std::chrono::steady_clock::now();
+    if (clock.get_elapsed_time_in_ms() > GAME_TIMEOUT) {
+        m_graphical_module.get_class().clear();
+        m_graphical_module.get_class().draw_components(
+            m_ecs.get_class().get_components<rtype::SpriteComponent>(),
+            m_ecs.get_class().get_components<rtype::TransformComponent>());
+        m_graphical_module.get_class().display();
+        clock.reset();
     }
+}
+
+void rclient::Client::client_lounge(rtype::utils::Clock &clock)
+{
+    m_lounge.draw(m_graphical_module.get_class(), clock);
 }
 
 void rclient::Client::configure_network()
 {
     m_network = std::make_unique<NetworkManager>(m_host, m_port);
-    m_state = STATE::Game;
+    m_state = State::Lounge;
     this->threads.add_job([&, this]() {
         while (RUNNING) {
             this->m_network->fetch_messages(this->m_ecs.get_class());
@@ -164,7 +185,7 @@ void rclient::Client::check_input()
         m_timer_shoot = std::chrono::steady_clock::now();
     }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Escape)) {
-        PauseMenu pause_menu(STANDARD_WIDTH, STANDARD_HEIGHT);
+        scenes::PauseMenu pause_menu(STANDARD_WIDTH, STANDARD_HEIGHT);
         pause_menu.launch(m_graphical_module);
     }
     if (m_graphical_module.get_class().is_input_pressed(sf::Keyboard::Q)) {
