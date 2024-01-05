@@ -27,27 +27,9 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
                        static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
 }
 
-void rclient::scenes::Menu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
-
+void rclient::scenes::Menu::display(rtype::GraphicModule &graphical_module)
 {
-    bool start_cut_scene{false};
-    while (graphical_module.get_class().is_window_open() && !m_changing_scene) {
-        graphical_module.get_class().update();
-        if (graphical_module.get_class().is_input_pressed(sf::Keyboard::Enter)) {
-            start_cut_scene = true;
-            m_timer_menu = std::chrono::steady_clock::now();
-        }
-        if (start_cut_scene) {
-            m_changing_scene = true;
-        }
-        animate();
-        draw(graphical_module);
-    }
-}
-
-void rclient::scenes::Menu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
-{
-    graphical_module.get_class().clear();
+    graphical_module.clear();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)
             m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
@@ -56,12 +38,19 @@ void rclient::scenes::Menu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_m
         m_texture.loadFromFile(m_paths[i]);
         m_sprite.setPosition(m_transforms[i].position_x, m_transforms[i].position_y);
         m_sprite.setTexture(m_texture);
-        graphical_module.get_class().draw(m_sprite, {});
+        graphical_module.draw(m_sprite, {});
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    graphical_module.get_class().draw(m_text);
-    graphical_module.get_class().display();
+    graphical_module.draw(m_text);
+    graphical_module.display();
+}
+
+void rclient::scenes::Menu::handle_events(rtype::GraphicModule &graphics, sf::Event & /* events */,
+                                          State &state)
+{
+    if (graphics.is_input_pressed(sf::Keyboard::Enter))
+        state = State::Lounge;
 }
 
 void rclient::scenes::Menu::animate() // NOLINT

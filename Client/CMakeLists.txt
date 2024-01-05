@@ -34,6 +34,7 @@ add_library(
     src/rtype/scenes/Menu.cpp
     src/rtype/scenes/PauseMenu.cpp
     src/rtype/scenes/Lounge.cpp
+    src/rtype/scenes/Game.cpp
     src/rtype/components/Room.cpp
 )
 

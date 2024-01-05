@@ -80,13 +80,12 @@ void rclient::scenes::PauseMenu::launch(dl::DlLoader<rtype::GraphicModule> &grap
         if (start_cut_scene) {
             m_changing_scene = true;
         }
-        draw(graphical_module);
     }
 }
 
-void rclient::scenes::PauseMenu::draw(dl::DlLoader<rtype::GraphicModule> &graphical_module)
+void rclient::scenes::PauseMenu::display(rtype::GraphicModule &graphical_module)
 {
-    graphical_module.get_class().clear();
+    graphical_module.clear();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)
             m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
@@ -95,13 +94,20 @@ void rclient::scenes::PauseMenu::draw(dl::DlLoader<rtype::GraphicModule> &graphi
         m_texture.loadFromFile(m_paths[i]);
         m_sprite.setPosition(m_transforms[i].position_x, m_transforms[i].position_y);
         m_sprite.setTexture(m_texture);
-        graphical_module.get_class().draw(m_sprite, {});
+        graphical_module.draw(m_sprite, {});
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    graphical_module.get_class().draw(m_text);
-    graphical_module.get_class().draw(m_mute);
-    graphical_module.get_class().draw(m_unmute);
-    graphical_module.get_class().draw(m_quit);
-    graphical_module.get_class().display();
+    graphical_module.draw(m_text);
+    graphical_module.draw(m_mute);
+    graphical_module.draw(m_unmute);
+    graphical_module.draw(m_quit);
+    graphical_module.display();
+}
+
+void rclient::scenes::PauseMenu::handle_events(rtype::GraphicModule &graphics,
+                                               sf::Event & /* events */, State &state)
+{
+    if (graphics.is_input_pressed(sf::Keyboard::Enter))
+        state = State::Game;
 }

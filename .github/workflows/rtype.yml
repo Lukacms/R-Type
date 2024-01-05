@@ -226,7 +226,7 @@ jobs:
         node-version: v16.x
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 1
+        fetch-depth: 0
 
     - name : Install packages
       run: |
@@ -237,7 +237,7 @@ jobs:
     - name: generate doxygen mans
       run: doxygen assets/scripts/doxygen
     - name: Enforce docs footer
-      run: node ./scripts/append-footer.js
+      run: node ./assets/scripts/append-footer.js
     - name: Git Prep
       run: |
         git config --local user.email "footer-bot@coolproductinc.technology"

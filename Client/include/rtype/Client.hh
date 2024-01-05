@@ -2,87 +2,80 @@
 ** EPITECH PROJECT, 2023
 ** rtype
 ** File description:
-** client
+** Client
 */
 
 #pragma once
 
-#include <functional>
-#include <memory>
-#include <rtype/ComponentManager.hpp>
+// NOTE need to do this to be able to build the shared library of the client core
+#define ASIO_HEADER_ONLY
+
+#include <asio.hpp>
 #include <rtype/ECSManager.hpp>
-#include <rtype/Network/NetworkManager.hh>
 #include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <rtype/network/Network.hpp>
+#include <rtype/scenes/Game.hh>
 #include <rtype/scenes/Lounge.hh>
 #include <rtype/scenes/Menu.hh>
+#include <rtype/scenes/PauseMenu.hh>
 #include <rtype/utils/Clock.hh>
+#include <string>
 #include <string_view>
 
 namespace rclient
 {
 
-    constexpr int STANDARD_WIDTH{800};
-    constexpr int STANDARD_HEIGHT{600};
     constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
     constexpr double BULLET_TIMEOUT{250.0};
     constexpr double GAME_TIMEOUT{10.0};
 
-    enum class State {
-        Menu,
-        Lounge,
-        Game,
-        Pause,
-    };
-
     class Client
     {
         public:
-            explicit Client(unsigned int &&width = STANDARD_WIDTH,
-                            unsigned int &&height = STANDARD_HEIGHT,
-                            const std::string &title = STANDARD_TITLE.data());
+            Client(const rclient::Arguments &infos);
+            Client(Client const &to_copy) = delete;
+            Client(Client &&to_move);
             ~Client();
-            Client(const Client &) = delete;
-            Client(Client &&) = delete;
-            Client &operator=(const Client &) = delete;
-            Client &operator=(Client &&) = delete;
+            Client &operator=(Client const &to_copy) = delete;
+            Client &operator=(Client &&to_move) = delete;
 
-            // static method to launch client
-            static int launch(Arguments &infos);
-            // Methods for running client
-            int client_run();
-            void client_menu();
-            void client_game(rtype::utils::Clock &clock);
-            void client_lounge(rtype::utils::Clock &clock);
+            /* methods */
+            static int launch(const Arguments &infos);
 
-            void set_network_infos(Arguments &infos);
-            void configure_network();
-
-            void check_input();
+            static void send_message(const ntw::Communication &commn,
+                                     const asio::ip::udp::endpoint &endpoint,
+                                     asio::ip::udp::socket &socket);
+            void loop();
 
         private:
-            dl::DlLoader<rtype::ECSManager> m_ecs;
-            dl::DlLoader<rtype::GraphicModule> m_graphical_module;
+            /* game engine */
+            dl::DlLoader<rtype::ECSManager> ecs;
 
-            State m_state{State::Menu};
-            scenes::Menu m_menu;
-            scenes::Lounge m_lounge;
+            /* network */
+            asio::io_context context{};
+            asio::ip::udp::resolver resolver;
+            asio::ip::udp::endpoint endpoint{};
+            asio::ip::udp::socket socket;
 
-            std::chrono::time_point<std::chrono::steady_clock> m_timer_shoot;
+            /* utils for graphics */
+            dl::DlLoader<rtype::GraphicModule> graphics;
+            scenes::State state{scenes::State::Menu};
+            scenes::Menu menu{};
+            scenes::Lounge lounge{};
+            scenes::PauseMenu pause{};
+            scenes::Game game;
 
-            std::unique_ptr<rclient::NetworkManager> m_network{nullptr};
+            /* utils for network */
             ThreadPool threads{};
-            std::string m_host;
-            std::string m_port;
-            std::deque<ntw::Communication> m_to_send{};
-    };
+            std::string host{};
+            std::string port{};
 
-    struct DisplayHandler {
-        public:
-            /* variables */
-            State state{};
-            std::function<void(Client &, rtype::utils::Clock &)> handler;
+            /* methods */
+            void setup_network();
+            void launch_displays();
+            void check_events();
     };
 
 } // namespace rclient

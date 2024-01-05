@@ -5,6 +5,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Event.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/InputManager.hpp>
@@ -20,9 +21,9 @@ namespace rtype
     class GraphicModule
     {
         public:
-            explicit GraphicModule(unsigned int width = STANDARD_WIDTH,
-                                   unsigned int height = STANDARD_HEIGHT,
-                                   const std::string &title = STANDARD_TITLE);
+            GraphicModule(unsigned int width = STANDARD_WIDTH,
+                          unsigned int height = STANDARD_HEIGHT,
+                          const std::string &title = STANDARD_TITLE);
             ~GraphicModule() = default;
             GraphicModule(const GraphicModule &) = delete;
             GraphicModule(GraphicModule &&) = delete;
@@ -38,7 +39,8 @@ namespace rtype
             void close_window();
             void clear();
             void close();
-            bool is_input_pressed(sf::Keyboard::Key key);
+            [[nodiscard]] bool poll_event(sf::Event &event);
+            [[nodiscard]] bool is_input_pressed(sf::Keyboard::Key key);
             [[nodiscard]] bool is_window_open();
 
         private:

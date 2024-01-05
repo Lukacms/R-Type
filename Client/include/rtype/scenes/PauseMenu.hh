@@ -11,22 +11,26 @@
 #include <functional>
 #include <rtype/GraphicModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
 
 namespace rclient::scenes
 {
 
-    class PauseMenu
+    class PauseMenu : public IScene
     {
         public:
-            explicit PauseMenu(unsigned int width, unsigned int height);
+            PauseMenu(unsigned int width = STANDARD_WIDTH, unsigned int height = STANDARD_HEIGHT);
             PauseMenu(PauseMenu const &to_copy) = delete;
             PauseMenu(PauseMenu &&to_move) = delete;
-            ~PauseMenu() = default;
+            ~PauseMenu() override = default;
             PauseMenu &operator=(PauseMenu const &to_copy) = delete;
             PauseMenu &operator=(PauseMenu &&to_move) = delete;
 
             void launch(dl::DlLoader<rtype::GraphicModule> &graphical_module);
+            void display(rtype::GraphicModule &graphical_module) override;
+            void handle_events(rtype::GraphicModule &graphics, sf::Event &events,
+                               State &state) override;
 
         private:
             bool m_changing_scene{false};
@@ -48,7 +52,6 @@ namespace rclient::scenes
             sf::Text m_unmute{};
             sf::Text m_quit{};
 
-            void draw(dl::DlLoader<rtype::GraphicModule> &graphical_modules);
             void cut_scene_handling();
     };
 

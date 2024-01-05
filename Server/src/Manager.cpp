@@ -121,7 +121,7 @@ void rserver::Manager::launch(asio::ip::port_type port)
 
         manager.start_receive();
     } catch (std::exception &e) {
-        std::cout << e.what() << ENDL;
+        DEBUG(("%s%s", e.what(), ENDL));
     }
 }
 
@@ -137,8 +137,9 @@ void rserver::Manager::run_game_logic()
 
         while (RUNNING) {
             if (clock.get_elapsed_time_in_s() > game::TIMER) {
-                logic.game_loop(this->physics.get_class(), this->players, this->ecs.get_class(),
-                                static_cast<float>(delta.get_elapsed_time_in_s()));
+                this->logic.game_loop(this->physics.get_class(), this->players,
+                                      this->ecs.get_class(),
+                                      static_cast<float>(delta.get_elapsed_time_in_s()));
                 this->run_all_rooms_logics(delta);
                 ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_s()));
                 clock.reset();

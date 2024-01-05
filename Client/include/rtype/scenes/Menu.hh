@@ -11,38 +11,25 @@
 #include <functional>
 #include <rtype/GraphicModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <rtype/scenes/IScene.hh>
 
 namespace rclient::scenes
 {
-    static const constexpr int PLAY_FONT_SIZE{28};
-    static const constexpr int LOGO_ORIGIN_X{250};
-    static const constexpr float MIDLE_DIV{2.0F};
-    static const constexpr float TEXT_HEIGHT_DIV{1.5F};
-    static const constexpr float POS_Y_TEXT_MENU{50};
-    static const constexpr double CLOCK_TIMER_LOGO{250};
-    static const constexpr int LOGO_MAX_Y{60};
-    static const constexpr int LOGO_MIN_Y{40};
-    static const constexpr double CLOCK_TIMER_TEXT_MENU{50};
-    static const constexpr int MAX_OPACITY_TEXT_MENU{250};
-    static const constexpr int MIN_OPACITY_TEXT_MENU{50};
-    static const constexpr int OPACITY_INCREMENTATION{5};
-    static const constexpr float MENU_BG_WIDTH{1000.0F};
-    static const constexpr float MENU_BG_HEIGHT{562.0F};
-
-    class Menu
+    class Menu : public IScene
     {
         public:
-            explicit Menu(unsigned int width, unsigned int height);
+            Menu(unsigned int width = STANDARD_WIDTH, unsigned int height = STANDARD_HEIGHT);
             Menu(Menu const &to_copy) = delete;
             Menu(Menu &&to_move) = delete;
-            ~Menu() = default;
+            ~Menu() override = default;
             Menu &operator=(Menu const &to_copy) = delete;
             Menu &operator=(Menu &&to_move) = delete;
 
-            void launch(dl::DlLoader<rtype::GraphicModule> &graphical_module);
+            void display(rtype::GraphicModule &graphical_module) override;
+            void handle_events(rtype::GraphicModule &graphics, sf::Event &events,
+                               State &state) override;
 
         private:
-            bool m_changing_scene{false};
             bool m_descending_logo{false};
             bool m_fading_text{false};
             unsigned int m_width{};
@@ -58,7 +45,6 @@ namespace rclient::scenes
             sf::Sprite m_sprite{};
             sf::Text m_text{};
 
-            void draw(dl::DlLoader<rtype::GraphicModule> &graphical_module);
             void animate();
             void cut_scene_handling();
     };

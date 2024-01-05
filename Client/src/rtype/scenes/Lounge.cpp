@@ -6,7 +6,6 @@
 */
 
 #include <algorithm>
-#include <rtype/Client.hh>
 #include <rtype/scenes/Lounge.hh>
 
 /* ctor / dtor */
@@ -16,10 +15,16 @@ rclient::scenes::Lounge::Lounge(const unsigned int &pwidth, const unsigned int &
 }
 
 /* methods */
-void rclient::scenes::Lounge::draw(rtype::GraphicModule &graphics, rtype::utils::Clock &clock)
+void rclient::scenes::Lounge::display(rtype::GraphicModule &graphics)
 {
-    if (clock.get_elapsed_time_in_ms() > GAME_TIMEOUT) {
-        graphics.clear();
-        graphics.display();
+    graphics.clear();
+    for (auto &room : this->rooms) {
+        room.display(graphics, sprite);
     }
+    graphics.display();
+}
+
+void rclient::scenes::Lounge::handle_events(rtype::GraphicModule &graphics, sf::Event &events,
+                                            State &state)
+{
 }

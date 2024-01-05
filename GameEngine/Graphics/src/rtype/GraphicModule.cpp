@@ -2,6 +2,7 @@
 // Created by kane on 14/12/23.
 //
 
+#include <SFML/Window/Event.hpp>
 #include <rtype/GraphicModule.hh>
 
 rtype::GraphicModule::GraphicModule(unsigned int width, unsigned int height,
@@ -75,4 +76,9 @@ void rtype::GraphicModule::update()
 void rtype::GraphicModule::close()
 {
     m_window.close();
+}
+
+bool rtype::GraphicModule::poll_event(sf::Event &event)
+{
+    return m_window.pollEvent(event);
 }
