@@ -115,6 +115,10 @@ set(WARNING_FLAGS
     -Wno-padded
     -Wno-ctad-maybe-unsupported)
 
+if (WIN32)
+    set(WARNING_FLAGS "${WARNING_FLAGS} -Wno-language-extension-token")
+endif ()
+
 if (RTYPE_BUILD_TESTS)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")

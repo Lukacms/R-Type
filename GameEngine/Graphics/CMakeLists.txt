@@ -11,7 +11,7 @@ add_library(
 
 target_compile_features(r-type-graphics PRIVATE cxx_std_20)
 target_compile_options(r-type-graphics PRIVATE ${WARNING_FLAGS})
-target_include_directories(r-type-graphics PRIVATE ./include ../ECS/include ${CMAKE_BINARY_DIR}/_deps/sfml-src/include)
+target_include_directories(r-type-graphics PRIVATE ./include ../ECS/include)
 set_property(TARGET r-type-graphics PROPERTY CXX_STANDARD 20)
 set_property(TARGET r-type-graphics PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
