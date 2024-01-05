@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "SFML/Graphics/Rect.hpp"
+#include "rtype/utils/Clock.hh"
 #include <chrono>
 #include <functional>
 #include <rtype/GraphicModule.hh>
@@ -39,28 +41,39 @@ namespace rclient
             Menu &operator=(Menu const &to_copy) = delete;
             Menu &operator=(Menu &&to_move) = delete;
 
-            void launch(dl::DlLoader<rtype::GraphicModule> &graphical_module);
+            void launch(dl::DlLoader<rtype::GraphicModule> &graphical_module, std::string &host,
+                        std::string &port);
 
         private:
             bool m_changing_scene{false};
             bool m_descending_logo{false};
             bool m_fading_text{false};
+            bool m_select_port{false};
+            bool m_select_host{false};
             unsigned int m_width{};
             unsigned int m_height{};
 
+            std::string m_host_str{};
+            std::string m_port_str{};
+            rtype::utils::Clock m_clock{};
+            sf::FloatRect m_left_box{};
+            sf::FloatRect m_right_box{};
             std::chrono::time_point<std::chrono::steady_clock> m_timer_menu;
             std::array<std::chrono::time_point<std::chrono::steady_clock>, 3> m_clocks{};
             sf::Texture m_texture{};
-            std::array<rtype::TransformComponent, 2> m_transforms{};
+            std::array<rtype::TransformComponent, 4> m_transforms{};
             std::array<std::string, 2> m_paths{"./assets/SpaceBG.png", "./assets/Rtype-logo2.png"};
 
             sf::Font m_font{};
-            sf::Sprite m_sprite{};
             sf::Text m_text{};
+            sf::Text m_host{};
+            sf::Text m_port{};
 
             void draw(dl::DlLoader<rtype::GraphicModule> &graphical_module);
             void animate();
             void cut_scene_handling();
+            void button_handling(dl::DlLoader<rtype::GraphicModule> &graphical_module);
+            void key_handling(dl::DlLoader<rtype::GraphicModule> &graphical_module);
     };
 
     class PauseMenu

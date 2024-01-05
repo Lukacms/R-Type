@@ -100,7 +100,7 @@ void rclient::Client::set_network_infos(rclient::Arguments &infos)
 
 void rclient::Client::client_menu()
 {
-    m_menu.launch(m_graphical_module);
+    m_menu.launch(m_graphical_module, m_host, m_port);
     configure_network();
 }
 
