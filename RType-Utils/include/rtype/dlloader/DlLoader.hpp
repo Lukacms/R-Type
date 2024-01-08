@@ -80,8 +80,8 @@ namespace dl
                 if (!this->handle) {
                     throw DlException(std::string{dlerror()});
                 }
-                auto *loader =
-                    reinterpret_cast<TSignature *>(dlsym(this->handle, loader_func.data()));
+                auto *loader{
+                    reinterpret_cast<TSignature *>(dlsym(this->handle, loader_func.data()))};
                 if (!loader)
                     throw DlException(ERROR_FETCH_LOADER.data());
                 if (!(this->element = loader(std::forward<TValues>(values)...)))

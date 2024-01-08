@@ -6,5 +6,14 @@
 
 namespace rtype
 {
-    enum class Keys { UP, RIGHT, DOWN, LEFT, W };
+    enum class Keys {
+        UP,
+        RIGHT,
+        DOWN,
+        LEFT,
+        W,
+        Q,
+        ESCAPE,
+        ENTER,
+    };
 }

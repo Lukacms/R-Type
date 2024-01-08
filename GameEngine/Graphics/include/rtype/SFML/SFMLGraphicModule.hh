@@ -23,7 +23,7 @@ namespace rtype
     const constexpr int STANDARD_WIDTH{800};
     const constexpr int STANDARD_HEIGHT{600};
     const constexpr char *STANDARD_TITLE{"R-TYPE"};
-    const constexpr std::array<SFMLKeyring, 5> KeysArray{{
+    const constexpr std::array<SFMLKeyring, 5> KEYS_ARRAY{{
         {sf::Keyboard::Up, rtype::Keys::UP},
         {sf::Keyboard::Right, rtype::Keys::RIGHT},
         {sf::Keyboard::Down, rtype::Keys::DOWN},
@@ -49,6 +49,7 @@ namespace rtype
             void draw_components(SparseArray<SpriteComponent> &sprites,
                                  SparseArray<TransformComponent> &transforms) final;
             void draw(SpriteComponent &sprite, rtype::TransformComponent transform) final;
+            void draw(sf::Sprite &sprite, rtype::TransformComponent transform) final;
             void display() final;
             void close_window() final;
             void clear() final;

@@ -63,8 +63,9 @@ namespace rserver
         private:
             asio::ip::udp::endpoint endpoint;
             std::size_t entity_value{};
-            PlayerStatus status{PlayerStatus::Lobby};
+            // PlayerStatus status{PlayerStatus::Lobby};
             std::size_t level{1};
+            PlayerStatus status{PlayerStatus::Game};
     };
 
 } // namespace rserver

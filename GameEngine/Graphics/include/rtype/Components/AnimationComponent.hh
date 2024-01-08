@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "rtype/utils/Clock.hh"
-#include "rtype/utils/Vector2D.hh"
+#include <rtype/ComponentManager.hpp>
+#include <rtype/utils/Clock.hh>
+#include <rtype/utils/Vector2D.hh>
 #include <vector>
 
 namespace rtype
@@ -26,4 +27,7 @@ namespace rtype
             rtype::utils::Clock clock;
             std::vector<AnimationClip> animation_clips{};
     };
+
+    void animation_system(ComponentManager &registry, float /* delta_time */);
+
 } // namespace rtype

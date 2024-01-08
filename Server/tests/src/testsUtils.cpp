@@ -25,20 +25,20 @@ TEST(Utils, is_number_false_values)
 
 TEST(Utils, get_number_basic)
 {
-    EXPECT_EQ(rserver::get_number("8"), 8);
-    EXPECT_EQ(rserver::get_number("17"), 17);
+    EXPECT_EQ(rserver::get_number<int>("8"), 8);
+    EXPECT_EQ(rserver::get_number<int>("17"), 17);
 }
 
 TEST(Utils, get_number_partial)
 {
-    EXPECT_EQ(rserver::get_number("8a"), 8);
-    EXPECT_EQ(rserver::get_number("17ngh8"), 17);
+    EXPECT_EQ(rserver::get_number<int>("8a"), 8);
+    EXPECT_EQ(rserver::get_number<int>("17ngh8"), 17);
 }
 
 TEST(Utils, get_number_errors)
 {
-    EXPECT_EQ(rserver::get_number("a"), 0);
-    EXPECT_EQ(rserver::get_number("gh8"), 0);
+    EXPECT_EQ(rserver::get_number<int>("a"), 0);
+    EXPECT_EQ(rserver::get_number<int>("gh8"), 0);
 }
 
 TEST(Utils, split_delimitor_basic)

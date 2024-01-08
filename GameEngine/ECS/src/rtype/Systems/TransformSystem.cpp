@@ -14,7 +14,7 @@ namespace rtype
 {
     void transform_system(ComponentManager &registry, float delta_time)
     {
-        SparseArray<TransformComponent> &transforms = registry.get_components<TransformComponent>();
+        SparseArray<TransformComponent> &transforms{registry.get_components<TransformComponent>()};
 
         for (auto &transform : transforms) {
             if (transform == std::nullopt)

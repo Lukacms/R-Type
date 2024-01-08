@@ -36,6 +36,8 @@ size_t rclient::ClientEntityFactory::create(std::size_t entity, const std::strin
         }
     } catch (FactoryException &e) {
         throw e;
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
     throw FactoryException("Unknown entity type");
 }

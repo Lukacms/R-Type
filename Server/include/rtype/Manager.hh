@@ -56,7 +56,6 @@ namespace rserver
             Manager &operator=(Manager &&to_move);
 
             /* methods */
-            void run();
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
             static void send_message(const ntw::Communication &to_send, const Player &client,
                                      asio::ip::udp::socket &udp_socket);
@@ -74,7 +73,6 @@ namespace rserver
                                      asio::ip::udp::socket &udp_socket, const PlayerStatus &status);
             static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket);
-            void run_game_logic();
 
             /* udp methods */
             void start_receive();
@@ -83,6 +81,7 @@ namespace rserver
             /* They have to be public to be called */
             void input_handler(Player &, std::vector<std::string> &);
             void end_handler(Player &, std::vector<std::string> &);
+            void room_handler(Player &, std::vector<std::string> &);
 
             /* exception */
             class ManagerException : public std::exception
@@ -120,6 +119,7 @@ namespace rserver
 
             /* utils */
             std::shared_mutex ecs_mutex{};
+            std::shared_mutex rooms_mutex{};
 
             /* methods */
             static void handle_disconnection(int);
@@ -129,6 +129,8 @@ namespace rserver
             void add_new_player(asio::ip::udp::endpoint &client);
             void lobby_handler();
             void shoot_according_level(Player &);
+            void run_game_logic();
+            void run_all_rooms_logics(rtype::utils::Clock &delta);
     };
 
     struct CommandHandler {

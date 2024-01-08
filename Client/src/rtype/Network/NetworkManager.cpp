@@ -5,7 +5,6 @@
 ** networkManager.cpp
 */
 
-#include <asio/buffer.hpp>
 #include <iostream>
 #include <rtype.hh>
 #include <rtype/Components/TransformComponent.hh>
@@ -24,15 +23,13 @@ static const std::vector<rclient::CommandHandler> HANDLER{
 };
 
 rclient::NetworkManager::NetworkManager(const std::string &host, const std::string &port)
-    : m_resolver{m_io_context},
-      m_receiver_endpoint{*(m_resolver.resolve(asio::ip::udp::v4(), host, port).begin())},
-      m_socket{m_io_context}
+    : m_resolver{m_io_context}, m_socket{m_io_context}
 {
     m_receiver_endpoint = *m_resolver.resolve(asio::ip::udp::v4(), host, port).begin();
     m_socket.open(udp::v4());
     m_socket.non_blocking(true);
     // m_socket.set_option(asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>{1000});
-    this->send_message({.type = ntw::NetworkType::Connection, .args = {}});
+    this->send_message({ntw::NetworkType::Connection});
 }
 
 void rclient::NetworkManager::fetch_messages(rtype::ECSManager &manager)
@@ -126,5 +123,5 @@ void rclient::NetworkManager::manage_entity(rclient::NetworkManager &network_man
     if (!ecs_manager.is_entity_used(std::stoul(arguments[0])))
         rclient::NetworkManager::create_entity(network_manager, ecs_manager, communication);
     rclient::NetworkManager::move_entity(network_manager, ecs_manager, communication);
-    // DEBUG(("New X: %s, New Y: %s%s", arguments[3].c_str(), arguments[3].c_str(), ENDL));
+    DEBUG(("New X: %s, New Y: %s%s", arguments[2].c_str(), arguments[3].c_str(), ENDL));
 }

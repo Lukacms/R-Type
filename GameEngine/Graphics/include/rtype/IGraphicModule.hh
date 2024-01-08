@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <SFML/Graphics/Sprite.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Keys.hh>
@@ -12,6 +13,7 @@
 
 namespace rtype
 {
+
     class IGraphicModule
     {
         public:
@@ -27,6 +29,7 @@ namespace rtype
                                          SparseArray<rtype::TransformComponent> &transforms) = 0;
             virtual void draw(rtype::SpriteComponent &sprite,
                               rtype::TransformComponent transform) = 0;
+            virtual void draw(sf::Sprite &sprite, rtype::TransformComponent transform) = 0;
             virtual void display() = 0;
             virtual void close_window() = 0;
             virtual void clear() = 0;

@@ -39,7 +39,7 @@ int main(int argc, const char *argv[])
 
         if (infos.help)
             return display_help();
-        rserver::Manager::launch(rserver::DEFAULT_PORT);
+        rserver::Manager::launch(infos.port);
     } catch (rserver::ArgsParser::ArgsException &e) {
         std::cout << e.what() << ENDL;
         return rserver::FAILURE;

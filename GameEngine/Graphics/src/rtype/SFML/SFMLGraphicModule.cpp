@@ -54,7 +54,7 @@ bool rtype::SFMLGraphicModule::is_input_pressed(rtype::Keys key)
 {
     if (key == rtype::Keys::DOWN)
         printf("");
-    for (const auto &keyring : KeysArray) {
+    for (const auto &keyring : KEYS_ARRAY) {
         if (keyring.key == key)
             return m_input.is_key_pressed(keyring.sfml_key);
     }
@@ -86,4 +86,12 @@ void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
     sprite.setScale(transform.scale_x, transform.scale_y);
     sprite.setTexture(texture);
     m_window.draw(sprite);
+}
+
+void rtype::SFMLGraphicModule::draw(sf::Sprite &sprite_component,
+                                    rtype::TransformComponent transform)
+{
+    sprite_component.setPosition(transform.position_x, transform.position_y);
+    sprite_component.setScale(transform.scale_x, transform.scale_y);
+    m_window.draw(sprite_component);
 }

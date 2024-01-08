@@ -61,7 +61,6 @@ namespace rserver::game
             asio::ip::udp::socket &m_socket;
             std::shared_mutex &m_ecs_mutex;
             rtype::utils::Clock m_enemy_clock{};
-            std::chrono::time_point<std::chrono::steady_clock> m_start_enemy{
-                std::chrono::steady_clock::now()};
+            rtype::utils::Clock m_clock{};
     };
 } // namespace rserver::game

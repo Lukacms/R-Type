@@ -28,13 +28,14 @@ TEST(ServerEntityFactory, constructor_without_register)
     dl::DlLoader<rtype::ECSManager> ecs{};
 
     ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
-    EXPECT_THROW(rserver::ServerEntityFactory::create("Enemy", ecs.get_class()), std::out_of_range);
+    EXPECT_THROW(rserver::ServerEntityFactory::create("BasicEnemy", ecs.get_class()),
+                 rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("Player", ecs.get_class()),
-                 std::out_of_range);
+                 rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()),
-                 std::out_of_range);
+                 rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("Bullet", ecs.get_class()),
-                 std::out_of_range);
+                 rtype::ECSManager::ECSException);
 }
 
 TEST(ServerEntityFactory, constructor_no_throw)

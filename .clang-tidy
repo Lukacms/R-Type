@@ -10,13 +10,13 @@ CheckOptions:
   - key:             readability-identifier-naming.ClassMemberCase
     value:           lower_case
   - key:             readability-identifier-naming.ClassMethodCase
-    value:           camelCase
+    value:           lower_case
   - key:             readability-identifier-naming.StructCase
     value:           CamelCase
   - key:             readability-identifier-naming.MemberCase
     value:           aNy_CasE
   - key:             readability-identifier-naming.MethodCase
-    value:           camelCase
+    value:           lower_case
 
   - key:             readability-identifier-naming.EnumCase
     value:           CamelCase
@@ -34,10 +34,10 @@ CheckOptions:
     value:           UPPER_CASE
 
   - key:             readability-identifier-naming.NamespaceCase
-    value:           camelCase
+    value:           camelBack
 
 
   - key:             readability-identifier-naming.TemplateParameterCase
-    value:           camelCase
+    value:           CamelCase
   - key:             readability-identifier-naming.TemplateParameterPrefix
     value:           T

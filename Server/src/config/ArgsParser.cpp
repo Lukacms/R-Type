@@ -25,7 +25,7 @@ rserver::Infos rserver::ArgsParser::get_args(int argc, std::span<const char *> a
     }
     if (!is_number(std::string{argv[1]}))
         throw ArgsException();
-    infos.port = static_cast<asio::ip::port_type>(get_number(argv[1]));
+    infos.port = static_cast<asio::ip::port_type>(get_number<std::size_t>(argv[1]));
     return infos;
 }
 

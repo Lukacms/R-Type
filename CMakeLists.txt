@@ -17,6 +17,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 option(RTYPE_BUILD_TESTS "Build the tests" OFF)
 option(RTYPE_BUILD_BENCHMARKS "Build benchmarks" OFF)
 
+message("Is it win32 ? -> " ${WIN32})
+
 # fetch asio library which is used by both client and server
 message("Loading Asio library")
 
@@ -73,7 +75,7 @@ message("Finished loading json")
 # Warning flags
 set(GCC_WARNING_FLAGS
     -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches
-    -Wlogical-op -Wnull-dereference -Wuseless-cast -Wno-pragmas)
+    -Wlogical-op -Wno-null-dereference -Wuseless-cast -Wno-pragmas)
 
 set(CLANG_WARNING_FLAGS
     -Weverything
@@ -89,7 +91,10 @@ set(CLANG_WARNING_FLAGS
     -Wno-global-constructors
     -Wno-implicit-int-float-conversion
     -Wno-return-std-move
+    -Wno-documentation
+    -Wno-deprecated-copy-with-user-provided-dtor
     -Wno-return-type-c-linkage
+    -Wno-suggest-destructor-override
     -Wno-signed-enum-bitfield
     -Wno-weak-vtables)
 
@@ -117,13 +122,14 @@ set(WARNING_FLAGS
     -Wformat=2
     -Wno-effc++
     -Wno-suggest-override
-    -Wno-suggest-destructor-override
-    -Wno-documentation
-    -Wno-deprecated-copy-with-user-provided-dtor
     -Wno-null-dereference
     -Wno-zero-as-null-pointer-constant
     -Wno-padded
     -Wno-ctad-maybe-unsupported)
+
+if (WIN32)
+    set(WARNING_FLAGS "${WARNING_FLAGS} -Wno-language-extension-token")
+endif ()
 
 if (RTYPE_BUILD_TESTS)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
@@ -157,12 +163,12 @@ set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}
   "Choose the type of build, options are: None Debug Release tsan"
   FORCE)
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb3")
-elseif(CMAKE_BUILD_TYPE MATCHES "tsan")
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
-endif()
+elseif (CMAKE_BUILD_TYPE MATCHES "tsan")
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
+endif ()
 
 # Clang-tidy
 if(USE_CLANG_TIDY)
@@ -206,6 +212,7 @@ add_subdirectory(Server)
 add_subdirectory(Client)
 
 if (RTYPE_BUILD_TESTS)
+    message("${BoldYellow}Building tests${ColourReset}")
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/tests)
     FetchContent_Declare(
         googletest
@@ -222,6 +229,7 @@ if (RTYPE_BUILD_TESTS)
 endif()
 
 if (RTYPE_BUILD_BENCHMARKS)
+    message("${BoldYellow}Building benchmarks${ColourReset}")
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY "https://github.com/google/googletest.git"
@@ -233,3 +241,15 @@ if (RTYPE_BUILD_BENCHMARKS)
     FetchContent_MakeAvailable(googletest)
     add_subdirectory(benchmarks)
 endif()
+
+if (CMAKE_BUILD_TYPE MATCHES "Release")
+    install(TARGETS r-type_client RUNTIME DESTINATION bin)
+    install(TARGETS rtype-client-core RUNTIME DESTINATION bin)
+    install(TARGETS r-type-ecs RUNTIME DESTINATION bin)
+    install(TARGETS r-type-graphics RUNTIME DESTINATION bin)
+    install(TARGETS r-type-physics RUNTIME DESTINATION bin)
+    install(TARGETS r-type-utils RUNTIME DESTINATION bin)
+    install(TARGETS r-type_server RUNTIME DESTINATION bin)
+    install(TARGETS rtype-server-core RUNTIME DESTINATION bin)
+    include(CPack)
+endif ()

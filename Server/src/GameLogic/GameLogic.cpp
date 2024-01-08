@@ -76,7 +76,7 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
                                                          rserver::PlayersManager &players_manager,
                                                          rtype::ECSManager &manager)
 {
-    rtype::SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
+    rtype::SparseArray<rtype::TagComponent> &tags{manager.get_components<rtype::TagComponent>()};
 
     for (const auto entity1 : m_entities) {
         if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
@@ -104,11 +104,11 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
 void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_manager,
                                            rtype::ECSManager &manager)
 {
-    rtype::SparseArray<rtype::TransformComponent> &transforms =
-        manager.get_components<rtype::TransformComponent>();
-    rtype::SparseArray<rtype::TagComponent> &tags = manager.get_components<rtype::TagComponent>();
+    rtype::SparseArray<rtype::TransformComponent> &transforms{
+        manager.get_components<rtype::TransformComponent>()};
+    rtype::SparseArray<rtype::TagComponent> &tags{manager.get_components<rtype::TagComponent>()};
 
-    for (size_t entity = 0; entity < transforms.size(); entity += 1) {
+    for (size_t entity{0}; entity < transforms.size(); entity += 1) {
         ntw::Communication entity_descriptor{ntw::NetworkType::Entity, {}};
         if (!transforms[entity].has_value())
             continue;
@@ -123,10 +123,10 @@ void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_mana
 void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                                         rtype::ECSManager &manager)
 {
-    auto &transforms = manager.get_components<rtype::TransformComponent>();
-    auto &tag = manager.get_components<rtype::TagComponent>();
+    auto &transforms{manager.get_components<rtype::TransformComponent>()};
+    auto &tag{manager.get_components<rtype::TagComponent>()};
 
-    for (size_t entity = 0; entity < transforms.size(); entity += 1) {
+    for (size_t entity{0}; entity < transforms.size(); entity += 1) {
         if (!transforms[entity].has_value())
             continue;
         if (!tag[entity].has_value())
@@ -136,14 +136,14 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
             continue;
         if (transforms[entity]->position_x < MIN_POSITION ||
             transforms[entity]->position_x > MAX_POSITION_X) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction, .args = {}};
+            ntw::Communication send{.type = ntw::NetworkType::Destruction};
             manager.delete_entity(entity);
             send.add_param(entity);
             Manager::send_to_all(send, players_manager, m_socket);
         }
         if (transforms[entity]->position_y < MIN_POSITION ||
             transforms[entity]->position_y > MAX_POSITION_Y) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction, .args = {}};
+            ntw::Communication send{.type = ntw::NetworkType::Destruction};
             manager.delete_entity(entity);
             send.add_param(entity);
             Manager::send_to_all(send, players_manager, m_socket);

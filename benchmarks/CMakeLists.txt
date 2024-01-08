@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin/benchmarks)
 
+message("In the cmake to build benchmarks")
+
 include(FetchContent)
 
 option(BENCHMARK_DOWNLOAD_DEPENDENCIES "download its dependencies" ON)
@@ -38,3 +40,5 @@ target_link_libraries(
     rtype-client-interface
     benchmark::benchmark
 )
+
+message("Should have built benchmarks")

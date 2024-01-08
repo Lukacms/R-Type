@@ -32,6 +32,11 @@ add_library(
     src/rtype/Network/NetworkManager.cpp
     src/rtype/Network/ThreadPool.cpp
     src/Factory/ClientEntityFactory.cpp
+    src/rtype/scenes/Menu.cpp
+    src/rtype/scenes/PauseMenu.cpp
+    src/rtype/scenes/Lounge.cpp
+    src/rtype/scenes/Game.cpp
+    src/rtype/components/Room.cpp
 )
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)
@@ -44,7 +49,6 @@ target_include_directories(
     ../GameEngine/Physics/include/
     ../GameEngine/Audio/include/
     ../RType-Utils/include/
-    ${CMAKE_BINARY_DIR}/_deps/sfml-src/include
 )
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -52,6 +56,7 @@ target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
     r-type-graphics-interface
+    r-type-graphics
     r-type-utils
     asio::asio # link asio library to core
 )

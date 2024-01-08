@@ -6,7 +6,7 @@ AlignEscapedNewlines: DontAlign
 AlignOperands: 'false'
 AllowAllArgumentsOnNextLine: 'false'
 AllowShortBlocksOnASingleLine: 'false'
-AllowShortCaseLabelsOnASingleLine: 'true'
+AllowShortCaseLabelsOnASingleLine: 'false'
 AllowShortFunctionsOnASingleLine: 'false'
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: Inline

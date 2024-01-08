@@ -38,6 +38,9 @@ cmake-build-release/
 .vscode/
 .cache/
 compile_commands.json
+latex
+html
+man
 
 # specific to project
 r-type_server

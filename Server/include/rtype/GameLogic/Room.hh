@@ -10,8 +10,11 @@
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
+#include <rtype/ECSManager.hpp>
 #include <rtype/GameLogic/GameLogic.hh>
+#include <rtype/PhysicsManager.hh>
 #include <rtype/clients/Player.hh>
+#include <rtype/dlloader/DlLoader.hpp>
 #include <vector>
 
 namespace rserver::game
@@ -20,13 +23,14 @@ namespace rserver::game
     constexpr int MAX_ROOMS{100};
     constexpr int MAX_PLAYERS{4};
 
-    enum class RoomStatus { Waiting, InGame };
+    constexpr int TIMEOUT_WAITING{2 * 60};
+
+    enum class RoomStatus { Lounge, Waiting, InGame };
 
     class Room
     {
         public:
-            Room(std::shared_mutex &pecs, asio::ip::udp::socket &psocket, PlayersManager &pmanager,
-                 std::size_t pid);
+            Room(asio::ip::udp::socket &psocket, PlayersManager &pmanager, std::size_t pid);
             Room(Room const &to_copy) = delete;
             Room(Room &&to_move);
             ~Room();
@@ -39,6 +43,10 @@ namespace rserver::game
             [[nodiscard]] std::size_t get_nb_players() const;
             [[nodiscard]] std::size_t get_id() const;
             void del_player(Player &to_del);
+            [[nodiscard]] GameLogic &get_logic();
+            void run_game_logic(rtype::utils::Clock &delta);
+            void check_wait_timeout();
+            [[nodiscard]] bool has_player(const Player &player);
 
             class RoomException : public std::exception
             {
@@ -58,13 +66,16 @@ namespace rserver::game
 
         private:
             asio::ip::udp::socket &socket;
-            std::shared_mutex &ecs_mutex;
-
+            std::shared_mutex ecs_mutex{};
             std::size_t id{0};
+            dl::DlLoader<rtype::ECSManager> ecs{};
+            dl::DlLoader<rtype::PhysicsManager> physics{};
+
             GameLogic logic{socket, ecs_mutex};
             std::vector<asio::ip::port_type> players{};
             PlayersManager &manager;
-            RoomStatus status{RoomStatus::Waiting};
+            RoomStatus status{RoomStatus::Lounge};
+            rtype::utils::Clock timeout_connect{};
     };
 
 } // namespace rserver::game
