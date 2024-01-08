@@ -15,16 +15,16 @@ rclient::scenes::Lounge::Lounge(const unsigned int &pwidth, const unsigned int &
 }
 
 /* methods */
-void rclient::scenes::Lounge::display(rtype::GraphicModule &graphics)
+void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
     for (auto &room : this->rooms) {
-        room.display(graphics, sprite);
+        room.display(graphics, this->sprite);
     }
     graphics.display();
 }
 
-void rclient::scenes::Lounge::handle_events(rtype::GraphicModule &graphics, State &state)
+void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics, State &state)
 {
 }
 

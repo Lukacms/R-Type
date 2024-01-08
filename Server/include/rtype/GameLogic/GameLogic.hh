@@ -8,13 +8,13 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the server core
-#include "rtype/utils/Clock.hh"
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
 #include <rtype/ECSManager.hpp>
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/PlayersManager.hh>
+#include <rtype/utils/Clock.hh>
 #include <shared_mutex>
 #include <vector>
 
@@ -23,7 +23,7 @@ namespace rserver::game
     const constexpr int MAX_POSITION_X{900};
     const constexpr int MAX_POSITION_Y{700};
     const constexpr int MIN_POSITION{-200};
-    constexpr double TIMER{0.001};
+    constexpr double TIMER{10};
 
     class GameLogic
     {
@@ -43,6 +43,7 @@ namespace rserver::game
             void destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                           rtype::ECSManager &manager);
             void spawn_enemy(rtype::ECSManager &manager);
+            void spawn_upgrade(std::size_t entity_to_follow, rtype::ECSManager &manager);
 
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,
@@ -59,6 +60,7 @@ namespace rserver::game
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
             std::shared_mutex &m_ecs_mutex;
+            rtype::utils::Clock m_enemy_clock{};
             rtype::utils::Clock m_clock{};
     };
 } // namespace rserver::game

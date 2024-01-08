@@ -55,12 +55,16 @@ namespace rserver
             [[nodiscard]] const PlayerStatus &get_status() const;
             void set_status(const PlayerStatus &new_status);
             void set_entity_value(std::size_t const &value);
+            void level_up();
+            std::size_t get_level();
             void lock();
             void unlock();
 
         private:
             asio::ip::udp::endpoint endpoint;
             std::size_t entity_value{};
+            // PlayerStatus status{PlayerStatus::Lobby};
+            std::size_t level{1};
             PlayerStatus status{PlayerStatus::Game};
     };
 

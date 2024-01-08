@@ -8,12 +8,13 @@
 #include <SFML/Window/Event.hpp>
 #include <algorithm>
 #include <csignal>
-#include <iostream>
 #include <rtype.hh>
 #include <rtype/Client.hh>
+#include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
+#include <rtype/SFML/SFMLGraphicModule.hh>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/utils/Clock.hh>
 #include <vector>
@@ -31,22 +32,29 @@ rclient::Client::Client(const rclient::Arguments &infos)
     : resolver{this->context}, socket{this->context}, game{endpoint, socket},
       host{std::move(infos.hostname)}, port{std::move(infos.port)}
 {
-    ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
-    graphics.init_class<std::unique_ptr<rtype::GraphicModule>(
+    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
+    this->graphics.init_class<std::unique_ptr<rtype::SFMLGraphicModule>(
         unsigned int width, unsigned int height, const std::string &title)>(
-        "./libs/r-type-graphics.so", "entrypoint", scenes::STANDARD_WIDTH, scenes::STANDARD_HEIGHT,
+        "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH, rtype::STANDARD_HEIGHT,
         STANDARD_TITLE.data());
+    this->audio.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so",
+                                                                   "entrypoint");
     rtype::SparseArray<rtype::SpriteComponent> sprites{};
     rtype::SparseArray<rtype::TransformComponent> transforms{};
     rtype::SparseArray<rtype::TagComponent> tags{};
     rtype::SparseArray<rtype::BoxColliderComponent> colliders{};
     rtype::SparseArray<rtype::HealthComponent> health{};
+    rtype::SparseArray<rtype::AnimationComponent> animation{};
+    std::function<void(rtype::ComponentManager &, float)> animation_system{
+        &rtype::animation_system};
 
     ecs.get_class().register_component(sprites);
     ecs.get_class().register_component(transforms);
     ecs.get_class().register_component(tags);
     ecs.get_class().register_component(colliders);
     ecs.get_class().register_component(health);
+    ecs.get_class().register_component(animation);
+    ecs.get_class().add_system(animation_system);
     std::signal(SIGINT, &handle_sigint);
 }
 
@@ -102,18 +110,23 @@ void rclient::Client::setup_network()
         ntw::Communication commn{};
         asio::ip::udp::endpoint sender{};
 
-        while (RUNNING) {
+        while (RUNNING && this->state != scenes::State::End) {
             try {
                 this->socket.receive_from(asio::buffer(&commn, sizeof(commn)), sender);
                 if (sender.port() > 0) {
-                    switch (this->state) { // NOLINT
+                    switch (this->state) {
                         case scenes::State::Game:
                             this->game.handle_network(commn, this->state);
                             break;
                         case scenes::State::Lounge:
                             this->lounge.handle_network(commn, this->state);
                             break;
-                        default:
+                        case scenes::State::Pause:
+                            this->game.handle_network(commn, this->state);
+                            break;
+                        case scenes::State::Menu:
+                            break;
+                        case scenes::State::End:
                             break;
                     }
                 }
@@ -160,10 +173,10 @@ void rclient::Client::check_events()
 {
 
     if (this->state == scenes::State::Menu &&
-        this->graphics.get_class().is_input_pressed(sf::Keyboard::Enter)) {
+        this->graphics.get_class().is_input_pressed(rtype::Keys::ENTER)) {
         this->setup_network();
     }
-    if (this->graphics.get_class().is_input_pressed(sf::Keyboard::Q))
+    if (this->graphics.get_class().is_input_pressed(rtype::Keys::Q))
         RUNNING = 0;
     switch (this->state) {
         case scenes::State::Menu:

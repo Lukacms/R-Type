@@ -7,6 +7,7 @@
 
 #include <rtype.hh>
 #include <rtype/Components/TagComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
 #include <rtype/GameLogic/GameLogic.hh>
 #include <rtype/Manager.hh>
@@ -43,20 +44,27 @@ void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physic
     enemy_collision_responses(physics_manager, players_manager, manager);
 }
 
-void rserver::game::GameLogic::player_collision_responses(
-    rtype::PhysicsManager & /* physics_manager */, rserver::PlayersManager & /* players_manager */,
-    rtype::ECSManager &manager)
+void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager &physics_manager,
+                                                          rserver::PlayersManager &players_manager,
+                                                          rtype::ECSManager &manager)
 {
     try {
         rtype::SparseArray<rtype::TagComponent> &tags =
             manager.get_components<rtype::TagComponent>();
-
         for (auto entity1 : m_entities) {
             if (!tags[entity1].has_value() || tags[entity1]->tag != "Player")
                 continue;
             for (auto entity2 : m_entities) {
                 if (entity1 == entity2 || !tags[entity2].has_value())
                     continue;
+                if (tags[entity2]->tag == "Upgrade" &&
+                    physics_manager.is_collided(entity1, entity2)) {
+                    players_manager.get_by_entity_id(entity1).level_up();
+                    ntw::Communication destroy{.type = ntw::NetworkType::Destruction, .args = {}};
+                    destroy.add_param(entity2);
+                    rserver::Manager::send_to_all(destroy, players_manager, m_socket);
+                    manager.delete_entity(entity2);
+                }
             }
         }
     } catch (rtype::ECSManager::ECSException &e) {
@@ -85,6 +93,7 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
                 destroy2.add_param(entity2);
                 rserver::Manager::send_to_all(destroy1, players_manager, m_socket);
                 rserver::Manager::send_to_all(destroy2, players_manager, m_socket);
+                spawn_upgrade(entity1, manager);
                 manager.delete_entity(entity1);
                 manager.delete_entity(entity2);
             }
@@ -127,14 +136,14 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
             continue;
         if (transforms[entity]->position_x < MIN_POSITION ||
             transforms[entity]->position_x > MAX_POSITION_X) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction, .args = {}};
+            ntw::Communication send{.type = ntw::NetworkType::Destruction};
             manager.delete_entity(entity);
             send.add_param(entity);
             Manager::send_to_all(send, players_manager, m_socket);
         }
         if (transforms[entity]->position_y < MIN_POSITION ||
             transforms[entity]->position_y > MAX_POSITION_Y) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction, .args = {}};
+            ntw::Communication send{.type = ntw::NetworkType::Destruction};
             manager.delete_entity(entity);
             send.add_param(entity);
             Manager::send_to_all(send, players_manager, m_socket);
@@ -144,9 +153,25 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
 
 void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
-    if (m_clock.get_elapsed_time_in_s() > 2) {
+    if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
         std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
-        rserver::ServerEntityFactory::create("BasicEnemy", manager);
-        m_clock.reset();
+        auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
+        auto &transform = manager.get_component<rtype::TransformComponent>(entity);
+        transform.position_y = std::rand() % 550;
+        transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
+        m_enemy_clock.reset();
+    }
+}
+
+void rserver::game::GameLogic::spawn_upgrade(std::size_t entity_to_follow,
+                                             rtype::ECSManager &manager)
+{
+    int success = std::rand() % 50;
+    auto &transforms = manager.get_components<rtype::TransformComponent>();
+
+    if (transforms[entity_to_follow].has_value() && success == 0) {
+        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
+        std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
+        transforms[entity] = {transforms[entity_to_follow]};
     }
 }

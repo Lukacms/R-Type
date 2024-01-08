@@ -5,13 +5,13 @@
 ** Game
 */
 
-#include "rtype/Factory/ClientEntityFactory.hh"
 #include <iostream>
 #include <rtype.hh>
 #include <rtype/Client.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
+#include <rtype/Factory/ClientEntityFactory.hh>
 #include <rtype/network/Network.hpp>
 #include <rtype/scenes/Game.hh>
 #include <shared_mutex>
@@ -41,7 +41,7 @@ rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::s
     this->ecs.get_class().register_component(health);
 }
 
-void rclient::scenes::Game::display(rtype::GraphicModule &graphics)
+void rclient::scenes::Game::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
     graphics.draw_components(this->ecs.get_class().get_components<rtype::SpriteComponent>(),
@@ -49,33 +49,33 @@ void rclient::scenes::Game::display(rtype::GraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::Game::handle_events(rtype::GraphicModule &graphics, State &state)
+void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics, State &state)
 {
-    if (graphics.is_input_pressed(sf::Keyboard::Up)) {
+    if (graphics.is_input_pressed(rtype::Keys::UP)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(0);
         Client::send_message(to_send, this->endpoint, this->socket);
     }
-    if (graphics.is_input_pressed(sf::Keyboard::Right)) {
+    if (graphics.is_input_pressed(rtype::Keys::RIGHT)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(1);
         Client::send_message(to_send, this->endpoint, this->socket);
     }
-    if (graphics.is_input_pressed(sf::Keyboard::Down)) {
+    if (graphics.is_input_pressed(rtype::Keys::DOWN)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(2);
         Client::send_message(to_send, this->endpoint, this->socket);
     }
-    if (graphics.is_input_pressed(sf::Keyboard::Left)) {
+    if (graphics.is_input_pressed(rtype::Keys::LEFT)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(3);
         Client::send_message(to_send, this->endpoint, this->socket);
     }
-    if (graphics.is_input_pressed(sf::Keyboard::W) &&
+    if (graphics.is_input_pressed(rtype::Keys::W) &&
         this->timer_shoot.get_elapsed_time_in_ms() > BULLET_TIMEOUT) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
@@ -83,8 +83,8 @@ void rclient::scenes::Game::handle_events(rtype::GraphicModule &graphics, State 
         Client::send_message(to_send, this->endpoint, this->socket);
         this->timer_shoot.reset();
     }
-    if (graphics.is_input_pressed(sf::Keyboard::Escape))
-        state = State::Menu;
+    if (graphics.is_input_pressed(rtype::Keys::ESCAPE))
+        state = State::Pause;
 }
 
 void rclient::scenes::Game::handle_network(ntw::Communication &commn, State &state)

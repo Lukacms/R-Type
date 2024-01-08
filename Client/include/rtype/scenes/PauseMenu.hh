@@ -9,27 +9,29 @@
 
 #include <chrono>
 #include <functional>
-#include <rtype/GraphicModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
 
 namespace rclient::scenes
 {
+    constexpr int TEXT_BASE{150};
+    constexpr int MUTE_BASE{100};
+    constexpr int UNMUTE_BASE{50};
 
     class PauseMenu : public IScene
     {
         public:
-            PauseMenu(unsigned int width = STANDARD_WIDTH, unsigned int height = STANDARD_HEIGHT);
+            PauseMenu(unsigned int width = rtype::STANDARD_WIDTH,
+                      unsigned int height = rtype::STANDARD_HEIGHT);
             PauseMenu(PauseMenu const &to_copy) = delete;
             PauseMenu(PauseMenu &&to_move) = delete;
             ~PauseMenu() override = default;
             PauseMenu &operator=(PauseMenu const &to_copy) = delete;
             PauseMenu &operator=(PauseMenu &&to_move) = delete;
 
-            void launch(dl::DlLoader<rtype::GraphicModule> &graphical_module);
-            void display(rtype::GraphicModule &graphical_module) override;
-            void handle_events(rtype::GraphicModule &graphics, State &state) override;
+            void display(rtype::IGraphicModule &graphics) override;
+            void handle_events(rtype::IGraphicModule &graphics, State &state) override;
             void handle_network(ntw::Communication &commn, State &state) override;
 
         private:

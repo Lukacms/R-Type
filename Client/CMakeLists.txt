@@ -6,7 +6,7 @@
 project(r-type_client)
 
 # include directories
-include_directories(include/)
+include_directories(./include/)
 
 # if shared libraries need to have template files
 add_library(rtype-client-interface INTERFACE)
@@ -18,6 +18,7 @@ target_link_libraries(
     rtype-client-interface INTERFACE
     asio::asio
     r-type-utils
+    r-type-audio
     r-type-graphics-interface
 )
 
@@ -45,7 +46,8 @@ target_include_directories(
     PUBLIC
     ../GameEngine/ECS/include/
     ../GameEngine/Graphics/include/
-    ../GameEngine/Physics/include
+    ../GameEngine/Physics/include/
+    ../GameEngine/Audio/include/
     ../RType-Utils/include/
 )
 set_property(TARGET rtype-client-core PROPERTY CXX_STANDARD 20)
@@ -54,6 +56,7 @@ target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
     r-type-graphics-interface
+    r-type-graphics
     r-type-utils
     asio::asio # link asio library to core
 )

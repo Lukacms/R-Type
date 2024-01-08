@@ -9,7 +9,7 @@
 
 rtype::EntityManager::EntityManager()
 {
-    for (size_t i = 1; i <= MAX_ENTITIES; i += 1)
+    for (size_t i = 0; i <= MAX_ENTITIES; i += 1)
         m_queue.emplace_back(i);
 }
 

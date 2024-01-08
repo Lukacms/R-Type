@@ -9,7 +9,7 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
-#include <rtype/GraphicModule.hh>
+#include <rtype/IGraphicModule.hh>
 #include <string>
 #include <string_view>
 
@@ -28,7 +28,7 @@ namespace rclient::components
             RoomInfos &operator=(RoomInfos const &to_copy) = default;
             RoomInfos &operator=(RoomInfos &&to_move) = default;
 
-            void display(rtype::GraphicModule &graphics, sf::Sprite &box);
+            void display(rtype::IGraphicModule &graphics, rtype::SpriteComponent &box);
             void set_nb_players(const unsigned int &new_players);
 
         private:

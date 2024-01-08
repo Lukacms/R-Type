@@ -32,6 +32,7 @@ static int display_help()
  */
 int main(int argc, const char *argv[])
 {
+    std::srand(std::time(nullptr));
     try {
         rserver::Infos infos{
             rserver::ArgsParser::get_args(argc, std::span(argv, std::size_t(argc)))};

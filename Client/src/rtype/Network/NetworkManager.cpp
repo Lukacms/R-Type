@@ -39,7 +39,7 @@ void rclient::NetworkManager::fetch_messages(rtype::ECSManager &manager)
 
     try {
         m_socket.receive_from(asio::buffer(&comm, sizeof(comm)), sender_endpoint);
-        DEBUG(("Arguments upon recieve: %s\n", comm.args.data()));
+        // DEBUG(("Arguments upon recieve: %s\n", comm.args.data()));
         m_queue.emplace_back(comm);
         if (sender_endpoint.port() > 0)
             this->manage_message(manager);

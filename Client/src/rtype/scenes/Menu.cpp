@@ -27,28 +27,29 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
                        static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
 }
 
-void rclient::scenes::Menu::display(rtype::GraphicModule &graphical_module)
+void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
 {
-    graphical_module.clear();
+    graphics.clear();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)
             m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
         if (i == 1)
             m_sprite.setOrigin(LOGO_ORIGIN_X, 0);
         m_texture.loadFromFile(m_paths[i]);
-        m_sprite.setPosition(m_transforms[i].position_x, m_transforms[i].position_y);
         m_sprite.setTexture(m_texture);
-        graphical_module.draw(m_sprite, {});
+        graphics.draw(m_sprite, m_transforms[i]);
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    graphical_module.draw(m_text);
-    graphical_module.display();
+    graphics.draw(m_text,
+                  {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
+                   .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+    graphics.display();
 }
 
-void rclient::scenes::Menu::handle_events(rtype::GraphicModule &graphics, State &state)
+void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics, State &state)
 {
-    if (graphics.is_input_pressed(sf::Keyboard::Enter))
+    if (graphics.is_input_pressed(rtype::Keys::ESCAPE))
         state = State::Lounge;
 }
 

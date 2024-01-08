@@ -25,6 +25,9 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
     if (type == "Bullet") {
         return create_bullet(ecs_manager);
     }
+    if (type == "Upgrade") {
+        return create_upgrade(ecs_manager);
+    }
     throw FactoryException("Unknown entity type");
 }
 
@@ -86,6 +89,20 @@ size_t rserver::ServerEntityFactory::create_bullet(rtype::ECSManager &ecs_manage
     tag.insert_at(entity, rtype::TagComponent{"Bullet"});
     transform.insert_at(entity, TRANS_BULLET);
     transform[entity]->velocity_x = 1;
+    return entity;
+}
+
+size_t rserver::ServerEntityFactory::create_upgrade(rtype::ECSManager &ecs_manager)
+{
+    size_t entity = ecs_manager.create_entity();
+    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
+    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
+    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
+
+    collider.insert_at(entity, rtype::BoxColliderComponent{36, 36});
+    tag.insert_at(entity, rtype::TagComponent{"Upgrade"});
+    transform.insert_at(entity, rtype::TransformComponent{0, 0, 0, 0});
+    transform[entity]->velocity_x = -5;
     return entity;
 }
 

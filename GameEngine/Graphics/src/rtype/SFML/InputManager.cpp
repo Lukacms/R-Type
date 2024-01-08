@@ -5,11 +5,11 @@
 ** inputManager
 */
 
-#include <rtype/InputManager.hpp>
+#include <rtype/SFML/InputManager.hh>
 
-InputManager::InputManager() = default;
+rtype::InputManager::InputManager() = default;
 
-void InputManager::update()
+void rtype::InputManager::update()
 {
     for (int key = sf::Keyboard::Key::A; key != sf::Keyboard::KeyCount; ++key) {
         keyMap[static_cast<sf::Keyboard::Key>(key)] =
@@ -23,7 +23,7 @@ void InputManager::update()
     }
 }
 
-bool InputManager::is_key_pressed(sf::Keyboard::Key key) const
+bool rtype::InputManager::is_key_pressed(sf::Keyboard::Key key) const
 {
     auto input = keyMap.find(key);
 
@@ -33,7 +33,7 @@ bool InputManager::is_key_pressed(sf::Keyboard::Key key) const
     return false;
 }
 
-bool InputManager::is_mouse_button_pressed(sf::Mouse::Button button) const
+bool rtype::InputManager::is_mouse_button_pressed(sf::Mouse::Button button) const
 {
     auto input = mouseButtonMap.find(button);
 
@@ -43,7 +43,7 @@ bool InputManager::is_mouse_button_pressed(sf::Mouse::Button button) const
     return false;
 }
 
-sf::Vector2i InputManager::get_mouse_position(const sf::Window &window) const // NOLINT
+sf::Vector2i rtype::InputManager::get_mouse_position(const sf::Window &window) const // NOLINT
 {
     return sf::Mouse::getPosition(window);
 }

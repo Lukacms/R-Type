@@ -5,6 +5,7 @@
 ** PauseMenu
 */
 
+#include <iostream>
 #include <rtype/scenes/PauseMenu.hh>
 
 rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
@@ -42,72 +43,45 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
     m_transforms[1].position_x = m_width / MIDLE_DIV;
     m_transforms[1].position_y = POS_Y_TEXT_MENU;
-    m_text.setPosition(static_cast<float>(m_width) / MIDLE_DIV,
-                       static_cast<float>(m_height) / TEXT_HEIGHT_DIV - 150);
-    m_mute.setPosition(static_cast<float>(m_width) / MIDLE_DIV,
-                       static_cast<float>(m_height) / TEXT_HEIGHT_DIV - 100);
-    m_unmute.setPosition(static_cast<float>(m_width) / MIDLE_DIV,
-                         static_cast<float>(m_height) / TEXT_HEIGHT_DIV - 50);
-    m_quit.setPosition(static_cast<float>(m_width) / MIDLE_DIV,
-                       static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
 }
 
-void rclient::scenes::PauseMenu::launch(dl::DlLoader<rtype::GraphicModule> &graphical_module)
-
+void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
 {
-    bool start_cut_scene{false};
-
-    while (graphical_module.get_class().is_window_open() && !m_changing_scene) {
-        graphical_module.get_class().update();
-        if (graphical_module.get_class().is_input_pressed(sf::Keyboard::Enter)) {
-            start_cut_scene = true;
-            m_timer_menu = std::chrono::steady_clock::now();
-            std::cout << "Enter pressed" << std::endl;
-        }
-        if (graphical_module.get_class().is_input_pressed(sf::Keyboard::M)) {
-            std::cout << "M pressed" << std::endl;
-            // m_audio_manager.setVolume("test", 0);
-            // TODO : Mute
-        }
-        if (graphical_module.get_class().is_input_pressed(sf::Keyboard::U)) {
-            std::cout << "U pressed" << std::endl;
-            // m_audio_manager.setVolume("test", 100);
-            // TODO : Unmute
-        }
-        if (graphical_module.get_class().is_input_pressed(sf::Keyboard::Q)) {
-            graphical_module.get_class().close();
-        }
-        if (start_cut_scene) {
-            m_changing_scene = true;
-        }
-    }
-}
-
-void rclient::scenes::PauseMenu::display(rtype::GraphicModule &graphical_module)
-{
-    graphical_module.clear();
+    std::cout << "ouin\n";
+    graphics.clear();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)
             m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
         if (i == 1)
             m_sprite.setOrigin(LOGO_ORIGIN_X, 0);
         m_texture.loadFromFile(m_paths[i]);
-        m_sprite.setPosition(m_transforms[i].position_x, m_transforms[i].position_y);
         m_sprite.setTexture(m_texture);
-        graphical_module.draw(m_sprite, {});
+        graphics.draw(m_sprite, m_transforms[i]);
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    graphical_module.draw(m_text);
-    graphical_module.draw(m_mute);
-    graphical_module.draw(m_unmute);
-    graphical_module.draw(m_quit);
-    graphical_module.display();
+    graphics.draw(m_text,
+                  rtype::TransformComponent{
+                      .position_x = static_cast<float>(m_width) / MIDLE_DIV,
+                      .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE});
+    graphics.draw(m_mute,
+                  rtype::TransformComponent{
+                      .position_x = static_cast<float>(m_width) / MIDLE_DIV,
+                      .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE});
+    graphics.draw(m_unmute,
+                  rtype::TransformComponent{
+                      .position_x = static_cast<float>(m_width) / MIDLE_DIV,
+                      .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE});
+    graphics.draw(
+        m_quit,
+        rtype::TransformComponent{.position_x = static_cast<float>(m_width) / MIDLE_DIV,
+                                  .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+    graphics.display();
 }
 
-void rclient::scenes::PauseMenu::handle_events(rtype::GraphicModule &graphics, State &state)
+void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics, State &state)
 {
-    if (graphics.is_input_pressed(sf::Keyboard::Enter))
+    if (graphics.is_input_pressed(rtype::Keys::ENTER))
         state = State::Game;
 }
 

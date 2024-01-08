@@ -9,7 +9,7 @@
 
 #include <chrono>
 #include <functional>
-#include <rtype/GraphicModule.hh>
+#include <rtype/SFML/SFMLGraphicModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/scenes/IScene.hh>
 
@@ -18,15 +18,16 @@ namespace rclient::scenes
     class Menu : public IScene
     {
         public:
-            Menu(unsigned int width = STANDARD_WIDTH, unsigned int height = STANDARD_HEIGHT);
+            Menu(unsigned int width = rtype::STANDARD_WIDTH,
+                 unsigned int height = rtype::STANDARD_HEIGHT);
             Menu(Menu const &to_copy) = delete;
             Menu(Menu &&to_move) = delete;
             ~Menu() override = default;
             Menu &operator=(Menu const &to_copy) = delete;
             Menu &operator=(Menu &&to_move) = delete;
 
-            void display(rtype::GraphicModule &graphical_module) override;
-            void handle_events(rtype::GraphicModule &graphics, State &state) override;
+            void display(rtype::IGraphicModule &graphics) override;
+            void handle_events(rtype::IGraphicModule &graphics, State &state) override;
             void handle_network(ntw::Communication &commn, State &state) override;
 
         private:

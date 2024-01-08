@@ -132,19 +132,19 @@ void rserver::Manager::launch(asio::ip::port_type port)
 void rserver::Manager::run_game_logic()
 {
     this->threads.add_job([this]() {
-        rtype::utils::Clock clock{};
-        rtype::utils::Clock delta{};
+        rtype::utils::Clock timer{};
+        rtype::utils::Clock delta_time{};
 
         while (RUNNING) {
-            if (clock.get_elapsed_time_in_s() > game::TIMER) {
-                this->logic.game_loop(this->physics.get_class(), this->players,
-                                      this->ecs.get_class(),
-                                      static_cast<float>(delta.get_elapsed_time_in_s()));
-                this->run_all_rooms_logics(delta);
-                ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_s()));
-                clock.reset();
+            if (timer.get_elapsed_time_in_ms() > game::TIMER) {
+                logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
+                                static_cast<float>(delta_time.get_elapsed_time_in_ms()));
+                this->run_all_rooms_logics(delta_time);
+                ecs.get_class().apply_system(
+                    static_cast<float>(delta_time.get_elapsed_time_in_ms()));
+                timer.reset();
+                delta_time.reset();
             }
-            delta.reset();
         }
     });
 }

@@ -5,6 +5,7 @@
 ** Room
 */
 
+#include "rtype/Components/SpriteComponent.hh"
 #include <rtype/components/Room.hh>
 #include <string>
 
@@ -15,7 +16,8 @@ rclient::components::RoomInfos::RoomInfos(const unsigned int &pid)
 }
 
 /* methods */
-void rclient::components::RoomInfos::display(rtype::GraphicModule &graphics, sf::Sprite &box)
+void rclient::components::RoomInfos::display(rtype::IGraphicModule &graphics,
+                                             rtype::SpriteComponent &box)
 {
     graphics.draw(box, {});
 }

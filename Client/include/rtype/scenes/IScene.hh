@@ -8,7 +8,7 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
-#include <rtype/GraphicModule.hh>
+#include <rtype/IGraphicModule.hh>
 #include <rtype/network/Network.hpp>
 
 namespace rclient::scenes
@@ -28,8 +28,8 @@ namespace rclient::scenes
     constexpr int OPACITY_INCREMENTATION{5};
     constexpr float MENU_BG_WIDTH{1000.0F};
     constexpr float MENU_BG_HEIGHT{562.0F};
-    constexpr unsigned int STANDARD_WIDTH{800};
-    constexpr unsigned int STANDARD_HEIGHT{600};
+    // constexpr unsigned int STANDARD_WIDTH{800};
+    // constexpr unsigned int STANDARD_HEIGHT{600};
 
     enum class State {
         Menu,
@@ -49,8 +49,8 @@ namespace rclient::scenes
             IScene &operator=(IScene const &to_copy) = default;
             IScene &operator=(IScene &&to_move) = default;
 
-            virtual void display(rtype::GraphicModule &graphics) = 0;
-            virtual void handle_events(rtype::GraphicModule &graphics, State &state) = 0;
+            virtual void display(rtype::IGraphicModule &graphics) = 0;
+            virtual void handle_events(rtype::IGraphicModule &graphics, State &state) = 0;
             virtual void handle_network(ntw::Communication &commn, State &state) = 0;
     };
 

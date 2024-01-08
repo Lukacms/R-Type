@@ -8,6 +8,7 @@
 #pragma once
 
 #include <asio.hpp>
+#include <functional>
 #include <rtype/ECSManager.hpp>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/scenes/IScene.hh>
@@ -27,8 +28,8 @@ namespace rclient::scenes
             Game &operator=(Game const &to_copy) = delete;
             Game &operator=(Game &&to_move) = delete;
 
-            void display(rtype::GraphicModule &graphics) override;
-            void handle_events(rtype::GraphicModule &graphics, State &state) override;
+            void display(rtype::IGraphicModule &graphics) override;
+            void handle_events(rtype::IGraphicModule &graphics, State &state) override;
             void handle_network(ntw::Communication &commn, State &state) override;
 
             /* network */

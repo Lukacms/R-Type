@@ -8,10 +8,16 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the client core
+#include <algorithm>
 #define ASIO_HEADER_ONLY
 
 #include <asio.hpp>
+#include <memory>
+#include <rtype/ComponentManager.hpp>
 #include <rtype/ECSManager.hpp>
+#include <rtype/IAudioModule.hh>
+#include <rtype/IGraphicModule.hh>
+#include <rtype/Network/NetworkManager.hh>
 #include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
@@ -52,6 +58,8 @@ namespace rclient
         private:
             /* game engine */
             dl::DlLoader<rtype::ECSManager> ecs;
+            dl::DlLoader<rtype::IGraphicModule> graphics;
+            dl::DlLoader<rtype::IAudioModule> audio;
 
             /* network */
             asio::io_context context{};
@@ -60,7 +68,6 @@ namespace rclient
             asio::ip::udp::socket socket;
 
             /* utils for graphics */
-            dl::DlLoader<rtype::GraphicModule> graphics;
             scenes::State state{scenes::State::Menu};
             scenes::Menu menu{};
             scenes::Lounge lounge{};

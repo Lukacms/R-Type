@@ -103,9 +103,9 @@ namespace rtype
 
             void remove(size_t pos) override
             {
-                if (pos > m_data.size())
+                if (pos >= m_data.size())
                     return;
-                m_data[pos] = std::nullopt;
+                m_data[pos].reset();
             }
 
             size_type get_index(value_type const &value) const

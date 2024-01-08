@@ -10,6 +10,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <array>
 #include <exception>
+#include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/ECSManager.hpp>
@@ -20,8 +21,8 @@ namespace rclient
 
     constexpr rtype::HealthComponent BASIC_HEALTH{100, 100};
     constexpr rtype::BoxColliderComponent BASIC_COLLIDER{66, 30};
-    const sf::IntRect TEXTURERECT_SHIP{0, 0, 33, 15};
-    const sf::IntRect TEXTURERECT_OTHER_PLAYER{0, 0, 32, 32};
+    const rtype::utils::TextureRect TEXTURERECT_SHIP{0, 0, 33, 15};
+    const rtype::utils::TextureRect TEXTURERECT_OTHER_PLAYER{0, 0, 32, 32};
     const sf::Vector2f ORIGIN_ENEMY{16.5, 7.5};
 
     class ClientEntityFactory
@@ -60,5 +61,6 @@ namespace rclient
             static size_t create_player(std::size_t entity, rtype::ECSManager &ecs_manager);
             static size_t create_other_player(std::size_t entity, rtype::ECSManager &ecs_manager);
             static size_t create_bullet(std::size_t entity, rtype::ECSManager &ecs_manager);
+            static size_t create_upgrade(std::size_t entity, rtype::ECSManager &ecs_manager);
     };
 } // namespace rclient
