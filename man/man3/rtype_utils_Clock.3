@@ -1,0 +1,44 @@
+.TH "rtype::utils::Clock" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::utils::Clock
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBClock\fP (\fBClock\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBClock\fP (\fBClock\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBClock\fP & \fBoperator=\fP (\fBClock\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBClock\fP & \fBoperator=\fP (\fBClock\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "std::chrono::duration< double > \fBget_elapsed_time\fP ()"
+.br
+.ti -1c
+.RI "double \fBget_elapsed_time_in_s\fP ()"
+.br
+.ti -1c
+.RI "double \fBget_elapsed_time_in_ms\fP ()"
+.br
+.ti -1c
+.RI "void \fBreset\fP ()"
+.br
+.in -1c
+.SH "Member Function Documentation"
+.PP 
+.SS "void rtype::utils::Clock::reset ()"
+reset the clock 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

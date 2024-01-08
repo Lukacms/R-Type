@@ -1,0 +1,34 @@
+.TH "dl::DlLoader< TLoad >" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+dl::DlLoader< TLoad >
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDlLoader\fP (\fBDlLoader\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBDlLoader\fP (\fBDlLoader\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBDlLoader\fP & \fBoperator=\fP (\fBDlLoader\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBDlLoader\fP & \fBoperator=\fP (\fBDlLoader\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "TLoad & \fBget_class\fP () const"
+.br
+.ti -1c
+.RI "template<typename TSignature , typename\&.\&.\&. TValues> void \fBinit_class\fP (std::string const &path, std::string const &loader_func=DEFAULT_LOADER\&.data(), TValues &&\&.\&.\&.values)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

@@ -1,0 +1,50 @@
+.TH "rtype::EntityManager" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::EntityManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBEntityException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBEntityManager\fP (\fBEntityManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBEntityManager\fP (\fBEntityManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBEntityManager\fP & \fBoperator=\fP (\fBEntityManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBEntityManager\fP & \fBoperator=\fP (\fBEntityManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "size_t \fBcreate_entity\fP ()"
+.br
+.ti -1c
+.RI "size_t \fBcreate_entity\fP (size_t entity)"
+.br
+.ti -1c
+.RI "bool \fBis_entity_used\fP (std::size_t entity)"
+.br
+.ti -1c
+.RI "void \fBdelete_entity\fP (size_t entity)"
+.br
+.ti -1c
+.RI "std::vector< std::size_t > & \fBget_used_entity\fP ()"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

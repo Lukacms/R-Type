@@ -1,0 +1,45 @@
+.TH "rtype::IAudioModule" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::IAudioModule
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by \fBrtype::SFMLAudioModule\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBIAudioModule\fP (const \fBIAudioModule\fP &)=delete"
+.br
+.ti -1c
+.RI "\fBIAudioModule\fP (\fBIAudioModule\fP &&)=delete"
+.br
+.ti -1c
+.RI "\fBIAudioModule\fP & \fBoperator=\fP (const \fBIAudioModule\fP &)=delete"
+.br
+.ti -1c
+.RI "\fBIAudioModule\fP & \fBoperator=\fP (\fBIAudioModule\fP &&)=delete"
+.br
+.ti -1c
+.RI "virtual void \fBplay_music\fP (const std::string &name)=0"
+.br
+.ti -1c
+.RI "virtual void \fBplay_sfx\fP (const std::string &name)=0"
+.br
+.ti -1c
+.RI "virtual void \fBset_volume_music\fP (float volume)=0"
+.br
+.ti -1c
+.RI "virtual void \fBset_volume_sfx\fP (float volume)=0"
+.br
+.ti -1c
+.RI "virtual void \fBupdate\fP ()=0"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

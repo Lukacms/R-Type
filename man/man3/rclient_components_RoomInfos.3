@@ -1,0 +1,49 @@
+.TH "rclient::components::RoomInfos" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::components::RoomInfos
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRoomInfos\fP (const unsigned int &pid, sf::Font &font)"
+.br
+.ti -1c
+.RI "\fBRoomInfos\fP (\fBRoomInfos\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBRoomInfos\fP (\fBRoomInfos\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBRoomInfos\fP & \fBoperator=\fP (\fBRoomInfos\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBRoomInfos\fP & \fBoperator=\fP (\fBRoomInfos\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics, sf::Sprite &box, \fBrtype::TransformComponent\fP &trans)"
+.br
+.ti -1c
+.RI "void \fBset_nb_players\fP (const unsigned int &new_players)"
+.br
+.ti -1c
+.RI "void \fBset_status\fP (const unsigned short &pstatus)"
+.br
+.ti -1c
+.RI "unsigned int \fBget_id\fP () const"
+.br
+.ti -1c
+.RI "unsigned short \fBget_status\fP () const"
+.br
+.ti -1c
+.RI "unsigned int \fBget_nb_players\fP () const"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

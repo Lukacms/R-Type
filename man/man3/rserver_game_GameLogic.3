@@ -1,0 +1,55 @@
+.TH "rserver::game::GameLogic" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::game::GameLogic
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBGameLogic\fP (asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)"
+.br
+.ti -1c
+.RI "\fBGameLogic\fP (\fBGameLogic\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBGameLogic\fP (\fBGameLogic\fP &&to_move)"
+.br
+.ti -1c
+.RI "\fBGameLogic\fP & \fBoperator=\fP (\fBGameLogic\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBGameLogic\fP & \fBoperator=\fP (\fBGameLogic\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "void \fBgame_loop\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager, float delta_time)"
+.br
+.ti -1c
+.RI "void \fBsend_entity\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBdestroy_too_far_entities\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBspawn_enemy\fP (\fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBspawn_upgrade\fP (std::size_t entity_to_follow, \fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBcollision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBplayer_collision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBenemy_collision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.
