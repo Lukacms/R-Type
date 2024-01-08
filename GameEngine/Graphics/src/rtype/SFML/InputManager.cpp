@@ -25,7 +25,7 @@ void rtype::InputManager::update()
 
 bool rtype::InputManager::is_key_pressed(sf::Keyboard::Key key) const
 {
-    auto input = keyMap.find(key);
+    auto input{keyMap.find(key)};
 
     if (input != keyMap.end()) {
         return input->second;
@@ -35,7 +35,7 @@ bool rtype::InputManager::is_key_pressed(sf::Keyboard::Key key) const
 
 bool rtype::InputManager::is_mouse_button_pressed(sf::Mouse::Button button) const
 {
-    auto input = mouseButtonMap.find(button);
+    auto input{mouseButtonMap.find(button)};
 
     if (input != mouseButtonMap.end()) {
         return input->second;

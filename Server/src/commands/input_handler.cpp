@@ -6,7 +6,6 @@
 */
 
 #include <array>
-#include <iostream>
 #include <rtype.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
@@ -80,7 +79,7 @@ void rserver::Manager::shoot_according_level(rserver::Player &player)
         transform_bullet2.position_y = component.position_y;
         transform_bullet3.position_x = component.position_x + POSITION_CHANGE;
         transform_bullet3.position_y = component.position_y;
-        transform_bullet1.velocity_y = 0.15;
-        transform_bullet3.velocity_y = -0.15;
+        transform_bullet1.velocity_y = 0.15F;
+        transform_bullet3.velocity_y = -0.15F;
     }
 }

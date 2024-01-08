@@ -8,7 +8,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <rtype/utils/Vector2D.hh>
+#include <rtype/utils/Vector2D.hpp>
 
 namespace rtype
 {

@@ -12,6 +12,7 @@
 #include <rtype/Keys.hh>
 #include <rtype/SFML/InputManager.hh>
 #include <rtype/SparseArray.hpp>
+#include <string_view>
 
 namespace rtype
 {
@@ -20,10 +21,10 @@ namespace rtype
             rtype::Keys key;
     };
 
-    const constexpr int STANDARD_WIDTH{800};
-    const constexpr int STANDARD_HEIGHT{600};
-    const constexpr char *STANDARD_TITLE{"R-TYPE"};
-    const constexpr std::array<SFMLKeyring, 8> KEYS_ARRAY{{
+    constexpr unsigned int STANDARD_WIDTH{800};
+    constexpr unsigned int STANDARD_HEIGHT{600};
+    constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
+    constexpr std::array<SFMLKeyring, 8> KEYS_ARRAY{{
         {sf::Keyboard::Up, rtype::Keys::UP},
         {sf::Keyboard::Right, rtype::Keys::RIGHT},
         {sf::Keyboard::Down, rtype::Keys::DOWN},
@@ -41,7 +42,7 @@ namespace rtype
         public:
             explicit SFMLGraphicModule(unsigned int width = STANDARD_WIDTH,
                                        unsigned int height = STANDARD_HEIGHT,
-                                       const std::string &title = STANDARD_TITLE);
+                                       const std::string &title = STANDARD_TITLE.data());
             ~SFMLGraphicModule() override = default;
             SFMLGraphicModule(const SFMLGraphicModule &) = delete;
             SFMLGraphicModule(SFMLGraphicModule &&) = delete;
@@ -59,6 +60,7 @@ namespace rtype
             void clear() final;
             bool is_input_pressed(rtype::Keys key) final;
             [[nodiscard]] bool is_window_open() final;
+            [[nodiscard]] rtype::utils::Vector2D<float> is_left_mouse_pressed() final;
 
         private:
             sf::VideoMode m_mode;

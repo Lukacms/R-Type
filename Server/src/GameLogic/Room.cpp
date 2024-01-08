@@ -33,7 +33,7 @@ rserver::game::Room::~Room()
 /* methods */
 void rserver::game::Room::add_player(Player &new_player)
 {
-    if (this->status != RoomStatus::Waiting)
+    if (this->status == RoomStatus::InGame)
         throw RoomException("Can't add player. Room is in a game.");
     if (this->players.size() >= MAX_PLAYERS)
         throw RoomException("Already max number of players");

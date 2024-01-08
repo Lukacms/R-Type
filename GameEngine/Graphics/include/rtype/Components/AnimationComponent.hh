@@ -9,7 +9,7 @@
 
 #include <rtype/ComponentManager.hpp>
 #include <rtype/utils/Clock.hh>
-#include <rtype/utils/Vector2D.hh>
+#include <rtype/utils/Vector2D.hpp>
 #include <vector>
 
 namespace rtype

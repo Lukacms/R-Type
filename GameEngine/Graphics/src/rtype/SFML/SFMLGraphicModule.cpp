@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <rtype/SFML/SFMLGraphicModule.hh>
+#include <rtype/utils/Vector2D.hpp>
 
 rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int height,
                                             const std::string &title)
@@ -100,6 +101,14 @@ void rtype::SFMLGraphicModule::draw(sf::Sprite &sprite_component,
 void rtype::SFMLGraphicModule::draw(sf::Text &text, rtype::TransformComponent transform)
 {
     text.setPosition(transform.position_x, transform.position_y);
-    text.setScale(transform.scale_x, transform.scale_y);
     m_window.draw(text);
+}
+
+rtype::utils::Vector2D<float> rtype::SFMLGraphicModule::is_left_mouse_pressed()
+{
+    if (m_input.is_mouse_button_pressed(sf::Mouse::Button::Left)) {
+        auto click{m_input.get_mouse_position(m_window)};
+        return {static_cast<float>(click.x), static_cast<float>(click.y)};
+    }
+    return {-1, -1};
 }

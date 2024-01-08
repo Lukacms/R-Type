@@ -47,7 +47,6 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
 
 void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
 {
-    std::cout << "ouin\n";
     graphics.clear();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)

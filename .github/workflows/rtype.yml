@@ -244,8 +244,7 @@ jobs:
       run: |
         git config --local user.email "footer-bot@coolproductinc.technology"
         git config --local user.name "footer-bot[bot]"
-        git diff
-        git diff-index HEAD
-        git diff-index --quiet HEAD || git commit -am "[DOCS] footer => ensure footer exists on all docs pages"
+        git add .
+        git commit -am "[DOCS] footer => ensure footer exists on all docs pages"
     - name: Git Push
       run: "git push origin $(git branch --show-current) || true"

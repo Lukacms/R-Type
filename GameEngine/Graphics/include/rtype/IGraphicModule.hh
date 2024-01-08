@@ -9,6 +9,7 @@
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Keys.hh>
 #include <rtype/SparseArray.hpp>
+#include <rtype/utils/Vector2D.hpp>
 #include <string>
 
 namespace rtype
@@ -36,5 +37,6 @@ namespace rtype
             virtual void clear() = 0;
             virtual bool is_input_pressed(rtype::Keys key) = 0;
             [[nodiscard]] virtual bool is_window_open() = 0;
+            [[nodiscard]] virtual rtype::utils::Vector2D<float> is_left_mouse_pressed() = 0;
     };
 } // namespace rtype

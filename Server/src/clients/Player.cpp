@@ -5,7 +5,6 @@
 */
 
 #include <algorithm>
-#include <iostream>
 #include <rtype.hh>
 #include <rtype/clients/Player.hh>
 
