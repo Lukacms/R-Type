@@ -1,4 +1,4 @@
 {
-  "Explosion": "./Client/assets/SFX/Explosion.ogg",
-  "Shoot": "./Client/assets/SFX/Shoot.ogg"
+  "Explosion": "./assets/SFX/Explosion.ogg",
+  "Shoot": "./assets/SFX/Shoot.ogg"
 }

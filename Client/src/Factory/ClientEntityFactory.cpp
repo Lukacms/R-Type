@@ -55,7 +55,7 @@ size_t rclient::ClientEntityFactory::create_enemy(std::size_t entity,
         transform.insert_at(entity, rtype::TransformComponent{});
         tag.insert_at(entity, rtype::TagComponent{"BasicEnemy"});
         sprite.insert_at(entity, rtype::SpriteComponent{});
-        sprite[entity]->texture_path = "./Client/assets/BasicEnemy.png";
+        sprite[entity]->texture_path = "./assets/entities/BasicEnemy.png";
         sprite[entity]->rectangle = TEXTURERECT_SHIP;
         sprite[entity]->origin = {ORIGIN_ENEMY.x, ORIGIN_ENEMY.y};
         transform[entity]->scale_x = -2;
@@ -80,7 +80,7 @@ size_t rclient::ClientEntityFactory::create_player(std::size_t entity,
         transform.insert_at(entity, rtype::TransformComponent{});
         tag.insert_at(entity, rtype::TagComponent{"Player"});
         sprite.insert_at(entity, rtype::SpriteComponent{});
-        sprite[entity]->texture_path = "./Client/assets/Spaceship.png";
+        sprite[entity]->texture_path = "./assets/entities/Spaceship.png";
         sprite[entity]->rectangle = TEXTURERECT_SHIP;
         transform[entity]->scale_x = 2;
         transform[entity]->scale_y = 2;
@@ -126,7 +126,7 @@ size_t rclient::ClientEntityFactory::create_bullet(std::size_t entity,
         transform.insert_at(entity, rtype::TransformComponent{});
         tag.insert_at(entity, rtype::TagComponent{"Bullet"});
         sprite.insert_at(entity, rtype::SpriteComponent{});
-        sprite[entity]->texture_path = "./Client/assets/PlayerShoot.png";
+        sprite[entity]->texture_path = "./assets/entities/PlayerShoot.png";
         transform[entity]->scale_x = 2;
         transform[entity]->scale_y = 2;
         sprite[entity]->rectangle = {0, 0, 31, 6};
