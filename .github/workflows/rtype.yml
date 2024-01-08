@@ -240,13 +240,7 @@ jobs:
       run: doxygen assets/scripts/doxygen
     - name: Enforce docs footer
       run: node ./assets/scripts/append-footer.js
-    - name: Git Prep
-      run: |
-        git config --local user.email "footer-bot@coolproductinc.technology"
-        git config --local user.name "footer-bot[bot]"
-        ls
-        pwd
-        git diff -s
-        git add -v . && git commit -am "[DOCS] footer => ensure footer exists on all docs pages"
-    - name: Git Push
-      run: "git push origin $(git branch --show-current) || true"
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "[DOCS] doxygen => generate doxygen mans"
+        create_branch: false
