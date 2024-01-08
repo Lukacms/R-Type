@@ -140,6 +140,7 @@ void rclient::Client::loop()
 {
     rtype::utils::Clock clock{};
 
+    this->audio.get_class().play_music("TitleScreen");
     while (RUNNING && this->state != scenes::State::End) {
         this->graphics.get_class().update();
         if (clock.get_elapsed_time_in_ms() > GAME_TIMEOUT) {

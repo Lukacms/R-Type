@@ -17,6 +17,7 @@
 #include <rtype/utils/Clock.hh>
 #include <shared_mutex>
 #include <vector>
+#include <rtype/GameLogic/LevelManager/LevelManager.hh>
 
 namespace rserver::game
 {
@@ -61,6 +62,7 @@ namespace rserver::game
             asio::ip::udp::socket &m_socket;
             std::shared_mutex &m_ecs_mutex;
             rtype::utils::Clock m_enemy_clock{};
+            rserver::LevelManager m_level_manager{};
             rtype::utils::Clock m_clock{};
     };
 } // namespace rserver::game

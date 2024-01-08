@@ -14,7 +14,12 @@ add_library(rtype-server-interface INTERFACE)
 # link the library
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD_REQUIRED ON)
-target_include_directories(rtype-server-interface INTERFACE include ../RType-Utils/include/ ../GameEngine/ECS/include ../GameEngine/Physics/include)
+target_include_directories(rtype-server-interface INTERFACE
+        include
+        ../RType-Utils/include/
+        ../GameEngine/ECS/include
+        ../GameEngine/Physics/include
+        ${CMAKE_BINARY_DIR}/_deps/json-src/include/)
 target_link_libraries(
     rtype-server-interface INTERFACE
     r-type-ecs
@@ -34,6 +39,7 @@ add_library(
     src/GameLogic/GameLogic.cpp
     src/GameLogic/Room.cpp
     src/GameLogic/RoomsManager.cpp
+    src/GameLogic/LevelManager/LevelManager.cpp
     src/Factory/ServerEntityFactory.cpp
     src/commands/input_handler.cpp
     src/commands/add_new_player.cpp
@@ -49,6 +55,7 @@ target_link_libraries(
     rtype-server-core PRIVATE
     rtype-server-interface
     r-type-utils
+    nlohmann_json::nlohmann_json
     asio::asio # link asio library to core
     )
 
