@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "rtype/Components/SpriteComponent.hh"
+#include "rtype/Components/TextComponent.hh"
 #include <chrono>
 #include <functional>
 #include <rtype/SFML/SFMLGraphicModule.hh>
@@ -38,16 +40,14 @@ namespace rclient::scenes
 
             std::chrono::time_point<std::chrono::steady_clock> m_timer_menu;
             std::array<std::chrono::time_point<std::chrono::steady_clock>, 3> m_clocks{};
-            sf::Texture m_texture{};
-            std::array<rtype::TransformComponent, 2> m_transforms{};
-            std::array<std::string, 2> m_paths{"./assets/SpaceBG.png", "./assets/Rtype-logo2.png"};
-
-            sf::Font m_font{};
-            sf::Sprite m_sprite{};
-            sf::Text m_text{};
+            std::array<rtype::TransformComponent, 5> m_transforms{};
+            std::array<rtype::SpriteComponent, 3> m_sprites{};
+            rtype::TextComponent m_text{};
 
             void animate();
             void cut_scene_handling();
+            void button_handling(rtype::IGraphicModule &graphical_module);
+            void key_handling(rtype::IGraphicModule &graphical_module);
     };
 
 } // namespace rclient::scenes

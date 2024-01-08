@@ -2,7 +2,10 @@
 // Created by kane on 14/12/23.
 //
 
-#include <iostream>
+#include "rtype/Components/TextComponent.hh"
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <rtype/SFML/SFMLGraphicModule.hh>
 
 rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int height,
@@ -28,6 +31,32 @@ void rtype::SFMLGraphicModule::draw_components(SparseArray<rtype::SpriteComponen
         sprite.setScale(transforms[index]->scale_x, transforms[index]->scale_y);
         sprite.setTexture(texture);
         m_window.draw(sprite);
+    }
+}
+
+void rtype::SFMLGraphicModule::draw_components(SparseArray<rtype::TextComponent> &texts,
+                                               SparseArray<rtype::TransformComponent> &transforms)
+{
+    sf::Font font{};
+    sf::Text text{};
+    sf::Color colors{};
+
+    for (size_t index = 0; index < texts.size(); index += 1) {
+        if (!texts[index].has_value())
+            continue;
+        font.loadFromFile(texts[index]->font_path);
+        text.setFont(font);
+        text.setString(texts[index]->text);
+        text.setOrigin(texts[index]->origin.x, texts[index]->origin.y);
+        text.setCharacterSize(texts[index]->font_size);
+        colors.a = texts[index]->colors.opacity;
+        colors.r = texts[index]->colors.red;
+        colors.g = texts[index]->colors.green;
+        colors.b = texts[index]->colors.blue;
+        text.setFillColor(colors);
+        text.setPosition(transforms[index]->position_x, transforms[index]->position_y);
+        text.setScale(transforms[index]->scale_x, transforms[index]->scale_y);
+        m_window.draw(text);
     }
 }
 
@@ -74,7 +103,7 @@ void rtype::SFMLGraphicModule::update()
 }
 
 void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
-                                    rtype::TransformComponent transform)
+                                    rtype::TransformComponent &transform)
 {
     sf::Texture texture{};
     sf::Sprite sprite{};
@@ -89,17 +118,36 @@ void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
     m_window.draw(sprite);
 }
 
-void rtype::SFMLGraphicModule::draw(sf::Sprite &sprite_component,
-                                    rtype::TransformComponent transform)
+void rtype::SFMLGraphicModule::draw(rtype::TextComponent &text_component,
+                                    rtype::TransformComponent &transform)
 {
-    sprite_component.setPosition(transform.position_x, transform.position_y);
-    sprite_component.setScale(transform.scale_x, transform.scale_y);
-    m_window.draw(sprite_component);
-}
+    sf::Font font{};
+    sf::Text text{};
+    sf::Color colors{};
 
-void rtype::SFMLGraphicModule::draw(sf::Text &text, rtype::TransformComponent transform)
-{
+    font.loadFromFile(text_component.font_path);
+    text.setFont(font);
+    text.setString(text_component.text);
+    text.setOrigin(text_component.origin.x, text_component.origin.y);
+    text.setCharacterSize(text_component.font_size);
+    colors.a = text_component.colors.opacity;
+    colors.r = text_component.colors.red;
+    colors.g = text_component.colors.green;
+    colors.b = text_component.colors.blue;
+    text.setFillColor(colors);
     text.setPosition(transform.position_x, transform.position_y);
     text.setScale(transform.scale_x, transform.scale_y);
     m_window.draw(text);
+}
+
+float rtype::SFMLGraphicModule::get_text_width(rtype::TextComponent &text_component)
+{
+    sf::Text text{};
+    sf::Font font{};
+
+    font.loadFromFile(text_component.font_path);
+    text.setFont(font);
+    text.setString(text_component.text);
+    text.setCharacterSize(text_component.font_size);
+    return text.getGlobalBounds().width;
 }

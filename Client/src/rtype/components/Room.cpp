@@ -19,7 +19,7 @@ rclient::components::RoomInfos::RoomInfos(const unsigned int &pid)
 void rclient::components::RoomInfos::display(rtype::IGraphicModule &graphics,
                                              rtype::SpriteComponent &box)
 {
-    graphics.draw(box, {});
+    // graphics.draw(box, {});
 }
 
 void rclient::components::RoomInfos::set_nb_players(const unsigned int &new_players)

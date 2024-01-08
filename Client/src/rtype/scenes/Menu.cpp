@@ -5,6 +5,8 @@
 ** Menu
 */
 
+#include <ios>
+#include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
 
 rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
@@ -13,37 +15,31 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     for (size_t i{0}; i < 3; i++) {
         m_clocks[i] = std::chrono::steady_clock::now();
     }
-    m_font.loadFromFile("./assets/font.ttf");
-    m_text.setFont(m_font);
-    m_text.setString("Press Enter to play");
-    m_text.setCharacterSize(PLAY_FONT_SIZE);
-    m_text.setFillColor(sf::Color::White);
-    m_text.setOrigin(m_text.getGlobalBounds().width / 2, 0);
+    m_text.text = "Press Enter to play";
+    m_text.colors = {255, 255, 255, 255};
+    m_text.font_path = "./assets/font.ttf";
+    m_text.font_size = PLAY_FONT_SIZE;
+    m_sprites[0].texture_path = "./assets/SpaceBG.png";
+    m_sprites[0].origin = {0, 0};
+    m_sprites[1].texture_path = "./assets/Rtype-logo2.png";
+    m_sprites[1].origin = {LOGO_ORIGIN_X, 0};
     m_transforms[0].scale_x = static_cast<float>(width) / MENU_BG_WIDTH;
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
     m_transforms[1].position_x = m_width / MIDLE_DIV;
     m_transforms[1].position_y = POS_Y_TEXT_MENU;
-    m_text.setPosition(static_cast<float>(m_width) / MIDLE_DIV,
-                       static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
+    m_transforms[4].position_x = static_cast<float>(m_width) / MIDLE_DIV;
+    m_transforms[4].position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV;
 }
 
 void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
+    animate();
     for (size_t i{0}; i < 2; i++) {
-        if (i == 0)
-            m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
-        if (i == 1)
-            m_sprite.setOrigin(LOGO_ORIGIN_X, 0);
-        m_texture.loadFromFile(m_paths[i]);
-        m_sprite.setTexture(m_texture);
-        graphics.draw(m_sprite, m_transforms[i]);
+        graphics.draw(m_sprites[i], m_transforms[i]);
     }
-    m_sprite.setOrigin(0, 0);
-    m_sprite.setScale(1, 1);
-    graphics.draw(m_text,
-                  {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                   .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+    m_text.origin = {graphics.get_text_width(m_text) / 2.0F, 0};
+    graphics.draw(m_text, m_transforms[4]);
     graphics.display();
 }
 
@@ -76,16 +72,16 @@ void rclient::scenes::Menu::animate() // NOLINT
                                 std::chrono::steady_clock::now() - m_clocks[1])
                                 .count()) > CLOCK_TIMER_TEXT_MENU) {
         m_clocks[1] = now;
-        auto color = m_text.getFillColor();
-        if (color.a < MAX_OPACITY_TEXT_MENU && !m_fading_text)
-            color.a += OPACITY_INCREMENTATION;
-        if (color.a >= MAX_OPACITY_TEXT_MENU && !m_fading_text)
+        auto color = m_text.colors;
+
+        if (color.opacity < MAX_OPACITY_TEXT_MENU && !m_fading_text)
+            m_text.colors.opacity += OPACITY_INCREMENTATION;
+        if (color.opacity >= MAX_OPACITY_TEXT_MENU && !m_fading_text)
             m_fading_text = true;
-        if (color.a > MIN_OPACITY_TEXT_MENU && m_fading_text)
-            color.a -= OPACITY_INCREMENTATION;
-        if (color.a <= MIN_OPACITY_TEXT_MENU && m_fading_text)
+        if (color.opacity > MIN_OPACITY_TEXT_MENU && m_fading_text)
+            m_text.colors.opacity -= OPACITY_INCREMENTATION;
+        if (color.opacity <= MIN_OPACITY_TEXT_MENU && m_fading_text)
             m_fading_text = false;
-        m_text.setFillColor(color);
     }
 }
 
@@ -95,4 +91,56 @@ void rclient::scenes::Menu::cut_scene_handling()
 
 void rclient::scenes::Menu::handle_network(ntw::Communication & /* commn */, State & /* state */)
 {
+}
+
+void rclient::scenes::Menu::button_handling(rtype::IGraphicModule &graphical_module)
+{
+    /*    rtype::Vector2D mouse_pos{graphical_module.get_class().is_mouse_button_pressed()};
+
+        if (mouse_pos.x == -1 && mouse_pos.y == -1)
+            return;
+        std::cout << mouse_pos.x << ' ' << mouse_pos.y << '\n';
+        if (m_left_box.contains(mouse_pos.x, mouse_pos.y)) {
+            m_select_host = true;
+            m_select_port = false;
+            std::cout << "left\n";
+        }
+        if (m_right_box.contains(mouse_pos.x, mouse_pos.y)) {
+            m_select_host = false;
+            m_select_port = true;
+            std::cout << "right\n";
+        }
+        */
+}
+
+void rclient::scenes::Menu::key_handling(rtype::IGraphicModule &graphical_module)
+{
+    /*
+    char tmp{'\0'};
+
+    for (size_t i{0}; i < rtype::KEY_MAP.size(); i++) {
+        if (graphical_module.get_class().is_input_pressed(rtype::KEY_MAP[i].key))
+            tmp = rtype::KEY_MAP[i].chr;
+    }
+    if (m_clock.get_elapsed_time_in_ms() < 200)
+        return;
+    m_clock.reset();
+    if (m_select_host) {
+        std::cout << m_host_str << '\n';
+        if (tmp == 127 && !m_host_str.empty())
+            m_host_str.erase(m_host_str.end() - 1);
+        if (tmp == '\n')
+            m_select_host = false;
+        if ((tmp >= 48 && tmp <= 57) || tmp == '.')
+            m_host_str.push_back(tmp);
+    }
+    if (m_select_port) {
+        if (tmp == 127 && !m_port_str.empty())
+            m_port_str.erase(m_host_str.end() - 1);
+        if (tmp == '\n')
+            m_select_host = false;
+        if ((tmp >= 48 && tmp <= 57) || tmp == '.')
+            m_port_str.push_back(tmp);
+    }
+    */
 }

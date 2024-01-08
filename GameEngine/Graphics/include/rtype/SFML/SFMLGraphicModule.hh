@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "rtype/Components/TextComponent.hh"
 #include <SFML/Graphics.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
@@ -51,9 +52,11 @@ namespace rtype
             void update() final;
             void draw_components(SparseArray<SpriteComponent> &sprites,
                                  SparseArray<TransformComponent> &transforms) final;
-            void draw(SpriteComponent &sprite, rtype::TransformComponent transform) final;
-            void draw(sf::Sprite &sprite, rtype::TransformComponent transform) final;
-            void draw(sf::Text &text, rtype::TransformComponent transform) final;
+            void draw_components(SparseArray<TextComponent> &text,
+                                 SparseArray<TransformComponent> &transforms) final;
+            void draw(SpriteComponent &sprite_component, TransformComponent &transform) final;
+            void draw(TextComponent &text_component, TransformComponent &transform) final;
+            float get_text_width(TextComponent &text) final;
             void display() final;
             void close_window() final;
             void clear() final;
