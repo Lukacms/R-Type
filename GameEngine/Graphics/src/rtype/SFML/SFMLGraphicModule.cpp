@@ -2,6 +2,7 @@
 // Created by kane on 14/12/23.
 //
 
+#include <iostream>
 #include <rtype/SFML/SFMLGraphicModule.hh>
 
 rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int height,
@@ -94,4 +95,11 @@ void rtype::SFMLGraphicModule::draw(sf::Sprite &sprite_component,
     sprite_component.setPosition(transform.position_x, transform.position_y);
     sprite_component.setScale(transform.scale_x, transform.scale_y);
     m_window.draw(sprite_component);
+}
+
+void rtype::SFMLGraphicModule::draw(sf::Text &text, rtype::TransformComponent transform)
+{
+    text.setPosition(transform.position_x, transform.position_y);
+    text.setScale(transform.scale_x, transform.scale_y);
+    m_window.draw(text);
 }

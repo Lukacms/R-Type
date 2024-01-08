@@ -110,18 +110,23 @@ void rclient::Client::setup_network()
         ntw::Communication commn{};
         asio::ip::udp::endpoint sender{};
 
-        while (RUNNING) {
+        while (RUNNING && this->state != scenes::State::End) {
             try {
                 this->socket.receive_from(asio::buffer(&commn, sizeof(commn)), sender);
                 if (sender.port() > 0) {
-                    switch (this->state) { // NOLINT
+                    switch (this->state) {
                         case scenes::State::Game:
                             this->game.handle_network(commn, this->state);
                             break;
                         case scenes::State::Lounge:
                             this->lounge.handle_network(commn, this->state);
                             break;
-                        default:
+                        case scenes::State::Pause:
+                            this->game.handle_network(commn, this->state);
+                            break;
+                        case scenes::State::Menu:
+                            break;
+                        case scenes::State::End:
                             break;
                     }
                 }

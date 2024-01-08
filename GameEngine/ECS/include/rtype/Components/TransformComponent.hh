@@ -15,7 +15,7 @@ namespace rtype
             float position_y{0};
             float velocity_x{0};
             float velocity_y{0};
-            float scale_x{0};
-            float scale_y{0};
+            float scale_x{1};
+            float scale_y{1};
     };
 } // namespace rtype

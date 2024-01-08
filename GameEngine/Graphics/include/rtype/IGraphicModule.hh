@@ -30,6 +30,7 @@ namespace rtype
             virtual void draw(rtype::SpriteComponent &sprite,
                               rtype::TransformComponent transform) = 0;
             virtual void draw(sf::Sprite &sprite, rtype::TransformComponent transform) = 0;
+            virtual void draw(sf::Text &text, rtype::TransformComponent transform) = 0;
             virtual void display() = 0;
             virtual void close_window() = 0;
             virtual void clear() = 0;

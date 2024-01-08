@@ -36,13 +36,14 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
         if (i == 1)
             m_sprite.setOrigin(LOGO_ORIGIN_X, 0);
         m_texture.loadFromFile(m_paths[i]);
-        m_sprite.setPosition(m_transforms[i].position_x, m_transforms[i].position_y);
         m_sprite.setTexture(m_texture);
-        graphics.draw(m_sprite, {});
+        graphics.draw(m_sprite, m_transforms[i]);
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    // graphics.draw(m_text, {});
+    graphics.draw(m_text,
+                  {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
+                   .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
     graphics.display();
 }
 

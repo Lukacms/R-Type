@@ -84,7 +84,7 @@ void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics, State
         this->timer_shoot.reset();
     }
     if (graphics.is_input_pressed(rtype::Keys::ESCAPE))
-        state = State::Menu;
+        state = State::Pause;
 }
 
 void rclient::scenes::Game::handle_network(ntw::Communication &commn, State &state)

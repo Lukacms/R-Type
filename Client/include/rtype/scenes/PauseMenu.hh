@@ -15,6 +15,9 @@
 
 namespace rclient::scenes
 {
+    constexpr int TEXT_BASE{150};
+    constexpr int MUTE_BASE{100};
+    constexpr int UNMUTE_BASE{50};
 
     class PauseMenu : public IScene
     {
