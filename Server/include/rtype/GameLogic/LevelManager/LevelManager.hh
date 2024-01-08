@@ -4,29 +4,31 @@
 
 #pragma once
 
+#include <rtype/ECSManager.hpp>
 #include <rtype/utils/Clock.hh>
 #include <vector>
-#include <rtype/ECSManager.hpp>
 
-namespace rserver {
+namespace rserver
+{
 
     constexpr std::string_view LEVEL_FOLDER{"./Server/level/"};
     constexpr std::string_view ERROR_LEVEL{"R-Type : Enable to load the following level : "};
 
     struct Wave {
-        double time;
-        bool is_done{false};
-        std::vector<std::string> enemies;
+            double time;
+            bool is_done{false};
+            std::vector<std::string> enemies;
     };
 
     struct Level {
-        std::string title;
-        std::string background;
-        std::string music;
-        std::vector<Wave> waves;
+            std::string title;
+            std::string background;
+            std::string music;
+            std::vector<Wave> waves;
     };
 
-    class LevelManager {
+    class LevelManager
+    {
         public:
             LevelManager();
             LevelManager(LevelManager const &to_copy) = delete;
@@ -44,4 +46,4 @@ namespace rserver {
             rtype::utils::Clock m_level_clock;
             std::vector<Level> m_levels;
     };
-}
+} // namespace rserver

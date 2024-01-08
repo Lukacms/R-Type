@@ -2,12 +2,12 @@
 // Created by kane on 08/01/24.
 //
 
-#include <rtype/GameLogic/LevelManager/LevelManager.hh>
 #include <filesystem>
 #include <fstream>
-#include <nlohmann/json.hpp>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <rtype/Factory/ServerEntityFactory.hh>
+#include <rtype/GameLogic/LevelManager/LevelManager.hh>
 
 rserver::LevelManager::LevelManager()
 {
@@ -15,7 +15,8 @@ rserver::LevelManager::LevelManager()
         if (!path.is_regular_file())
             continue;
         if (path.path().extension() != ".json") {
-            std::cerr << ERROR_LEVEL.data() << path.path().string() << "Not a JSON File" << std::endl;
+            std::cerr << ERROR_LEVEL.data() << path.path().string() << "Not a JSON File"
+                      << std::endl;
             continue;
         }
         std::ifstream level_file(path.path().string());
@@ -50,7 +51,7 @@ void rserver::LevelManager::manage_wave(rserver::Level &level, rtype::ECSManager
     for (auto &wave : level.waves) {
         if (m_level_clock.get_elapsed_time_in_ms() < wave.time || wave.is_done)
             continue;
-        for (auto &enemy: wave.enemies) {
+        for (auto &enemy : wave.enemies) {
             std::size_t entity = rserver::ServerEntityFactory::create(enemy, ecs_manager);
             auto &transform = ecs_manager.get_component<rtype::TransformComponent>(entity);
             transform.position_y = std::rand() % 580;

@@ -12,12 +12,12 @@
 
 #include <asio.hpp>
 #include <rtype/ECSManager.hpp>
+#include <rtype/GameLogic/LevelManager/LevelManager.hh>
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/utils/Clock.hh>
 #include <shared_mutex>
 #include <vector>
-#include <rtype/GameLogic/LevelManager/LevelManager.hh>
 
 namespace rserver::game
 {
