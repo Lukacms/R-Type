@@ -63,7 +63,7 @@ rclient::Client::~Client()
 
 rclient::Client::Client(rclient::Client &&to_move)
     : resolver{std::move(to_move.resolver)}, socket{std::move(to_move.socket)},
-      game{std::move(to_move.game)}, threads{std::move(to_move.threads)},
+      game{to_move.endpoint, to_move.socket}, threads{std::move(to_move.threads)},
       host{std::move(to_move.host)}, port{std::move(to_move.port)}
 {
 }
@@ -75,7 +75,8 @@ void rclient::Client::send_message(const ntw::Communication &commn,
                                    const asio::ip::udp::endpoint &endpoint,
                                    asio::ip::udp::socket &socket)
 {
-    socket.send_to(asio::buffer(&commn, sizeof(commn)), endpoint);
+    if (socket.is_open())
+        socket.send_to(asio::buffer(&commn, sizeof(commn)), endpoint);
 }
 
 int rclient::Client::launch(const Arguments &infos)
@@ -92,7 +93,6 @@ int rclient::Client::launch(const Arguments &infos)
  */
 void rclient::Client::setup_network()
 {
-    std::cout << "oui\n";
     this->state = scenes::State::Game;
     this->endpoint = *this->resolver.resolve(asio::ip::udp::v4(), this->host, this->port).begin();
     this->socket.open(asio::ip::udp::v4());
@@ -106,7 +106,16 @@ void rclient::Client::setup_network()
             try {
                 this->socket.receive_from(asio::buffer(&commn, sizeof(commn)), sender);
                 if (sender.port() > 0) {
-                    // TODO handle messages
+                    switch (this->state) { // NOLINT
+                        case scenes::State::Game:
+                            this->game.handle_network(commn, this->state);
+                            break;
+                        case scenes::State::Lounge:
+                            this->lounge.handle_network(commn, this->state);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             } catch (std::exception & /* e */) {
             }
@@ -118,7 +127,8 @@ void rclient::Client::loop()
 {
     rtype::utils::Clock clock{};
 
-    while (RUNNING) {
+    while (RUNNING && this->state != scenes::State::End) {
+        this->graphics.get_class().update();
         if (clock.get_elapsed_time_in_ms() > GAME_TIMEOUT) {
             this->launch_displays();
             clock.reset();
@@ -129,41 +139,46 @@ void rclient::Client::loop()
 
 void rclient::Client::launch_displays()
 {
-    switch (this->state) {
-        case scenes::State::Menu:
-            return this->menu.display(this->graphics.get_class());
-        case scenes::State::Lounge:
-            return this->lounge.display(this->graphics.get_class());
-        case scenes::State::Game:
-            return this->game.display(this->graphics.get_class());
-        case scenes::State::Pause:
-            return this->pause.display(this->graphics.get_class());
+    {
+        std::unique_lock<std::shared_mutex> lock{this->scenes};
+        switch (this->state) {
+            case scenes::State::Menu:
+                return this->menu.display(this->graphics.get_class());
+            case scenes::State::Lounge:
+                return this->lounge.display(this->graphics.get_class());
+            case scenes::State::Game:
+                return this->game.display(this->graphics.get_class());
+            case scenes::State::Pause:
+                return this->pause.display(this->graphics.get_class());
+            case scenes::State::End:
+                return;
+        }
     }
 }
 
 void rclient::Client::check_events()
 {
-    sf::Event event{};
 
-    while (this->graphics.get_class().poll_event(event)) {
-        if (this->state == scenes::State::Menu && event.key.code == sf::Keyboard::Enter) {
-            this->setup_network();
-        }
-        if (this->graphics.get_class().is_input_pressed(sf::Keyboard::Q))
-            RUNNING = 0;
-        switch (this->state) {
-            case scenes::State::Menu:
-                this->menu.handle_events(this->graphics.get_class(), event, this->state);
-                break;
-            case scenes::State::Lounge:
-                this->lounge.handle_events(this->graphics.get_class(), event, this->state);
-                break;
-            case scenes::State::Game:
-                this->game.handle_events(this->graphics.get_class(), event, this->state);
-                break;
-            case scenes::State::Pause:
-                this->pause.handle_events(this->graphics.get_class(), event, this->state);
-                break;
-        }
+    if (this->state == scenes::State::Menu &&
+        this->graphics.get_class().is_input_pressed(sf::Keyboard::Enter)) {
+        this->setup_network();
+    }
+    if (this->graphics.get_class().is_input_pressed(sf::Keyboard::Q))
+        RUNNING = 0;
+    switch (this->state) {
+        case scenes::State::Menu:
+            this->menu.handle_events(this->graphics.get_class(), this->state);
+            break;
+        case scenes::State::Lounge:
+            this->lounge.handle_events(this->graphics.get_class(), this->state);
+            break;
+        case scenes::State::Game:
+            this->game.handle_events(this->graphics.get_class(), this->state);
+            break;
+        case scenes::State::Pause:
+            this->pause.handle_events(this->graphics.get_class(), this->state);
+            break;
+        case scenes::State::End:
+            return;
     }
 }

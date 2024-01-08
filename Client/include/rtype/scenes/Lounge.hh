@@ -30,10 +30,10 @@ namespace rclient::scenes
             Lounge &operator=(Lounge const &to_copy);
             Lounge &operator=(Lounge &&to_move);
 
-            void handle_events(rtype::GraphicModule &graphics, sf::Event &events,
-                               State &state) override;
+            void handle_events(rtype::GraphicModule &graphics, State &state) override;
             void display(rtype::GraphicModule &graphics) override;
             void add_room(unsigned int r_id);
+            void handle_network(ntw::Communication &commn, State &state) override;
 
         private:
             /* variables */

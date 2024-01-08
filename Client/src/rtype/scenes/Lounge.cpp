@@ -24,7 +24,10 @@ void rclient::scenes::Lounge::display(rtype::GraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::Lounge::handle_events(rtype::GraphicModule &graphics, sf::Event &events,
-                                            State &state)
+void rclient::scenes::Lounge::handle_events(rtype::GraphicModule &graphics, State &state)
+{
+}
+
+void rclient::scenes::Lounge::handle_network(ntw::Communication &commn, State &state)
 {
 }

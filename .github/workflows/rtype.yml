@@ -219,6 +219,8 @@ jobs:
   generate_doc:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: check_status_repos
     steps:
     - uses: actions/setup-node@v1

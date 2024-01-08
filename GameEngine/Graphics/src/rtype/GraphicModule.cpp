@@ -77,8 +77,3 @@ void rtype::GraphicModule::close()
 {
     m_window.close();
 }
-
-bool rtype::GraphicModule::poll_event(sf::Event &event)
-{
-    return m_window.pollEvent(event);
-}

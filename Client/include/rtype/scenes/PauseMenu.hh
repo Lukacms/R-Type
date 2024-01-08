@@ -29,8 +29,8 @@ namespace rclient::scenes
 
             void launch(dl::DlLoader<rtype::GraphicModule> &graphical_module);
             void display(rtype::GraphicModule &graphical_module) override;
-            void handle_events(rtype::GraphicModule &graphics, sf::Event &events,
-                               State &state) override;
+            void handle_events(rtype::GraphicModule &graphics, State &state) override;
+            void handle_network(ntw::Communication &commn, State &state) override;
 
         private:
             bool m_changing_scene{false};

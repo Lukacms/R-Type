@@ -46,8 +46,7 @@ void rclient::scenes::Menu::display(rtype::GraphicModule &graphical_module)
     graphical_module.display();
 }
 
-void rclient::scenes::Menu::handle_events(rtype::GraphicModule &graphics, sf::Event & /* events */,
-                                          State &state)
+void rclient::scenes::Menu::handle_events(rtype::GraphicModule &graphics, State &state)
 {
     if (graphics.is_input_pressed(sf::Keyboard::Enter))
         state = State::Lounge;
@@ -90,5 +89,9 @@ void rclient::scenes::Menu::animate() // NOLINT
 }
 
 void rclient::scenes::Menu::cut_scene_handling()
+{
+}
+
+void rclient::scenes::Menu::handle_network(ntw::Communication & /* commn */, State & /* state */)
 {
 }

@@ -66,6 +66,7 @@ namespace rclient
             scenes::Lounge lounge{};
             scenes::PauseMenu pause{};
             scenes::Game game;
+            std::shared_mutex scenes;
 
             /* utils for network */
             ThreadPool threads{};

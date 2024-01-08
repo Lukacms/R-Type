@@ -5,12 +5,24 @@
 ** Game
 */
 
+#include "rtype/Factory/ClientEntityFactory.hh"
+#include <iostream>
+#include <rtype.hh>
 #include <rtype/Client.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/network/Network.hpp>
 #include <rtype/scenes/Game.hh>
+#include <shared_mutex>
+#include <vector>
+
+static const std::vector<rclient::scenes::CommandHandler> HANDLER{
+    {ntw::NetworkType::Entity, &rclient::scenes::Game::manage_entity},
+    {ntw::NetworkType::Destruction, &rclient::scenes::Game::delete_entity},
+    {ntw::NetworkType::Position, &rclient::scenes::Game::move_entity},
+    {ntw::NetworkType::End, &rclient::scenes::Game::end_game},
+};
 
 rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::socket &psocket)
     : endpoint{pendpoint}, socket{psocket}
@@ -37,41 +49,97 @@ void rclient::scenes::Game::display(rtype::GraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::Game::handle_events(rtype::GraphicModule &graphics, sf::Event & /* events */,
-                                          State &state)
+void rclient::scenes::Game::handle_events(rtype::GraphicModule &graphics, State &state)
 {
     if (graphics.is_input_pressed(sf::Keyboard::Up)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(0);
-        // Client::send_message(commn);
+        Client::send_message(to_send, this->endpoint, this->socket);
     }
     if (graphics.is_input_pressed(sf::Keyboard::Right)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(1);
-        // Client::send_message(commn);
+        Client::send_message(to_send, this->endpoint, this->socket);
     }
     if (graphics.is_input_pressed(sf::Keyboard::Down)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(2);
-        // Client::send_message(commn);
+        Client::send_message(to_send, this->endpoint, this->socket);
     }
     if (graphics.is_input_pressed(sf::Keyboard::Left)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(3);
-        // Client::send_message(commn);
+        Client::send_message(to_send, this->endpoint, this->socket);
     }
     if (graphics.is_input_pressed(sf::Keyboard::W) &&
         this->timer_shoot.get_elapsed_time_in_ms() > BULLET_TIMEOUT) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(4);
-        // Client::send_message(commn);
+        Client::send_message(to_send, this->endpoint, this->socket);
         this->timer_shoot.reset();
     }
     if (graphics.is_input_pressed(sf::Keyboard::Escape))
         state = State::Menu;
+}
+
+void rclient::scenes::Game::handle_network(ntw::Communication &commn, State &state)
+{
+    for (const auto &handler : HANDLER) {
+        if (handler.type == commn.type)
+            return handler.handler(*this, commn, state);
+    }
+}
+
+/* network functions */
+void rclient::scenes::Game::delete_entity(ntw::Communication &commn, State & /* state */)
+{
+    {
+        // std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
+        std::vector<std::string> arguments = commn.deserialize();
+
+        this->ecs.get_class().delete_entity(static_cast<size_t>(std::stoi(arguments[0])));
+    }
+}
+
+void rclient::scenes::Game::manage_entity(ntw::Communication &commn, State &state)
+{
+    std::vector<std::string> arguments = commn.deserialize();
+
+    {
+        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+        if (!this->ecs.get_class().is_entity_used(std::stoul(arguments[0])))
+            this->create_entity(commn, state);
+        this->move_entity(commn, state);
+    }
+    DEBUG(("New X: %s, New Y: %s%s", arguments[2].c_str(), arguments[3].c_str(), ENDL));
+}
+
+void rclient::scenes::Game::create_entity(ntw::Communication &commn, State & /* state */)
+{
+    {
+        std::vector<std::string> arguments = commn.deserialize();
+
+        rclient::ClientEntityFactory::create(static_cast<size_t>(std::stoi(arguments[0])),
+                                             arguments[1], this->ecs.get_class());
+    }
+}
+
+void rclient::scenes::Game::move_entity(ntw::Communication &commn, State & /* state */)
+{
+    std::vector<std::string> arguments = commn.deserialize();
+    auto &transform = this->ecs.get_class().get_component<rtype::TransformComponent>(
+        static_cast<size_t>(std::stoi(arguments[0])));
+
+    transform.position_x = std::stof(arguments[2]);
+    transform.position_y = std::stof(arguments[3]);
+}
+
+void rclient::scenes::Game::end_game(ntw::Communication & /* commn */, State &state) // NOLINT
+{
+    state = State::End;
 }

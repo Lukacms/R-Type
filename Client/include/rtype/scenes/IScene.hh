@@ -9,6 +9,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include <rtype/GraphicModule.hh>
+#include <rtype/network/Network.hpp>
 
 namespace rclient::scenes
 {
@@ -35,6 +36,7 @@ namespace rclient::scenes
         Lounge,
         Game,
         Pause,
+        End,
     };
 
     class IScene
@@ -48,8 +50,8 @@ namespace rclient::scenes
             IScene &operator=(IScene &&to_move) = default;
 
             virtual void display(rtype::GraphicModule &graphics) = 0;
-            virtual void handle_events(rtype::GraphicModule &graphics, sf::Event &events,
-                                       State &state) = 0;
+            virtual void handle_events(rtype::GraphicModule &graphics, State &state) = 0;
+            virtual void handle_network(ntw::Communication &commn, State &state) = 0;
     };
 
 } // namespace rclient::scenes

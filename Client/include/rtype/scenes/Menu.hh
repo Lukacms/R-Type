@@ -26,8 +26,8 @@ namespace rclient::scenes
             Menu &operator=(Menu &&to_move) = delete;
 
             void display(rtype::GraphicModule &graphical_module) override;
-            void handle_events(rtype::GraphicModule &graphics, sf::Event &events,
-                               State &state) override;
+            void handle_events(rtype::GraphicModule &graphics, State &state) override;
+            void handle_network(ntw::Communication &commn, State &state) override;
 
         private:
             bool m_descending_logo{false};

@@ -105,9 +105,13 @@ void rclient::scenes::PauseMenu::display(rtype::GraphicModule &graphical_module)
     graphical_module.display();
 }
 
-void rclient::scenes::PauseMenu::handle_events(rtype::GraphicModule &graphics,
-                                               sf::Event & /* events */, State &state)
+void rclient::scenes::PauseMenu::handle_events(rtype::GraphicModule &graphics, State &state)
 {
     if (graphics.is_input_pressed(sf::Keyboard::Enter))
         state = State::Game;
+}
+
+void rclient::scenes::PauseMenu::handle_network(ntw::Communication & /* commn */,
+                                                State & /* state */)
+{
 }

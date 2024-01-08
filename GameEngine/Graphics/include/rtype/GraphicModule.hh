@@ -39,7 +39,6 @@ namespace rtype
             void close_window();
             void clear();
             void close();
-            [[nodiscard]] bool poll_event(sf::Event &event);
             [[nodiscard]] bool is_input_pressed(sf::Keyboard::Key key);
             [[nodiscard]] bool is_window_open();
 
