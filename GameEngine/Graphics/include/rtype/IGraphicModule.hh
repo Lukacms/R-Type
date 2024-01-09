@@ -34,6 +34,8 @@ namespace rtype
             virtual void draw(rtype::SpriteComponent &sprite,
                               rtype::TransformComponent &transform) = 0;
             virtual float get_text_width(rtype::TextComponent &text) = 0;
+            virtual bool is_sprite_left_click(rtype::SpriteComponent &sprite,
+                                              TransformComponent &transform) = 0;
             virtual void display() = 0;
             virtual void close_window() = 0;
             virtual void clear() = 0;

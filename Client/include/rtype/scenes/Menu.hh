@@ -9,6 +9,8 @@
 
 #include "rtype/Components/SpriteComponent.hh"
 #include "rtype/Components/TextComponent.hh"
+#include "rtype/Components/TransformComponent.hh"
+#include "rtype/utils/Clock.hh"
 #include <chrono>
 #include <functional>
 #include <rtype/SFML/SFMLGraphicModule.hh>
@@ -35,14 +37,16 @@ namespace rclient::scenes
         private:
             bool m_descending_logo{false};
             bool m_fading_text{false};
+            bool m_left_selected{false};
+            bool m_right_selected{false};
             unsigned int m_width{};
             unsigned int m_height{};
 
-            std::chrono::time_point<std::chrono::steady_clock> m_timer_menu;
+            rtype::utils::Clock m_inputs_clock{};
             std::array<std::chrono::time_point<std::chrono::steady_clock>, 3> m_clocks{};
             std::array<rtype::TransformComponent, 5> m_transforms{};
             std::array<rtype::SpriteComponent, 3> m_sprites{};
-            rtype::TextComponent m_text{};
+            std::array<rtype::TextComponent, 3> m_texts{};
 
             void animate();
             void cut_scene_handling();

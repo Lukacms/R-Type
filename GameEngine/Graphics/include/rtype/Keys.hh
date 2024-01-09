@@ -15,5 +15,17 @@ namespace rtype
         Q,
         ESCAPE,
         ENTER,
+        ZERO,
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+        SEVEN,
+        EIGHT,
+        NINE,
+        DOT,
+        DELETE
     };
 }

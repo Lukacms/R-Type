@@ -2,10 +2,14 @@
 // Created by kane on 14/12/23.
 //
 
-#include "rtype/Components/TextComponent.hh"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Window/Mouse.hpp>
+#include <algorithm>
+#include <rtype/Components/TextComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/SFML/SFMLGraphicModule.hh>
 
 rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int height,
@@ -150,4 +154,29 @@ float rtype::SFMLGraphicModule::get_text_width(rtype::TextComponent &text_compon
     text.setString(text_component.text);
     text.setCharacterSize(text_component.font_size);
     return text.getGlobalBounds().width;
+}
+
+bool rtype::SFMLGraphicModule::is_sprite_left_click(rtype::SpriteComponent &sprite,
+                                                    rtype::TransformComponent &transform)
+{
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        return false;
+
+    auto mouse_pos{sf::Mouse::getPosition(m_window)};
+    sf::Sprite tmp_sprite{};
+    sf::Texture tmp_texture{};
+    sf::IntRect tmp_rect{};
+
+    tmp_texture.loadFromFile(sprite.texture_path);
+    tmp_sprite.setPosition(transform.position_x, transform.position_y);
+    tmp_sprite.setOrigin(sprite.origin.x, sprite.origin.y);
+    tmp_rect.width = sprite.rectangle.width;
+    tmp_rect.left = sprite.rectangle.x;
+    tmp_rect.top = sprite.rectangle.y;
+    tmp_rect.height = sprite.rectangle.height;
+    tmp_sprite.setTextureRect(tmp_rect);
+    tmp_sprite.setTexture(tmp_texture);
+    sf::FloatRect sprite_pos{tmp_sprite.getGlobalBounds()};
+
+    return sprite_pos.contains(mouse_pos.x, mouse_pos.y);
 }
