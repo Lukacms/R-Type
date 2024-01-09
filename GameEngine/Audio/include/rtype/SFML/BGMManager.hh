@@ -17,7 +17,7 @@
 namespace rtype
 {
 
-    constexpr std::string_view BGM_FILEPATH{"./config/BGM.json"};
+    constexpr std::string_view BGM_FILEPATH{"./assets/configs/BGM.json"};
     constexpr float BGM_STANDARD_VOLUME{25.F};
 
     struct BGM {

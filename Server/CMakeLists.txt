@@ -15,11 +15,11 @@ add_library(rtype-server-interface INTERFACE)
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD_REQUIRED ON)
 target_include_directories(rtype-server-interface INTERFACE
-        include
-        ../RType-Utils/include/
-        ../GameEngine/ECS/include
-        ../GameEngine/Physics/include
-        ${CMAKE_BINARY_DIR}/_deps/json-src/include/)
+    include
+    ../RType-Utils/include/
+    ../GameEngine/ECS/include
+    ../GameEngine/Physics/include
+)
 target_link_libraries(
     rtype-server-interface INTERFACE
     r-type-ecs
@@ -33,6 +33,7 @@ add_library(
     src/Manager.cpp
     src/utils.cpp
     src/config/ArgsParser.cpp
+    src/config/ConfigsFile.cpp
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
     src/clients/ThreadPool.cpp

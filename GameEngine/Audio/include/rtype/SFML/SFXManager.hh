@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "SFML/Audio.hpp"
+#include <SFML/Audio.hpp>
 #include <list>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -15,7 +15,7 @@
 namespace rtype
 {
 
-    constexpr std::string_view SFX_FILEPATH{"./config/SFX.json"};
+    constexpr std::string_view SFX_FILEPATH{"./assets/configs/SFX.json"};
 
     struct Buffer {
             std::string name;

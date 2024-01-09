@@ -10,12 +10,13 @@
 #include <rtype/Keys.hh>
 #include <rtype/SparseArray.hpp>
 #include <string>
+#include <string_view>
 
 namespace rtype
 {
-    const constexpr int STANDARD_WIDTH{800};
-    const constexpr int STANDARD_HEIGHT{600};
-    const constexpr char *STANDARD_TITLE{"R-TYPE"};
+    constexpr unsigned int STANDARD_WIDTH{800};
+    constexpr unsigned int STANDARD_HEIGHT{600};
+    constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
 
     class IGraphicModule
     {
