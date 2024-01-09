@@ -7,10 +7,12 @@
 
 #include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
+#include <rtype/Components/ClockComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/utils.hpp>
+#include <rtype/GameLogic/GameLogic.hh>
 #include <sstream>
 #include <string>
 
@@ -82,12 +84,17 @@ void rserver::init_ecs(rtype::ECSManager &to_load)
     rtype::SparseArray<rtype::BoxColliderComponent> boxes{};
     rtype::SparseArray<rtype::TagComponent> tags{};
     rtype::SparseArray<rtype::HealthComponent> healths{};
+    rtype::SparseArray<rtype::ClockComponent> clocks{};
     std::function<void(rtype::ComponentManager &, float)> transform_system{
         &rtype::transform_system};
+    std::function<void(rtype::ComponentManager &, float)> kamikaze_system{
+        &game::kamikaze_system};
 
     to_load.register_component(transform);
     to_load.register_component(boxes);
     to_load.register_component(tags);
     to_load.register_component(healths);
+    to_load.register_component(clocks);
     to_load.add_system(transform_system);
+    to_load.add_system(kamikaze_system);
 }

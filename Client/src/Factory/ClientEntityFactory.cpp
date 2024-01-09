@@ -16,17 +16,19 @@
 size_t rclient::ClientEntityFactory::create(std::size_t entity, const std::string &type,
                                             rtype::ECSManager &ecs_manager)
 {
+    DEBUG(("NEW ENTITY : %s\n", type.c_str()));
     try {
         std::size_t new_entity = ecs_manager.create_entity(entity);
 
         if (type == "BasicEnemy") {
             return create_enemy(new_entity, ecs_manager);
         }
+        if (type == "KamikazeEnemy") {
+            DEBUG(("Kamikaze created in client\n"));
+            return create_kamikaze_enemy(new_entity, ecs_manager);
+        }
         if (type == "Player") {
             return create_player(new_entity, ecs_manager);
-        }
-        if (type == "OtherPlayer") {
-            return create_other_player(new_entity, ecs_manager);
         }
         if (type == "Bullet") {
             return create_bullet(new_entity, ecs_manager);
@@ -91,23 +93,41 @@ size_t rclient::ClientEntityFactory::create_player(std::size_t entity,
     }
 }
 
-size_t rclient::ClientEntityFactory::create_other_player(std::size_t entity,
-                                                         rtype::ECSManager &ecs_manager)
+size_t rclient::ClientEntityFactory::create_kamikaze_enemy(std::size_t entity,
+                                                           rtype::ECSManager &ecs_manager)
 {
     try {
         auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
         auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
         auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
         auto &sprite{ecs_manager.get_components<rtype::SpriteComponent>()};
-        auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
+        auto &animations{ecs_manager.get_components<rtype::AnimationComponent>()};
 
         health.insert_at(entity, BASIC_HEALTH);
         transform.insert_at(entity, rtype::TransformComponent{});
-        tag.insert_at(entity, rtype::TagComponent{"OtherPlayer"});
-        rtype::SpriteComponent tmp;
-        sprite[entity]->rectangle = TEXTURERECT_OTHER_PLAYER;
-        sprite.insert_at(entity, rtype::SpriteComponent{tmp});
-        collider.insert_at(entity, BASIC_COLLIDER);
+        tag.insert_at(entity, rtype::TagComponent{"KamikazeEnemy"});
+        sprite.insert_at(entity, rtype::SpriteComponent{});
+        animations.insert_at(entity, rtype::AnimationComponent{});
+        sprite[entity]->texture_path = "./assets/entities/KamikazeEnemy.png";
+        sprite[entity]->rectangle = {0, 0, 18, 18};
+        sprite[entity]->origin = {0, 0};
+        transform[entity]->scale_x = 2;
+        transform[entity]->scale_y = 2;
+        animations[entity]->current_animation = "Idle";
+        animations[entity]->animation_clips.push_back({.animation_name = "Idle",
+                                                       .is_loop = true,
+                                                       .time_after_change = 20,
+                                                       .texture_rects = {{0, 0, 18, 18},
+                                                                         {18, 0, 18, 18},
+                                                                         {18 * 2, 0, 18, 18},
+                                                                         {18 * 3, 0, 18, 18},
+                                                                         {18 * 4, 0, 18, 18},
+                                                                         {18 * 5, 0, 18, 18},
+                                                                         {18 * 6, 0, 18, 18},
+                                                                         {18 * 7, 0, 18, 18},
+                                                                         {18 * 8, 0, 18, 18},
+                                                                         {18 * 9, 0, 18, 18}}});
+        DEBUG(("SUCCESS\n"));
         return entity;
     } catch (rtype::ECSManager::ECSException &e) {
         throw FactoryException(e.what());

@@ -2,12 +2,13 @@
   "Title": "Level1",
   "Music": "Voyage1970",
   "Background": "Space",
+  "Timer": 20000,
   "Waves" : [
     {
       "Timer": 5000,
       "Enemies": [
-        "BasicEnemy",
-        "BasicEnemy",
+        "KamikazeEnemy",
+        "KamikazeEnemy",
         "BasicEnemy",
         "BasicEnemy"
       ]
@@ -15,10 +16,10 @@
     {
       "Timer": 10000,
       "Enemies": [
-        "BasicEnemy",
-        "BasicEnemy",
-        "BasicEnemy",
-        "BasicEnemy",
+        "KamikazeEnemy",
+        "KamikazeEnemy",
+        "KamikazeEnemy",
+        "KamikazeEnemy",
         "BasicEnemy",
         "BasicEnemy",
         "BasicEnemy"

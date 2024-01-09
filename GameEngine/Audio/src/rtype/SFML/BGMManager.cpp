@@ -2,8 +2,8 @@
 // Created by kane on 04/01/24.
 //
 
-#include "rtype/SFML/BGMManager.hh"
 #include <fstream>
+#include <rtype/SFML/BGMManager.hh>
 
 rtype::BGMManager::BGMManager()
 {
@@ -36,12 +36,15 @@ void rtype::BGMManager::set_volume(float volume)
 
 void rtype::BGMManager::play_music(const std::string &name)
 {
+    if (m_current_name == name)
+        return;
     for (auto &bgm : m_bgm) {
         if (bgm.name == name) {
             m_current_music.stop();
             if (!m_current_music.openFromFile(bgm.filepath))
                 return;
             m_current_music.play();
+            m_current_name = bgm.name;
         }
     }
 }

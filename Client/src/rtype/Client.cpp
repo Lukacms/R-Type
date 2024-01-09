@@ -33,7 +33,7 @@ rclient::Client::Client(const rclient::Arguments &infos)
       host{std::move(infos.hostname)}, port{std::move(infos.port)}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
-    this->graphics.init_class<std::unique_ptr<rtype::SFMLGraphicModule>(
+    this->graphics.init_class<std::unique_ptr<rtype::IGraphicModule>(
         unsigned int width, unsigned int height, const std::string &title)>(
         "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH, rtype::STANDARD_HEIGHT,
         STANDARD_TITLE.data());
@@ -116,13 +116,14 @@ void rclient::Client::setup_network()
                 if (sender.port() > 0) {
                     switch (this->state) {
                         case scenes::State::Game:
-                            this->game.handle_network(commn, this->state);
+                            this->game.handle_network(commn, this->audio.get_class(), this->state);
                             break;
                         case scenes::State::Lounge:
-                            this->lounge.handle_network(commn, this->state);
+                            this->lounge.handle_network(commn, this->audio.get_class(),
+                                                        this->state);
                             break;
                         case scenes::State::Pause:
-                            this->game.handle_network(commn, this->state);
+                            this->game.handle_network(commn, this->audio.get_class(), this->state);
                             break;
                         case scenes::State::Menu:
                             break;
@@ -181,16 +182,20 @@ void rclient::Client::check_events()
         RUNNING = 0;
     switch (this->state) {
         case scenes::State::Menu:
-            this->menu.handle_events(this->graphics.get_class(), this->state);
+            this->menu.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                     this->state);
             break;
         case scenes::State::Lounge:
-            this->lounge.handle_events(this->graphics.get_class(), this->state);
+            this->lounge.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                       this->state);
             break;
         case scenes::State::Game:
-            this->game.handle_events(this->graphics.get_class(), this->state);
+            this->game.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                     this->state);
             break;
         case scenes::State::Pause:
-            this->pause.handle_events(this->graphics.get_class(), this->state);
+            this->pause.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                      this->state);
             break;
         case scenes::State::End:
             return;

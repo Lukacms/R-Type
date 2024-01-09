@@ -20,9 +20,6 @@ namespace rtype
             rtype::Keys key;
     };
 
-    const constexpr int STANDARD_WIDTH{800};
-    const constexpr int STANDARD_HEIGHT{600};
-    const constexpr char *STANDARD_TITLE{"R-TYPE"};
     const constexpr std::array<SFMLKeyring, 8> KEYS_ARRAY{{
         {sf::Keyboard::Up, rtype::Keys::UP},
         {sf::Keyboard::Right, rtype::Keys::RIGHT},

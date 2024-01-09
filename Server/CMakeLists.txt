@@ -46,6 +46,7 @@ add_library(
     src/commands/end_handler.cpp
     src/commands/lobby_handler.cpp
     src/commands/room_handler.cpp
+    src/GameLogic/EnemySystems/KamikazeSystem.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
@@ -65,7 +66,7 @@ message("${BoldWhite}Finished loading rtype-server-core${ColourReset}")
 add_executable(
     r-type_server
     src/main.cpp
-    )
+)
 
 # link the libraries to executable
 target_link_libraries(
