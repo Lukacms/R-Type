@@ -13,6 +13,7 @@ namespace rtype
         LEFT,
         W,
         Q,
+        S,
         ESCAPE,
         ENTER,
         ZERO,

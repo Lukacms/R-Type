@@ -172,9 +172,10 @@ void rclient::Client::launch_displays()
 void rclient::Client::check_events()
 {
 
-    if (this->state == scenes::State::Menu &&
-        this->graphics.get_class().is_input_pressed(rtype::Keys::ENTER)) {
-        this->setup_network();
+    if (this->state == scenes::State::Menu) {
+        if (this->graphics.get_class().is_input_pressed(rtype::Keys::ENTER)) {
+            this->setup_network();
+        }
     }
     if (this->graphics.get_class().is_input_pressed(rtype::Keys::Q))
         RUNNING = 0;

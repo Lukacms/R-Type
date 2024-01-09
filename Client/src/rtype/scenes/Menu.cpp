@@ -31,14 +31,25 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_texts[2].font_path = "./assets/font.ttf";
     m_texts[2].font_size = 20;
 
+    m_texts[3].text="Press S to see the Scoreboard";
+    m_texts[3].colors = {0, 0, 0, 255};
+    m_texts[3].font_path = "./assets/font.ttf";
+    m_texts[3].font_size = PLAY_FONT_SIZE;
+
     m_sprites[0].texture_path = "./assets/SpaceBG.png";
     m_sprites[0].origin = {0, 0};
     m_sprites[1].texture_path = "./assets/Rtype-logo2.png";
     m_sprites[1].origin = {LOGO_ORIGIN_X, 0};
+
     m_sprites[2].texture_path = "./assets/button.png";
     m_sprites[2].origin = {100, 50};
     m_sprites[2].rectangle.width = 200;
     m_sprites[2].rectangle.height = 100;
+
+    m_sprites[3].texture_path = "./assets/High_score/full_score_window.png";
+    m_sprites[3].origin = {100, 50};
+    m_sprites[3].rectangle.width = 390;
+    m_sprites[3].rectangle.height = 450;
 
     m_transforms[0].scale_x = static_cast<float>(width) / MENU_BG_WIDTH;
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
@@ -54,6 +65,12 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
 
     m_transforms[4].position_x = static_cast<float>(m_width) / MIDLE_DIV;
     m_transforms[4].position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV;
+
+    m_transforms[5].position_x = m_transforms[4].position_x - 200.0F;
+    m_transforms[5].position_y = m_transforms[4].position_y + 100.0F;
+
+    m_transforms[6].position_x = m_transforms[1].position_x - 100.0F;
+    m_transforms[6].position_y = m_transforms[1].position_y + 100.0F;
 }
 
 void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
@@ -76,6 +93,8 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     tmp_transform_2.position_y -= 20;
     graphics.draw(m_texts[1], tmp_transform_1);
     graphics.draw(m_texts[2], tmp_transform_2);
+    graphics.draw(m_texts[3], m_transforms[5]);
+    graphics.draw(m_sprites[3], m_transforms[6]);
     graphics.display();
 }
 
@@ -83,6 +102,10 @@ void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics, State
 {
     if (graphics.is_input_pressed(rtype::Keys::ESCAPE))
         state = State::Lounge;
+    if (graphics.is_input_pressed(rtype::Keys::S)) {
+            std::cout << "PROUT" << std::endl;
+            graphics.MENU_PRESSED = true
+        }
 }
 
 void rclient::scenes::Menu::animate() // NOLINT
@@ -118,6 +141,17 @@ void rclient::scenes::Menu::animate() // NOLINT
             m_texts[0].colors.opacity -= OPACITY_INCREMENTATION;
         if (color.opacity <= MIN_OPACITY_TEXT_MENU && m_fading_text)
             m_fading_text = false;
+
+
+        if (color.opacity < MAX_OPACITY_TEXT_MENU && !m_fading_text)
+            m_texts[3].colors.opacity += OPACITY_INCREMENTATION;
+        if (color.opacity >= MAX_OPACITY_TEXT_MENU && !m_fading_text)
+            m_fading_text = true;
+        if (color.opacity > MIN_OPACITY_TEXT_MENU && m_fading_text)
+            m_texts[3].colors.opacity -= OPACITY_INCREMENTATION;
+        if (color.opacity <= MIN_OPACITY_TEXT_MENU && m_fading_text)
+            m_fading_text = false;
+
     }
 }
 
