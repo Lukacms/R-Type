@@ -1,38 +1,39 @@
 {
-    "Player": {
-        "texturePath": "./Client/assets/Spaceship.png",
-        "textureRect": {
-            "x": 0,
-            "y": 0,
-            "width": 33,
-            "height": 15
-        },
-        "health": {
-            "health": 100,
-            "maxHealth": 100
-        },
-        "collider": {
-            "width": 66,
-            "height": 30
-        },
-        "transform": {
-            "position": {
-                "x": 300,
-                "y": 400
-            },
-            "velocity": {
+    "entities": [
+        {
+            "tag": "Player",
+            "texturePath": "./Client/assets/Spaceship.png",
+            "textureRect": {
                 "x": 0,
-                "y": 0
+                "y": 0,
+                "width": 33,
+                "height": 15
             },
-            "scale": {
-                "x": 2,
-                "y": 2
+            "clock": false,
+            "health": {
+                "health": 100,
+                "maxHealth": 100
+            },
+            "collider": {
+                "width": 66,
+                "height": 30
+            },
+            "transform": {
+                "position": {
+                    "x": 300,
+                    "y": 400
+                },
+                "velocity": {
+                    "x": 0,
+                    "y": 0
+                },
+                "scale": {
+                    "x": 2,
+                    "y": 2
+                }
             }
         },
-        "tag": "Player"
-    },
-    "Enemies": {
-        "BasicEnemy": {
+        {
             "texturePath": "./Client/assets/BasicEnemy.png",
             "textureRect": {
                 "x": 0,
@@ -40,10 +41,7 @@
                 "width": 33,
                 "height": 15
             },
-            "health": {
-                "health": 100,
-                "maxHealth": 100
-            },
+            "clock": false,
             "collider": {
                 "width": 66,
                 "height": 30
@@ -64,36 +62,38 @@
             },
             "tag": "BasicEnemy"
         },
-        "Projectiles": {
-            "BasicBullet": {
-                "texturePath": "./Client/assets/PlayerShoot.png",
-                "textureRect": {
+        {
+            "texturePath": "./Client/assets/PlayerShoot.png",
+            "textureRect": {
+                "x": 0,
+                "y": 0,
+                "width": 33,
+                "height": 15
+            },
+            "clock": false,
+            "health": {
+                "health": 0,
+                "maxHealth": 0
+            },
+            "collider": {
+                "width": 31,
+                "height": 6
+            },
+            "transform": {
+                "position": {
                     "x": 0,
-                    "y": 0,
-                    "width": 33,
-                    "height": 15
+                    "y": 0
                 },
-                "health": 1,
-                "collider": {
-                    "width": 31,
-                    "height": 6
+                "velocity": {
+                    "x": 0,
+                    "y": 0
                 },
-                "transform": {
-                    "position": {
-                        "x": 0,
-                        "y": 0
-                    },
-                    "velocity": {
-                        "x": 0,
-                        "y": 0
-                    },
-                    "scale": {
-                        "x": 2,
-                        "y": 2
-                    }
-                },
-                "tag": "BasicBullet"
-            }
+                "scale": {
+                    "x": 2,
+                    "y": 2
+                }
+            },
+            "tag": "BasicBullet"
         }
-    }
+    ]
 }

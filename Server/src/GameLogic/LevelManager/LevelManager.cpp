@@ -5,7 +5,6 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp>
 #include <rtype.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
 #include <rtype/GameLogic/LevelManager/LevelManager.hh>
@@ -36,10 +35,13 @@ void rserver::LevelManager::manage_wave(config::Level &level, rtype::ECSManager 
         if (m_level_clock.get_elapsed_time_in_ms() < wave.time || wave.is_done)
             continue;
         for (auto &enemy : wave.enemies) {
-            std::size_t entity = rserver::ServerEntityFactory::create(enemy, ecs_manager);
-            auto &transform = ecs_manager.get_component<rtype::TransformComponent>(entity);
-            transform.position_y = std::rand() % WAVE_MODULO;
-            transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 3) / 10) - 0.3F;
+            try {
+                std::size_t entity = rserver::ServerEntityFactory::create_json(enemy, ecs_manager);
+                auto &transform = ecs_manager.get_component<rtype::TransformComponent>(entity);
+                transform.position_y = std::rand() % WAVE_MODULO;
+                transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 3) / 10) - 0.3F;
+            } catch (ServerEntityFactory::FactoryException & /* e */) {
+            }
         }
         wave.is_done = true;
     }

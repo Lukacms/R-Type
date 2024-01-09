@@ -19,7 +19,6 @@ namespace rserver::config
 {
     constexpr std::string_view ERROR_LEVEL{"R-Type : Unable to load the following level : "};
     constexpr std::string_view LEVEL_FOLDER{"./assets/configs/level/"};
-    constexpr std::string_view ENTITIES_PATH{"./assets/configs/entities.json"};
     constexpr std::string_view MUSIC_FOLDER{"./assets/BGM"};
     constexpr std::string_view MUSIC_EXT{".ogg"};
 

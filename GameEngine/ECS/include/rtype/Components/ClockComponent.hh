@@ -9,6 +9,8 @@
 namespace rtype
 {
     struct ClockComponent {
+        public:
+            /* variables */
             rtype::utils::Clock clock;
     };
 } // namespace rtype

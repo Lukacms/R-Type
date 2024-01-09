@@ -19,8 +19,8 @@
 namespace rclient
 {
 
-    constexpr rtype::HealthComponent BASIC_HEALTH{100, 100};
-    constexpr rtype::BoxColliderComponent BASIC_COLLIDER{66, 30};
+    static const rtype::HealthComponent BASIC_HEALTH{100, 100};
+    static const rtype::BoxColliderComponent BASIC_COLLIDER{66, 30};
     const rtype::utils::TextureRect TEXTURERECT_SHIP{0, 0, 33, 15};
     const rtype::utils::TextureRect TEXTURERECT_OTHER_PLAYER{0, 0, 32, 32};
     const sf::Vector2f ORIGIN_ENEMY{16.5, 7.5};

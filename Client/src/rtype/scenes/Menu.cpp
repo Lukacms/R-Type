@@ -42,9 +42,9 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    graphics.draw(m_text,
-                  {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                   .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+    graphics.draw(
+        m_text,
+        {static_cast<float>(m_width) / MIDLE_DIV, static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
     graphics.display();
 }
 

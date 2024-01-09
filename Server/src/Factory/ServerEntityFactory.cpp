@@ -5,11 +5,13 @@
 ** ServerEntityFactory
 */
 
-#include "rtype/ECSManager.hpp"
+#include "rtype.hh"
+#include <fstream>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/ClockComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
+#include <rtype/ECSManager.hpp>
 #include <rtype/Factory/ServerEntityFactory.hh>
 #include <shared_mutex>
 
@@ -36,12 +38,48 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
     throw FactoryException("Unknown entity type");
 }
 
-size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager)
+size_t rserver::ServerEntityFactory::create_json(const std::string &type,
+                                                 rtype::ECSManager &ecs_manager)
 {
-    size_t entity{ecs_manager.create_entity()};
+    std::ifstream file{ENTITIES_PATH.data()};
+    njson entities{};
     auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
     auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
     auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
+    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
+    auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
+
+    if (!file.is_open())
+        throw FactoryException("Couldn't find entities infos");
+    entities = njson::parse(file);
+    try {
+        for (auto &entity : entities["entities"]) {
+            if (entity["tag"] != type)
+                continue;
+            size_t e_id{ecs_manager.create_entity()};
+            tag.insert_at(e_id, rtype::TagComponent{type});
+            if (!entity["clock"].is_null() && entity["clock"] == true)
+                clocks.insert_at(e_id, {});
+            if (!entity["collider"].is_null())
+                collider.insert_at(e_id, entity["collider"]);
+            if (!entity["transform"].is_null())
+                transform.insert_at(e_id, entity["transform"]);
+            if (!entity["health"].is_null())
+                health.insert_at(e_id, entity["health"]);
+            return e_id;
+        }
+    } catch (nlohmann::json::exception &e) {
+        DEBUG(("%s%s", e.what(), ENDL));
+    }
+    throw FactoryException("Unknown entity type");
+}
+
+size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager)
+{
+    size_t entity{ecs_manager.create_entity()};
+    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
+    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
+    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
     auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
 
     health.insert_at(entity, BASIC_HEALTH);
@@ -76,7 +114,7 @@ size_t rserver::ServerEntityFactory::create_kamikaze_enemy(rtype::ECSManager &ec
     auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
 
     health.insert_at(entity, BASIC_HEALTH);
-    collider.insert_at(entity, {18, 18});
+    collider.insert_at(entity, KAMIKAZE_COLLIDER);
     tag.insert_at(entity, rtype::TagComponent{"KamikazeEnemy"});
     transform.insert_at(entity, TRANS_ENEMY);
     clocks.insert_at(entity, {});
@@ -108,7 +146,7 @@ size_t rserver::ServerEntityFactory::create_upgrade(rtype::ECSManager &ecs_manag
 
     collider.insert_at(entity, rtype::BoxColliderComponent{36, 36});
     tag.insert_at(entity, rtype::TagComponent{"Upgrade"});
-    transform.insert_at(entity, rtype::TransformComponent{0, 0, 0, 0});
+    transform.insert_at(entity, rtype::TransformComponent{0, 0, 0, 0, 1, 1});
     transform[entity]->velocity_x = -5;
     return entity;
 }
