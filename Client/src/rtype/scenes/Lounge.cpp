@@ -6,6 +6,7 @@
 */
 
 #include <algorithm>
+#include <iostream>
 #include <rtype/Client.hh>
 #include <rtype/scenes/Lounge.hh>
 #include <rtype/utils/Vector2D.hpp>
@@ -20,11 +21,11 @@ rclient::scenes::Lounge::Lounge(asio::ip::udp::socket &psocket, asio::ip::udp::e
                                 const unsigned int &pwidth, const unsigned int &pheight)
     : width{pwidth}, height{pheight}, endpoint{pendpoint}, socket{psocket}
 {
-    this->scrollable.setViewport({0.3F, 0.01F, 0.6F, 0.8F});
+    this->scrollable.setViewport({0.25F, 0.05F, 0.6F, 0.6F});
     this->transforms[0].scale_x = static_cast<float>(pwidth) / MENU_BG_WIDTH;
     this->transforms[0].scale_y = static_cast<float>(pheight) / MENU_BG_HEIGHT;
     this->transforms[1].scale_x = 3;
-    this->transforms[1].scale_y = 2;
+    this->transforms[1].scale_y = 3;
     this->font.loadFromFile(FONT_FILE.data());
     this->text.setFont(this->font);
     this->text.setString(NEW_ROOM.data());
@@ -37,7 +38,7 @@ rclient::scenes::Lounge::Lounge(asio::ip::udp::socket &psocket, asio::ip::udp::e
 void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
 {
     sf::View basic{graphics.get_view_port()};
-    rtype::utils::Vector2D<float> local{0, 0};
+    rtype::utils::Vector2D<float> local{0, 90};
     rtype::TransformComponent boxes{this->transforms[this->transforms.size() - 1]};
 
     graphics.clear();
@@ -48,13 +49,16 @@ void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
     }
     this->texture.loadFromFile(ROOM_CONTAINER.data());
     this->sprite.setTexture(this->texture);
-    this->sprite.setOrigin({10, 50});
     graphics.set_view_port(this->scrollable);
+    this->sprite.setOrigin(components::ORIGIN_BOX);
+    boxes.position_y = this->global_pos.y;
     for (auto &room : this->rooms) {
-        boxes.position_y += this->global_pos.y + local.y;
+        boxes.position_y += local.y;
         room.display(graphics, this->sprite, boxes);
-        local.y += this->sprite.getGlobalBounds().height + 10;
+        local.y = 200;
+        local.x = boxes.position_y + this->sprite.getGlobalBounds().height + local.y;
     }
+    this->end = local.x;
     graphics.set_view_port(basic);
     this->sprite.setOrigin({0, 0});
     this->text.setCharacterSize(PLAY_FONT_SIZE);
@@ -74,8 +78,25 @@ void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics, Sta
         if (this->box.contains(mouse.x, mouse.y)) {
             Client::send_message({ntw::NetworkType::Room}, this->endpoint, this->socket);
         }
+        for (auto &room : this->rooms) {
+            std::cout << room.get_box().top << "\n";
+            if (room.get_box().contains(mouse.x, mouse.y)) {
+                ntw::Communication commn{ntw::NetworkType::Room};
+                commn.add_param(room.get_id());
+                std::cout << "Connecting to : " << room.get_id() << "\n";
+                Client::send_message(commn, this->endpoint, this->socket);
+            }
+        }
         this->new_room.reset();
     }
+    if (graphics.is_input_pressed(rtype::Keys::UP) &&
+        this->end + this->global_pos.y > this->scrollable.getSize().y) {
+        this->global_pos.y -= 5;
+    }
+    if (graphics.is_input_pressed(rtype::Keys::DOWN) && this->global_pos.y < 0) {
+        this->global_pos.y += 5;
+    }
+    this->rooms.clear();
 }
 
 /* network functions */

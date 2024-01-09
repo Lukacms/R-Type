@@ -18,12 +18,12 @@ namespace rtype
             InputManager();
 
             void update();
-            bool is_key_pressed(sf::Keyboard::Key key) const;
-            bool is_mouse_button_pressed(sf::Mouse::Button button) const;
-            sf::Vector2i get_mouse_position(const sf::Window &window) const;
+            [[nodiscard]] bool is_key_pressed(sf::Keyboard::Key key) const;
+            [[nodiscard]] bool is_mouse_button_pressed(sf::Mouse::Button button) const;
+            [[nodiscard]] sf::Vector2i get_mouse_position(const sf::Window &window) const;
 
         private:
-            std::unordered_map<sf::Keyboard::Key, bool> keyMap{};
-            std::unordered_map<sf::Mouse::Button, bool> mouseButtonMap{};
+            std::unordered_map<sf::Keyboard::Key, bool> key_map{};
+            std::unordered_map<sf::Mouse::Button, bool> mouse_button_map{};
     };
 } // namespace rtype

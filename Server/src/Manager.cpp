@@ -56,6 +56,11 @@ rserver::Manager::Manager(asio::ip::port_type port)
     } catch (std::exception & /* e */) {
         DEBUG(("This instance will stay blocking, clean <CTRL-C> will not work.\n"));
     }
+    Player player{this->endpoint};
+    this->rooms.add_room(player, 8, this->udp_socket);
+    this->rooms.add_room(player, 8, this->udp_socket);
+    this->rooms.add_room(player, 8, this->udp_socket);
+    this->rooms.add_room(player, 8, this->udp_socket);
     init_ecs(this->ecs.get_class());
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
 }

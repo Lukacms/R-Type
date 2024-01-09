@@ -62,7 +62,7 @@ rclient::Client::Client(const rclient::Arguments &infos)
 rclient::Client::~Client()
 {
     RUNNING = 0;
-    Client::send_message({}, this->endpoint, this->socket);
+    Client::send_message({ntw::NetworkType::End}, this->endpoint, this->socket);
     if (this->graphics.get_class().is_window_open()) {
         this->graphics.get_class().close_window();
     }

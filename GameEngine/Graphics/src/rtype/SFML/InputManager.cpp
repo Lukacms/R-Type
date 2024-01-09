@@ -12,22 +12,22 @@ rtype::InputManager::InputManager() = default;
 void rtype::InputManager::update()
 {
     for (int key = sf::Keyboard::Key::A; key != sf::Keyboard::KeyCount; ++key) {
-        keyMap[static_cast<sf::Keyboard::Key>(key)] =
+        key_map[static_cast<sf::Keyboard::Key>(key)] =
             sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(key));
     }
 
     for (int button{static_cast<int>(sf::Mouse::Button::Left)}; button != sf::Mouse::ButtonCount;
          ++button) {
-        mouseButtonMap[static_cast<sf::Mouse::Button>(button)] =
+        mouse_button_map[static_cast<sf::Mouse::Button>(button)] =
             sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(button));
     }
 }
 
 bool rtype::InputManager::is_key_pressed(sf::Keyboard::Key key) const
 {
-    auto input{keyMap.find(key)};
+    auto input{key_map.find(key)};
 
-    if (input != keyMap.end()) {
+    if (input != key_map.end()) {
         return input->second;
     }
     return false;
@@ -35,9 +35,9 @@ bool rtype::InputManager::is_key_pressed(sf::Keyboard::Key key) const
 
 bool rtype::InputManager::is_mouse_button_pressed(sf::Mouse::Button button) const
 {
-    auto input{mouseButtonMap.find(button)};
+    auto input{mouse_button_map.find(button)};
 
-    if (input != mouseButtonMap.end()) {
+    if (input != mouse_button_map.end()) {
         return input->second;
     }
     return false;

@@ -5,6 +5,7 @@
 ** Room
 */
 
+#include <iostream>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/components/Room.hh>
 #include <string>
@@ -18,24 +19,25 @@ rclient::components::RoomInfos::RoomInfos(const unsigned int &pid, sf::Font &fon
 }
 
 /* methods */
-void rclient::components::RoomInfos::display(rtype::IGraphicModule &graphics, sf::Sprite &box,
+void rclient::components::RoomInfos::display(rtype::IGraphicModule &graphics, sf::Sprite &sprite,
                                              rtype::TransformComponent &trans)
 {
     auto pos_y{trans.position_y};
     auto pos_x{trans.position_x};
 
-    graphics.draw(box, trans);
+    graphics.draw(sprite, trans);
+    this->box = sprite.getGlobalBounds();
     this->text.setString(this->title);
-    this->text.setCharacterSize(20);
-    trans.position_y -= TRANS_POS;
-    trans.position_x += TRANS_POS + 20;
+    this->text.setCharacterSize(INFOS_SUBTITLE);
+    trans.position_y -= POS1;
+    trans.position_x += POS2;
     graphics.draw(this->text, trans);
-    trans.position_x += TRANS_POS * 9;
+    trans.position_x += POS3;
     this->text.setString(std::to_string(this->nb_players) + " / 4");
     graphics.draw(this->text, trans);
-    this->text.setCharacterSize(30);
-    trans.position_x -= TRANS_POS * 5;
-    trans.position_y += TRANS_POS / 2;
+    this->text.setCharacterSize(INFOS_TITLE);
+    trans.position_x -= POS4;
+    trans.position_y += POS5;
     this->text.setString(this->statuses[this->status]);
     graphics.draw(this->text, trans);
     trans.position_y = pos_y;
@@ -65,4 +67,9 @@ unsigned short rclient::components::RoomInfos::get_status() const
 unsigned int rclient::components::RoomInfos::get_nb_players() const
 {
     return this->nb_players;
+}
+
+sf::FloatRect rclient::components::RoomInfos::get_box() const
+{
+    return this->box;
 }

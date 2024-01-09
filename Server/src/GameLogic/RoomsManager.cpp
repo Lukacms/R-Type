@@ -45,10 +45,10 @@ void rserver::game::RoomsManager::add_room(rserver::Player &first_player,
 {
     if (this->rooms.size() >= (nb_threads - 2))
         throw Room::RoomException("No room available.");
-    auto &new_room{this->rooms.emplace_back(socket, this->manager, this->last_id)};
+    this->rooms.emplace_back(socket, this->manager, this->last_id);
     this->last_id++;
     try {
-        new_room.add_player(first_player);
+        this->rooms.back().add_player(first_player);
     } catch (Room::RoomException &e) {
         throw e;
     }
