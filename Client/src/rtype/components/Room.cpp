@@ -26,14 +26,16 @@ void rclient::components::RoomInfos::display(rtype::IGraphicModule &graphics, sf
 
     graphics.draw(box, trans);
     this->text.setString(this->title);
-    this->text.setCharacterSize(15);
+    this->text.setCharacterSize(20);
+    trans.position_y -= TRANS_POS;
+    trans.position_x += TRANS_POS + 20;
     graphics.draw(this->text, trans);
-    trans.position_x += TRANS_POS + 60;
-    trans.position_y += 20;
+    trans.position_x += TRANS_POS * 9;
     this->text.setString(std::to_string(this->nb_players) + " / 4");
     graphics.draw(this->text, trans);
-    trans.position_x -= TRANS_POS;
-    trans.position_y += TRANS_POS;
+    this->text.setCharacterSize(30);
+    trans.position_x -= TRANS_POS * 5;
+    trans.position_y += TRANS_POS / 2;
     this->text.setString(this->statuses[this->status]);
     graphics.draw(this->text, trans);
     trans.position_y = pos_y;

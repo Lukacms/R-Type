@@ -32,6 +32,8 @@ namespace rtype
                               rtype::TransformComponent transform) = 0;
             virtual void draw(sf::Sprite &sprite, rtype::TransformComponent transform) = 0;
             virtual void draw(sf::Text &text, rtype::TransformComponent transform) = 0;
+            virtual void set_view_port(sf::View &) = 0;
+            [[nodiscard]] virtual sf::View get_view_port() = 0;
             virtual void display() = 0;
             virtual void close_window() = 0;
             virtual void clear() = 0;

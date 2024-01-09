@@ -112,3 +112,13 @@ rtype::utils::Vector2D<float> rtype::SFMLGraphicModule::is_left_mouse_pressed()
     }
     return {-1, -1};
 }
+
+void rtype::SFMLGraphicModule::set_view_port(sf::View &view)
+{
+    m_window.setView(view);
+}
+
+sf::View rtype::SFMLGraphicModule::get_view_port()
+{
+    return m_window.getView();
+}

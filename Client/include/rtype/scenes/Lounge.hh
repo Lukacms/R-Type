@@ -67,7 +67,7 @@ namespace rclient::scenes
             /* scrollable */
             sf::View scrollable{};
             float end{};
-            rtype::utils::Vector2D<float> global_pos{};
+            rtype::utils::Vector2D<float> global_pos{0, 0};
             std::vector<components::RoomInfos> rooms{};
 
             /* network */

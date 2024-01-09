@@ -55,6 +55,8 @@ namespace rtype
             void draw(SpriteComponent &sprite, rtype::TransformComponent transform) final;
             void draw(sf::Sprite &sprite, rtype::TransformComponent transform) final;
             void draw(sf::Text &text, rtype::TransformComponent transform) final;
+            void set_view_port(sf::View &view) final;
+            [[nodiscard]] sf::View get_view_port() final;
             void display() final;
             void close_window() final;
             void clear() final;

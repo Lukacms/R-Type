@@ -20,11 +20,10 @@ rclient::scenes::Lounge::Lounge(asio::ip::udp::socket &psocket, asio::ip::udp::e
                                 const unsigned int &pwidth, const unsigned int &pheight)
     : width{pwidth}, height{pheight}, endpoint{pendpoint}, socket{psocket}
 {
+    this->scrollable.setViewport({0.3F, 0.01F, 0.6F, 0.8F});
     this->transforms[0].scale_x = static_cast<float>(pwidth) / MENU_BG_WIDTH;
     this->transforms[0].scale_y = static_cast<float>(pheight) / MENU_BG_HEIGHT;
-    this->transforms[1].position_x = static_cast<float>(pwidth) / 2 - 50;
-    this->transforms[1].position_y = TEXT_POS_LOUNGE;
-    this->transforms[1].scale_x = 2;
+    this->transforms[1].scale_x = 3;
     this->transforms[1].scale_y = 2;
     this->font.loadFromFile(FONT_FILE.data());
     this->text.setFont(this->font);
@@ -37,6 +36,10 @@ rclient::scenes::Lounge::Lounge(asio::ip::udp::socket &psocket, asio::ip::udp::e
 /* methods */
 void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
 {
+    sf::View basic{graphics.get_view_port()};
+    rtype::utils::Vector2D<float> local{0, 0};
+    rtype::TransformComponent boxes{this->transforms[this->transforms.size() - 1]};
+
     graphics.clear();
     for (unsigned int i{0}; i < this->paths.size(); i++) {
         this->texture.loadFromFile(this->paths[i]);
@@ -45,11 +48,15 @@ void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
     }
     this->texture.loadFromFile(ROOM_CONTAINER.data());
     this->sprite.setTexture(this->texture);
+    this->sprite.setOrigin({10, 50});
+    graphics.set_view_port(this->scrollable);
     for (auto &room : this->rooms) {
-        room.display(graphics, this->sprite, this->transforms[this->transforms.size() - 1]);
-        this->transforms[this->transforms.size() - 1].position_y +=
-            this->sprite.getGlobalBounds().height + 10;
+        boxes.position_y += this->global_pos.y + local.y;
+        room.display(graphics, this->sprite, boxes);
+        local.y += this->sprite.getGlobalBounds().height + 10;
     }
+    graphics.set_view_port(basic);
+    this->sprite.setOrigin({0, 0});
     this->text.setCharacterSize(PLAY_FONT_SIZE);
     graphics.draw(this->text,
                   {.position_x = this->width / MIDLE_DIV,
