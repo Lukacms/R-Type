@@ -24,10 +24,12 @@ void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics, State &state)
+void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics,
+                                            rtype::IAudioModule & /*audio*/, State &state)
 {
 }
 
-void rclient::scenes::Lounge::handle_network(ntw::Communication &commn, State &state)
+void rclient::scenes::Lounge::handle_network(ntw::Communication &commn,
+                                             rtype::IAudioModule & /*audio*/, State &state)
 {
 }

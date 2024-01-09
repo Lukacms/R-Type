@@ -10,7 +10,6 @@
 
 namespace rserver
 {
-
     constexpr std::string_view LEVEL_FOLDER{"./Server/level/"};
     constexpr std::string_view ERROR_LEVEL{"R-Type : Enable to load the following level : "};
 
@@ -24,6 +23,7 @@ namespace rserver
             std::string title;
             std::string background;
             std::string music;
+            double time;
             std::vector<Wave> waves;
     };
 
@@ -40,6 +40,9 @@ namespace rserver
             void update(rtype::ECSManager &ecs_manager);
             void manage_wave(Level &level, rtype::ECSManager &ecs_manager);
             bool has_enough_level();
+            bool is_level_finished();
+            void change_level();
+            std::string get_current_music();
 
         private:
             std::string m_current_level;

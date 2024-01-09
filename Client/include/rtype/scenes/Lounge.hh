@@ -9,7 +9,8 @@
 
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Window/Event.hpp>
-#include <rtype/SFML/SFMLGraphicModule.hh>
+#include <rtype/IAudioModule.hh>
+#include <rtype/IGraphicModule.hh>
 #include <rtype/components/Room.hh>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/utils/Clock.hh>
@@ -27,13 +28,15 @@ namespace rclient::scenes
             Lounge(Lounge const &to_copy) = default;
             Lounge(Lounge &&to_move) = default;
             ~Lounge() override = default;
-            Lounge &operator=(Lounge const &to_copy);
-            Lounge &operator=(Lounge &&to_move);
+            Lounge &operator=(Lounge const &to_copy) = default;
+            Lounge &operator=(Lounge &&to_move) = default;
 
             void display(rtype::IGraphicModule &graphics) override;
-            void handle_events(rtype::IGraphicModule &graphics, State &state) override;
             void add_room(unsigned int r_id);
-            void handle_network(ntw::Communication &commn, State &state) override;
+            void handle_events(rtype::IGraphicModule &graphics, rtype::IAudioModule &audio,
+                               State &state) override;
+            void handle_network(ntw::Communication &commn, rtype::IAudioModule &audio,
+                                State &state) override;
 
         private:
             /* variables */

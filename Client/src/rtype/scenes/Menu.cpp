@@ -48,7 +48,8 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics, State &state)
+void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics,
+                                          rtype::IAudioModule & /*audio*/, State &state)
 {
     if (graphics.is_input_pressed(rtype::Keys::ESCAPE))
         state = State::Lounge;
@@ -94,6 +95,7 @@ void rclient::scenes::Menu::cut_scene_handling()
 {
 }
 
-void rclient::scenes::Menu::handle_network(ntw::Communication & /* commn */, State & /* state */)
+void rclient::scenes::Menu::handle_network(ntw::Communication & /* commn */,
+                                           rtype::IAudioModule & /*audio*/, State & /* state */)
 {
 }

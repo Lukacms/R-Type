@@ -1,14 +1,14 @@
 {
-  "Title": "Level1",
-  "Music": "Voyage1970",
+  "Title": "Level2",
+  "Music": "BorderOfLife",
   "Background": "Space",
   "Timer": 20000,
   "Waves" : [
     {
       "Timer": 5000,
       "Enemies": [
-        "KamikazeEnemy",
-        "KamikazeEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
         "BasicEnemy",
         "BasicEnemy"
       ]
@@ -16,10 +16,10 @@
     {
       "Timer": 10000,
       "Enemies": [
-        "KamikazeEnemy",
-        "KamikazeEnemy",
-        "KamikazeEnemy",
-        "KamikazeEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
         "BasicEnemy",
         "BasicEnemy",
         "BasicEnemy"

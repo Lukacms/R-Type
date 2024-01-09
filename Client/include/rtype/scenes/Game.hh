@@ -29,8 +29,10 @@ namespace rclient::scenes
             Game &operator=(Game &&to_move) = delete;
 
             void display(rtype::IGraphicModule &graphics) override;
-            void handle_events(rtype::IGraphicModule &graphics, State &state) override;
-            void handle_network(ntw::Communication &commn, State &state) override;
+            void handle_events(rtype::IGraphicModule &graphics, rtype::IAudioModule &audio,
+                               State &state) override;
+            void handle_network(ntw::Communication &commn, rtype::IAudioModule &audio,
+                                State &state) override;
 
             /* network */
             void create_entity(ntw::Communication &commn, State &state);
@@ -38,6 +40,7 @@ namespace rclient::scenes
             void end_game(ntw::Communication &commn, State &state);
             void delete_entity(ntw::Communication &commn, State &state);
             void manage_entity(ntw::Communication &commn, State &state);
+            void change_music(ntw::Communication &commn, rtype::IAudioModule &audio);
 
         private:
             dl::DlLoader<rtype::ECSManager> ecs;

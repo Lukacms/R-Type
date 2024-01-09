@@ -13,6 +13,9 @@
 
 namespace rtype
 {
+    const constexpr int STANDARD_WIDTH{800};
+    const constexpr int STANDARD_HEIGHT{600};
+    const constexpr char *STANDARD_TITLE{"R-TYPE"};
 
     class IGraphicModule
     {

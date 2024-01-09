@@ -15,7 +15,7 @@
 namespace rtype
 {
 
-    constexpr std::string_view SFX_FILEPATH{"./Client/configs/SFX.json"};
+    constexpr std::string_view SFX_FILEPATH{"./config/SFX.json"};
 
     struct Buffer {
             std::string name;

@@ -25,6 +25,9 @@ namespace rserver::game
     const constexpr int MAX_POSITION_Y{700};
     const constexpr int MIN_POSITION{-200};
     constexpr double TIMER{10};
+    constexpr std::string_view STANDARD_MUSIC{"Voyage1970"};
+
+    void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */);
 
     class GameLogic
     {
@@ -41,6 +44,7 @@ namespace rserver::game
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
                            float delta_time);
             void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
+            void send_music(rserver::PlayersManager &players_manager, std::string music_name);
             void destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                           rtype::ECSManager &manager);
             void spawn_enemy(rtype::ECSManager &manager);

@@ -12,6 +12,7 @@
 #include <rtype/GameLogic/GameLogic.hh>
 #include <rtype/Manager.hh>
 #include <rtype/clients/PlayersManager.hh>
+#include <utility>
 
 rserver::game::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)
     : m_socket{socket}, m_ecs_mutex{ecs_mutex}
@@ -33,7 +34,15 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
     collision_responses(physics_manager, players_manager, manager);
     destroy_too_far_entities(players_manager, manager);
     send_entity(players_manager, manager);
-    spawn_enemy(manager);
+    if (!m_level_manager.has_enough_level()) {
+        spawn_enemy(manager);
+        send_music(players_manager, STANDARD_MUSIC.data());
+        return;
+    }
+    m_level_manager.update(manager);
+    send_music(players_manager, m_level_manager.get_current_music());
+    if (m_level_manager.is_level_finished())
+        m_level_manager.change_level();
 }
 
 void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
@@ -174,4 +183,14 @@ void rserver::game::GameLogic::spawn_upgrade(std::size_t entity_to_follow,
         std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
         transforms[entity] = {transforms[entity_to_follow]};
     }
+}
+
+void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manager,
+                                          std::string music_name)
+{
+    if (music_name.empty())
+        return;
+    ntw::Communication music_descriptor{ntw::NetworkType::Music, {}};
+    music_descriptor.add_param(music_name);
+    Manager::send_to_all(music_descriptor, players_manager, m_socket);
 }

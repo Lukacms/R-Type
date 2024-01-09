@@ -79,13 +79,15 @@ void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics, State &state)
+void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics,
+                                               rtype::IAudioModule & /*audio*/, State &state)
 {
     if (graphics.is_input_pressed(rtype::Keys::ENTER))
         state = State::Game;
 }
 
 void rclient::scenes::PauseMenu::handle_network(ntw::Communication & /* commn */,
+                                                rtype::IAudioModule & /*audio*/,
                                                 State & /* state */)
 {
 }
