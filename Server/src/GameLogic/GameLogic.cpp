@@ -33,7 +33,7 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
     collision_responses(physics_manager, players_manager, manager);
     destroy_too_far_entities(players_manager, manager);
     send_entity(players_manager, manager);
-    m_level_manager.has_enough_level() ? m_level_manager.update(manager) : spawn_enemy(manager);
+    spawn_enemy(manager);
 }
 
 void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,

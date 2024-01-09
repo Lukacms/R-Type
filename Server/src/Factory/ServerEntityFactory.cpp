@@ -5,6 +5,7 @@
 ** ServerEntityFactory
 */
 
+#include "rtype/ECSManager.hpp"
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
