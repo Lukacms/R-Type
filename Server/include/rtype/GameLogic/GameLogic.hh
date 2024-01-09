@@ -12,6 +12,7 @@
 
 #include <asio.hpp>
 #include <rtype/ECSManager.hpp>
+#include <rtype/GameLogic/LevelManager/LevelManager.hh>
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/utils/Clock.hh>
@@ -61,6 +62,7 @@ namespace rserver::game
             asio::ip::udp::socket &m_socket;
             std::shared_mutex &m_ecs_mutex;
             rtype::utils::Clock m_enemy_clock{};
+            rserver::LevelManager m_level_manager{};
             rtype::utils::Clock m_clock{};
     };
 } // namespace rserver::game

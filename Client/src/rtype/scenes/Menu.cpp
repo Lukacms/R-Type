@@ -30,6 +30,7 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
 void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
+    animate();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)
             m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
