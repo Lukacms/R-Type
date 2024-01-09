@@ -47,6 +47,7 @@ add_library(
     src/commands/lobby_handler.cpp
     src/commands/room_handler.cpp
     src/GameLogic/EnemySystems/KamikazeSystem.cpp
+    src/GameLogic/EnemySystems/UFOSystem.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)

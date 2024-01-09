@@ -62,5 +62,6 @@ namespace rclient
             static size_t create_kamikaze_enemy(std::size_t entity, rtype::ECSManager &ecs_manager);
             static size_t create_bullet(std::size_t entity, rtype::ECSManager &ecs_manager);
             static size_t create_upgrade(std::size_t entity, rtype::ECSManager &ecs_manager);
+            static size_t create_UFO_enemy(std::size_t entity, rtype::ECSManager &ecs_manager);
     };
 } // namespace rclient

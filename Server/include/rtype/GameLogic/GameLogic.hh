@@ -28,6 +28,7 @@ namespace rserver::game
     constexpr std::string_view STANDARD_MUSIC{"Voyage1970"};
 
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */);
+    void UFO_system(rtype::ComponentManager &registry, float /* delta_time */);
 
     class GameLogic
     {

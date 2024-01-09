@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <mutex>
+#include <nlohmann/json.hpp>
 #include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
@@ -19,7 +20,6 @@
 #include <rtype/Manager.hh>
 #include <rtype/SparseArray.hpp>
 #include <rtype/network/Network.hpp>
-#include <nlohmann/json.hpp>
 #include <rtype/utils/Clock.hh>
 
 /**

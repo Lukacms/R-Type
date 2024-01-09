@@ -2,12 +2,12 @@
 // Created by kane on 09/01/24.
 //
 
+#include <algorithm>
+#include <cmath>
 #include <rtype/ComponentManager.hpp>
 #include <rtype/Components/ClockComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
-#include <cmath>
-#include <algorithm>
 
 namespace rserver::game
 {
@@ -24,20 +24,25 @@ namespace rserver::game
                 players.emplace_back(transforms[entity].value());
         }
         auto lambda = [&](rtype::TransformComponent &p1, rtype::TransformComponent &p2) -> bool {
-            return std::sqrt(std::pow(p1.position_x - transforms[enemy_entity]->position_x, 2) + std::pow(p1.position_y - transforms[enemy_entity]->position_y, 2)) <
-                std::sqrt(std::pow(p2.position_x - transforms[enemy_entity]->position_x, 2) + std::pow(p2.position_y - transforms[enemy_entity]->position_y, 2));
+            return std::sqrt(std::pow(p1.position_x - transforms[enemy_entity]->position_x, 2) +
+                             std::pow(p1.position_y - transforms[enemy_entity]->position_y, 2)) <
+                std::sqrt(std::pow(p2.position_x - transforms[enemy_entity]->position_x, 2) +
+                          std::pow(p2.position_y - transforms[enemy_entity]->position_y, 2));
         };
         std::sort(players.begin(), players.end(), lambda);
         if (players.empty()) {
             transforms[enemy_entity]->velocity_x = std::rand() % 5 + 2 / 10;
             transforms[enemy_entity]->velocity_y = std::rand() % 5 + 2 / 10;
+            return;
         }
         auto focused_player = players[0];
         auto magnitude = static_cast<float>(std::sqrt(
             std::pow(focused_player.position_x - transforms[enemy_entity]->position_x, 2) +
             std::pow(focused_player.position_y - transforms[enemy_entity]->position_y, 2)));
-        transforms[enemy_entity]->velocity_x = (focused_player.position_x - transforms[enemy_entity]->position_x) / magnitude;
-        transforms[enemy_entity]->velocity_y = (focused_player.position_y - transforms[enemy_entity]->position_y) / magnitude;
+        transforms[enemy_entity]->velocity_x =
+            (focused_player.position_x - transforms[enemy_entity]->position_x) / magnitude;
+        transforms[enemy_entity]->velocity_y =
+            (focused_player.position_y - transforms[enemy_entity]->position_y) / magnitude;
     }
 
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */)
@@ -62,4 +67,4 @@ namespace rserver::game
             }
         }
     }
-} // namespace rserver::systems
+} // namespace rserver::game

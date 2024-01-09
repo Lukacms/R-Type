@@ -34,7 +34,6 @@ namespace rserver
     constexpr std::string_view PHYSICS_SL_PATH{"./libs/r-type-physics.so"};
     constexpr std::string_view ENTITIES_FILE{"./config/entities.json"};
 
-
     /* exceptions */
     constexpr std::string_view DEFAULT_ERROR{"Error"};
     constexpr std::string_view WRONG_ARGUMENTS{"Error while analyzing the arguments."};

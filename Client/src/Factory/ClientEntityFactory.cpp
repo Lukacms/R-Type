@@ -24,8 +24,10 @@ size_t rclient::ClientEntityFactory::create(std::size_t entity, const std::strin
             return create_enemy(new_entity, ecs_manager);
         }
         if (type == "KamikazeEnemy") {
-            DEBUG(("Kamikaze created in client\n"));
             return create_kamikaze_enemy(new_entity, ecs_manager);
+        }
+        if (type == "UFOEnemy") {
+            return create_UFO_enemy(new_entity, ecs_manager);
         }
         if (type == "Player") {
             return create_player(new_entity, ecs_manager);
@@ -192,6 +194,52 @@ size_t rclient::ClientEntityFactory::create_upgrade(std::size_t entity,
                                                                          {153, 0, 17, 17},
                                                                          {170, 0, 17, 17},
                                                                          {187, 0, 17, 17}}});
+        return entity;
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw FactoryException(e.what());
+    }
+}
+
+size_t rclient::ClientEntityFactory::create_UFO_enemy(std::size_t entity,
+                                                      rtype::ECSManager &ecs_manager)
+{
+    try {
+        auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
+        auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
+        auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
+        auto &sprite{ecs_manager.get_components<rtype::SpriteComponent>()};
+        auto &animations{ecs_manager.get_components<rtype::AnimationComponent>()};
+
+        health.insert_at(entity, BASIC_HEALTH);
+        transform.insert_at(entity, rtype::TransformComponent{});
+        tag.insert_at(entity, rtype::TagComponent{"SnakeEnemy"});
+        sprite.insert_at(entity, rtype::SpriteComponent{});
+        animations.insert_at(entity, rtype::AnimationComponent{});
+        sprite[entity]->texture_path = "./assets/entities/SnakeEnemy.png";
+        sprite[entity]->rectangle = {0, 0, 32, 32};
+        sprite[entity]->origin = {0, 0};
+        transform[entity]->scale_x = 2;
+        transform[entity]->scale_y = 2;
+        animations[entity]->current_animation = "Idle";
+        animations[entity]->animation_clips.push_back({.animation_name = "Idle",
+                                                       .is_loop = true,
+                                                       .time_after_change = 20,
+                                                       .texture_rects = {{0, 0, 32, 32},
+                                                                         {32, 0, 32, 32},
+                                                                         {32 * 2, 0, 32, 32},
+                                                                         {32 * 3, 0, 32, 32},
+                                                                         {32 * 4, 0, 32, 32},
+                                                                         {32 * 5, 0, 32, 32},
+                                                                         {32 * 6, 0, 32, 32},
+                                                                         {32 * 7, 0, 32, 32},
+                                                                         {32 * 8, 0, 32, 32},
+                                                                         {32 * 9, 0, 32, 32},
+                                                                         {32 * 10, 0, 32, 32},
+                                                                         {32 * 11, 0, 32, 32},
+                                                                         {32 * 12, 0, 32, 32},
+                                                                         {32 * 13, 0, 32, 32},
+                                                                         {32 * 14, 0, 32, 32},
+                                                                         {32 * 15, 0, 32, 32}}});
         return entity;
     } catch (rtype::ECSManager::ECSException &e) {
         throw FactoryException(e.what());

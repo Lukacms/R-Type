@@ -56,7 +56,8 @@ void rserver::LevelManager::manage_wave(rserver::Level &level, rtype::ECSManager
             std::size_t entity = rserver::ServerEntityFactory::create(enemy, ecs_manager);
             auto &transform = ecs_manager.get_component<rtype::TransformComponent>(entity);
             transform.position_y = std::rand() % 580;
-            transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 3) / 10) - 0.3F;
+            if (enemy == "BasicEnemy")
+                transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 3) / 10) - 0.3F;
         }
         wave.is_done = true;
     }

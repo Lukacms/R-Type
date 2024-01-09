@@ -21,6 +21,7 @@ namespace rserver
     constexpr rtype::BoxColliderComponent COLLIDER_BULLET{33, 15};
     constexpr rtype::TransformComponent TRANS_PLAYER{300, 400, 0, 0, 2, 2};
     constexpr rtype::TransformComponent TRANS_ENEMY{850, 300, -0.1F, 0, 2, 2};
+    constexpr rtype::TransformComponent TRANS_UFO{850, 300, -0.1F, 0, 2, 2};
     constexpr rtype::TransformComponent TRANS_BULLET{0, 0, 0, 0, 2, 2};
 
     class ServerEntityFactory
@@ -56,7 +57,7 @@ namespace rserver
             static size_t create_enemy(rtype::ECSManager &ecs_manager);
             static size_t create_player(rtype::ECSManager &ecs_manager);
             static size_t create_kamikaze_enemy(rtype::ECSManager &ecs_manager);
-            static size_t create_snake_enemy(rtype::ECSManager &ecs_manager);
+            static size_t create_UFO_enemy(rtype::ECSManager &ecs_manager);
             static size_t create_bullet(rtype::ECSManager &ecs_manager);
             static size_t create_upgrade(rtype::ECSManager &ecs_manager);
     };

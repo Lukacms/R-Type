@@ -7,19 +7,18 @@
     {
       "Timer": 5000,
       "Enemies": [
+        "UFOEnemy",
         "KamikazeEnemy",
-        "KamikazeEnemy",
-        "BasicEnemy",
         "BasicEnemy"
       ]
     },
     {
       "Timer": 10000,
       "Enemies": [
+        "UFOEnemy",
         "KamikazeEnemy",
         "KamikazeEnemy",
-        "KamikazeEnemy",
-        "KamikazeEnemy",
+        "UFOEnemy",
         "BasicEnemy",
         "BasicEnemy",
         "BasicEnemy"

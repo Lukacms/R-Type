@@ -11,7 +11,6 @@
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
-#include <shared_mutex>
 
 size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSManager &ecs_manager)
 {
@@ -21,8 +20,8 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
     if (type == "KamikazeEnemy") {
         return create_kamikaze_enemy(ecs_manager);
     }
-    if (type == "SnakeEnemy") {
-        return create_snake_enemy(ecs_manager);
+    if (type == "UFOEnemy") {
+        return create_UFO_enemy(ecs_manager);
     }
     if (type == "Player") {
         return create_player(ecs_manager);
@@ -113,7 +112,7 @@ size_t rserver::ServerEntityFactory::create_upgrade(rtype::ECSManager &ecs_manag
     return entity;
 }
 
-size_t rserver::ServerEntityFactory::create_snake_enemy(rtype::ECSManager &ecs_manager)
+size_t rserver::ServerEntityFactory::create_UFO_enemy(rtype::ECSManager &ecs_manager)
 {
     size_t entity{ecs_manager.create_entity()};
     auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
@@ -123,9 +122,9 @@ size_t rserver::ServerEntityFactory::create_snake_enemy(rtype::ECSManager &ecs_m
     auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
 
     health.insert_at(entity, BASIC_HEALTH);
-    collider.insert_at(entity, {32, 32});
-    tag.insert_at(entity, rtype::TagComponent{"SnakeEnemy"});
-    transform.insert_at(entity, TRANS_ENEMY);
+    collider.insert_at(entity, {64, 64});
+    tag.insert_at(entity, rtype::TagComponent{"UFOEnemy"});
+    transform.insert_at(entity, TRANS_UFO);
     clocks.insert_at(entity, {});
     return entity;
 }
