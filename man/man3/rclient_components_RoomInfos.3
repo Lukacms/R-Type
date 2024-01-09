@@ -1,4 +1,4 @@
-.TH "rclient::components::RoomInfos" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.TH "rclient::components::RoomInfos" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ rclient::components::RoomInfos
 .RI "\fBRoomInfos\fP & \fBoperator=\fP (\fBRoomInfos\fP &&to_move)=default"
 .br
 .ti -1c
-.RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics, sf::Sprite &box, \fBrtype::TransformComponent\fP &trans)"
+.RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics, sf::Sprite &sprite, \fBrtype::TransformComponent\fP &trans)"
 .br
 .ti -1c
 .RI "void \fBset_nb_players\fP (const unsigned int &new_players)"
@@ -41,6 +41,9 @@ rclient::components::RoomInfos
 .br
 .ti -1c
 .RI "unsigned int \fBget_nb_players\fP () const"
+.br
+.ti -1c
+.RI "sf::FloatRect \fBget_box\fP () const"
 .br
 .in -1c
 

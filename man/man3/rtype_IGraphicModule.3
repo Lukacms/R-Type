@@ -1,4 +1,4 @@
-.TH "rtype::IGraphicModule" 3 "Mon Jan 8 2024" "My Project" \" -*- nroff -*-
+.TH "rtype::IGraphicModule" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -37,6 +37,12 @@ Inherited by \fBrtype::SFMLGraphicModule\fP\&.
 .br
 .ti -1c
 .RI "virtual void \fBdraw\fP (sf::Text &text, \fBrtype::TransformComponent\fP transform)=0"
+.br
+.ti -1c
+.RI "virtual void \fBset_view_port\fP (sf::View &)=0"
+.br
+.ti -1c
+.RI "virtual sf::View \fBget_view_port\fP ()=0"
 .br
 .ti -1c
 .RI "virtual void \fBdisplay\fP ()=0"
