@@ -6,11 +6,11 @@
 */
 
 #include <rtype/Components/BoxColliderComponent.hh>
+#include <rtype/Components/ClockComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
 #include <shared_mutex>
-#include <rtype/Components/ClockComponent.hh>
 
 size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSManager &ecs_manager)
 {
