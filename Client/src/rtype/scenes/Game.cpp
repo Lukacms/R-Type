@@ -5,7 +5,9 @@
 ** Game
 */
 
+#include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <rtype.hh>
 #include <rtype/Client.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
@@ -49,8 +51,50 @@ void rclient::scenes::Game::display(rtype::IGraphicModule &graphics)
     graphics.display();
 }
 
+void write_score_to_leaderboard(int new_score, std::string new_name)
+{
+    std::ifstream file("./scoreboards/score1.json");
+    nlohmann::json j;
+    file >> j;
+    std::string tmp;
+    if (j["1"]["name"] == new_name) {
+        if (j["1"][new_name]["score"] < new_score) {
+            j["1"] = {{"name", new_name}, {"score", new_score}};
+            std::ofstream updated_file("./scoreboards/score1.json");
+            updated_file << j;
+            return;
+        }
+    } else if (j["2"]["name"] == new_name) {
+        if (j["2"][new_name]["score"] < new_score) {
+            j["2"] = {{"name", new_name}, {"score", new_score}};
+            std::ofstream updated_file("./scoreboards/score1.json");
+            updated_file << j;
+            return;
+        }
+    } else if (j["3"]["name"] == new_name) {
+        if (j["3"][new_name]["score"] < new_score) {
+            j["3"] = {{"name", new_name}, {"score", new_score}};
+            std::ofstream updated_file("./scoreboards/score1.json");
+            updated_file << j;
+            return;
+        }
+    } else {
+        int i = 0;
+        for (auto &it : j.items()) {
+            if (it.value()["score"] < new_score) {
+                j[std::to_string(i + 1)] = {{"name", new_name}, {"score", new_score}};
+                std::ofstream updated_file("./scoreboards/score1.json");
+                updated_file << j;
+                break;
+            }
+            i++;
+        }
+    }
+}
+
 void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics, State &state)
 {
+
     if (graphics.is_input_pressed(rtype::Keys::UP)) {
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
@@ -116,7 +160,7 @@ void rclient::scenes::Game::manage_entity(ntw::Communication &commn, State &stat
             this->create_entity(commn, state);
         this->move_entity(commn, state);
     }
-    DEBUG(("New X: %s, New Y: %s%s", arguments[2].c_str(), arguments[3].c_str(), ENDL));
+    // DEBUG(("New X: %s, New Y: %s%s", arguments[2].c_str(), arguments[3].c_str(), ENDL));
 }
 
 void rclient::scenes::Game::create_entity(ntw::Communication &commn, State & /* state */)
