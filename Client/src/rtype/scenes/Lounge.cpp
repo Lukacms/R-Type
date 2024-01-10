@@ -14,6 +14,7 @@
 static const std::vector<rclient::scenes::LoungeNtwHandler> LOUNGE_HANDLER{
     {ntw::NetworkType::Room, &rclient::scenes::Lounge::rooms_handler},
     {ntw::NetworkType::End, &rclient::scenes::Lounge::end_handler},
+    {ntw::NetworkType::ToGame, &rclient::scenes::Lounge::to_game_handler},
 };
 
 /* ctor / dtor */
@@ -61,13 +62,20 @@ void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
     this->end = local.x;
     graphics.set_view_port(basic);
     this->sprite.setOrigin({0, 0});
+    this->text.setString(NEW_ROOM.data());
     this->text.setCharacterSize(PLAY_FONT_SIZE);
     graphics.draw(this->text,
-                  {.position_x = this->width / MIDLE_DIV,
+                  {.position_x = this->width / MIDLE_DIV - TEXT_POS_LOUNGE * 2,
                    .position_y = static_cast<float>(this->height - TEXT_POS_LOUNGE)});
-    this->box = this->text.getGlobalBounds();
-    this->transforms[this->transforms.size() - 1].position_y = TEXT_POS_LOUNGE;
+    this->new_box = this->text.getGlobalBounds();
+    this->text.setString(JOIN_ROOM.data());
+    graphics.draw(this->text,
+                  {.position_x = this->width / MIDLE_DIV + TEXT_POS_LOUNGE * 2,
+                   .position_y = static_cast<float>(this->height - TEXT_POS_LOUNGE)});
+    this->join_box = this->text.getGlobalBounds();
+    this->transforms.back().position_y = TEXT_POS_LOUNGE;
     graphics.display();
+    this->rooms.clear();
 }
 
 void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics, State & /* state */)
@@ -75,28 +83,23 @@ void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics, Sta
     rtype::utils::Vector2D<float> mouse{graphics.is_left_mouse_pressed()};
 
     if (mouse.x > -1 && mouse.y > -1 && new_room.get_elapsed_time_in_ms() > ROOM_TIMEOUT) {
-        if (this->box.contains(mouse.x, mouse.y)) {
+        if (this->new_box.contains(mouse.x, mouse.y)) {
             Client::send_message({ntw::NetworkType::Room}, this->endpoint, this->socket);
         }
-        for (auto &room : this->rooms) {
-            std::cout << room.get_box().top << "\n";
-            if (room.get_box().contains(mouse.x, mouse.y)) {
-                ntw::Communication commn{ntw::NetworkType::Room};
-                commn.add_param(room.get_id());
-                std::cout << "Connecting to : " << room.get_id() << "\n";
-                Client::send_message(commn, this->endpoint, this->socket);
-            }
+        if (this->join_box.contains(mouse.x, mouse.y)) {
+            ntw::Communication commn{ntw::NetworkType::Room};
+            commn.add_param(-1);
+            Client::send_message(commn, this->endpoint, this->socket);
         }
         this->new_room.reset();
     }
     if (graphics.is_input_pressed(rtype::Keys::UP) &&
         this->end + this->global_pos.y > this->scrollable.getSize().y) {
-        this->global_pos.y -= 5;
+        this->global_pos.y -= CHANGE_SCROLL;
     }
     if (graphics.is_input_pressed(rtype::Keys::DOWN) && this->global_pos.y < 0) {
-        this->global_pos.y += 5;
+        this->global_pos.y += CHANGE_SCROLL;
     }
-    this->rooms.clear();
 }
 
 /* network functions */
@@ -135,4 +138,10 @@ void rclient::scenes::Lounge::end_handler(std::vector<std::string> & /* args */,
                                           State &state)
 {
     state = State::End;
+}
+
+void rclient::scenes::Lounge::to_game_handler(std::vector<std::string> & /* args */, // NOLINT
+                                              State &state)
+{
+    state = State::Game;
 }

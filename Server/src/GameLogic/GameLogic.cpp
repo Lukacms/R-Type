@@ -36,6 +36,16 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
     spawn_enemy(manager);
 }
 
+void rserver::game::GameLogic::game_waiting(rserver::PlayersManager &players_manager,
+                                            rtype::ECSManager &manager, float delta_time)
+{
+    m_entities = manager.get_used_entity();
+
+    destroy_too_far_entities(players_manager, manager);
+    send_entity(players_manager, manager);
+    manager.apply_system(delta_time);
+}
+
 void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
                                                    rserver::PlayersManager &players_manager,
                                                    rtype::ECSManager &manager)

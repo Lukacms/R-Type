@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <csignal>
+#include <iostream>
 #include <mutex>
 #include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
@@ -56,11 +57,6 @@ rserver::Manager::Manager(asio::ip::port_type port)
     } catch (std::exception & /* e */) {
         DEBUG(("This instance will stay blocking, clean <CTRL-C> will not work.\n"));
     }
-    Player player{this->endpoint};
-    this->rooms.add_room(player, 8, this->udp_socket);
-    this->rooms.add_room(player, 8, this->udp_socket);
-    this->rooms.add_room(player, 8, this->udp_socket);
-    this->rooms.add_room(player, 8, this->udp_socket);
     init_ecs(this->ecs.get_class());
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
 }
@@ -167,7 +163,7 @@ void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
         else
-            room.check_wait_timeout();
+            room.check_wait_timeout(static_cast<float>(delta.get_elapsed_time_in_ms()));
     }
 }
 

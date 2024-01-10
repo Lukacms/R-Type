@@ -5,6 +5,7 @@
 ** RoomsManager
 */
 
+#include <iostream>
 #include <rtype/GameLogic/RoomsManager.hh>
 
 /* ctor / dtor */
@@ -21,7 +22,7 @@ rserver::game::RoomsManager::RoomsManager(rserver::game::RoomsManager &&to_move)
 void rserver::game::RoomsManager::join_random_room(rserver::Player &player)
 {
     for (auto &room : this->rooms) {
-        if (room.get_status() != RoomStatus::Waiting || room.get_nb_players() >= 4)
+        if (room.get_status() == RoomStatus::InGame || room.get_nb_players() >= 4)
             continue;
         return room.add_player(player);
     }
@@ -45,7 +46,7 @@ void rserver::game::RoomsManager::add_room(rserver::Player &first_player,
 {
     if (this->rooms.size() >= (nb_threads - 2))
         throw Room::RoomException("No room available.");
-    this->rooms.emplace_back(socket, this->manager, this->last_id);
+    this->rooms.emplace_back(socket, this->last_id);
     this->last_id++;
     try {
         this->rooms.back().add_player(first_player);

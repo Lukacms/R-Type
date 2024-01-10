@@ -128,7 +128,7 @@ namespace rserver
             void refuse_client(asio::ip::udp::endpoint &client);
             void add_new_player(asio::ip::udp::endpoint &client);
             void lobby_handler();
-            void shoot_according_level(Player &);
+            void shoot_according_level(Player &, rtype::ECSManager &);
             void run_game_logic();
             void run_all_rooms_logics(rtype::utils::Clock &delta);
     };

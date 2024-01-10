@@ -25,8 +25,10 @@ namespace rclient::scenes
 {
 
     constexpr std::string_view NEW_ROOM{"NEW ROOM"};
+    constexpr std::string_view JOIN_ROOM{"JOIN ROOM"};
     constexpr std::string_view FONT_FILE{"./assets/font.ttf"};
     constexpr std::string_view ROOM_CONTAINER{"./assets/Room.png"};
+    constexpr int CHANGE_SCROLL{5};
     constexpr int TEXT_POS_LOUNGE{100};
     constexpr int ROOM_TIMEOUT{200};
 
@@ -50,6 +52,7 @@ namespace rclient::scenes
             /* function pointers for network */
             void rooms_handler(std::vector<std::string> &args, State &state);
             void end_handler(std::vector<std::string> &args, State &state);
+            void to_game_handler(std::vector<std::string> &args, State &state);
 
         private:
             /* variables */
@@ -57,7 +60,8 @@ namespace rclient::scenes
             sf::Texture texture{};
             sf::Sprite sprite{};
             sf::Text text{};
-            sf::FloatRect box{};
+            sf::FloatRect new_box{};
+            sf::FloatRect join_box{};
             unsigned int width{};
             unsigned int height{};
             std::array<std::string, 1> paths{"./assets/SpaceBG.png"};

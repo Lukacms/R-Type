@@ -24,6 +24,12 @@ rserver::Player::Player(rserver::Player &&to_move)
 {
 }
 
+rserver::Player::Player(const rserver::Player &to_copy)
+    : endpoint{to_copy.endpoint}, entity_value{to_copy.entity_value}, status{to_copy.status},
+      level{to_copy.level}, room_id{to_copy.room_id}
+{
+}
+
 rserver::Player &rserver::Player::operator=(Player &&to_move)
 {
     this->endpoint = std::move(to_move.endpoint);
@@ -84,7 +90,17 @@ void rserver::Player::level_up()
         this->level += 1;
 }
 
-std::size_t rserver::Player::get_level()
+std::size_t rserver::Player::get_level() const
 {
     return this->level;
+}
+
+const long &rserver::Player::get_room_id() const
+{
+    return this->room_id;
+}
+
+void rserver::Player::set_room_id(const long &new_id)
+{
+    this->room_id = new_id;
 }
