@@ -5,12 +5,13 @@
 ** Menu
 */
 
+#include <fstream>
+#include <nlohmann/json.hpp>
 #include <rtype/Keys.hh>
 #include <rtype/SFML/SFMLGraphicModule.hh>
+#include <rtype/scenes/Game.hh>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
-#include <rtype/scenes/Game.hh>
-
 
 rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     : m_width(width), m_height(height)
@@ -98,6 +99,29 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     graphics.draw(m_texts[3], m_transforms[5]);
     if (graphics.MENU_PRESSED == true) {
         graphics.draw(m_sprites[3], m_transforms[6]);
+        std::ifstream file("./scoreboards/score1.json");
+        nlohmann::json j;
+        file >> j;
+        std::string tmp;
+        if (m_texts[5].text.empty()) {
+            int i = 0;
+            for (auto &it : j.items()) {
+                std::cout << it.value()["name"] << std::endl;
+                tmp = it.value()["name"];
+                tmp += " : ";
+                tmp += std::to_string(static_cast<int>(it.value()["score"]));
+                m_texts[4 + i].text = tmp;
+                m_texts[4 + i].colors = {255, 255, 255, 255};
+                m_texts[4 + i].font_path = "./assets/font.ttf";
+                m_texts[4 + i].font_size = 20;
+                m_transforms[7 + i].position_x = m_transforms[6].position_x + 55.0F;
+                m_transforms[7 + i].position_y = m_transforms[6].position_y + 45.0F + (i * 125);
+                i++;
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            graphics.draw(m_texts[4 + i], m_transforms[7 + i]);
+        }
     }
     graphics.display();
 }
@@ -182,7 +206,7 @@ void rclient::scenes::Menu::key_handling(rtype::IGraphicModule &graphical_module
     m_inputs_clock.reset();
     if (graphical_module.is_input_pressed(rtype::Keys::S))
         graphical_module.MENU_PRESSED = !graphical_module.MENU_PRESSED;
-   
+
     if (graphical_module.is_input_pressed(rtype::Keys::ZERO))
         tmp = '0';
     if (graphical_module.is_input_pressed(rtype::Keys::ONE))

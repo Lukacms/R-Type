@@ -1,5 +1,14 @@
 {
-  "Stephane": 2000,
-  "Hugo": 1500,
-  "Paul": 1399
+  "1": {
+    "name": "Stephane",
+    "score": 2000
+  },
+  "2": {
+    "name": "Hugo",
+    "score": 1500
+  },
+  "3": {
+    "name": "Paul",
+    "score": 1399
+  }
 }

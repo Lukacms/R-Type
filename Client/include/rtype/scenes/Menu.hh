@@ -45,9 +45,9 @@ namespace rclient::scenes
 
             rtype::utils::Clock m_inputs_clock{};
             std::array<std::chrono::time_point<std::chrono::steady_clock>, 3> m_clocks{};
-            std::array<rtype::TransformComponent, 7> m_transforms{};
+            std::array<rtype::TransformComponent, 10> m_transforms{};
             std::array<rtype::SpriteComponent, 4> m_sprites{};
-            std::array<rtype::TextComponent, 4> m_texts{};
+            std::array<rtype::TextComponent, 7> m_texts{};
 
             void animate();
             void cut_scene_handling();

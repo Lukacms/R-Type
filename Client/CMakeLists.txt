@@ -56,6 +56,7 @@ target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
     r-type-graphics-interface
+    nlohmann_json::nlohmann_json
     r-type-graphics
     r-type-utils
     asio::asio # link asio library to core
