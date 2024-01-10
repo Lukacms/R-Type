@@ -1,4 +1,4 @@
-.TH "rserver::game::Room" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::game::Room" 3 "Wed Jan 10 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ rserver::game::Room
 
 .in +1c
 .ti -1c
-.RI "\fBRoom\fP (asio::ip::udp::socket &psocket, \fBPlayersManager\fP &pmanager, std::size_t pid)"
+.RI "\fBRoom\fP (asio::ip::udp::socket &psocket, std::size_t pid)"
 .br
 .ti -1c
 .RI "\fBRoom\fP (\fBRoom\fP const &to_copy)=delete"
@@ -53,10 +53,13 @@ rserver::game::Room
 .RI "void \fBrun_game_logic\fP (\fBrtype::utils::Clock\fP &delta)"
 .br
 .ti -1c
-.RI "void \fBcheck_wait_timeout\fP ()"
+.RI "void \fBcheck_wait_timeout\fP (float delta_time)"
 .br
 .ti -1c
 .RI "bool \fBhas_player\fP (const \fBPlayer\fP &player)"
+.br
+.ti -1c
+.RI "\fBrtype::ECSManager\fP & \fBget_ecs\fP ()"
 .br
 .in -1c
 

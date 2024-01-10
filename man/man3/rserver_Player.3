@@ -1,4 +1,4 @@
-.TH "rserver::Player" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::Player" 3 "Wed Jan 10 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,7 +13,7 @@ rserver::Player
 .RI "\fBPlayer\fP (asio::ip::udp::endpoint p_endpoint)"
 .br
 .ti -1c
-.RI "\fBPlayer\fP (\fBPlayer\fP const &to_copy)=delete"
+.RI "\fBPlayer\fP (\fBPlayer\fP const &to_copy)"
 .br
 .ti -1c
 .RI "\fBPlayer\fP (\fBPlayer\fP &&to_move)"
@@ -40,6 +40,15 @@ rserver::Player
 .RI "const PlayerStatus & \fBget_status\fP () const"
 .br
 .ti -1c
+.RI "const long & \fBget_room_id\fP () const"
+.br
+.ti -1c
+.RI "std::size_t \fBget_level\fP () const"
+.br
+.ti -1c
+.RI "void \fBset_room_id\fP (const long &new_id)"
+.br
+.ti -1c
 .RI "void \fBset_status\fP (const PlayerStatus &new_status)"
 .br
 .ti -1c
@@ -47,9 +56,6 @@ rserver::Player
 .br
 .ti -1c
 .RI "void \fBlevel_up\fP ()"
-.br
-.ti -1c
-.RI "std::size_t \fBget_level\fP ()"
 .br
 .ti -1c
 .RI "void \fBlock\fP ()"
