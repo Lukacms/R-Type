@@ -19,7 +19,7 @@ namespace rclient::scenes
     constexpr float MIDLE_DIV{2.0F};
     constexpr float TEXT_HEIGHT_DIV{1.5F};
     constexpr float POS_Y_TEXT_MENU{50};
-    constexpr double CLOCK_TIMER_LOGO{250};
+    constexpr double CLOCK_TIMER_LOGO{50};
     constexpr int LOGO_MAX_Y{60};
     constexpr int LOGO_MIN_Y{40};
     constexpr double CLOCK_TIMER_TEXT_MENU{50};

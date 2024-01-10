@@ -9,6 +9,8 @@
 #include <rtype/SFML/SFMLGraphicModule.hh>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
+#include <rtype/scenes/Game.hh>
+
 
 rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     : m_width(width), m_height(height)
@@ -31,7 +33,7 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_texts[2].font_path = "./assets/font.ttf";
     m_texts[2].font_size = 20;
 
-    m_texts[3].text="Press S to see the Scoreboard";
+    m_texts[3].text = "Press S to see the Scoreboard";
     m_texts[3].colors = {0, 0, 0, 255};
     m_texts[3].font_path = "./assets/font.ttf";
     m_texts[3].font_size = PLAY_FONT_SIZE;
@@ -94,7 +96,9 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     graphics.draw(m_texts[1], tmp_transform_1);
     graphics.draw(m_texts[2], tmp_transform_2);
     graphics.draw(m_texts[3], m_transforms[5]);
-    graphics.draw(m_sprites[3], m_transforms[6]);
+    if (graphics.MENU_PRESSED == true) {
+        graphics.draw(m_sprites[3], m_transforms[6]);
+    }
     graphics.display();
 }
 
@@ -102,10 +106,6 @@ void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics, State
 {
     if (graphics.is_input_pressed(rtype::Keys::ESCAPE))
         state = State::Lounge;
-    if (graphics.is_input_pressed(rtype::Keys::S)) {
-            std::cout << "PROUT" << std::endl;
-            graphics.MENU_PRESSED = true
-        }
 }
 
 void rclient::scenes::Menu::animate() // NOLINT
@@ -117,12 +117,12 @@ void rclient::scenes::Menu::animate() // NOLINT
                                 .count()) > CLOCK_TIMER_LOGO) {
         m_clocks[0] = now;
         if (m_transforms[1].position_y <= LOGO_MAX_Y && !m_descending_logo) {
-            m_transforms[1].position_y += 2;
+            m_transforms[1].position_y += 1;
         }
         if (m_transforms[1].position_y > LOGO_MAX_Y && !m_descending_logo)
             m_descending_logo = true;
         if (m_transforms[1].position_y >= LOGO_MIN_Y && m_descending_logo) {
-            m_transforms[1].position_y -= 2;
+            m_transforms[1].position_y -= 1;
         }
         if (m_transforms[1].position_y < LOGO_MIN_Y && m_descending_logo)
             m_descending_logo = false;
@@ -142,7 +142,6 @@ void rclient::scenes::Menu::animate() // NOLINT
         if (color.opacity <= MIN_OPACITY_TEXT_MENU && m_fading_text)
             m_fading_text = false;
 
-
         if (color.opacity < MAX_OPACITY_TEXT_MENU && !m_fading_text)
             m_texts[3].colors.opacity += OPACITY_INCREMENTATION;
         if (color.opacity >= MAX_OPACITY_TEXT_MENU && !m_fading_text)
@@ -151,7 +150,6 @@ void rclient::scenes::Menu::animate() // NOLINT
             m_texts[3].colors.opacity -= OPACITY_INCREMENTATION;
         if (color.opacity <= MIN_OPACITY_TEXT_MENU && m_fading_text)
             m_fading_text = false;
-
     }
 }
 
@@ -178,10 +176,13 @@ void rclient::scenes::Menu::button_handling(rtype::IGraphicModule &graphical_mod
 void rclient::scenes::Menu::key_handling(rtype::IGraphicModule &graphical_module)
 {
     char tmp{'\0'};
-    if (m_inputs_clock.get_elapsed_time_in_ms() < 150 || (!m_right_selected && !m_left_selected))
+    if (m_inputs_clock.get_elapsed_time_in_ms() < 150)
         return;
 
     m_inputs_clock.reset();
+    if (graphical_module.is_input_pressed(rtype::Keys::S))
+        graphical_module.MENU_PRESSED = !graphical_module.MENU_PRESSED;
+   
     if (graphical_module.is_input_pressed(rtype::Keys::ZERO))
         tmp = '0';
     if (graphical_module.is_input_pressed(rtype::Keys::ONE))

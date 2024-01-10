@@ -40,7 +40,7 @@ namespace rtype
             virtual void close_window() = 0;
             virtual void clear() = 0;
             virtual bool is_input_pressed(rtype::Keys key) = 0;
-            virtual bool MENU_PRESSED = false;
+            bool MENU_PRESSED = false;
 
             [[nodiscard]] virtual bool is_window_open() = 0;
     };
