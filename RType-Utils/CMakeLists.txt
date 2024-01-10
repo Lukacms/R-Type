@@ -15,6 +15,7 @@ include_directories(include/)
 add_library(
     r-type-utils SHARED
     src/utils/Clock.cpp
+    src/utils/Vector2D.cpp
 )
 
 # properties

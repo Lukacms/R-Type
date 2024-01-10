@@ -2,12 +2,18 @@
     "entities": [
         {
             "tag": "Player",
-            "texturePath": "./Client/assets/Spaceship.png",
-            "textureRect": {
-                "x": 0,
-                "y": 0,
-                "width": 33,
-                "height": 15
+            "sprite": {
+                "texturePath": "./Client/assets/Spaceship.png",
+                "textureRect": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 33,
+                    "height": 15
+                },
+                "origin": {
+                    "x": 0,
+                    "y": 0
+                }
             },
             "clock": false,
             "health": {
@@ -34,12 +40,18 @@
             }
         },
         {
-            "texturePath": "./Client/assets/BasicEnemy.png",
-            "textureRect": {
-                "x": 0,
-                "y": 0,
-                "width": 33,
-                "height": 15
+            "sprite": {
+                "texturePath": "./Client/assets/BasicEnemy.png",
+                "textureRect": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 33,
+                    "height": 15
+                },
+                "origin": {
+                    "x": 0,
+                    "y": 0
+                }
             },
             "clock": false,
             "collider": {
@@ -63,12 +75,18 @@
             "tag": "BasicEnemy"
         },
         {
-            "texturePath": "./Client/assets/PlayerShoot.png",
-            "textureRect": {
-                "x": 0,
-                "y": 0,
-                "width": 33,
-                "height": 15
+            "sprite": {
+                "texturePath": "./Client/assets/PlayerShoot.png",
+                "textureRect": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 33,
+                    "height": 15
+                },
+                "origin": {
+                    "x": 0,
+                    "y": 0
+                }
             },
             "clock": false,
             "health": {
@@ -94,6 +112,59 @@
                 }
             },
             "tag": "BasicBullet"
+        },
+        {
+            "tag": "KamikazeEnemy",
+            "sprite": {
+                "texturePath": "./Client/assets/Spaceship.png",
+                "textureRect": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 33,
+                    "height": 15
+                },
+                "origin": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "health": {
+                "health": 100,
+                "maxHealth": 100
+            },
+            "transform": {
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "velocity": {
+                    "x": 0,
+                    "y": 0
+                },
+                "scale": {
+                    "x": 2,
+                    "y": 2
+                }
+            },
+            "animation": {
+                "current": "Idle",
+                "frame": 0,
+                "clips": [
+                    {
+                        "name": "",
+                        "loop": true,
+                        "change": 20,
+                        "textures": [
+                            {
+                                "x": 0,
+                                "y": 0,
+                                "width": 0,
+                                "height": 0
+                            }
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

@@ -20,6 +20,8 @@ add_library(
     src/rtype/SFML/InputManager.cpp
     src/rtype/SFML/Systems/AnimationSystem.cpp
     src/rtype/EntryPoint.cpp
+    src/rtype/SFML/Systems/SpriteComponent.cpp
+    src/rtype/SFML/Systems/AnimationComponent.cpp
 )
 
 target_compile_features(r-type-graphics PRIVATE cxx_std_20)

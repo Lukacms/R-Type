@@ -5,15 +5,14 @@
 ** ServerEntityFactory
 */
 
-#include "rtype.hh"
 #include <fstream>
+#include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/ClockComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <rtype/Factory/ServerEntityFactory.hh>
-#include <shared_mutex>
 
 size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSManager &ecs_manager)
 {
