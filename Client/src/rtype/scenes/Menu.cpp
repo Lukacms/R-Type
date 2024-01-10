@@ -54,6 +54,7 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_sprites[3].rectangle.width = 390;
     m_sprites[3].rectangle.height = 450;
 
+
     m_transforms[0].scale_x = static_cast<float>(width) / MENU_BG_WIDTH;
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
 

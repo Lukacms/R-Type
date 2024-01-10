@@ -1,14 +1,17 @@
 {
   "1": {
     "name": "Stephane",
-    "score": 2000
+    "score": 2000,
+    "avatar" :1
   },
   "2": {
     "name": "Hugo",
-    "score": 1500
+    "score": 1500,
+    "avatar" :2
   },
   "3": {
     "name": "Paul",
-    "score": 1399
+    "score": 1399,
+    "avatar" :3
   }
 }
