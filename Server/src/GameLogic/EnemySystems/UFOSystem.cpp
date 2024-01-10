@@ -11,7 +11,8 @@
 
 namespace rserver::game
 {
-    static float sinus_wave(float x) {
+    static float sinus_wave(float x)
+    {
         return 100 * std::sin(x / 50);
     }
 
@@ -29,4 +30,4 @@ namespace rserver::game
             transforms[entity]->position_y += sinus_wave(transforms[entity]->position_x) / 20;
         }
     }
-}
+} // namespace rserver::game

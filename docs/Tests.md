@@ -25,7 +25,7 @@ TEST(ServerEntityFactory, constructor_without_register)
                  std::out_of_range);
     EXPECT_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()),
                  std::out_of_range);
-    EXPECT_THROW(rserver::ServerEntityFactory::create("Bullet", ecs.get_class()),
+    EXPECT_THROW(rserver::ServerEntityFactory::create("PlayerBullet", ecs.get_class()),
                  std::out_of_range);
 }
 ```

@@ -144,6 +144,7 @@ void rclient::Client::loop()
     this->audio.get_class().play_music("TitleScreen");
     while (RUNNING && this->state != scenes::State::End) {
         this->graphics.get_class().update();
+        this->audio.get_class().update();
         if (clock.get_elapsed_time_in_ms() > GAME_TIMEOUT) {
             this->launch_displays();
             clock.reset();

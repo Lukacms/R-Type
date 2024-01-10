@@ -14,7 +14,7 @@
 #include <rtype/components/Room.hh>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/utils/Clock.hh>
-#include <rtype/utils/Vector2d.hpp>
+#include <rtype/utils/Vector2D.hpp>
 #include <vector>
 
 namespace rclient::scenes
@@ -49,7 +49,7 @@ namespace rclient::scenes
             /* scrollable */
             sf::View scrollable{};
             float end{};
-            rtype::utils::Vector2d<float> global_pos{};
+            rtype::utils::Vector2D<float> global_pos{};
             std::vector<components::RoomInfos> rooms{};
 
             /* methods */

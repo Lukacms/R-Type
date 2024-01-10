@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "SFML/Audio.hpp"
+#include <SFML/Audio.hpp>
 #include <list>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -15,7 +15,8 @@
 namespace rtype
 {
 
-    constexpr std::string_view SFX_FILEPATH{"./config/SFX.json"};
+    constexpr std::string_view SFX_FILEPATH{"./assets/configs/SFX.json"};
+    constexpr float SFX_STANDARD_VOLUME{100.F};
 
     struct Buffer {
             std::string name;
@@ -39,6 +40,6 @@ namespace rtype
         private:
             std::list<Buffer> m_buffers{};
             std::list<sf::Sound> m_sounds{};
-            float m_volume{100.F};
+            float m_volume{SFX_STANDARD_VOLUME};
     };
 } // namespace rtype

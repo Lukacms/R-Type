@@ -9,13 +9,24 @@
 
 #include <SFML/Window.hpp>
 #include <unordered_map>
+#include <rtype/utils/Vector2D.hpp>
 
 namespace rtype
 {
+    struct KeyInput {
+        sf::Keyboard::Key key;
+        bool is_pressed{false};
+    };
+
     class InputManager
     {
         public:
             InputManager();
+            ~InputManager() = default;
+            InputManager(const InputManager &) = default;
+            InputManager(InputManager &&) = default;
+            InputManager &operator=(const InputManager &) = default;
+            InputManager &operator=(InputManager &&) = default;
 
             void update();
             bool is_key_pressed(sf::Keyboard::Key key) const;
@@ -23,7 +34,10 @@ namespace rtype
             sf::Vector2i get_mouse_position(const sf::Window &window) const;
 
         private:
-            std::unordered_map<sf::Keyboard::Key, bool> keyMap{};
+            void update_joystick();
+
+            std::vector<KeyInput> m_key_mapping{};
             std::unordered_map<sf::Mouse::Button, bool> mouseButtonMap{};
+            rtype::utils::Vector2D<float> m_joystick{};
     };
 } // namespace rtype

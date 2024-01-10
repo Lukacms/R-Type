@@ -62,7 +62,7 @@ namespace rserver::game
                 continue;
             }
             if (clocks[entity]->clock.get_elapsed_time_in_s() > 4) {
-                if (transforms[entity]->velocity_x == 0)
+                if (transforms[entity]->velocity_x == 0.0F)
                     find_nearest_player(transforms, tags, entity);
             }
         }

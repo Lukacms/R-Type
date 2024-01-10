@@ -60,22 +60,21 @@ void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    graphics.draw(m_text,
-                  rtype::TransformComponent{
-                      .position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                      .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE});
-    graphics.draw(m_mute,
-                  rtype::TransformComponent{
-                      .position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                      .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE});
-    graphics.draw(m_unmute,
-                  rtype::TransformComponent{
-                      .position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                      .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE});
     graphics.draw(
-        m_quit,
-        rtype::TransformComponent{.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                                  .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+        m_text,
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE});
+    graphics.draw(
+        m_mute,
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE});
+    graphics.draw(
+        m_unmute,
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE});
+    graphics.draw(m_quit,
+                  rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+                                            static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
     graphics.display();
 }
 

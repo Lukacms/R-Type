@@ -28,7 +28,7 @@ namespace rtype
                 animations[entity]->current_frame += 1;
                 if (animations[entity]->current_frame >= clip.texture_rects.size() && clip.is_loop)
                     animations[entity]->current_frame = 0;
-                else if (!clip.is_loop)
+                else if (animations[entity]->current_frame >= clip.texture_rects.size() && !clip.is_loop)
                     animations[entity]->current_frame = clip.texture_rects.size() - 1;
                 sprites[entity]->rectangle = clip.texture_rects[animations[entity]->current_frame];
                 animations[entity]->clock.reset();

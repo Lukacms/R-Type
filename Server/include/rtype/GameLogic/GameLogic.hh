@@ -48,8 +48,10 @@ namespace rserver::game
             void send_music(rserver::PlayersManager &players_manager, std::string music_name);
             void destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                           rtype::ECSManager &manager);
+            void destroy_too_long_entities(rserver::PlayersManager &players_manager,
+                                          rtype::ECSManager &manager);
             void spawn_enemy(rtype::ECSManager &manager);
-            void spawn_upgrade(std::size_t entity_to_follow, rtype::ECSManager &manager);
+            void spawn_at_enemy_death(std::size_t entity_to_follow, rtype::ECSManager &manager);
 
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,

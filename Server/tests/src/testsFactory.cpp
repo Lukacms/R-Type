@@ -34,7 +34,7 @@ TEST(ServerEntityFactory, constructor_without_register)
                  rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()),
                  rtype::ECSManager::ECSException);
-    EXPECT_THROW(rserver::ServerEntityFactory::create("Bullet", ecs.get_class()),
+    EXPECT_THROW(rserver::ServerEntityFactory::create("PlayerBullet", ecs.get_class()),
                  rtype::ECSManager::ECSException);
 }
 
@@ -54,5 +54,5 @@ TEST(ServerEntityFactory, constructor_no_throw)
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("BasicEnemy", ecs.get_class()));
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("Player", ecs.get_class()));
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()));
-    EXPECT_NO_THROW(rserver::ServerEntityFactory::create("Bullet", ecs.get_class()));
+    EXPECT_NO_THROW(rserver::ServerEntityFactory::create("PlayerBullet", ecs.get_class()));
 }
