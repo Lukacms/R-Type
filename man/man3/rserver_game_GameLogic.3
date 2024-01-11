@@ -34,13 +34,19 @@ rserver::game::GameLogic
 .RI "void \fBsend_entity\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .ti -1c
+.RI "void \fBsend_music\fP (\fBrserver::PlayersManager\fP &players_manager, const std::string &music_name)"
+.br
+.ti -1c
 .RI "void \fBdestroy_too_far_entities\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBdestroy_too_long_entities\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .ti -1c
 .RI "void \fBspawn_enemy\fP (\fBrtype::ECSManager\fP &manager)"
 .br
 .ti -1c
-.RI "void \fBspawn_upgrade\fP (std::size_t entity_to_follow, \fBrtype::ECSManager\fP &manager)"
+.RI "void \fBspawn_at_enemy_death\fP (std::size_t entity_to_follow, \fBrtype::ECSManager\fP &manager)"
 .br
 .ti -1c
 .RI "void \fBcollision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"

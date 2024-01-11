@@ -30,10 +30,10 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
 .br
 .ti -1c
-.RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, State &state) override"
+.RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
 .ti -1c
-.RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, State &state) override"
+.RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
 .ti -1c
 .RI "void \fBcreate_entity\fP (\fBntw::Communication\fP &commn, State &state)"
@@ -49,6 +49,9 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .br
 .ti -1c
 .RI "void \fBmanage_entity\fP (\fBntw::Communication\fP &commn, State &state)"
+.br
+.ti -1c
+.RI "void \fBchange_music\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio)"
 .br
 .in -1c
 
