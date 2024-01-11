@@ -11,11 +11,11 @@
 #include <string>
 
 /* ctor / dtor */
-rclient::components::RoomInfos::RoomInfos(const unsigned int &pid, sf::Font &font)
+rclient::components::RoomInfos::RoomInfos(const unsigned int &pid, const std::string &font)
     : title{BASE_TITLE_ROOM.data() + std::to_string(pid)}, id{pid}
 {
-    this->text.setFont(font);
-    this->text.setFillColor(sf::Color::White);
+    this->text.font_path = font;
+    this->text.colors = rtype::utils::Colors::White;
 }
 
 /* methods */
@@ -27,18 +27,18 @@ void rclient::components::RoomInfos::display(rtype::IGraphicModule &graphics, sf
 
     graphics.draw(sprite, trans);
     this->box = sprite.getGlobalBounds();
-    this->text.setString(this->title);
-    this->text.setCharacterSize(INFOS_SUBTITLE);
+    this->text.text = this->title;
+    this->text.font_size = INFOS_SUBTITLE;
     trans.position_y -= POS1;
     trans.position_x += POS2;
     graphics.draw(this->text, trans);
     trans.position_x += POS3;
-    this->text.setString(std::to_string(this->nb_players) + " / 4");
+    this->text.text = std::to_string(this->nb_players) + " / 4";
     graphics.draw(this->text, trans);
-    this->text.setCharacterSize(INFOS_TITLE);
+    this->text.font_size = INFOS_TITLE;
     trans.position_x -= POS4;
     trans.position_y += POS5;
-    this->text.setString(this->statuses[this->status]);
+    this->text.text = this->statuses[this->status];
     graphics.draw(this->text, trans);
     trans.position_y = pos_y;
     trans.position_x = pos_x;

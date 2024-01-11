@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "rtype/Components/TextComponent.hh"
+#include <array>
 #include <chrono>
 #include <functional>
 #include <rtype/IAudioModule.hh>
@@ -48,14 +50,9 @@ namespace rclient::scenes
             std::array<std::chrono::time_point<std::chrono::steady_clock>, 3> m_clocks{};
             sf::Texture m_texture{};
             std::array<rtype::TransformComponent, 2> m_transforms{};
-            std::array<std::string, 2> m_paths{"./assets/SpaceBG.png", "./assets/Rtype-logo2.png"};
-
-            sf::Font m_font{};
-            sf::Sprite m_sprite{};
-            sf::Text m_text{};
-            sf::Text m_mute{};
-            sf::Text m_unmute{};
-            sf::Text m_quit{};
+            std::array<rtype::TextComponent, 4> m_texts{};
+            std::array<rtype::SpriteComponent, 2> m_sprites{};
+            std::array<rtype::TransformComponent, 4> m_texts_transforms{};
 
             void cut_scene_handling();
     };

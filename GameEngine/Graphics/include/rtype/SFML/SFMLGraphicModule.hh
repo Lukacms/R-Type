@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "rtype/Components/TextComponent.hh"
 #include <SFML/Graphics.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
@@ -22,16 +23,17 @@ namespace rtype
             rtype::Keys key;
     };
 
-    static const std::array<SFMLKeyring, 8> KEYS_ARRAY{{
-        {sf::Keyboard::Up, rtype::Keys::UP},
-        {sf::Keyboard::Right, rtype::Keys::RIGHT},
-        {sf::Keyboard::Down, rtype::Keys::DOWN},
-        {sf::Keyboard::Left, rtype::Keys::LEFT},
-        {sf::Keyboard::Enter, rtype::Keys::ENTER},
-        {sf::Keyboard::Escape, rtype::Keys::ESCAPE},
-        {sf::Keyboard::Q, rtype::Keys::Q},
-        {sf::Keyboard::W, rtype::Keys::W},
-    }};
+    static const std::array<SFMLKeyring, 20> KEYS_ARRAY{
+        {{sf::Keyboard::Up, rtype::Keys::UP},       {sf::Keyboard::Right, rtype::Keys::RIGHT},
+         {sf::Keyboard::Down, rtype::Keys::DOWN},   {sf::Keyboard::Left, rtype::Keys::LEFT},
+         {sf::Keyboard::Enter, rtype::Keys::ENTER}, {sf::Keyboard::Escape, rtype::Keys::ESCAPE},
+         {sf::Keyboard::Q, rtype::Keys::Q},         {sf::Keyboard::W, rtype::Keys::W},
+         {sf::Keyboard::Num0, rtype::Keys::ZERO},   {sf::Keyboard::Num1, rtype::Keys::ONE},
+         {sf::Keyboard::Num2, rtype::Keys::TWO},    {sf::Keyboard::Num3, rtype::Keys::THREE},
+         {sf::Keyboard::Num4, rtype::Keys::FOUR},   {sf::Keyboard::Num5, rtype::Keys::FIVE},
+         {sf::Keyboard::Num6, rtype::Keys::SIX},    {sf::Keyboard::Num7, rtype::Keys::SEVEN},
+         {sf::Keyboard::Num8, rtype::Keys::EIGHT},  {sf::Keyboard::Num9, rtype::Keys::NINE},
+         {sf::Keyboard::Period, rtype::Keys::DOT},  {sf::Keyboard::Delete, rtype::Keys::DELETE}}};
 
     void animation_system(ComponentManager &registry, float /* delta_time */);
 
@@ -50,9 +52,15 @@ namespace rtype
             void update() final;
             void draw_components(SparseArray<SpriteComponent> &sprites,
                                  SparseArray<TransformComponent> &transforms) final;
-            void draw(SpriteComponent &sprite, rtype::TransformComponent transform) final;
-            void draw(sf::Sprite &sprite, rtype::TransformComponent transform) final;
-            void draw(sf::Text &text, rtype::TransformComponent transform) final;
+            void draw_components(SparseArray<TextComponent> &text,
+                                 SparseArray<TransformComponent> &transforms) final;
+            void draw(SpriteComponent &sprite_component, const TransformComponent &transform) final;
+            void draw(TextComponent &text_component, const TransformComponent &transform) final;
+            void draw(sf::Text &text_component, const TransformComponent &transform) final;
+            void draw(sf::Sprite &sprite, const TransformComponent &transform) final;
+            float get_text_width(TextComponent &text) final;
+            bool is_sprite_left_click(rtype::SpriteComponent &sprite,
+                                      rtype::TransformComponent &transform) final;
             void set_view_port(sf::View &view) final;
             [[nodiscard]] sf::View get_view_port() final;
             void display() final;

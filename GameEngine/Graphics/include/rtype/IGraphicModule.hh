@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "rtype/Components/TextComponent.hh"
 #include <SFML/Graphics/Sprite.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
@@ -32,10 +33,17 @@ namespace rtype
             virtual void update() = 0;
             virtual void draw_components(SparseArray<rtype::SpriteComponent> &sprites,
                                          SparseArray<rtype::TransformComponent> &transforms) = 0;
+            virtual void draw_components(SparseArray<rtype::TextComponent> &sprites,
+                                         SparseArray<rtype::TransformComponent> &transforms) = 0;
+            virtual void draw(rtype::TextComponent &text,
+                              const rtype::TransformComponent &transform) = 0;
             virtual void draw(rtype::SpriteComponent &sprite,
-                              rtype::TransformComponent transform) = 0;
-            virtual void draw(sf::Sprite &sprite, rtype::TransformComponent transform) = 0;
-            virtual void draw(sf::Text &text, rtype::TransformComponent transform) = 0;
+                              const rtype::TransformComponent &transform) = 0;
+            virtual void draw(sf::Sprite &sprite, const rtype::TransformComponent &transform) = 0;
+            virtual void draw(sf::Text &text_component, const TransformComponent &transform) = 0;
+            virtual float get_text_width(rtype::TextComponent &text) = 0;
+            virtual bool is_sprite_left_click(rtype::SpriteComponent &sprite,
+                                              rtype::TransformComponent &transform) = 0;
             virtual void set_view_port(sf::View &) = 0;
             [[nodiscard]] virtual sf::View get_view_port() = 0;
             virtual void display() = 0;

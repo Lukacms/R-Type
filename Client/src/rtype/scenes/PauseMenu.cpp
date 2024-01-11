@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/PauseMenu.hh>
 
 rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
@@ -14,66 +15,67 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     for (size_t i{0}; i < 3; i++) {
         m_clocks[i] = std::chrono::steady_clock::now();
     }
-    m_font.loadFromFile("./assets/font.ttf");
-    m_text.setFont(m_font);
-    m_text.setString("Press Enter to continue");
-    m_text.setCharacterSize(PLAY_FONT_SIZE);
-    m_text.setFillColor(sf::Color::White);
-    m_text.setOrigin(m_text.getGlobalBounds().width / 2, 0);
+    m_texts[0].colors = rtype::utils::Colors::White;
+    m_texts[0].text = "Press Enter to continue";
+    m_texts[0].font_path = "./assets/font.ttf";
+    m_texts[0].font_size = PLAY_FONT_SIZE;
 
-    m_mute.setFont(m_font);
-    m_mute.setString("Press M to mute");
-    m_mute.setCharacterSize(PLAY_FONT_SIZE);
-    m_mute.setFillColor(sf::Color::White);
-    m_mute.setOrigin(m_mute.getGlobalBounds().width / 2, 0);
+    m_texts[1].colors = rtype::utils::Colors::White;
+    m_texts[1].text = "Press M to mute";
+    m_texts[1].font_path = "./assets/font.ttf";
+    m_texts[1].font_size = PLAY_FONT_SIZE;
 
-    m_unmute.setFont(m_font);
-    m_unmute.setString("Press U to unmute");
-    m_unmute.setCharacterSize(PLAY_FONT_SIZE);
-    m_unmute.setFillColor(sf::Color::White);
-    m_unmute.setOrigin(m_unmute.getGlobalBounds().width / 2, 0);
+    m_texts[2].colors = rtype::utils::Colors::White;
+    m_texts[2].text = "Press U to unmute";
+    m_texts[2].font_path = "./assets/font.ttf";
+    m_texts[2].font_size = PLAY_FONT_SIZE;
 
-    m_quit.setFont(m_font);
-    m_quit.setString("Press Q to quit");
-    m_quit.setCharacterSize(PLAY_FONT_SIZE);
-    m_quit.setFillColor(sf::Color::White);
-    m_quit.setOrigin(m_quit.getGlobalBounds().width / 2, 0);
+    m_texts[3].colors = rtype::utils::Colors::White;
+    m_texts[3].text = "Press Q to quit";
+    m_texts[3].font_path = "./assets/font.ttf";
+    m_texts[3].font_size = PLAY_FONT_SIZE;
+
+    m_sprites[0].texture_path = "./assets/SpaceBG.png";
+    m_sprites[1].texture_path = "./assets/Rtype-logo2.png";
+    m_sprites[1].origin = {LOGO_ORIGIN_X, 0};
 
     m_transforms[0].scale_x = static_cast<float>(width) / MENU_BG_WIDTH;
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
+
     m_transforms[1].position_x = m_width / MIDLE_DIV;
     m_transforms[1].position_y = POS_Y_TEXT_MENU;
+
+    m_texts_transforms[0] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE};
+
+    m_texts_transforms[1] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE};
+
+    m_texts_transforms[2] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE};
+
+    m_texts_transforms[3] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_HEIGHT_DIV};
 }
 
 void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
 {
-    graphics.clear();
-    for (size_t i{0}; i < 2; i++) {
-        if (i == 0)
-            m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
-        if (i == 1)
-            m_sprite.setOrigin(LOGO_ORIGIN_X, 0);
-        m_texture.loadFromFile(m_paths[i]);
-        m_sprite.setTexture(m_texture);
-        graphics.draw(m_sprite, m_transforms[i]);
+    for (size_t i{0}; i < 2; i++)
+        graphics.draw(m_sprites[i], m_transforms[i]);
+    for (size_t i{0}; i < 4; i++) {
+        if (m_texts[i].origin.x < 0.1f && m_texts[i].origin.y > -0.1F)
+            m_texts[i].origin = {graphics.get_text_width(m_texts[i]) / 2.0F, 0};
+        graphics.draw(m_texts[i], m_texts_transforms[i]);
     }
-    m_sprite.setOrigin(0, 0);
-    m_sprite.setScale(1, 1);
-    graphics.draw(
-        m_text,
-        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
-                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE});
-    graphics.draw(
-        m_mute,
-        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
-                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE});
-    graphics.draw(
-        m_unmute,
-        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
-                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE});
-    graphics.draw(m_quit,
-                  rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
-                                            static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+
     graphics.display();
 }
 

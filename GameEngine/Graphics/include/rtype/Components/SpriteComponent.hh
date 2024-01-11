@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 #include <rtype/utils/Vector2D.hpp>
+#include <string>
 
 namespace rtype
 {
