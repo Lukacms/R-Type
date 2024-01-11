@@ -17,6 +17,7 @@
 namespace rtype
 {
     struct SFMLKeyring {
+        public:
             sf::Keyboard::Key sfml_key;
             rtype::Keys key;
     };
@@ -24,7 +25,7 @@ namespace rtype
     constexpr unsigned int STANDARD_WIDTH{800};
     constexpr unsigned int STANDARD_HEIGHT{600};
     constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
-    constexpr std::array<SFMLKeyring, 8> KEYS_ARRAY{{
+    static const std::array<SFMLKeyring, 8> KEYS_ARRAY{{
         {sf::Keyboard::Up, rtype::Keys::UP},
         {sf::Keyboard::Right, rtype::Keys::RIGHT},
         {sf::Keyboard::Down, rtype::Keys::DOWN},
