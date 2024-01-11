@@ -18,8 +18,8 @@ add_library(
     src/utils/Vector2D.cpp
 )
 target_link_libraries(
-        r-type-utils PRIVATE
-        nlohmann_json::nlohmann_json
+    r-type-utils PRIVATE
+    nlohmann_json::nlohmann_json
 )
 
 # properties

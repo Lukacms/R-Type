@@ -27,6 +27,7 @@ namespace rserver
     static const rtype::TransformComponent TRANS_BULLET{0, 0, 0, 0, 2, 2};
     static const rtype::BoxColliderComponent KAMIKAZE_COLLIDER{18, 18};
     static const std::string_view ENTITIES_PATH{"./assets/configs/entities.json"};
+    constexpr float VELOCITY_BULLET{0.15F};
 
     class ServerEntityFactory
     {

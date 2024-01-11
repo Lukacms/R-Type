@@ -10,17 +10,17 @@ add_library(r-type-audio SHARED
 )
 
 target_include_directories(r-type-audio PRIVATE
-        ./include/
-        ${CMAKE_BINARY_DIR}/_deps/json-src/include/
-        ${CMAKE_BINARY_DIR}/_deps/sfml-src/include/
+    include/
+    ../../RType-Utils/include
 )
 target_compile_options(r-type-audio PRIVATE ${WARNING_FLAGS})
 target_link_libraries(r-type-audio PRIVATE
-        r-type-ecs-interface
-        r-type-ecs
-        r-type-utils
-        nlohmann_json::nlohmann_json
-        sfml-system
-        sfml-audio)
+    r-type-ecs-interface
+    r-type-ecs
+    r-type-utils
+    nlohmann_json::nlohmann_json
+    sfml-system
+    sfml-audio
+)
 set_property(TARGET r-type-audio PROPERTY CXX_STANDARD 20)
 set_property(TARGET r-type-audio PROPERTY CXX_STANDARD_REQUIRED ON)

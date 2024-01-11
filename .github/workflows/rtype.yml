@@ -223,7 +223,7 @@ jobs:
       contents: write
     needs: check_status_repos
     steps:
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v4
       with:
         node-version: v16.x
     - uses: actions/checkout@v3
