@@ -1,4 +1,4 @@
-.TH "rclient::scenes::Lounge" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.TH "rclient::scenes::Lounge" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,28 +21,31 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .RI "\fBLounge\fP (\fBLounge\fP &&to_move)=default"
 .br
 .ti -1c
-.RI "\fBLounge\fP & \fBoperator=\fP (\fBLounge\fP const &to_copy)"
+.RI "\fBLounge\fP & \fBoperator=\fP (\fBLounge\fP const &to_copy)=delete"
 .br
 .ti -1c
-.RI "\fBLounge\fP & \fBoperator=\fP (\fBLounge\fP &&to_move)"
+.RI "\fBLounge\fP & \fBoperator=\fP (\fBLounge\fP &&to_move)=delete"
 .br
 .ti -1c
 .RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
 .br
 .ti -1c
-.RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, State &state) override"
-.br
-.ti -1c
 .RI "void \fBadd_room\fP (unsigned int r_id)"
 .br
 .ti -1c
-.RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, State &state) override"
+.RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
+.br
+.ti -1c
+.RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
 .ti -1c
 .RI "void \fBrooms_handler\fP (std::vector< std::string > &args, State &state)"
 .br
 .ti -1c
 .RI "void \fBend_handler\fP (std::vector< std::string > &args, State &state)"
+.br
+.ti -1c
+.RI "void \fBto_game_handler\fP (std::vector< std::string > &args, State &state)"
 .br
 .in -1c
 
