@@ -6,13 +6,13 @@
 */
 
 #include <rtype.hh>
+#include <rtype/Components/ClockComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
 #include <rtype/GameLogic/GameLogic.hh>
 #include <rtype/Manager.hh>
 #include <rtype/clients/PlayersManager.hh>
-#include <rtype/Components/ClockComponent.hh>
 
 rserver::game::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)
     : m_socket{socket}, m_ecs_mutex{ecs_mutex}
@@ -173,7 +173,7 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 }
 
 void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow,
-                                             rtype::ECSManager &manager)
+                                                    rtype::ECSManager &manager)
 {
     int success = std::rand() % 50;
     auto &transforms = manager.get_components<rtype::TransformComponent>();
@@ -201,7 +201,7 @@ void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manag
 }
 
 void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager &players_manager,
-                                                       rtype::ECSManager &manager)
+                                                         rtype::ECSManager &manager)
 {
     auto &tags = manager.get_components<rtype::TagComponent>();
     auto &clocks = manager.get_components<rtype::ClockComponent>();

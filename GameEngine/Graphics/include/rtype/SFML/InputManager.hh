@@ -8,14 +8,14 @@
 #pragma once
 
 #include <SFML/Window.hpp>
-#include <unordered_map>
 #include <rtype/utils/Vector2D.hpp>
+#include <unordered_map>
 
 namespace rtype
 {
     struct KeyInput {
-        sf::Keyboard::Key key;
-        bool is_pressed{false};
+            sf::Keyboard::Key key;
+            bool is_pressed{false};
     };
 
     class InputManager

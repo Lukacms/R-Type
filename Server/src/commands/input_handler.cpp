@@ -22,25 +22,19 @@ static const std::array<rserver::Vector2f, 4> POSITIONS{{
 
 void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::string> &args)
 {
-    try {
-        auto &component{
-            this->ecs.get_class().get_component<rtype::TransformComponent>(player.get_entity_value())};
+    auto &component{
+        this->ecs.get_class().get_component<rtype::TransformComponent>(player.get_entity_value())};
 
-        if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
-            throw ManagerException{WRONG_ARGUMENTS.data()};
-        }
-        if (args[0][0] == '4') {
-            std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
-            shoot_according_level(player);
-            return;
-        }
-        component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
-        component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
-        /*DEBUG(("pos x: %f, pos_y: %f\n", static_cast<double>(component.position_x),
-               static_cast<double>(component.position_y)));*/
-    } catch (...) {
+    if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
+        throw ManagerException{WRONG_ARGUMENTS.data()};
+    }
+    if (args[0][0] == '4') {
+        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+        shoot_according_level(player);
         return;
     }
+    component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
+    component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
 }
 
 /**

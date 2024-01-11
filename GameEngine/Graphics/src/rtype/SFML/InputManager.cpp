@@ -7,7 +7,6 @@
 
 #include <rtype/SFML/InputManager.hh>
 
-
 rtype::InputManager::InputManager()
 {
     for (int key = sf::Keyboard::Key::A; key != sf::Keyboard::KeyCount; ++key)
@@ -54,15 +53,20 @@ sf::Vector2i rtype::InputManager::get_mouse_position(const sf::Window &window) c
 void rtype::InputManager::update_joystick()
 {
     for (auto &keyring : m_key_mapping) {
-        if (keyring.key == sf::Keyboard::Up && sf::Joystick::getAxisPosition(0, sf::Joystick::Y) < 50.F)
+        if (keyring.key == sf::Keyboard::Up &&
+            sf::Joystick::getAxisPosition(0, sf::Joystick::Y) < 50.F)
             keyring.is_pressed = true;
-        if (keyring.key == sf::Keyboard::Down && sf::Joystick::getAxisPosition(0, sf::Joystick::Y) > -50.F)
+        if (keyring.key == sf::Keyboard::Down &&
+            sf::Joystick::getAxisPosition(0, sf::Joystick::Y) > -50.F)
             keyring.is_pressed = true;
-        if (keyring.key == sf::Keyboard::Right && sf::Joystick::getAxisPosition(0, sf::Joystick::X) > 50.F)
+        if (keyring.key == sf::Keyboard::Right &&
+            sf::Joystick::getAxisPosition(0, sf::Joystick::X) > 50.F)
             keyring.is_pressed = true;
-        if (keyring.key == sf::Keyboard::Left && sf::Joystick::getAxisPosition(0, sf::Joystick::X) < -50.F)
+        if (keyring.key == sf::Keyboard::Left &&
+            sf::Joystick::getAxisPosition(0, sf::Joystick::X) < -50.F)
             keyring.is_pressed = true;
-        if (keyring.key == sf::Keyboard::W && (sf::Joystick::isButtonPressed(0, 7) || sf::Joystick::isButtonPressed(0, 1)))
+        if (keyring.key == sf::Keyboard::W &&
+            (sf::Joystick::isButtonPressed(0, 7) || sf::Joystick::isButtonPressed(0, 1)))
             keyring.is_pressed = true;
         if (keyring.key == sf::Keyboard::Enter && sf::Joystick::isButtonPressed(0, 10))
             keyring.is_pressed = true;

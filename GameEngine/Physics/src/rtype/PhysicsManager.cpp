@@ -6,11 +6,11 @@
 */
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/PhysicsManager.hh>
-#include <cmath>
 
 void rtype::PhysicsManager::check_collisions(ECSManager &ecs_manager)
 {
