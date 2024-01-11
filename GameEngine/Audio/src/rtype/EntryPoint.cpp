@@ -19,7 +19,7 @@ std::unique_ptr<rtype::IAudioModule> entrypoint()
 #else
 
 extern "C" {
-void * entrypoint()
+void *entrypoint()
 {
     auto *audio{new rtype::SFMLAudioModule()};
 

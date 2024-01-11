@@ -22,7 +22,7 @@ std::unique_ptr<rtype::PhysicsManager> entrypoint()
 #else
 
 extern "C" {
-void * entrypoint()
+void *entrypoint()
 {
     auto *physics{new rtype::PhysicsManager()};
 

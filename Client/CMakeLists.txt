@@ -16,11 +16,12 @@ set_property(TARGET rtype-client-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-interface PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-client-interface INTERFACE
-    asio::asio
     r-type-utils
     r-type-ecs
     r-type-audio
     r-type-graphics-interface
+    r-type-graphics
+    asio::asio
     nlohmann_json::nlohmann_json
 )
 
@@ -57,7 +58,6 @@ target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
     r-type-graphics-interface
-    r-type-graphics
     r-type-utils
     nlohmann_json::nlohmann_json
     asio::asio # link asio library to core

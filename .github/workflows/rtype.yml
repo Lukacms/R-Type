@@ -179,11 +179,29 @@ jobs:
       with:
         just-version: 0.8 # optional semver specification, otherwise latest
 
+    - name: Cache build caches
+      uses: actions/cache@v3
+      with:
+        path: |
+          .ccache
+          .ctcache
+          ctcache
+        key: clcache-${{ env.CLCACHE_VERSION }}-Tests-${{ github.run_id }}
+        restore-keys: clcache-${{ env.CLCACHE_VERSION }}-Tests
+
+    - name: Configure compiler cache (ccache)
+      run: |
+        ccache --set-config=cache_dir=$GITHUB_WORKSPACE/.ccache
+        ccache --set-config=max_size=$CLCACHE_MAX_SIZE
+        ccache --set-config=compression=true
+        ccache --show-config
+
     - name: Install newer Clang
       run: |
        wget https://apt.llvm.org/llvm.sh
        chmod +x ./llvm.sh
        sudo ./llvm.sh 17
+
 
     - name: Compilation test
       run: |
@@ -229,9 +247,11 @@ jobs:
     - name : Install packages
       run: |
           sudo apt-get update -qq
-          sudo apt-get install -y doxygen
+          sudo apt-get install -y doxygen unzip
           npm i
 
+    - name: Unzip assets
+      run: unzip ./assets.zip
     - name: generate doxygen mans
       run: doxygen assets/scripts/doxygen
     - name: Enforce docs footer

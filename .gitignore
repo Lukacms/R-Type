@@ -46,6 +46,7 @@ r-type_server
 r-type_client
 build/
 libs/
+/assets/
 
 # tests
 tests-r-type_server

@@ -5,7 +5,6 @@
 ** EntryPoint
 */
 
-
 #include <memory>
 #include <rtype/ECSManager.hpp>
 
@@ -16,7 +15,6 @@
         #define RTYPE_ECS_API __declspec(dllimport)
     #endif
 #else
-    #define RTYPE_ECS_API
 #endif
 
 #ifdef __linux
@@ -33,7 +31,7 @@ std::unique_ptr<rtype::ECSManager> entrypoint()
 #else
 
 extern "C" {
-void * entrypoint()
+void *entrypoint()
 {
     auto *ecs{new rtype::ECSManager()};
 

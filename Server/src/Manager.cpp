@@ -48,8 +48,13 @@ rserver::Manager::Manager(asio::ip::port_type port)
     : udp_socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}},
       logic{this->udp_socket, this->ecs_mutex}
 {
+#ifdef __linux
+    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
+    this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
+#else
     this->ecs.init_class<void *()>(ECS_SL_PATH.data());
     this->physics.init_class<void *()>(PHYSICS_SL_PATH.data());
+#endif /* __linux */
 
     try {
         this->udp_socket.non_blocking(true);

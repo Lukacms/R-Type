@@ -7,7 +7,7 @@
 
 #ifdef __linux
 
-#pragma GCC diagnostic ignored "-Wreturn-type-c-linkage"
+    #pragma GCC diagnostic ignored "-Wreturn-type-c-linkage"
 
 extern "C" {
 std::unique_ptr<rtype::IGraphicModule> entrypoint(unsigned int width, unsigned int height,
@@ -20,8 +20,7 @@ std::unique_ptr<rtype::IGraphicModule> entrypoint(unsigned int width, unsigned i
 #else
 
 extern "C" {
-void * entrypoint(unsigned int width, unsigned int height,
-                                                  const std::string &title)
+void *entrypoint(unsigned int width, unsigned int height, const std::string &title)
 {
     auto *sfml{new rtype::SFMLGraphicModule(width, height, title)};
 
