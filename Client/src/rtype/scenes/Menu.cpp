@@ -54,6 +54,21 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_sprites[3].rectangle.width = 390;
     m_sprites[3].rectangle.height = 450;
 
+    m_sprites[4].texture_path = "./assets/High_score/icon1.png";
+    m_sprites[4].origin = {100, 50};
+    m_sprites[4].rectangle.width = 95;
+    m_sprites[4].rectangle.height = 95;
+
+    m_sprites[5].texture_path = "./assets/High_score/icon2.png";
+    m_sprites[5].origin = {100, 50};
+    m_sprites[5].rectangle.width = 95;
+    m_sprites[5].rectangle.height = 95;
+
+    m_sprites[6].texture_path = "./assets/High_score/icon3.png";
+    m_sprites[6].origin = {100, 50};
+    m_sprites[6].rectangle.width = 95;
+    m_sprites[6].rectangle.height = 95;
+
 
     m_transforms[0].scale_x = static_cast<float>(width) / MENU_BG_WIDTH;
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
@@ -116,12 +131,15 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
                 m_texts[4 + i].font_path = "./assets/font.ttf";
                 m_texts[4 + i].font_size = 20;
                 m_transforms[7 + i].position_x = m_transforms[6].position_x + 55.0F;
-                m_transforms[7 + i].position_y = m_transforms[6].position_y + 45.0F + (i * 125);
+                m_transforms[7 + i].position_y = m_transforms[6].position_y + 70.0F + (i * 113);
+                m_transforms[10+i].position_x = m_transforms[7].position_x - 10.0F; 
+                m_transforms[10+i].position_y = m_transforms[6].position_y + 82.0F +(i * 112);
                 i++;
             }
         }
         for (int i = 0; i < 3; i++) {
             graphics.draw(m_texts[4 + i], m_transforms[7 + i]);
+            graphics.draw(m_sprites[4 + i], m_transforms[10+i]);
         }
     }
     graphics.display();
