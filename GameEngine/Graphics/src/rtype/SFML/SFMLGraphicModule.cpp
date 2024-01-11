@@ -87,8 +87,6 @@ void rtype::SFMLGraphicModule::close_window()
 
 bool rtype::SFMLGraphicModule::is_input_pressed(rtype::Keys key)
 {
-    if (key == rtype::Keys::DOWN)
-        printf("");
     for (const auto &keyring : KEYS_ARRAY) {
         if (keyring.key == key)
             return m_input.is_key_pressed(keyring.sfml_key);
