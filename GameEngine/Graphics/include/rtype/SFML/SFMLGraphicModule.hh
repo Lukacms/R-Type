@@ -22,9 +22,6 @@ namespace rtype
             rtype::Keys key;
     };
 
-    constexpr unsigned int STANDARD_WIDTH{800};
-    constexpr unsigned int STANDARD_HEIGHT{600};
-    constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
     static const std::array<SFMLKeyring, 8> KEYS_ARRAY{{
         {sf::Keyboard::Up, rtype::Keys::UP},
         {sf::Keyboard::Right, rtype::Keys::RIGHT},
@@ -41,9 +38,9 @@ namespace rtype
     class SFMLGraphicModule : public rtype::IGraphicModule
     {
         public:
-            explicit SFMLGraphicModule(unsigned int width = STANDARD_WIDTH,
-                                       unsigned int height = STANDARD_HEIGHT,
-                                       const std::string &title = STANDARD_TITLE.data());
+            SFMLGraphicModule(unsigned int width = STANDARD_WIDTH,
+                              unsigned int height = STANDARD_HEIGHT,
+                              const std::string &title = STANDARD_TITLE.data());
             ~SFMLGraphicModule() override = default;
             SFMLGraphicModule(const SFMLGraphicModule &) = delete;
             SFMLGraphicModule(SFMLGraphicModule &&) = delete;

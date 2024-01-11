@@ -7,8 +7,11 @@
 
 #include <algorithm>
 #include <csignal>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <mutex>
+#include <nlohmann/json.hpp>
 #include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
@@ -125,6 +128,19 @@ void rserver::Manager::launch(asio::ip::port_type port)
     }
 }
 
+void load_entity_properties()
+{
+    std::string path = rserver::ENTITIES_FILE.data();
+    std::ifstream file{path};
+
+    if (!file) {
+        return;
+    }
+    nlohmann::json json;
+    file >> json;
+    std::cout << json["Enemies"] << std::endl;
+}
+
 /**
  * @brief method to run game logic
  *  the game logic has to be on another thread, as the asio context run is an infinite loop
@@ -134,7 +150,7 @@ void rserver::Manager::run_game_logic()
     this->threads.add_job([this]() {
         rtype::utils::Clock timer{};
         rtype::utils::Clock delta_time{};
-
+        load_entity_properties();
         while (RUNNING) {
             if (timer.get_elapsed_time_in_ms() > game::TIMER) {
                 /* logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),

@@ -28,6 +28,7 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
 void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
+    animate();
     for (size_t i{0}; i < 2; i++) {
         if (i == 0)
             m_sprite.setScale(m_transforms[0].scale_x, m_transforms[0].scale_y);
@@ -39,14 +40,15 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     }
     m_sprite.setOrigin(0, 0);
     m_sprite.setScale(1, 1);
-    graphics.draw(m_text,
-                  {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                   .position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+    graphics.draw(
+        m_text,
+        {static_cast<float>(m_width) / MIDLE_DIV, static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
     this->animate();
     graphics.display();
 }
 
-void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics, State &state)
+void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics,
+                                          rtype::IAudioModule & /*audio*/, State &state)
 {
     if (graphics.is_input_pressed(rtype::Keys::ESCAPE))
         state = State::Lounge;
@@ -92,6 +94,7 @@ void rclient::scenes::Menu::cut_scene_handling()
 {
 }
 
-void rclient::scenes::Menu::handle_network(ntw::Communication & /* commn */, State & /* state */)
+void rclient::scenes::Menu::handle_network(ntw::Communication & /* commn */,
+                                           rtype::IAudioModule & /*audio*/, State & /* state */)
 {
 }

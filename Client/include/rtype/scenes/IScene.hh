@@ -8,6 +8,7 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
+#include <rtype/IAudioModule.hh>
 #include <rtype/IGraphicModule.hh>
 #include <rtype/network/Network.hpp>
 
@@ -50,8 +51,10 @@ namespace rclient::scenes
             IScene &operator=(IScene &&to_move) = default;
 
             virtual void display(rtype::IGraphicModule &graphics) = 0;
-            virtual void handle_events(rtype::IGraphicModule &graphics, State &state) = 0;
-            virtual void handle_network(ntw::Communication &commn, State &state) = 0;
+            virtual void handle_events(rtype::IGraphicModule &graphics, rtype::IAudioModule &audio,
+                                       State &state) = 0;
+            virtual void handle_network(ntw::Communication &commn, rtype::IAudioModule &audio,
+                                        State &state) = 0;
     };
 
 } // namespace rclient::scenes

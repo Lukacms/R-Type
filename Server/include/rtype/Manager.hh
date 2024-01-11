@@ -32,6 +32,7 @@ namespace rserver
     constexpr float TIMEOUT_GL{1000000.0};
     constexpr std::string_view ECS_SL_PATH{"./libs/r-type-ecs.so"};
     constexpr std::string_view PHYSICS_SL_PATH{"./libs/r-type-physics.so"};
+    constexpr std::string_view ENTITIES_FILE{"./config/entities.json"};
 
     /* exceptions */
     constexpr std::string_view DEFAULT_ERROR{"Error"};

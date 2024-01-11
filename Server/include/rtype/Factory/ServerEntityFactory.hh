@@ -8,20 +8,25 @@
 #pragma once
 
 #include <exception>
+#include <nlohmann/json.hpp>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <string_view>
 
+using njson = nlohmann::json;
+
 namespace rserver
 {
-    constexpr rtype::HealthComponent BASIC_HEALTH{100, 100};
-    constexpr rtype::BoxColliderComponent BASIC_COLLIDER{33, 15};
-    constexpr rtype::BoxColliderComponent COLLIDER_BULLET{33, 15};
-    constexpr rtype::TransformComponent TRANS_PLAYER{300, 400, 0, 0, 2, 2};
-    constexpr rtype::TransformComponent TRANS_ENEMY{850, 300, static_cast<float>(-0.1), 0, 2, 2};
-    constexpr rtype::TransformComponent TRANS_BULLET{0, 0, 0, 0, 2, 2};
+    static const rtype::HealthComponent BASIC_HEALTH{100, 100};
+    static const rtype::BoxColliderComponent BASIC_COLLIDER{33, 15};
+    static const rtype::BoxColliderComponent COLLIDER_BULLET{33, 15};
+    static const rtype::TransformComponent TRANS_PLAYER{300, 400, 0, 0, 2, 2};
+    static const rtype::TransformComponent TRANS_ENEMY{850, 300, -0.1F, 0, 2, 2};
+    static const rtype::TransformComponent TRANS_BULLET{0, 0, 0, 0, 2, 2};
+    static const rtype::BoxColliderComponent KAMIKAZE_COLLIDER{18, 18};
+    static const std::string_view ENTITIES_PATH{"./assets/configs/entities.json"};
 
     class ServerEntityFactory
     {
@@ -51,11 +56,13 @@ namespace rserver
             };
 
             static size_t create(const std::string &type, rtype::ECSManager &ecs_manager);
+            static size_t create_json(const std::string &type, rtype::ECSManager &ecs_manager);
 
         private:
             static size_t create_enemy(rtype::ECSManager &ecs_manager);
             static size_t create_player(rtype::ECSManager &ecs_manager);
-            static size_t create_other_player(rtype::ECSManager &ecs_manager);
+            static size_t create_kamikaze_enemy(rtype::ECSManager &ecs_manager);
+            static size_t create_UFO_enemy(rtype::ECSManager &ecs_manager);
             static size_t create_bullet(rtype::ECSManager &ecs_manager);
             static size_t create_upgrade(rtype::ECSManager &ecs_manager);
     };

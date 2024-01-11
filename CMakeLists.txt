@@ -17,8 +17,6 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 option(RTYPE_BUILD_TESTS "Build the tests" OFF)
 option(RTYPE_BUILD_BENCHMARKS "Build benchmarks" OFF)
 
-message("Is it win32 ? -> " ${WIN32})
-
 # fetch asio library which is used by both client and server
 message("Loading Asio library")
 
@@ -125,11 +123,7 @@ set(WARNING_FLAGS
     -Wno-null-dereference
     -Wno-zero-as-null-pointer-constant
     -Wno-padded
-    -Wno-ctad-maybe-unsupported)
-
-if (WIN32)
-    set(WARNING_FLAGS "${WARNING_FLAGS} -Wno-language-extension-token")
-endif ()
+    -Wno-language-extension-token)
 
 if (RTYPE_BUILD_TESTS)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")

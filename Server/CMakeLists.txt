@@ -14,12 +14,18 @@ add_library(rtype-server-interface INTERFACE)
 # link the library
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-server-interface PROPERTY CXX_STANDARD_REQUIRED ON)
-target_include_directories(rtype-server-interface INTERFACE include ../RType-Utils/include/ ../GameEngine/ECS/include ../GameEngine/Physics/include)
+target_include_directories(rtype-server-interface INTERFACE
+    include
+    ../RType-Utils/include/
+    ../GameEngine/ECS/include
+    ../GameEngine/Physics/include
+)
 target_link_libraries(
     rtype-server-interface INTERFACE
     r-type-ecs
     r-type-physics
     asio::asio
+    nlohmann_json::nlohmann_json
     )
 
 # add library with all of the source file, execpt for the main
@@ -28,18 +34,22 @@ add_library(
     src/Manager.cpp
     src/utils.cpp
     src/config/ArgsParser.cpp
+    src/config/ConfigsFile.cpp
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
     src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
     src/GameLogic/Room.cpp
     src/GameLogic/RoomsManager.cpp
+    src/GameLogic/LevelManager/LevelManager.cpp
     src/Factory/ServerEntityFactory.cpp
     src/commands/input_handler.cpp
     src/commands/add_new_player.cpp
     src/commands/end_handler.cpp
     src/commands/lobby_handler.cpp
     src/commands/room_handler.cpp
+    src/GameLogic/EnemySystems/KamikazeSystem.cpp
+    src/GameLogic/EnemySystems/UFOSystem.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)
@@ -49,6 +59,7 @@ target_link_libraries(
     rtype-server-core PRIVATE
     rtype-server-interface
     r-type-utils
+    nlohmann_json::nlohmann_json
     asio::asio # link asio library to core
     )
 
@@ -58,7 +69,7 @@ message("${BoldWhite}Finished loading rtype-server-core${ColourReset}")
 add_executable(
     r-type_server
     src/main.cpp
-    )
+)
 
 # link the libraries to executable
 target_link_libraries(

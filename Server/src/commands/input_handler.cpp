@@ -21,7 +21,8 @@ static const std::array<rserver::Vector2f, 4> POSITIONS{{
 
 void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::string> &args)
 {
-    auto &room_ecs{this->rooms.get_room_by_id(player.get_room_id()).get_ecs()};
+    auto &room_ecs{
+        this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).get_ecs()};
     auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
 
     if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
@@ -34,14 +35,13 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
     }
     component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
     component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
-    /*DEBUG(("pos x: %f, pos_y: %f\n", static_cast<double>(component.position_x),
-           static_cast<double>(component.position_y)));*/
 }
 
 /**
  * @brief Create bullet according to the level of the player
  */
-void rserver::Manager::shoot_according_level(rserver::Player &player, rtype::ECSManager &room_ecs)
+void rserver::Manager::shoot_according_level(rserver::Player &player, // NOLINT
+                                             rtype::ECSManager &room_ecs)
 {
     auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
 

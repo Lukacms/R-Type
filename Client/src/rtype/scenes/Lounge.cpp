@@ -22,7 +22,7 @@ rclient::scenes::Lounge::Lounge(asio::ip::udp::socket &psocket, asio::ip::udp::e
                                 const unsigned int &pwidth, const unsigned int &pheight)
     : width{pwidth}, height{pheight}, endpoint{pendpoint}, socket{psocket}
 {
-    this->scrollable.setViewport({0.25F, 0.05F, 0.6F, 0.6F});
+    this->scrollable.setViewport(VIEWPORT);
     this->transforms[0].scale_x = static_cast<float>(pwidth) / MENU_BG_WIDTH;
     this->transforms[0].scale_y = static_cast<float>(pheight) / MENU_BG_HEIGHT;
     this->transforms[1].scale_x = 3;
@@ -65,20 +65,21 @@ void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
     this->text.setString(NEW_ROOM.data());
     this->text.setCharacterSize(PLAY_FONT_SIZE);
     graphics.draw(this->text,
-                  {.position_x = this->width / MIDLE_DIV - TEXT_POS_LOUNGE * 2,
-                   .position_y = static_cast<float>(this->height - TEXT_POS_LOUNGE)});
+                  {this->width / MIDLE_DIV - TEXT_POS_LOUNGE * 2,
+                   static_cast<float>(this->height - TEXT_POS_LOUNGE)});
     this->new_box = this->text.getGlobalBounds();
     this->text.setString(JOIN_ROOM.data());
     graphics.draw(this->text,
-                  {.position_x = this->width / MIDLE_DIV + TEXT_POS_LOUNGE * 2,
-                   .position_y = static_cast<float>(this->height - TEXT_POS_LOUNGE)});
+                  {this->width / MIDLE_DIV + TEXT_POS_LOUNGE * 2,
+                   static_cast<float>(this->height - TEXT_POS_LOUNGE)});
     this->join_box = this->text.getGlobalBounds();
     this->transforms.back().position_y = TEXT_POS_LOUNGE;
     graphics.display();
     this->rooms.clear();
 }
 
-void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics, State & /* state */)
+void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics,
+                                            rtype::IAudioModule & /*audio*/, State & /* state */)
 {
     rtype::utils::Vector2D<float> mouse{graphics.is_left_mouse_pressed()};
 
@@ -103,8 +104,9 @@ void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics, Sta
 }
 
 /* network functions */
+void rclient::scenes::Lounge::handle_network(ntw::Communication &commn,
+                                             rtype::IAudioModule & /*audio*/, State &state)
 
-void rclient::scenes::Lounge::handle_network(ntw::Communication &commn, State &state)
 {
     std::vector<std::string> arguments{commn.deserialize()};
 

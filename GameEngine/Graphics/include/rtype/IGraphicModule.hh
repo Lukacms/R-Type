@@ -11,9 +11,13 @@
 #include <rtype/SparseArray.hpp>
 #include <rtype/utils/Vector2D.hpp>
 #include <string>
+#include <string_view>
 
 namespace rtype
 {
+    constexpr unsigned int STANDARD_WIDTH{800};
+    constexpr unsigned int STANDARD_HEIGHT{600};
+    constexpr std::string_view STANDARD_TITLE{"R-TYPE"};
 
     class IGraphicModule
     {
