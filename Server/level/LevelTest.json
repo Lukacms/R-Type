@@ -1,0 +1,28 @@
+{
+  "Title": "Level1",
+  "Music": "Voyage1970",
+  "Background": "Space",
+  "Waves" : [
+    {
+      "Timer": 5000,
+      "Enemies": [
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy"
+      ]
+    },
+    {
+      "Timer": 10000,
+      "Enemies": [
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy",
+        "BasicEnemy"
+      ]
+    }
+  ]
+}

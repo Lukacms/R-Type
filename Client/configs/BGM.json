@@ -1,4 +1,5 @@
 {
   "SpiderDance": "",
-  "Voyage1970": "./Client/assets/BGM/Voyage1970.ogg"
+  "Voyage1970": "./assets/BGM/Voyage1970.ogg",
+  "TitleScreen": "./assets/BGM/TitleScreen.ogg"
 }
