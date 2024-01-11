@@ -1,4 +1,4 @@
-.TH "rserver::game::GameLogic" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::game::GameLogic" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -26,6 +26,9 @@ rserver::game::GameLogic
 .br
 .ti -1c
 .RI "void \fBgame_loop\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager, float delta_time)"
+.br
+.ti -1c
+.RI "void \fBgame_waiting\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager, float delta_time)"
 .br
 .ti -1c
 .RI "void \fBsend_entity\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
