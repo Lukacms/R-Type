@@ -5,8 +5,8 @@
 ** PauseMenu
 */
 
-#include "rtype/scenes/IScene.hh"
 #include <iostream>
+#include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/PauseMenu.hh>
 
 rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
@@ -15,22 +15,22 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     for (size_t i{0}; i < 3; i++) {
         m_clocks[i] = std::chrono::steady_clock::now();
     }
-    m_texts[0].colors = {255, 255, 255, 255};
+    m_texts[0].colors = rtype::utils::Colors::White;
     m_texts[0].text = "Press Enter to continue";
     m_texts[0].font_path = "./assets/font.ttf";
     m_texts[0].font_size = PLAY_FONT_SIZE;
 
-    m_texts[1].colors = {255, 255, 255, 255};
+    m_texts[1].colors = rtype::utils::Colors::White;
     m_texts[1].text = "Press M to mute";
     m_texts[1].font_path = "./assets/font.ttf";
     m_texts[1].font_size = PLAY_FONT_SIZE;
 
-    m_texts[2].colors = {255, 255, 255, 255};
+    m_texts[2].colors = rtype::utils::Colors::White;
     m_texts[2].text = "Press U to unmute";
     m_texts[2].font_path = "./assets/font.ttf";
     m_texts[2].font_size = PLAY_FONT_SIZE;
 
-    m_texts[3].colors = {255, 255, 255, 255};
+    m_texts[3].colors = rtype::utils::Colors::White;
     m_texts[3].text = "Press Q to quit";
     m_texts[3].font_path = "./assets/font.ttf";
     m_texts[3].font_size = PLAY_FONT_SIZE;
@@ -45,21 +45,25 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     m_transforms[1].position_x = m_width / MIDLE_DIV;
     m_transforms[1].position_y = POS_Y_TEXT_MENU;
 
-    m_texts_transforms[0] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE};
+    m_texts_transforms[0] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
 
-    m_texts_transforms[1] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE};
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE};
 
-    m_texts_transforms[2] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE};
+    m_texts_transforms[1] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
 
-    m_texts_transforms[3] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_HEIGHT_DIV};
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE};
+
+    m_texts_transforms[2] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE};
+
+    m_texts_transforms[3] =
+        rtype::TransformComponent{static_cast<float>(m_width) / MIDLE_DIV,
+
+                                  static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_HEIGHT_DIV};
 }
 
 void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
@@ -75,13 +79,15 @@ void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics, State &state)
+void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics,
+                                               rtype::IAudioModule & /*audio*/, State &state)
 {
     if (graphics.is_input_pressed(rtype::Keys::ENTER))
         state = State::Game;
 }
 
 void rclient::scenes::PauseMenu::handle_network(ntw::Communication & /* commn */,
+                                                rtype::IAudioModule & /*audio*/,
                                                 State & /* state */)
 {
 }

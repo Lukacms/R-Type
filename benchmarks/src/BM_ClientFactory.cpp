@@ -5,10 +5,10 @@
 ** BM_ServerFactory
 */
 
-#include <rtype/Components/SpriteComponent.hh>
 #include <benchmark/benchmark.h>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
+#include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
@@ -37,7 +37,7 @@ static void bm_server_factory(benchmark::State &state)
             rclient::ClientEntityFactory::create(1, "BasicEnemy", ecs.get_class());
             rclient::ClientEntityFactory::create(1, "Player", ecs.get_class());
             rclient::ClientEntityFactory::create(1, "OtherPlayer", ecs.get_class());
-            rclient::ClientEntityFactory::create(1, "Bullet", ecs.get_class());
+            rclient::ClientEntityFactory::create(1, "PlayerBullet", ecs.get_class());
         } catch (std::out_of_range & /* e */) {
         }
     }

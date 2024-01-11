@@ -6,12 +6,13 @@
 */
 
 #include <rtype.hh>
+#include <rtype/Factory/ServerEntityFactory.hh>
 #include <rtype/GameLogic/Room.hh>
 #include <rtype/Manager.hh>
 
 /* constructors / destructors */
-rserver::game::Room::Room(asio::ip::udp::socket &psocket, PlayersManager &pmanager, std::size_t pid)
-    : socket{psocket}, id{std::move(pid)}, logic{socket, ecs_mutex}, manager{pmanager}
+rserver::game::Room::Room(asio::ip::udp::socket &psocket, std::size_t pid)
+    : socket{psocket}, id{std::move(pid)}, logic{socket, ecs_mutex}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
     this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
@@ -33,17 +34,25 @@ rserver::game::Room::~Room()
 /* methods */
 void rserver::game::Room::add_player(Player &new_player)
 {
-    if (this->status != RoomStatus::Waiting)
+    if (this->status == RoomStatus::InGame)
         throw RoomException("Can't add player. Room is in a game.");
+    if (new_player.get_room_id() != -1)
+        throw RoomException("Player already in a room");
     if (this->players.size() >= MAX_PLAYERS)
         throw RoomException("Already max number of players");
     this->players.emplace_back(new_player.get_port());
+    this->manager.add_player(new_player);
     if (this->players.size() == 2) {
         this->status = RoomStatus::Waiting;
         this->timeout_connect.reset();
     } else if (this->players.size() == MAX_PLAYERS)
         this->status = RoomStatus::InGame;
-    // Manager::send_message({}, new_player.get(), this->socket);
+    {
+        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+        new_player.set_entity_value(
+            rserver::ServerEntityFactory::create("Player", this->ecs.get_class()));
+    }
+    new_player.set_room_id(static_cast<long>(this->id));
 }
 
 const rserver::game::RoomStatus &rserver::game::Room::get_status() const
@@ -86,8 +95,12 @@ void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
                           static_cast<float>(delta.get_elapsed_time_in_s()));
 }
 
-void rserver::game::Room::check_wait_timeout()
+void rserver::game::Room::check_wait_timeout(float delta_time)
 {
+    {
+        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+        this->logic.game_waiting(this->manager, this->ecs.get_class(), delta_time);
+    }
     if (this->status != RoomStatus::Waiting)
         return;
     if (this->timeout_connect.get_elapsed_time_in_s() > TIMEOUT_WAITING) {
@@ -106,6 +119,11 @@ bool rserver::game::Room::has_player(const Player &player)
             return true;
     }
     return false;
+}
+
+rtype::ECSManager &rserver::game::Room::get_ecs()
+{
+    return this->ecs.get_class();
 }
 
 /* exception */

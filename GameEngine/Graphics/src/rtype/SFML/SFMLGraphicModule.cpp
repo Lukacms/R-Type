@@ -11,6 +11,7 @@
 #include <rtype/Components/TextComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/SFML/SFMLGraphicModule.hh>
+#include <rtype/utils/Vector2D.hpp>
 
 rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int height,
                                             const std::string &title)
@@ -107,7 +108,7 @@ void rtype::SFMLGraphicModule::update()
 }
 
 void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
-                                    rtype::TransformComponent &transform)
+                                    const rtype::TransformComponent &transform)
 {
     sf::Texture texture{};
     sf::Sprite sprite{};
@@ -122,8 +123,23 @@ void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
     m_window.draw(sprite);
 }
 
+void rtype::SFMLGraphicModule::draw(sf::Sprite &sprite, const rtype::TransformComponent &transform)
+{
+    sprite.setPosition(transform.position_x, transform.position_y);
+    sprite.setScale(transform.scale_x, transform.scale_y);
+    m_window.draw(sprite);
+}
+
+void rtype::SFMLGraphicModule::draw(sf::Text &text, const rtype::TransformComponent &transform)
+{
+
+    text.setPosition({transform.position_x, transform.position_y});
+    text.setScale({transform.scale_x, transform.scale_y});
+    m_window.draw(text);
+}
+
 void rtype::SFMLGraphicModule::draw(rtype::TextComponent &text_component,
-                                    rtype::TransformComponent &transform)
+                                    const rtype::TransformComponent &transform)
 {
     sf::Font font{};
     sf::Text text{};
@@ -140,7 +156,6 @@ void rtype::SFMLGraphicModule::draw(rtype::TextComponent &text_component,
     colors.b = text_component.colors.blue;
     text.setFillColor(colors);
     text.setPosition(transform.position_x, transform.position_y);
-    text.setScale(transform.scale_x, transform.scale_y);
     m_window.draw(text);
 }
 
@@ -179,4 +194,23 @@ bool rtype::SFMLGraphicModule::is_sprite_left_click(rtype::SpriteComponent &spri
     sf::FloatRect sprite_pos{tmp_sprite.getGlobalBounds()};
 
     return sprite_pos.contains(mouse_pos.x, mouse_pos.y);
+}
+
+rtype::utils::Vector2D<float> rtype::SFMLGraphicModule::is_left_mouse_pressed()
+{
+    if (m_input.is_mouse_button_pressed(sf::Mouse::Button::Left)) {
+        auto click{m_input.get_mouse_position(m_window)};
+        return {static_cast<float>(click.x), static_cast<float>(click.y)};
+    }
+    return {-1, -1};
+}
+
+void rtype::SFMLGraphicModule::set_view_port(sf::View &view)
+{
+    m_window.setView(view);
+}
+
+sf::View rtype::SFMLGraphicModule::get_view_port()
+{
+    return m_window.getView();
 }

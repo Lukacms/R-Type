@@ -1,0 +1,54 @@
+.TH "rclient::ThreadPool" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::ThreadPool
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBThreadPool\fP (u_int p_nb_threads=std::thread::hardware_concurrency())"
+.br
+.RI "construct a new \fBThreadPool\fP object\&. Sould be only one in project, no need for more "
+.ti -1c
+.RI "\fBThreadPool\fP (\fBThreadPool\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBThreadPool\fP (\fBThreadPool\fP &&to_move)"
+.br
+.ti -1c
+.RI "\fBThreadPool\fP & \fBoperator=\fP (\fBThreadPool\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBThreadPool\fP & \fBoperator=\fP (\fBThreadPool\fP &&to_move)"
+.br
+.ti -1c
+.RI "void \fBadd_job\fP (const std::function< void()> &job)"
+.br
+.ti -1c
+.RI "void \fBstop\fP ()"
+.br
+.ti -1c
+.RI "bool \fBis_busy\fP ()"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rclient::ThreadPool::ThreadPool (u_int p_nb_threads = \fCstd::thread::hardware_concurrency()\fP)"
+
+.PP
+construct a new \fBThreadPool\fP object\&. Sould be only one in project, no need for more 
+.PP
+\fBParameters\fP
+.RS 4
+\fIp_nb_threads\fP - u_int - default is max threads that the system supports 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

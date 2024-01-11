@@ -1,0 +1,53 @@
+.TH "rtype::ComponentManager" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::ComponentManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBComponentException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBComponentManager\fP (const \fBComponentManager\fP &)=default"
+.br
+.ti -1c
+.RI "\fBComponentManager\fP (\fBComponentManager\fP &&)=default"
+.br
+.ti -1c
+.RI "\fBComponentManager\fP & \fBoperator=\fP (const \fBComponentManager\fP &)=default"
+.br
+.ti -1c
+.RI "\fBComponentManager\fP & \fBoperator=\fP (\fBComponentManager\fP &&)=default"
+.br
+.ti -1c
+.RI "template<class TComponent > \fBSparseArray\fP< TComponent > & \fBregister_component\fP (\fBSparseArray\fP< TComponent > &array)"
+.br
+.ti -1c
+.RI "template<class TComponent > \fBSparseArray\fP< TComponent > & \fBget_components\fP ()"
+.br
+.ti -1c
+.RI "template<class TComponent > \fBSparseArray\fP< TComponent > const  & \fBget_components\fP () const"
+.br
+.ti -1c
+.RI "template<class TComponent > void \fBremove_component\fP (size_t entity)"
+.br
+.ti -1c
+.RI "void \fBremove_all_component\fP (size_t entity)"
+.br
+.ti -1c
+.RI "template<class TComponent > std::type_index \fBget_index\fP () const"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

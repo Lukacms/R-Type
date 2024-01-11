@@ -28,13 +28,14 @@ namespace ntw
         Ok,          // Everything is good : Ok
         Ko,          // Something went wrong
         End,         // End the game for one player : End
-        Creation,    // Create a new entity : Creation [Id] [Type]
         Destruction, // Destruct one entity : Destruction [Id]
         Position,    // Send the position of an entity : Position [Id] [x] [y]
         Entity,      // Must replace Creation Tag and Position Tag => Entity [Id] [Tag] [x] [y]
         ToGame,      // Client passing from waiting mode to game
         Input, // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
         Room, // Server -> send infos about room [id] [nb_player] [status], Client -> join room [id]
+              // or create one
+        Music, // Send the music that the client should play, [MusicString],
     };
 
 #pragma pack(push, 1)

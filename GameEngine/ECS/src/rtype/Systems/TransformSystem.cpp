@@ -6,7 +6,6 @@
 */
 
 #include <iomanip>
-#include <iostream>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 
@@ -17,17 +16,10 @@ namespace rtype
         SparseArray<TransformComponent> &transforms{registry.get_components<TransformComponent>()};
 
         for (auto &transform : transforms) {
-            if (transform == std::nullopt)
+            if (!transform.has_value())
                 continue;
             transform->position_x += transform->velocity_x * delta_time;
             transform->position_y += transform->velocity_y * delta_time;
-            DEBUG(("--------------------------------------------------"));
-            DEBUG(("Delta_Time = %f\n", static_cast<double>(delta_time)));
-            DEBUG(("VELOCITY : %f:%f\n", static_cast<double>(transform->velocity_x * delta_time),
-                   static_cast<double>(transform->velocity_y * delta_time)));
-            DEBUG(("POSITION : %f:%f\n", static_cast<double>(transform->position_x),
-                   static_cast<double>(transform->position_y)));
-            DEBUG(("--------------------------------------------------"));
         }
     }
 } // namespace rtype

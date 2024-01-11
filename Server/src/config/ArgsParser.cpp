@@ -6,7 +6,6 @@
 */
 
 #include <algorithm>
-#include <iostream>
 #include <rtype.hh>
 #include <rtype/config/ArgsParser.hh>
 

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <rtype/utils/Color.hh>
-#include <rtype/utils/Vector2D.hh>
+#include <rtype/utils/Vector2D.hpp>
 #include <string>
 
 namespace rtype

@@ -1,0 +1,97 @@
+.TH "rtype::SparseArray< TComponent >" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::SparseArray< TComponent >
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBrtype::ISparseArray\fP\&.
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "using \fBvalue_type\fP = std::optional< TComponent >"
+.br
+.ti -1c
+.RI "using \fBreference_type\fP = value_type &"
+.br
+.ti -1c
+.RI "using \fBconst_reference_type\fP = value_type const &"
+.br
+.ti -1c
+.RI "using \fBcontainer_t\fP = std::vector< value_type >"
+.br
+.ti -1c
+.RI "using \fBsize_type\fP = typename container_t::size_type"
+.br
+.ti -1c
+.RI "using \fBiterator\fP = typename container_t::iterator"
+.br
+.ti -1c
+.RI "using \fBconst_iterator\fP = typename container_t::const_iterator"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSparseArray\fP (\fBSparseArray\fP const &)=default"
+.br
+.ti -1c
+.RI "\fBSparseArray\fP (\fBSparseArray\fP &&)=default"
+.br
+.ti -1c
+.RI "\fBSparseArray\fP & \fBoperator=\fP (\fBSparseArray\fP const &)=default"
+.br
+.ti -1c
+.RI "\fBSparseArray\fP & \fBoperator=\fP (\fBSparseArray\fP &&)=default"
+.br
+.ti -1c
+.RI "reference_type \fBoperator[]\fP (size_t index)"
+.br
+.ti -1c
+.RI "const_reference_type \fBoperator[]\fP (size_t index) const"
+.br
+.ti -1c
+.RI "iterator \fBbegin\fP ()"
+.br
+.ti -1c
+.RI "const_iterator \fBbegin\fP () const"
+.br
+.ti -1c
+.RI "const_iterator \fBcbegin\fP () const"
+.br
+.ti -1c
+.RI "iterator \fBend\fP ()"
+.br
+.ti -1c
+.RI "const_iterator \fBend\fP () const"
+.br
+.ti -1c
+.RI "const_iterator \fBcend\fP () const"
+.br
+.ti -1c
+.RI "size_type \fBsize\fP () const"
+.br
+.ti -1c
+.RI "reference_type \fBinsert_at\fP (size_type pos, TComponent const &comp)"
+.br
+.ti -1c
+.RI "reference_type \fBinsert_at\fP (size_type pos, TComponent &&comp)"
+.br
+.ti -1c
+.RI "template<class\&.\&.\&. TParams> reference_type \fBemplace_at\fP (size_type pos, TParams &&\&.\&.\&.args)"
+.br
+.ti -1c
+.RI "void \fBremove\fP (size_t pos) override"
+.br
+.ti -1c
+.RI "size_type \fBget_index\fP (value_type const &value) const"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.
