@@ -33,13 +33,25 @@ Inherits \fBrtype::IGraphicModule\fP\&.
 .RI "void \fBdraw_components\fP (\fBSparseArray\fP< \fBSpriteComponent\fP > &sprites, \fBSparseArray\fP< \fBTransformComponent\fP > &transforms) final"
 .br
 .ti -1c
-.RI "void \fBdraw\fP (\fBSpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP transform) final"
+.RI "void \fBdraw_components\fP (\fBSparseArray\fP< \fBTextComponent\fP > &text, \fBSparseArray\fP< \fBTransformComponent\fP > &transforms) final"
 .br
 .ti -1c
-.RI "void \fBdraw\fP (sf::Sprite &sprite, \fBrtype::TransformComponent\fP transform) final"
+.RI "void \fBdraw\fP (\fBSpriteComponent\fP &sprite_component, const \fBTransformComponent\fP &transform) final"
 .br
 .ti -1c
-.RI "void \fBdraw\fP (sf::Text &text, \fBrtype::TransformComponent\fP transform) final"
+.RI "void \fBdraw\fP (\fBTextComponent\fP &text_component, const \fBTransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "void \fBdraw\fP (sf::Text &text_component, const \fBTransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "void \fBdraw\fP (sf::Sprite &sprite, const \fBTransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "float \fBget_text_width\fP (\fBTextComponent\fP &text) final"
+.br
+.ti -1c
+.RI "bool \fBis_sprite_left_click\fP (\fBrtype::SpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP &transform) final"
 .br
 .ti -1c
 .RI "void \fBset_view_port\fP (sf::View &view) final"

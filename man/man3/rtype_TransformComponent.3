@@ -13,6 +13,18 @@ rtype::TransformComponent
 .RI "\fBTransformComponent\fP (float position_x=0, float position_y=0, float velocity_x=0, float velocity_y=0, float scale_x=1, float scale_y=1)"
 .br
 .ti -1c
+.RI "\fBTransformComponent\fP (const \fBTransformComponent\fP &transform)=default"
+.br
+.ti -1c
+.RI "\fBTransformComponent\fP (\fBTransformComponent\fP &&transform)=default"
+.br
+.ti -1c
+.RI "\fBTransformComponent\fP & \fBoperator=\fP (const \fBTransformComponent\fP &transform)=default"
+.br
+.ti -1c
+.RI "\fBTransformComponent\fP & \fBoperator=\fP (\fBTransformComponent\fP &&transform)=default"
+.br
+.ti -1c
 .RI "\fBTransformComponent\fP & \fBoperator=\fP (const nlohmann::json &json)"
 .br
 .ti -1c
