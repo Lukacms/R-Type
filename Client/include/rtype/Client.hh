@@ -17,7 +17,6 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/IAudioModule.hh>
 #include <rtype/IGraphicModule.hh>
-#include <rtype/Network/NetworkManager.hh>
 #include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>

@@ -172,7 +172,7 @@ void rclient::scenes::Menu::key_handling(rtype::IGraphicModule &graphical_module
         tmp = '9';
     if (graphical_module.is_input_pressed(rtype::Keys::DOT))
         tmp = '.';
-    if (graphical_module.is_input_pressed(rtype::Keys::DELETE)) {
+    if (graphical_module.is_input_pressed(rtype::Keys::DEL)) {
         tmp = 127;
     }
     if (m_right_selected) {

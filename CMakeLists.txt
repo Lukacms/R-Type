@@ -100,30 +100,33 @@ if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 13.0.0)
     set(CLANG_WARNING_FLAGS "${CLANG_WARNING_FLAGS} -Wno-return-std-move-in-c++11")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always -std=c++20")
+if (NOT WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always -std=c++20")
 
-set(WARNING_FLAGS
-    -Wall
-    -Wextra
-    -Wshadow
-    -Wnon-virtual-dtor
-    -pedantic
-    -Wold-style-cast
-    -Wcast-align
-    -Wunused
-    -Wno-switch-default
-    -Woverloaded-virtual
-    -Wpedantic
-    -Wconversion
-    -Wsign-conversion
-    -Wdouble-promotion
-    -Wformat=2
-    -Wno-effc++
-    -Wno-suggest-override
-    -Wno-null-dereference
-    -Wno-zero-as-null-pointer-constant
-    -Wno-padded
-    -Wno-language-extension-token)
+    set(WARNING_FLAGS
+        -Wall
+        -Wextra
+        -Wshadow
+        -Wnon-virtual-dtor
+        -pedantic
+        -Wold-style-cast
+        -Wcast-align
+        -Wunused
+        -Wno-switch-default
+        -Woverloaded-virtual
+        -Wpedantic
+        -Wconversion
+        -Wsign-conversion
+        -Wdouble-promotion
+        -Wformat=2
+        -Wno-effc++
+        -Wno-suggest-override
+        -Wno-null-dereference
+        -Wno-zero-as-null-pointer-constant
+        -Wno-padded
+        -Wno-language-extension-token
+    )
+endif ()
 
 if (RTYPE_BUILD_TESTS)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
@@ -197,6 +200,10 @@ message("Warning flags: ${Cyan} ${WARNING_FLAGS}${ColourReset}")
 
 # for library compilation => shared libraries of game engine, utils, etc
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/libs)
+
+if(WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 # need to first load this one to load library
 add_subdirectory(RType-Utils)

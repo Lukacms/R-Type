@@ -8,6 +8,7 @@
 #include <iostream>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/PauseMenu.hh>
+#include <rtype/utils/Color.hh>
 
 rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     : m_width(width), m_height(height)
@@ -15,22 +16,22 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     for (size_t i{0}; i < 3; i++) {
         m_clocks[i] = std::chrono::steady_clock::now();
     }
-    m_texts[0].colors = rtype::utils::Colors::White;
+    m_texts[0].colors = rtype::utils::Colors{255, 255, 255};
     m_texts[0].text = "Press Enter to continue";
     m_texts[0].font_path = "./assets/font.ttf";
     m_texts[0].font_size = PLAY_FONT_SIZE;
 
-    m_texts[1].colors = rtype::utils::Colors::White;
+    m_texts[1].colors = rtype::utils::Colors{255, 255, 255};
     m_texts[1].text = "Press M to mute";
     m_texts[1].font_path = "./assets/font.ttf";
     m_texts[1].font_size = PLAY_FONT_SIZE;
 
-    m_texts[2].colors = rtype::utils::Colors::White;
+    m_texts[2].colors = rtype::utils::Colors{255, 255, 255};
     m_texts[2].text = "Press U to unmute";
     m_texts[2].font_path = "./assets/font.ttf";
     m_texts[2].font_size = PLAY_FONT_SIZE;
 
-    m_texts[3].colors = rtype::utils::Colors::White;
+    m_texts[3].colors = rtype::utils::Colors{255, 255, 255};
     m_texts[3].text = "Press Q to quit";
     m_texts[3].font_path = "./assets/font.ttf";
     m_texts[3].font_size = PLAY_FONT_SIZE;

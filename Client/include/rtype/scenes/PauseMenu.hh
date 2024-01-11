@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "rtype/Components/TextComponent.hh"
+#include <rtype/Components/TextComponent.hh>
+#include <rtype/IGraphicModule.hh>
 #include <array>
 #include <chrono>
 #include <functional>

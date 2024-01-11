@@ -5,8 +5,6 @@
 ** PlayersManager
 */
 
-#include <algorithm>
-#include <asio/registered_buffer.hpp>
 #include <rtype/clients/PlayersManager.hh>
 #include <shared_mutex>
 #include <vector>

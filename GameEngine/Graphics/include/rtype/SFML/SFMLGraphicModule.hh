@@ -33,7 +33,7 @@ namespace rtype
          {sf::Keyboard::Num4, rtype::Keys::FOUR},   {sf::Keyboard::Num5, rtype::Keys::FIVE},
          {sf::Keyboard::Num6, rtype::Keys::SIX},    {sf::Keyboard::Num7, rtype::Keys::SEVEN},
          {sf::Keyboard::Num8, rtype::Keys::EIGHT},  {sf::Keyboard::Num9, rtype::Keys::NINE},
-         {sf::Keyboard::Period, rtype::Keys::DOT},  {sf::Keyboard::Delete, rtype::Keys::DELETE}}};
+         {sf::Keyboard::Period, rtype::Keys::DOT},  {sf::Keyboard::Delete, rtype::Keys::DEL}}};
 
     void animation_system(ComponentManager &registry, float /* delta_time */);
 

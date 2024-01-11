@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "rtype/Components/TextComponent.hh"
+#include <rtype/Components/TextComponent.hh>
 #include <SFML/Graphics/Sprite.hpp>
 #include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TransformComponent.hh>

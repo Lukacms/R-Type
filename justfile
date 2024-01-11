@@ -2,6 +2,9 @@
 lint:
     @clang-format -i --style='file:.clang-format' `find Server/ Client/ RType-Utils/ GameEngine/ -name *.cpp -o -name *.hh -o -name *.hpp`
 
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+set shell := ["bash", "-uc"]
+
 names   := "r-type_server r-type_client"
 name_tests_server   :=  "tests/tests-r-type_server"
 name_tests_client   :=  "tests/tests-r-type_client"
@@ -39,8 +42,7 @@ tests: clean_tests
 
 # compile on windows
 windows:
-    cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release {{ basic_options }} -DASIO_STANDALONE=true --preset debug &&\
-    ninja -C {{ build_folder }}
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release ; cmake --build build
 
 benchmarks: prep
     cmake -B {{ build_folder }} -GNinja -DCMAKE_BUILD_TYPE=Release {{ no_release }} {{ basic_options }} -DRTYPE_BUILD_BENCHMARKS=true &&\

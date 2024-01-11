@@ -27,7 +27,7 @@ static const std::vector<rclient::scenes::CommandHandler> HANDLER{
 rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::socket &psocket)
     : endpoint{pendpoint}, socket{psocket}
 {
-    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
+    this->ecs.init_class<void *()>("./libs/r-type-ecs.so");
     rtype::SparseArray<rtype::SpriteComponent> sprites{};
     rtype::SparseArray<rtype::TransformComponent> transforms{};
     rtype::SparseArray<rtype::TagComponent> tags{};

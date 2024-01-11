@@ -15,7 +15,7 @@ rclient::components::RoomInfos::RoomInfos(const unsigned int &pid, const std::st
     : title{BASE_TITLE_ROOM.data() + std::to_string(pid)}, id{pid}
 {
     this->text.font_path = font;
-    this->text.colors = rtype::utils::Colors::White;
+    this->text.colors = rtype::utils::Colors{255, 255, 255};
 }
 
 /* methods */

@@ -26,6 +26,6 @@ namespace rtype
         EIGHT,
         NINE,
         DOT,
-        DELETE
+        DEL,
     };
 }

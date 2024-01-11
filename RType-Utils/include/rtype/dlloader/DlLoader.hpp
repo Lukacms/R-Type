@@ -112,7 +112,7 @@ namespace dl
     class DlException : public std::exception
     {
         public:
-            DlException(std::string p_error) : error_msg{std::move(p_error)}
+            explicit DlException(std::string p_error = "Error") : error_msg{std::move(p_error)}
             {
             }
 
@@ -142,7 +142,7 @@ namespace dl
 
             ~DlLoader()
             {
-                this->element.release();
+                delete this->element;
                 if (this->handle)
                     FreeLibrary(this->handle);
             }
@@ -153,7 +153,7 @@ namespace dl
             /* methods */
             TLoad &get_class() const
             {
-                return *this->element.get();
+                return *this->element;
             }
 
             template <typename TSignature, typename... TValues>
@@ -161,26 +161,28 @@ namespace dl
                             std::string const &loader_func = DEFAULT_LOADER.data(),
                             TValues &&...values)
             {
-                this->handle = LoadLibrary(path.c_str(), RTLD_LAZY);
+                this->handle = LoadLibrary(path.c_str());
+                void *load_variable{nullptr};
 
                 if (!this->handle) {
-                    throw DlException(std::string{dlerror()});
+                    throw DlException(std::string{"error"});
                 }
                 auto *loader{reinterpret_cast<TSignature *>(
                     GetProcAddress(this->handle, loader_func.data()))};
                 if (!loader)
                     throw DlException(ERROR_FETCH_LOADER.data());
-                if (!(this->element = loader(std::forward<TValues>(values)...)))
+                if (!(load_variable = loader(std::forward<TValues>(values)...)))
                     throw DlException(ERROR_LOAD_CLASS.data());
+                this->element = static_cast<TLoad *>(load_variable);
             }
 
             /* exception */
 
         private:
-            HMODULE *handle{nullptr};
-            std::unique_ptr<TLoad> element{nullptr};
+            HMODULE handle{nullptr};
+            TLoad *element{nullptr};
     };
 
 } // namespace dl
 
-#endif /* os */
+#endif /* __linux */

@@ -150,14 +150,10 @@ jobs:
           vcpkg: true
           cppcheck: true
           clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
-      - name: install dlfcn library
-        run: |
-          vcpkg install dlfcn-win32
       - name: Build project with msvc
         run: |
           echo $env:VCPKG_ROOT
-          cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DASIO_STANDALONE=true --preset debug
-          ninja -C build
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release ; cmake --build build
         timeout-minutes: 10
 
   run_tests:

@@ -33,12 +33,12 @@ rclient::Client::Client(const rclient::Arguments &infos)
       game{this->endpoint, this->socket}, host{std::move(infos.hostname)},
       port{std::move(infos.port)}
 {
-    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
-    this->graphics.init_class<std::unique_ptr<rtype::IGraphicModule>(
+    this->ecs.init_class<void *()>("./libs/r-type-ecs.so");
+    this->graphics.init_class<void *(
         unsigned int width, unsigned int height, const std::string &title)>(
         "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH, rtype::STANDARD_HEIGHT,
         STANDARD_TITLE.data());
-    this->audio.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so",
+    this->audio.init_class<void *()>("./libs/r-type-audio.so",
                                                                    "entrypoint");
     rtype::SparseArray<rtype::SpriteComponent> sprites{};
     rtype::SparseArray<rtype::TransformComponent> transforms{};

@@ -14,8 +14,8 @@
 rserver::game::Room::Room(asio::ip::udp::socket &psocket, std::size_t pid)
     : socket{psocket}, id{std::move(pid)}, logic{socket, ecs_mutex}
 {
-    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
-    this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
+    this->ecs.init_class<void *()>(ECS_SL_PATH.data());
+    this->physics.init_class<void *()>(PHYSICS_SL_PATH.data());
     init_ecs(this->ecs.get_class());
     DEBUG(("New game room created%s", ENDL));
 }
