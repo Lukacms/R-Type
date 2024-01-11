@@ -35,17 +35,23 @@ rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::s
     rtype::SparseArray<rtype::TagComponent> tags{};
     rtype::SparseArray<rtype::BoxColliderComponent> colliders{};
     rtype::SparseArray<rtype::HealthComponent> health{};
+    rtype::SparseArray<rtype::AnimationComponent> animation{};
+    std::function<void(rtype::ComponentManager &, float)> animation_system{
+        &rtype::animation_system};
 
     this->ecs.get_class().register_component(sprites);
     this->ecs.get_class().register_component(transforms);
     this->ecs.get_class().register_component(tags);
     this->ecs.get_class().register_component(colliders);
     this->ecs.get_class().register_component(health);
+    this->ecs.get_class().register_component(animation);
+    this->ecs.get_class().add_system(animation_system);
 }
 
 void rclient::scenes::Game::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
+    ecs.get_class().apply_system(0);
     graphics.draw_components(this->ecs.get_class().get_components<rtype::SpriteComponent>(),
                              this->ecs.get_class().get_components<rtype::TransformComponent>());
     graphics.display();
@@ -92,7 +98,8 @@ void write_score_to_leaderboard(int new_score, std::string new_name)
     }
 }
 
-void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics, State &state)
+void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics,
+                                          rtype::IAudioModule &audio, State &state)
 {
 
     if (graphics.is_input_pressed(rtype::Keys::UP)) {
@@ -121,6 +128,7 @@ void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics, State
     }
     if (graphics.is_input_pressed(rtype::Keys::W) &&
         this->timer_shoot.get_elapsed_time_in_ms() > BULLET_TIMEOUT) {
+        audio.play_sfx("Shoot");
         ntw::Communication to_send{};
         to_send.type = ntw::NetworkType::Input;
         to_send.add_param(4);
@@ -131,9 +139,12 @@ void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics, State
         state = State::Pause;
 }
 
-void rclient::scenes::Game::handle_network(ntw::Communication &commn, State &state)
+void rclient::scenes::Game::handle_network(ntw::Communication &commn, rtype::IAudioModule &audio,
+                                           State &state)
 {
     for (const auto &handler : HANDLER) {
+        if (commn.type == ntw::NetworkType::Music)
+            return change_music(commn, audio);
         if (handler.type == commn.type)
             return handler.handler(*this, commn, state);
     }
@@ -175,7 +186,7 @@ void rclient::scenes::Game::create_entity(ntw::Communication &commn, State & /* 
 
 void rclient::scenes::Game::move_entity(ntw::Communication &commn, State & /* state */)
 {
-    std::vector<std::string> arguments = commn.deserialize();
+    std::vector<std::string> arguments{commn.deserialize()};
     auto &transform = this->ecs.get_class().get_component<rtype::TransformComponent>(
         static_cast<size_t>(std::stoi(arguments[0])));
 
@@ -186,4 +197,10 @@ void rclient::scenes::Game::move_entity(ntw::Communication &commn, State & /* st
 void rclient::scenes::Game::end_game(ntw::Communication & /* commn */, State &state) // NOLINT
 {
     state = State::End;
+}
+
+void rclient::scenes::Game::change_music(ntw::Communication &commn, rtype::IAudioModule &audio)
+{
+    std::vector<std::string> arguments = commn.deserialize();
+    audio.play_music(arguments[0]);
 }

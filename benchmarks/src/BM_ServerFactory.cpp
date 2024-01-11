@@ -33,7 +33,7 @@ static void bm_server_factory(benchmark::State &state)
         rserver::ServerEntityFactory::create("BasicEnemy", ecs.get_class());
         rserver::ServerEntityFactory::create("Player", ecs.get_class());
         rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class());
-        rserver::ServerEntityFactory::create("Bullet", ecs.get_class());
+        rserver::ServerEntityFactory::create("PlayerBullet", ecs.get_class());
     }
 }
 

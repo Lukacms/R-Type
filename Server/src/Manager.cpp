@@ -7,8 +7,11 @@
 
 #include <algorithm>
 #include <csignal>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <mutex>
+#include <nlohmann/json.hpp>
 #include <rtype.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
@@ -125,6 +128,19 @@ void rserver::Manager::launch(asio::ip::port_type port)
     }
 }
 
+void load_entity_properties()
+{
+    std::string path = rserver::ENTITIES_FILE.data();
+    std::ifstream file{path};
+
+    if (!file) {
+        return;
+    }
+    nlohmann::json json;
+    file >> json;
+    std::cout << json["Enemies"] << std::endl;
+}
+
 /**
  * @brief method to run game logic
  *  the game logic has to be on another thread, as the asio context run is an infinite loop
@@ -134,11 +150,11 @@ void rserver::Manager::run_game_logic()
     this->threads.add_job([this]() {
         rtype::utils::Clock timer{};
         rtype::utils::Clock delta_time{};
-
+        load_entity_properties();
         while (RUNNING) {
             if (timer.get_elapsed_time_in_ms() > game::TIMER) {
-                logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
-                                static_cast<float>(delta_time.get_elapsed_time_in_ms()));
+                /* logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
+                                static_cast<float>(delta_time.get_elapsed_time_in_ms())); */
                 this->run_all_rooms_logics(delta_time);
                 ecs.get_class().apply_system(
                     static_cast<float>(delta_time.get_elapsed_time_in_ms()));
@@ -163,7 +179,7 @@ void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
         else
-            room.check_wait_timeout();
+            room.check_wait_timeout(static_cast<float>(delta.get_elapsed_time_in_ms()));
     }
 }
 
@@ -222,12 +238,12 @@ void rserver::Manager::start_receive()
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
                     [commn, this]() { this->command_manager(commn, this->endpoint); });
-            if (clock.get_elapsed_time_in_ms() > game::TIMER) {
-                this->lobby_handler();
-                clock.reset();
-            }
         } catch (std::exception & /* e */) {
             // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
+        }
+        if (clock.get_elapsed_time_in_ms() > game::TIMER) {
+            this->lobby_handler();
+            clock.reset();
         }
     }
 }

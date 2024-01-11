@@ -6,7 +6,7 @@
 project(r-type_client)
 
 # include directories
-include_directories(./include/)
+include_directories(include/)
 
 # if shared libraries need to have template files
 add_library(rtype-client-interface INTERFACE)
@@ -20,6 +20,7 @@ target_link_libraries(
     r-type-utils
     r-type-audio
     r-type-graphics-interface
+    nlohmann_json::nlohmann_json
 )
 
 # add library with all of the source file, execpt for the main
@@ -59,6 +60,7 @@ target_link_libraries(
     nlohmann_json::nlohmann_json
     r-type-graphics
     r-type-utils
+    nlohmann_json::nlohmann_json
     asio::asio # link asio library to core
 )
 

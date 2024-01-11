@@ -45,21 +45,18 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     m_transforms[1].position_x = m_width / MIDLE_DIV;
     m_transforms[1].position_y = POS_Y_TEXT_MENU;
 
-    m_texts_transforms[0] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE};
+    m_texts_transforms[0].position_x = static_cast<float>(m_width) / MIDLE_DIV;
+    m_texts_transforms[0].position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_BASE;
+    
+    m_texts_transforms[1].position_x = static_cast<float>(m_width) / MIDLE_DIV;
+    m_texts_transforms[1].position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE;
 
-    m_texts_transforms[1] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - MUTE_BASE};
+    m_texts_transforms[2].position_x = static_cast<float>(m_width) / MIDLE_DIV;
+    m_texts_transforms[2].position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE;
 
-    m_texts_transforms[2] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - UNMUTE_BASE};
+    m_texts_transforms[3].position_x = static_cast<float>(m_width) / MIDLE_DIV;
+    m_texts_transforms[3].position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_HEIGHT_DIV;
 
-    m_texts_transforms[3] = {.position_x = static_cast<float>(m_width) / MIDLE_DIV,
-                             .position_y =
-                                 static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_HEIGHT_DIV};
 }
 
 void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
@@ -75,13 +72,15 @@ void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
     graphics.display();
 }
 
-void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics, State &state)
+void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics,
+                                               rtype::IAudioModule & /*audio*/, State &state)
 {
     if (graphics.is_input_pressed(rtype::Keys::ENTER))
         state = State::Game;
 }
 
 void rclient::scenes::PauseMenu::handle_network(ntw::Communication & /* commn */,
+                                                rtype::IAudioModule & /*audio*/,
                                                 State & /* state */)
 {
 }

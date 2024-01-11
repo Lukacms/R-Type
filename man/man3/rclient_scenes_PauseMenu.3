@@ -1,0 +1,42 @@
+.TH "rclient::scenes::PauseMenu" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::scenes::PauseMenu
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBrclient::scenes::IScene\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPauseMenu\fP (unsigned int width=rtype::STANDARD_WIDTH, unsigned int height=rtype::STANDARD_HEIGHT)"
+.br
+.ti -1c
+.RI "\fBPauseMenu\fP (\fBPauseMenu\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBPauseMenu\fP (\fBPauseMenu\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "\fBPauseMenu\fP & \fBoperator=\fP (\fBPauseMenu\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBPauseMenu\fP & \fBoperator=\fP (\fBPauseMenu\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
+.br
+.ti -1c
+.RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
+.br
+.ti -1c
+.RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

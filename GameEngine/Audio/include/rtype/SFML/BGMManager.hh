@@ -17,8 +17,8 @@
 namespace rtype
 {
 
-    constexpr std::string_view BGM_FILEPATH{"./Client/configs/BGM.json"};
-    constexpr float BGM_STANDARD_VOLUME{25.F};
+    constexpr std::string_view BGM_FILEPATH{"./assets/configs/BGM.json"};
+    constexpr float BGM_STANDARD_VOLUME{10.F};
 
     struct BGM {
             std::string name{};
@@ -42,6 +42,7 @@ namespace rtype
         private:
             std::vector<BGM> m_bgm{};
             sf::Music m_current_music{};
+            std::string m_current_name{};
             float m_volume{BGM_STANDARD_VOLUME};
     };
 } // namespace rtype

@@ -1,0 +1,44 @@
+.TH "rclient::Client" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::Client
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBClient\fP (const \fBrclient::Arguments\fP &infos)"
+.br
+.ti -1c
+.RI "\fBClient\fP (\fBClient\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBClient\fP (\fBClient\fP &&to_move)"
+.br
+.ti -1c
+.RI "\fBClient\fP & \fBoperator=\fP (\fBClient\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBClient\fP & \fBoperator=\fP (\fBClient\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "void \fBloop\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static int \fBlaunch\fP (const \fBArguments\fP &infos)"
+.br
+.ti -1c
+.RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &commn, const asio::ip::udp::endpoint &endpoint, asio::ip::udp::socket &socket)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

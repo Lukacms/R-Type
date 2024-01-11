@@ -1,0 +1,69 @@
+.TH "rtype::IGraphicModule" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::IGraphicModule
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by \fBrtype::SFMLGraphicModule\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBIGraphicModule\fP (const \fBIGraphicModule\fP &)=delete"
+.br
+.ti -1c
+.RI "\fBIGraphicModule\fP (\fBIGraphicModule\fP &&)=delete"
+.br
+.ti -1c
+.RI "\fBIGraphicModule\fP & \fBoperator=\fP (const \fBIGraphicModule\fP &)=delete"
+.br
+.ti -1c
+.RI "\fBIGraphicModule\fP & \fBoperator=\fP (\fBIGraphicModule\fP &&)=delete"
+.br
+.ti -1c
+.RI "virtual void \fBupdate\fP ()=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw_components\fP (\fBSparseArray\fP< \fBrtype::SpriteComponent\fP > &sprites, \fBSparseArray\fP< \fBrtype::TransformComponent\fP > &transforms)=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw\fP (\fBrtype::SpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP transform)=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw\fP (sf::Sprite &sprite, \fBrtype::TransformComponent\fP transform)=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw\fP (sf::Text &text, \fBrtype::TransformComponent\fP transform)=0"
+.br
+.ti -1c
+.RI "virtual void \fBset_view_port\fP (sf::View &)=0"
+.br
+.ti -1c
+.RI "virtual sf::View \fBget_view_port\fP ()=0"
+.br
+.ti -1c
+.RI "virtual void \fBdisplay\fP ()=0"
+.br
+.ti -1c
+.RI "virtual void \fBclose_window\fP ()=0"
+.br
+.ti -1c
+.RI "virtual void \fBclear\fP ()=0"
+.br
+.ti -1c
+.RI "virtual bool \fBis_input_pressed\fP (rtype::Keys key)=0"
+.br
+.ti -1c
+.RI "virtual bool \fBis_window_open\fP ()=0"
+.br
+.ti -1c
+.RI "virtual \fBrtype::utils::Vector2D\fP< float > \fBis_left_mouse_pressed\fP ()=0"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

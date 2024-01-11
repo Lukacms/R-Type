@@ -1,0 +1,44 @@
+.TH "rtype::PhysicsManager" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::PhysicsManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPhysicsException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPhysicsManager\fP (\fBPhysicsManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBPhysicsManager\fP (\fBPhysicsManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBPhysicsManager\fP & \fBoperator=\fP (\fBPhysicsManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBPhysicsManager\fP & \fBoperator=\fP (\fBPhysicsManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "void \fBcheck_collisions\fP (\fBECSManager\fP &ecs_manager)"
+.br
+.ti -1c
+.RI "std::vector< std::size_t > \fBget_collision\fP (std::size_t entity) const"
+.br
+.ti -1c
+.RI "bool \fBis_collided\fP (std::size_t entity1, std::size_t entity2) const"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

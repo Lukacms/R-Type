@@ -5,6 +5,7 @@
 ** end_handler
 */
 
+#include <iostream>
 #include <rtype.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Manager.hh>

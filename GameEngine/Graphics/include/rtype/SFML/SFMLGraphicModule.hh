@@ -13,17 +13,16 @@
 #include <rtype/Keys.hh>
 #include <rtype/SFML/InputManager.hh>
 #include <rtype/SparseArray.hpp>
+#include <string_view>
 
 namespace rtype
 {
     struct SFMLKeyring {
+        public:
             sf::Keyboard::Key sfml_key;
             rtype::Keys key;
     };
 
-    const constexpr int STANDARD_WIDTH{800};
-    const constexpr int STANDARD_HEIGHT{600};
-    const constexpr char *STANDARD_TITLE{"R-TYPE"};
     const constexpr std::array<SFMLKeyring, 20> KEYS_ARRAY{
         {
             {sf::Keyboard::Up, rtype::Keys::UP},       {sf::Keyboard::Right, rtype::Keys::RIGHT},
@@ -44,9 +43,9 @@ namespace rtype
     class SFMLGraphicModule : public rtype::IGraphicModule
     {
         public:
-            explicit SFMLGraphicModule(unsigned int width = STANDARD_WIDTH,
-                                       unsigned int height = STANDARD_HEIGHT,
-                                       const std::string &title = STANDARD_TITLE);
+            SFMLGraphicModule(unsigned int width = STANDARD_WIDTH,
+                              unsigned int height = STANDARD_HEIGHT,
+                              const std::string &title = STANDARD_TITLE.data());
             ~SFMLGraphicModule() override = default;
             SFMLGraphicModule(const SFMLGraphicModule &) = delete;
             SFMLGraphicModule(SFMLGraphicModule &&) = delete;
@@ -62,11 +61,16 @@ namespace rtype
             void draw(TextComponent &text_component, TransformComponent &transform) final;
             float get_text_width(TextComponent &text) final;
             bool is_sprite_left_click(SpriteComponent &sprite, TransformComponent &transform) final;
+            void draw(sf::Sprite &sprite, rtype::TransformComponent &transform) final;
+            void draw(sf::Text &text, rtype::TransformComponent &transform) final;
+            void set_view_port(sf::View &view) final;
+            [[nodiscard]] sf::View get_view_port() final;
             void display() final;
             void close_window() final;
             void clear() final;
             bool is_input_pressed(rtype::Keys key) final;
             [[nodiscard]] bool is_window_open() final;
+            [[nodiscard]] rtype::utils::Vector2D<float> is_left_mouse_pressed() final;
 
         private:
             sf::VideoMode m_mode;

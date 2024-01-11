@@ -1,0 +1,45 @@
+.TH "rserver::ServerEntityFactory" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::ServerEntityFactory
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBFactoryException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBServerEntityFactory\fP (const \fBServerEntityFactory\fP &factory)=default"
+.br
+.ti -1c
+.RI "\fBServerEntityFactory\fP (\fBServerEntityFactory\fP &&factory)=default"
+.br
+.ti -1c
+.RI "\fBServerEntityFactory\fP & \fBoperator=\fP (const \fBServerEntityFactory\fP &factory)=default"
+.br
+.ti -1c
+.RI "\fBServerEntityFactory\fP & \fBoperator=\fP (\fBServerEntityFactory\fP &&factory)=default"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static size_t \fBcreate\fP (const std::string &type, \fBrtype::ECSManager\fP &ecs_manager)"
+.br
+.ti -1c
+.RI "static size_t \fBcreate_json\fP (const std::string &type, \fBrtype::ECSManager\fP &ecs_manager)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

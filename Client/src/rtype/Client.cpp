@@ -29,11 +29,12 @@ static void handle_sigint(int /* unused */)
 
 /* ctor / dtor */
 rclient::Client::Client(const rclient::Arguments &infos)
-    : resolver{this->context}, socket{this->context}, game{endpoint, socket},
-      host{std::move(infos.hostname)}, port{std::move(infos.port)}
+    : resolver{this->context}, socket{this->context}, lounge{this->socket, this->endpoint},
+      game{this->endpoint, this->socket}, host{std::move(infos.hostname)},
+      port{std::move(infos.port)}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
-    this->graphics.init_class<std::unique_ptr<rtype::SFMLGraphicModule>(
+    this->graphics.init_class<std::unique_ptr<rtype::IGraphicModule>(
         unsigned int width, unsigned int height, const std::string &title)>(
         "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH, rtype::STANDARD_HEIGHT,
         STANDARD_TITLE.data());
@@ -61,7 +62,7 @@ rclient::Client::Client(const rclient::Arguments &infos)
 rclient::Client::~Client()
 {
     RUNNING = 0;
-    Client::send_message({}, this->endpoint, this->socket);
+    Client::send_message({ntw::NetworkType::End}, this->endpoint, this->socket);
     if (this->graphics.get_class().is_window_open()) {
         this->graphics.get_class().close_window();
     }
@@ -71,8 +72,9 @@ rclient::Client::~Client()
 
 rclient::Client::Client(rclient::Client &&to_move)
     : resolver{std::move(to_move.resolver)}, socket{std::move(to_move.socket)},
-      game{to_move.endpoint, to_move.socket}, threads{std::move(to_move.threads)},
-      host{std::move(to_move.host)}, port{std::move(to_move.port)}
+      lounge{to_move.socket, to_move.endpoint}, game{to_move.endpoint, to_move.socket},
+      threads{std::move(to_move.threads)}, host{std::move(to_move.host)},
+      port{std::move(to_move.port)}
 {
 }
 
@@ -101,7 +103,7 @@ int rclient::Client::launch(const Arguments &infos)
  */
 void rclient::Client::setup_network()
 {
-    this->state = scenes::State::Game;
+    this->state = scenes::State::Lounge;
     this->endpoint = *this->resolver.resolve(asio::ip::udp::v4(), this->host, this->port).begin();
     this->socket.open(asio::ip::udp::v4());
     this->socket.non_blocking(true); // <- set socket mode as non-blocking
@@ -110,19 +112,21 @@ void rclient::Client::setup_network()
         ntw::Communication commn{};
         asio::ip::udp::endpoint sender{};
 
-        while (RUNNING && this->state != scenes::State::End) {
+        while (RUNNING && this->state != scenes::State::End &&
+               this->graphics.get_class().is_window_open()) {
             try {
                 this->socket.receive_from(asio::buffer(&commn, sizeof(commn)), sender);
                 if (sender.port() > 0) {
                     switch (this->state) {
                         case scenes::State::Game:
-                            this->game.handle_network(commn, this->state);
+                            this->game.handle_network(commn, this->audio.get_class(), this->state);
                             break;
                         case scenes::State::Lounge:
-                            this->lounge.handle_network(commn, this->state);
+                            this->lounge.handle_network(commn, this->audio.get_class(),
+                                                        this->state);
                             break;
                         case scenes::State::Pause:
-                            this->game.handle_network(commn, this->state);
+                            this->game.handle_network(commn, this->audio.get_class(), this->state);
                             break;
                         case scenes::State::Menu:
                             break;
@@ -143,6 +147,7 @@ void rclient::Client::loop()
     this->audio.get_class().play_music("TitleScreen");
     while (RUNNING && this->state != scenes::State::End) {
         this->graphics.get_class().update();
+        this->audio.get_class().update();
         if (clock.get_elapsed_time_in_ms() > GAME_TIMEOUT) {
             this->launch_displays();
             clock.reset();
@@ -182,16 +187,20 @@ void rclient::Client::check_events()
         RUNNING = 0;
     switch (this->state) {
         case scenes::State::Menu:
-            this->menu.handle_events(this->graphics.get_class(), this->state);
+            this->menu.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                     this->state);
             break;
         case scenes::State::Lounge:
-            this->lounge.handle_events(this->graphics.get_class(), this->state);
+            this->lounge.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                       this->state);
             break;
         case scenes::State::Game:
-            this->game.handle_events(this->graphics.get_class(), this->state);
+            this->game.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                     this->state);
             break;
         case scenes::State::Pause:
-            this->pause.handle_events(this->graphics.get_class(), this->state);
+            this->pause.handle_events(this->graphics.get_class(), this->audio.get_class(),
+                                      this->state);
             break;
         case scenes::State::End:
             return;

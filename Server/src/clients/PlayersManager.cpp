@@ -36,6 +36,13 @@ rserver::Player &rserver::PlayersManager::add_player(asio::ip::udp::endpoint &en
     return this->players.back();
 }
 
+rserver::Player &rserver::PlayersManager::add_player(rserver::Player &to_add)
+{
+    this->players.push_back(to_add);
+
+    return this->players.back();
+}
+
 std::size_t rserver::PlayersManager::length() const
 {
     return this->players.size();

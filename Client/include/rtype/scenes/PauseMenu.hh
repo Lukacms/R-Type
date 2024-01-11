@@ -11,6 +11,7 @@
 #include <array>
 #include <chrono>
 #include <functional>
+#include <rtype/IAudioModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
@@ -33,8 +34,10 @@ namespace rclient::scenes
             PauseMenu &operator=(PauseMenu &&to_move) = delete;
 
             void display(rtype::IGraphicModule &graphics) override;
-            void handle_events(rtype::IGraphicModule &graphics, State &state) override;
-            void handle_network(ntw::Communication &commn, State &state) override;
+            void handle_events(rtype::IGraphicModule &graphics, rtype::IAudioModule &audio,
+                               State &state) override;
+            void handle_network(ntw::Communication &commn, rtype::IAudioModule &audio,
+                                State &state) override;
 
         private:
             bool m_changing_scene{false};

@@ -40,7 +40,6 @@ cmake-build-release/
 compile_commands.json
 latex
 html
-man
 
 # specific to project
 r-type_server

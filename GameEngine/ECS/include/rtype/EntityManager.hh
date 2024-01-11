@@ -7,9 +7,11 @@
 
 #pragma once
 
+#include <any>
 #include <cstddef>
 #include <exception>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace rtype
@@ -51,5 +53,6 @@ namespace rtype
         private:
             std::vector<std::size_t> m_queue{};
             std::vector<std::size_t> m_used{};
+            std::vector<std::unordered_map<std::string, std::any>> m_entities{};
     };
 } // namespace rtype

@@ -1,0 +1,65 @@
+.TH "rclient::NetworkManager" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::NetworkManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBNetworkManager\fP (const std::string &host, const std::string &port)"
+.br
+.ti -1c
+.RI "\fBNetworkManager\fP (\fBNetworkManager\fP const &other)=delete"
+.br
+.ti -1c
+.RI "\fBNetworkManager\fP (\fBNetworkManager\fP &&other)=delete"
+.br
+.ti -1c
+.RI "\fBNetworkManager\fP & \fBoperator=\fP (\fBNetworkManager\fP const &other)=delete"
+.br
+.ti -1c
+.RI "\fBNetworkManager\fP & \fBoperator=\fP (\fBNetworkManager\fP &&other)=delete"
+.br
+.ti -1c
+.RI "void \fBfetch_messages\fP (\fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBsend_message\fP (\fBntw::Communication\fP &communication)"
+.br
+.ti -1c
+.RI "void \fBsend_message\fP (\fBntw::Communication\fP communication)"
+.br
+.ti -1c
+.RI "void \fBmanage_message\fP (\fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "std::deque< \fBntw::Communication\fP > & \fBget_message_queue\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBcreate_entity\fP (\fBNetworkManager\fP &network_manager, \fBrtype::ECSManager\fP &ecs_manager, \fBntw::Communication\fP &communication)"
+.br
+.ti -1c
+.RI "static void \fBmove_entity\fP (\fBNetworkManager\fP &network_manager, \fBrtype::ECSManager\fP &ecs_manager, \fBntw::Communication\fP &communication)"
+.br
+.ti -1c
+.RI "static void \fBend_game\fP (\fBNetworkManager\fP &network_manager, \fBrtype::ECSManager\fP &ecs_manager, \fBntw::Communication\fP &communication)"
+.br
+.ti -1c
+.RI "static void \fBdelete_entity\fP (\fBNetworkManager\fP &network_manager, \fBrtype::ECSManager\fP &ecs_manager, \fBntw::Communication\fP &communication)"
+.br
+.ti -1c
+.RI "static void \fBmanage_entity\fP (\fBNetworkManager\fP &network_manager, \fBrtype::ECSManager\fP &ecs_manager, \fBntw::Communication\fP &communication)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

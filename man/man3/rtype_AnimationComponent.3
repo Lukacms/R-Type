@@ -1,0 +1,38 @@
+.TH "rtype::AnimationComponent" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::AnimationComponent
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAnimationComponent\fP (std::size_t pframe=0, std::string panim='', \fButils::Clock\fP pclock={}, std::vector< \fBAnimationClip\fP > pclip={})"
+.br
+.ti -1c
+.RI "\fBAnimationComponent\fP (const nlohmann::json &json)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::size_t \fBcurrent_frame\fP {0}"
+.br
+.ti -1c
+.RI "std::string \fBcurrent_animation\fP {}"
+.br
+.ti -1c
+.RI "\fBrtype::utils::Clock\fP \fBclock\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBAnimationClip\fP > \fBanimation_clips\fP {}"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.
