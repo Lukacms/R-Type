@@ -38,10 +38,12 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
     if (!m_level_manager.has_enough_level()) {
         spawn_enemy(manager);
         send_music(players_manager, STANDARD_MUSIC.data());
+        send_background(players_manager, STANDARD_BACKGROUND.data());
         return;
     }
     m_level_manager.update(manager);
     send_music(players_manager, m_level_manager.get_current_music());
+    send_background(players_manager, m_level_manager.get_current_background());
     if (m_level_manager.is_level_finished())
         m_level_manager.change_level();
 }
@@ -185,7 +187,7 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow,
                                                     rtype::ECSManager &manager)
 {
-    int success = std::rand() % 50;
+    int success = std::rand() % 1;
     auto &transforms = manager.get_components<rtype::TransformComponent>();
 
     std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
@@ -208,6 +210,16 @@ void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manag
     ntw::Communication music_descriptor{ntw::NetworkType::Music, {}};
     music_descriptor.add_param(music_name);
     Manager::send_to_all(music_descriptor, players_manager, m_socket);
+}
+
+void rserver::game::GameLogic::send_background(rserver::PlayersManager &players_manager,
+                                               const std::string &background_name)
+{
+    if (background_name.empty())
+        return;
+    ntw::Communication background_descriptor{ntw::NetworkType::Background, {}};
+    background_descriptor.add_param(background_name);
+    Manager::send_to_all(background_descriptor, players_manager, m_socket);
 }
 
 void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager &players_manager,

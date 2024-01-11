@@ -19,6 +19,7 @@ namespace rtype
             rtype::utils::TextureRect rectangle{};
             std::string texture_path{};
             rtype::utils::Vector2D<float> origin{};
+            int opacity{255};
 
             SpriteComponent(rtype::utils::TextureRect prec = {}, std::string text = "",
                             rtype::utils::Vector2D<float> pog = {});

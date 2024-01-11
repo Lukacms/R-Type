@@ -23,7 +23,8 @@ namespace rserver::game
     constexpr int MAX_ROOMS{100};
     constexpr int MAX_PLAYERS{4};
 
-    constexpr int TIMEOUT_WAITING{2 * 60};
+    // constexpr int TIMEOUT_WAITING{2 * 60};
+    constexpr int TIMEOUT_WAITING{10};
 
     enum class RoomStatus { Lounge, Waiting, InGame };
 

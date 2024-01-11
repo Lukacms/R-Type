@@ -3,7 +3,7 @@
         {
             "tag": "Player",
             "sprite": {
-                "texturePath": "./assets/entities/Spaceship.png",
+                "texturePath": "Player",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -42,7 +42,7 @@
         {
             "tag": "BasicEnemy",
             "sprite": {
-                "texturePath": "./assets/entities/BasicEnemy.png",
+                "texturePath": "BasicEnemy",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -77,7 +77,7 @@
         {
             "tag": "PlayerBullet",
             "sprite": {
-                "texturePath": "./assets/entities/PlayerShoot.png",
+                "texturePath": "PlayerBullet",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -112,7 +112,7 @@
         {
             "tag": "Upgrade",
             "sprite": {
-                "texturePath": "./assets/entities/Upgrade.png",
+                "texturePath": "Upgrade",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -236,7 +236,7 @@
                 "height": 18
             },
             "sprite": {
-                "texturePath": "./assets/entities/KamikazeEnemy.png",
+                "texturePath": "Kamikaze",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -342,7 +342,7 @@
                 "height": 18
             },
             "sprite": {
-                "texturePath": "./assets/entities/UFOEnemy.png",
+                "texturePath": "UFO",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -486,129 +486,7 @@
             "tag": "Explosion",
             "clock": true,
             "sprite": {
-                "texturePath": "./assets/entities/Explosion.png",
-                "textureRect": {
-                    "x": 0,
-                    "y": 0,
-                    "width": 96,
-                    "height": 96
-                },
-                "origin": {
-                    "x": 48,
-                    "y": 48
-                }
-            },
-            "transform": {
-                "position": {
-                    "x": 850,
-                    "y": 0
-                },
-                "velocity": {
-                    "x": 0,
-                    "y": 0
-                },
-                "scale": {
-                    "x": 2,
-                    "y": 2
-                }
-            },
-            "animation": {
-                "current": "KaBOOM",
-                "frame": 0,
-                "clips": [
-                    {
-                        "name": "KaBOOM",
-                        "loop": false,
-                        "change": 100,
-                        "textures": [
-                            {
-                                "x": 0,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 96,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 192,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 288,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 384,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 480,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 576,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 672,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 768,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 864,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 960,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 1056,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            },
-                            {
-                                "x": 1152,
-                                "y": 0,
-                                "width": 96,
-                                "height": 96
-                            }
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "tag": "Explosion",
-            "clock": true,
-            "sprite": {
-                "texturePath": "./assets/entities/Explosion.png",
+                "texturePath": "Explosion",
                 "textureRect": {
                     "x": 0,
                     "y": 0,

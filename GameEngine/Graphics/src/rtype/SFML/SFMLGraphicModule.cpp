@@ -15,19 +15,19 @@ rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int hei
 void rtype::SFMLGraphicModule::draw_components(SparseArray<rtype::SpriteComponent> &sprites,
                                                SparseArray<rtype::TransformComponent> &transforms)
 {
-    sf::Texture texture{};
     sf::Sprite sprite{};
 
     for (size_t index = 0; index < sprites.size(); index += 1) {
         if (!sprites[index].has_value())
             continue;
-        texture.loadFromFile(sprites[index]->texture_path);
+        auto &texture = m_texture_library.get_texture(sprites[index]->texture_path);
         sprite.setPosition(transforms[index]->position_x, transforms[index]->position_y);
         sprite.setTextureRect({sprites[index]->rectangle.x, sprites[index]->rectangle.y,
                                sprites[index]->rectangle.width, sprites[index]->rectangle.height});
         sprite.setOrigin(sprites[index]->origin.x, sprites[index]->origin.y);
         sprite.setScale(transforms[index]->scale_x, transforms[index]->scale_y);
-        sprite.setTexture(texture);
+        sprite.setTexture(texture.texture);
+        sprite.setColor({255, 255, 255, static_cast<sf::Uint8>(sprites[index]->opacity)});
         m_window.draw(sprite);
     }
 }
@@ -77,16 +77,16 @@ void rtype::SFMLGraphicModule::update()
 void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
                                     rtype::TransformComponent transform)
 {
-    sf::Texture texture{};
     sf::Sprite sprite{};
 
-    texture.loadFromFile(sprite_component.texture_path);
+    auto &texture = m_texture_library.get_texture(sprite_component.texture_path);
     sprite.setPosition(transform.position_x, transform.position_y);
     sprite.setTextureRect({sprite_component.rectangle.x, sprite_component.rectangle.y,
                            sprite_component.rectangle.width, sprite_component.rectangle.height});
     sprite.setOrigin(sprite_component.origin.x, sprite_component.origin.y);
     sprite.setScale(transform.scale_x, transform.scale_y);
-    sprite.setTexture(texture);
+    sprite.setTexture(texture.texture);
+    sprite.setColor({255, 255, 255, static_cast<sf::Uint8>(sprite_component.opacity)});
     m_window.draw(sprite);
 }
 
