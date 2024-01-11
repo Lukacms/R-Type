@@ -30,13 +30,22 @@ Inherited by \fBrtype::SFMLGraphicModule\fP\&.
 .RI "virtual void \fBdraw_components\fP (\fBSparseArray\fP< \fBrtype::SpriteComponent\fP > &sprites, \fBSparseArray\fP< \fBrtype::TransformComponent\fP > &transforms)=0"
 .br
 .ti -1c
-.RI "virtual void \fBdraw\fP (\fBrtype::SpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP transform)=0"
+.RI "virtual void \fBdraw_components\fP (\fBSparseArray\fP< \fBrtype::TextComponent\fP > &sprites, \fBSparseArray\fP< \fBrtype::TransformComponent\fP > &transforms)=0"
 .br
 .ti -1c
-.RI "virtual void \fBdraw\fP (sf::Sprite &sprite, \fBrtype::TransformComponent\fP transform)=0"
+.RI "virtual void \fBdraw\fP (\fBrtype::TextComponent\fP &text, \fBrtype::TransformComponent\fP &transform)=0"
 .br
 .ti -1c
-.RI "virtual void \fBdraw\fP (sf::Text &text, \fBrtype::TransformComponent\fP transform)=0"
+.RI "virtual void \fBdraw\fP (\fBrtype::SpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP &transform)=0"
+.br
+.ti -1c
+.RI "virtual float \fBget_text_width\fP (\fBrtype::TextComponent\fP &text)=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw\fP (sf::Sprite &sprite, \fBrtype::TransformComponent\fP &transform)=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw\fP (sf::Text &text, \fBrtype::TransformComponent\fP &transform)=0"
 .br
 .ti -1c
 .RI "virtual void \fBset_view_port\fP (sf::View &)=0"
@@ -57,10 +66,20 @@ Inherited by \fBrtype::SFMLGraphicModule\fP\&.
 .RI "virtual bool \fBis_input_pressed\fP (rtype::Keys key)=0"
 .br
 .ti -1c
+.RI "virtual bool \fBis_sprite_left_click\fP (\fBSpriteComponent\fP &sprite, \fBTransformComponent\fP &transform)=0"
+.br
+.ti -1c
 .RI "virtual bool \fBis_window_open\fP ()=0"
 .br
 .ti -1c
 .RI "virtual \fBrtype::utils::Vector2D\fP< float > \fBis_left_mouse_pressed\fP ()=0"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "bool \fBMENU_PRESSED\fP = false"
 .br
 .in -1c
 
