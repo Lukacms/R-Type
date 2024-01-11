@@ -70,6 +70,8 @@ namespace rserver::game
                                            rserver::PlayersManager &players_manager,
                                            rtype::ECSManager &manager);
 
+            void check_if_player_out_of_bounds(rtype::ECSManager &manager);
+
         private:
             std::vector<size_t> m_entities{};
             asio::ip::udp::socket &m_socket;
