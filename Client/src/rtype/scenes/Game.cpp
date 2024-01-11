@@ -5,6 +5,7 @@
 ** Game
 */
 
+#include "rtype/Components/SpriteComponent.hh"
 #include <iostream>
 #include <rtype.hh>
 #include <rtype/Client.hh>
@@ -15,6 +16,7 @@
 #include <rtype/network/Network.hpp>
 #include <rtype/scenes/Game.hh>
 #include <shared_mutex>
+#include <string>
 #include <vector>
 
 static const std::vector<rclient::scenes::CommandHandler> HANDLER{
@@ -49,7 +51,7 @@ rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::s
 void rclient::scenes::Game::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
-    ecs.get_class().apply_system(0);
+    ecs.get_class().apply_system(1);
     graphics.draw_components(this->ecs.get_class().get_components<rtype::SpriteComponent>(),
                              this->ecs.get_class().get_components<rtype::TransformComponent>());
     graphics.display();
@@ -148,6 +150,7 @@ void rclient::scenes::Game::move_entity(ntw::Communication &commn, State & /* st
 
     transform.position_x = std::stof(arguments[2]);
     transform.position_y = std::stof(arguments[3]);
+    transform.rotation = std::stof(arguments[4]);
 }
 
 void rclient::scenes::Game::end_game(ntw::Communication & /* commn */, State &state) // NOLINT

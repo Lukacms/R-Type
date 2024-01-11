@@ -42,7 +42,7 @@ void rserver::game::Room::add_player(Player &new_player)
         throw RoomException("Already max number of players");
     this->players.emplace_back(new_player.get_port());
     this->manager.add_player(new_player);
-    if (this->players.size() == 2) {
+    if (this->players.size() == 1) {
         this->status = RoomStatus::Waiting;
         this->timeout_connect.reset();
     } else if (this->players.size() == MAX_PLAYERS)
@@ -71,8 +71,8 @@ void rserver::game::Room::del_player(rserver::Player &to_del)
         if (to_del.get_port() == *player) {
             to_del.set_status(PlayerStatus::Lobby);
             this->players.erase(player);
-            if (this->players.size() < 2)
-                this->status = RoomStatus::Lounge;
+            // if (this->players.size() < 2)
+            //     this->status = RoomStatus::Lounge;
             return;
         }
     }
@@ -93,6 +93,7 @@ void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 {
     this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
                           static_cast<float>(delta.get_elapsed_time_in_s()));
+    this->ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_ms()));
 }
 
 void rserver::game::Room::check_wait_timeout(float delta_time)

@@ -136,6 +136,7 @@ void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_mana
         entity_descriptor.add_param(!tags[entity].has_value() ? "Nothing" : tags[entity]->tag);
         entity_descriptor.add_param(transforms[entity]->position_x);
         entity_descriptor.add_param(transforms[entity]->position_y);
+        entity_descriptor.add_param(transforms[entity]->rotation);
         Manager::send_to_all(entity_descriptor, players_manager, m_socket);
     }
 }

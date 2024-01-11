@@ -28,6 +28,7 @@ void rtype::SFMLGraphicModule::draw_components(SparseArray<rtype::SpriteComponen
         sprite.setOrigin(sprites[index]->origin.x, sprites[index]->origin.y);
         sprite.setScale(transforms[index]->scale_x, transforms[index]->scale_y);
         sprite.setTexture(texture);
+        sprite.setRotation(transforms[index]->rotation);
         m_window.draw(sprite);
     }
 }
@@ -86,6 +87,7 @@ void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
                            sprite_component.rectangle.width, sprite_component.rectangle.height});
     sprite.setOrigin(sprite_component.origin.x, sprite_component.origin.y);
     sprite.setScale(transform.scale_x, transform.scale_y);
+    sprite.setRotation(transform.rotation);
     sprite.setTexture(texture);
     m_window.draw(sprite);
 }

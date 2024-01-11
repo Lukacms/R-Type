@@ -58,6 +58,7 @@ rtype::TransformComponent &rtype::TransformComponent::operator=(const nlohmann::
     this->position_y = json["position"]["y"];
     this->velocity_x = json["velocity"]["x"];
     this->velocity_y = json["velocity"]["y"];
+    this->rotation = json["rotation"];
     return *this;
 }
 
@@ -69,13 +70,14 @@ rtype::TransformComponent::TransformComponent(const nlohmann::json &json)
     this->position_y = json["position"]["y"];
     this->velocity_x = json["velocity"]["x"];
     this->velocity_y = json["velocity"]["y"];
+    this->rotation = json["rotation"];
 }
 
 rtype::TransformComponent::TransformComponent(float pposition_x, float pposition_y,
                                               float pvelocity_x, float pvelocity_y, float pscale_x,
-                                              float pscale_y)
+                                              float pscale_y, float protation)
     : position_x{std::move(pposition_x)}, position_y{std::move(pposition_y)},
       velocity_x{std::move(pvelocity_x)}, velocity_y{std::move(pvelocity_y)},
-      scale_x{std::move(pscale_x)}, scale_y{std::move(pscale_y)}
+      scale_x{std::move(pscale_x)}, scale_y{std::move(pscale_y)}, rotation{std::move(protation)}
 {
 }
