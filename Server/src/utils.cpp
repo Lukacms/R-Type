@@ -88,7 +88,7 @@ void rserver::init_ecs(rtype::ECSManager &to_load)
     std::function<void(rtype::ComponentManager &, float)> transform_system{
         &rtype::transform_system};
     std::function<void(rtype::ComponentManager &, float)> kamikaze_system{&game::kamikaze_system};
-    std::function<void(rtype::ComponentManager &, float)> UFO_system{&game::UFO_system};
+    std::function<void(rtype::ComponentManager &, float)> ufo_system{&game::ufo_system};
 
     to_load.register_component(transform);
     to_load.register_component(boxes);
@@ -97,5 +97,5 @@ void rserver::init_ecs(rtype::ECSManager &to_load)
     to_load.register_component(clocks);
     to_load.add_system(transform_system);
     to_load.add_system(kamikaze_system);
-    to_load.add_system(UFO_system);
+    to_load.add_system(ufo_system);
 }

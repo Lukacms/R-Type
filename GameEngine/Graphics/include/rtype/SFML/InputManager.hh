@@ -18,6 +18,8 @@ namespace rtype
             bool is_pressed{false};
     };
 
+    constexpr float JOYSTICK_INPUT{50.0F};
+
     class InputManager
     {
         public:
@@ -29,15 +31,15 @@ namespace rtype
             InputManager &operator=(InputManager &&) = default;
 
             void update();
-            bool is_key_pressed(sf::Keyboard::Key key) const;
-            bool is_mouse_button_pressed(sf::Mouse::Button button) const;
-            sf::Vector2i get_mouse_position(const sf::Window &window) const;
+            [[nodiscard]] bool is_key_pressed(sf::Keyboard::Key key) const;
+            [[nodiscard]] bool is_mouse_button_pressed(sf::Mouse::Button button) const;
+            [[nodiscard]] sf::Vector2i get_mouse_position(const sf::Window &window) const;
 
         private:
             void update_joystick();
 
             std::vector<KeyInput> m_key_mapping{};
-            std::unordered_map<sf::Mouse::Button, bool> mouseButtonMap{};
             rtype::utils::Vector2D<float> m_joystick{};
+            std::unordered_map<sf::Mouse::Button, bool> mouse_button_map{};
     };
 } // namespace rtype

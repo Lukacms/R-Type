@@ -1,0 +1,65 @@
+.TH "rserver::game::Room" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::game::Room
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBRoomException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRoom\fP (asio::ip::udp::socket &psocket, \fBPlayersManager\fP &pmanager, std::size_t pid)"
+.br
+.ti -1c
+.RI "\fBRoom\fP (\fBRoom\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBRoom\fP (\fBRoom\fP &&to_move)"
+.br
+.ti -1c
+.RI "\fBRoom\fP & \fBoperator=\fP (\fBRoom\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBRoom\fP & \fBoperator=\fP (\fBRoom\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "void \fBadd_player\fP (\fBPlayer\fP &new_player)"
+.br
+.ti -1c
+.RI "const RoomStatus & \fBget_status\fP () const"
+.br
+.ti -1c
+.RI "std::size_t \fBget_nb_players\fP () const"
+.br
+.ti -1c
+.RI "std::size_t \fBget_id\fP () const"
+.br
+.ti -1c
+.RI "void \fBdel_player\fP (\fBPlayer\fP &to_del)"
+.br
+.ti -1c
+.RI "\fBGameLogic\fP & \fBget_logic\fP ()"
+.br
+.ti -1c
+.RI "void \fBrun_game_logic\fP (\fBrtype::utils::Clock\fP &delta)"
+.br
+.ti -1c
+.RI "void \fBcheck_wait_timeout\fP ()"
+.br
+.ti -1c
+.RI "bool \fBhas_player\fP (const \fBPlayer\fP &player)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

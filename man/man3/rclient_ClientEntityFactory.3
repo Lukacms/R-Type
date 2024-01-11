@@ -1,0 +1,42 @@
+.TH "rclient::ClientEntityFactory" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::ClientEntityFactory
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBFactoryException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBClientEntityFactory\fP (\fBClientEntityFactory\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBClientEntityFactory\fP (\fBClientEntityFactory\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBClientEntityFactory\fP & \fBoperator=\fP (\fBClientEntityFactory\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBClientEntityFactory\fP & \fBoperator=\fP (\fBClientEntityFactory\fP &&to_move)=default"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static size_t \fBcreate\fP (std::size_t entity, const std::string &type, \fBrtype::ECSManager\fP &ecs_manager)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

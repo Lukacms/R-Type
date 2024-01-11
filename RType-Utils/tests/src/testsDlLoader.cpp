@@ -7,7 +7,6 @@
 
 #include <dlfcn.h>
 #include <gtest/gtest.h>
-#include <iostream>
 #include <rtype/dlloader/DlLoader.hpp>
 
 TEST(DlLoader, errors_non_existing_lib)

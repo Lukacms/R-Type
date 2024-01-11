@@ -29,8 +29,9 @@ static void handle_sigint(int /* unused */)
 
 /* ctor / dtor */
 rclient::Client::Client(const rclient::Arguments &infos)
-    : resolver{this->context}, socket{this->context}, game{endpoint, socket},
-      host{std::move(infos.hostname)}, port{std::move(infos.port)}
+    : resolver{this->context}, socket{this->context}, lounge{this->socket, this->endpoint},
+      game{this->endpoint, this->socket}, host{std::move(infos.hostname)},
+      port{std::move(infos.port)}
 {
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
     this->graphics.init_class<std::unique_ptr<rtype::IGraphicModule>(
@@ -61,7 +62,7 @@ rclient::Client::Client(const rclient::Arguments &infos)
 rclient::Client::~Client()
 {
     RUNNING = 0;
-    Client::send_message({}, this->endpoint, this->socket);
+    Client::send_message({ntw::NetworkType::End}, this->endpoint, this->socket);
     if (this->graphics.get_class().is_window_open()) {
         this->graphics.get_class().close_window();
     }
@@ -71,8 +72,9 @@ rclient::Client::~Client()
 
 rclient::Client::Client(rclient::Client &&to_move)
     : resolver{std::move(to_move.resolver)}, socket{std::move(to_move.socket)},
-      game{to_move.endpoint, to_move.socket}, threads{std::move(to_move.threads)},
-      host{std::move(to_move.host)}, port{std::move(to_move.port)}
+      lounge{to_move.socket, to_move.endpoint}, game{to_move.endpoint, to_move.socket},
+      threads{std::move(to_move.threads)}, host{std::move(to_move.host)},
+      port{std::move(to_move.port)}
 {
 }
 
@@ -101,7 +103,7 @@ int rclient::Client::launch(const Arguments &infos)
  */
 void rclient::Client::setup_network()
 {
-    this->state = scenes::State::Game;
+    this->state = scenes::State::Lounge;
     this->endpoint = *this->resolver.resolve(asio::ip::udp::v4(), this->host, this->port).begin();
     this->socket.open(asio::ip::udp::v4());
     this->socket.non_blocking(true); // <- set socket mode as non-blocking
@@ -110,7 +112,8 @@ void rclient::Client::setup_network()
         ntw::Communication commn{};
         asio::ip::udp::endpoint sender{};
 
-        while (RUNNING && this->state != scenes::State::End) {
+        while (RUNNING && this->state != scenes::State::End &&
+               this->graphics.get_class().is_window_open()) {
             try {
                 this->socket.receive_from(asio::buffer(&commn, sizeof(commn)), sender);
                 if (sender.port() > 0) {

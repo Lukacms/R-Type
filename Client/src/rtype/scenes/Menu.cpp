@@ -23,8 +23,6 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_transforms[0].scale_y = static_cast<float>(height) / MENU_BG_HEIGHT;
     m_transforms[1].position_x = m_width / MIDLE_DIV;
     m_transforms[1].position_y = POS_Y_TEXT_MENU;
-    m_text.setPosition(static_cast<float>(m_width) / MIDLE_DIV,
-                       static_cast<float>(m_height) / TEXT_HEIGHT_DIV);
 }
 
 void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
@@ -45,6 +43,7 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     graphics.draw(
         m_text,
         {static_cast<float>(m_width) / MIDLE_DIV, static_cast<float>(m_height) / TEXT_HEIGHT_DIV});
+    this->animate();
     graphics.display();
 }
 

@@ -1,0 +1,68 @@
+.TH "rtype::ECSManager" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::ECSManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBECSException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBECSManager\fP (\fBECSManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBECSManager\fP (\fBECSManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBECSManager\fP & \fBoperator=\fP (\fBECSManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBECSManager\fP & \fBoperator=\fP (\fBECSManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBEntity\fP \fBcreate_entity\fP ()"
+.br
+.ti -1c
+.RI "\fBEntity\fP \fBcreate_entity\fP (std::size_t entity)"
+.br
+.ti -1c
+.RI "void \fBdelete_entity\fP (size_t entity)"
+.br
+.ti -1c
+.RI "template<class TComponent > void \fBremove_component\fP (size_t entity)"
+.br
+.ti -1c
+.RI "template<class TComponent > \fBSparseArray\fP< TComponent > & \fBregister_component\fP (\fBSparseArray\fP< TComponent > &array)"
+.br
+.ti -1c
+.RI "template<class TComponent > \fBSparseArray\fP< TComponent > & \fBget_components\fP ()"
+.br
+.ti -1c
+.RI "template<class TComponent > TComponent & \fBget_component\fP (size_t entity)"
+.br
+.ti -1c
+.RI "std::function< void(\fBComponentManager\fP &, float)> & \fBadd_system\fP (std::function< void(\fBComponentManager\fP &, float)> &function)"
+.br
+.ti -1c
+.RI "void \fBapply_system\fP (float delta_time)"
+.br
+.ti -1c
+.RI "bool \fBis_entity_used\fP (std::size_t entity)"
+.br
+.ti -1c
+.RI "std::vector< std::size_t > \fBget_used_entity\fP ()"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

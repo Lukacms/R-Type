@@ -39,7 +39,7 @@ namespace rserver
             std::shared_mutex mutex{};
             /* constructor / destructor */
             Player(asio::ip::udp::endpoint p_endpoint);
-            Player(Player const &to_copy) = delete;
+            Player(Player const &to_copy);
             Player(Player &&to_move);
             ~Player();
 
@@ -53,19 +53,21 @@ namespace rserver
             [[nodiscard]] asio::ip::udp::endpoint get_endpoint() const;
             [[nodiscard]] const std::size_t &get_entity_value() const;
             [[nodiscard]] const PlayerStatus &get_status() const;
+            [[nodiscard]] const long &get_room_id() const;
+            [[nodiscard]] std::size_t get_level() const;
+            void set_room_id(const long &new_id);
             void set_status(const PlayerStatus &new_status);
             void set_entity_value(std::size_t const &value);
             void level_up();
-            std::size_t get_level();
             void lock();
             void unlock();
 
         private:
             asio::ip::udp::endpoint endpoint;
             std::size_t entity_value{};
-            // PlayerStatus status{PlayerStatus::Lobby};
+            PlayerStatus status{PlayerStatus::Lobby};
             std::size_t level{1};
-            PlayerStatus status{PlayerStatus::Game};
+            long room_id{-1};
     };
 
 } // namespace rserver

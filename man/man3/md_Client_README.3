@@ -1,0 +1,54 @@
+.TH "md_Client_README" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_Client_README \- R-Type - Client 
+C++ client built with \fCasio\fP\&.
+.SH "Project"
+.PP
+As the r-type is a game using network, the client is the 'eyes' and the 'arms' of the project\&. It allows the player to interact with the server via a spaceship and to see what's going on in the game\&.
+.PP
+It uses \fCudp\fP protocol to communicate with the server, and it uses the library \fCasio\fP to handle the network\&.
+.SH "Thread Pool :white_check_mark:"
+.PP
+The client is multithreaded, and uses a \fCthread pool\fP to handle the commands\&. By default, the maximum numbers of threads are created, using the function: 
+.PP
+.nf
+std::thread::hardware_concurrency()
+
+.fi
+.PP
+ The threads created are waiting until a command is received by the client, which will then trigger a \fCcondition variable\fP to allow the thread to select the first command in the queue\&. When the command is executed, the thread will try to fetch another command, or go back into a waiting mode\&.\\ At the end of the program, the threads are destroyed\&.
+.SH "Graphic :white_check_mark:"
+.PP
+In order to display and render the dynamic elements of the game effectively, the client utilizes the \fCSFML\fP (Simple and Fast Multimedia Library)\&.
+.SH "Protocol :white_check_mark:"
+.PP
+It manages the communication with the server\&. It must be a \fCbinary protocol\fP\&.\\ For that, the client and server use the same \fCstructure\fP that is given in the RType-Utils folder, and look like this: 
+.PP
+.nf
+#pragma pack(push, 1)
+
+    struct Communication {
+        public:
+            NetworkType type{None};
+            std::array<char, MAX_SIZE> args;
+    };
+
+#pragma pack(pop)
+
+.fi
+.PP
+ The \fC#pragma pack\fP is used to avoid buffering problems\&.
+.SH "How to launch the project ?"
+.PP
+.PP
+.nf
+$> \&./r-type_client -h
+USAGE \&./r-type_client [host] [port] [-h]
+        host    is the host number, default to localhost, or 0\&.0\&.0\&.0
+        port    is the port number, default is 8080
+        -h      display this message and exit
+.fi
+.PP
+ 

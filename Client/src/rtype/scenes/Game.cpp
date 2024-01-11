@@ -142,7 +142,7 @@ void rclient::scenes::Game::create_entity(ntw::Communication &commn, State & /* 
 
 void rclient::scenes::Game::move_entity(ntw::Communication &commn, State & /* state */)
 {
-    std::vector<std::string> arguments = commn.deserialize();
+    std::vector<std::string> arguments{commn.deserialize()};
     auto &transform = this->ecs.get_class().get_component<rtype::TransformComponent>(
         static_cast<size_t>(std::stoi(arguments[0])));
 

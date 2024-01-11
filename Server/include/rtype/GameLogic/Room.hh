@@ -30,7 +30,7 @@ namespace rserver::game
     class Room
     {
         public:
-            Room(asio::ip::udp::socket &psocket, PlayersManager &pmanager, std::size_t pid);
+            Room(asio::ip::udp::socket &psocket, std::size_t pid);
             Room(Room const &to_copy) = delete;
             Room(Room &&to_move);
             ~Room();
@@ -45,8 +45,9 @@ namespace rserver::game
             void del_player(Player &to_del);
             [[nodiscard]] GameLogic &get_logic();
             void run_game_logic(rtype::utils::Clock &delta);
-            void check_wait_timeout();
+            void check_wait_timeout(float delta_time);
             [[nodiscard]] bool has_player(const Player &player);
+            [[nodiscard]] rtype::ECSManager &get_ecs();
 
             class RoomException : public std::exception
             {
@@ -73,7 +74,7 @@ namespace rserver::game
 
             GameLogic logic{socket, ecs_mutex};
             std::vector<asio::ip::port_type> players{};
-            PlayersManager &manager;
+            PlayersManager manager{};
             RoomStatus status{RoomStatus::Lounge};
             rtype::utils::Clock timeout_connect{};
     };

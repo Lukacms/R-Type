@@ -1,0 +1,71 @@
+.TH "rserver::Player" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::Player
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPlayer\fP (asio::ip::udp::endpoint p_endpoint)"
+.br
+.ti -1c
+.RI "\fBPlayer\fP (\fBPlayer\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBPlayer\fP (\fBPlayer\fP &&to_move)"
+.br
+.ti -1c
+.RI "\fBPlayer\fP & \fBoperator=\fP (\fBPlayer\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBPlayer\fP & \fBoperator=\fP (\fBPlayer\fP &&to_move)"
+.br
+.ti -1c
+.RI "bool \fBoperator==\fP (asio::ip::port_type &port) const"
+.br
+.ti -1c
+.RI "asio::ip::port_type \fBget_port\fP () const"
+.br
+.ti -1c
+.RI "asio::ip::udp::endpoint \fBget_endpoint\fP () const"
+.br
+.ti -1c
+.RI "const std::size_t & \fBget_entity_value\fP () const"
+.br
+.ti -1c
+.RI "const PlayerStatus & \fBget_status\fP () const"
+.br
+.ti -1c
+.RI "void \fBset_status\fP (const PlayerStatus &new_status)"
+.br
+.ti -1c
+.RI "void \fBset_entity_value\fP (std::size_t const &value)"
+.br
+.ti -1c
+.RI "void \fBlevel_up\fP ()"
+.br
+.ti -1c
+.RI "std::size_t \fBget_level\fP ()"
+.br
+.ti -1c
+.RI "void \fBlock\fP ()"
+.br
+.ti -1c
+.RI "void \fBunlock\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::shared_mutex \fBmutex\fP {}"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

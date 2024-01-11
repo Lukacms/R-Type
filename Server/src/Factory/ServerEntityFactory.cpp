@@ -19,7 +19,7 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
     try {
         return create_json(type, ecs_manager);
     } catch (FactoryException &e) {
-        throw FactoryException("Unknown entity type");
+        throw e;
     }
 }
 
@@ -56,7 +56,7 @@ size_t rserver::ServerEntityFactory::create_json(const std::string &type,
     } catch (nlohmann::json::exception &e) {
         DEBUG(("%s%s", e.what(), ENDL));
     }
-    // throw FactoryException("Unknown entity type");
+    throw FactoryException("Unknown entity type");
 }
 
 size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager)

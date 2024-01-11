@@ -12,10 +12,12 @@
 #include <rtype/Keys.hh>
 #include <rtype/SFML/InputManager.hh>
 #include <rtype/SparseArray.hpp>
+#include <string_view>
 
 namespace rtype
 {
     struct SFMLKeyring {
+        public:
             sf::Keyboard::Key sfml_key;
             rtype::Keys key;
     };
@@ -51,11 +53,14 @@ namespace rtype
             void draw(SpriteComponent &sprite, rtype::TransformComponent transform) final;
             void draw(sf::Sprite &sprite, rtype::TransformComponent transform) final;
             void draw(sf::Text &text, rtype::TransformComponent transform) final;
+            void set_view_port(sf::View &view) final;
+            [[nodiscard]] sf::View get_view_port() final;
             void display() final;
             void close_window() final;
             void clear() final;
             bool is_input_pressed(rtype::Keys key) final;
             [[nodiscard]] bool is_window_open() final;
+            [[nodiscard]] rtype::utils::Vector2D<float> is_left_mouse_pressed() final;
 
         private:
             sf::VideoMode m_mode;

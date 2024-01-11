@@ -1,0 +1,51 @@
+.TH "rclient::scenes::Lounge" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::scenes::Lounge
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBrclient::scenes::IScene\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLounge\fP (asio::ip::udp::socket &psocket, asio::ip::udp::endpoint &pendpoint, const unsigned int &pwidth=rtype::STANDARD_WIDTH, const unsigned int &pheight=rtype::STANDARD_HEIGHT)"
+.br
+.ti -1c
+.RI "\fBLounge\fP (\fBLounge\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBLounge\fP (\fBLounge\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBLounge\fP & \fBoperator=\fP (\fBLounge\fP const &to_copy)"
+.br
+.ti -1c
+.RI "\fBLounge\fP & \fBoperator=\fP (\fBLounge\fP &&to_move)"
+.br
+.ti -1c
+.RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
+.br
+.ti -1c
+.RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, State &state) override"
+.br
+.ti -1c
+.RI "void \fBadd_room\fP (unsigned int r_id)"
+.br
+.ti -1c
+.RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, State &state) override"
+.br
+.ti -1c
+.RI "void \fBrooms_handler\fP (std::vector< std::string > &args, State &state)"
+.br
+.ti -1c
+.RI "void \fBend_handler\fP (std::vector< std::string > &args, State &state)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

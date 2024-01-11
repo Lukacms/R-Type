@@ -11,12 +11,12 @@
 
 namespace rserver::game
 {
-    static float sinus_wave(float x)
+    static float sinus_wave(float x_wave)
     {
-        return 100 * std::sin(x / 50);
+        return 100 * std::sin(x_wave / 50);
     }
 
-    void UFO_system(rtype::ComponentManager &registry, float /* delta_time */)
+    void ufo_system(rtype::ComponentManager &registry, float /* delta_time */)
     {
         auto &clocks = registry.get_components<rtype::ClockComponent>();
         auto &transforms = registry.get_components<rtype::TransformComponent>();

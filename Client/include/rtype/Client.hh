@@ -8,9 +8,9 @@
 #pragma once
 
 // NOTE need to do this to be able to build the shared library of the client core
-#include <algorithm>
 #define ASIO_HEADER_ONLY
 
+#include <algorithm>
 #include <asio.hpp>
 #include <memory>
 #include <rtype/ComponentManager.hpp>
@@ -70,7 +70,7 @@ namespace rclient
             /* utils for graphics */
             scenes::State state{scenes::State::Menu};
             scenes::Menu menu{};
-            scenes::Lounge lounge{};
+            scenes::Lounge lounge;
             scenes::PauseMenu pause{};
             scenes::Game game;
             std::shared_mutex scenes;

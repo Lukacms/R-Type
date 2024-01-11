@@ -46,6 +46,16 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
         m_level_manager.change_level();
 }
 
+void rserver::game::GameLogic::game_waiting(rserver::PlayersManager &players_manager,
+                                            rtype::ECSManager &manager, float delta_time)
+{
+    m_entities = manager.get_used_entity();
+
+    destroy_too_far_entities(players_manager, manager);
+    send_entity(players_manager, manager);
+    manager.apply_system(delta_time);
+}
+
 void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
                                                    rserver::PlayersManager &players_manager,
                                                    rtype::ECSManager &manager)
@@ -191,7 +201,7 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
 }
 
 void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manager,
-                                          std::string music_name)
+                                          const std::string &music_name)
 {
     if (music_name.empty())
         return;

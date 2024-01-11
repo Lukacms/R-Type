@@ -1,0 +1,53 @@
+.TH "md_Server_README" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_Server_README \- R-Type - Server 
+C++ server built with \fCasio\fP\&.
+.SH "Project"
+.PP
+As the r-type is a game using network, the server is the «heart» of the project\&. It handles communication between itself and the clients connected, and how the game will evolve\&.
+.PP
+Its protocol is \fCudp\fP, and it uses the library \fCasio\fP to handle the network\&.
+.SH "Thread Pool :white_check_mark:"
+.PP
+The server is multithreaded, and uses a \fCthread pool\fP to handle the commands\&. By default, the maximum numbers of threads are created, using the function: 
+.PP
+.nf
+std::thread::hardware_concurrency()
+
+.fi
+.PP
+ The threads created are waiting until a command is recieved by the server, which will then trigger a \fCcondition variable\fP to allow the thread to select the first command in the queue\&. When the command is executed, the thread will try to fetch another command, or go back into a waiting mode\&.\\ At the end of the program, the threads are destroyed\&.
+.SH "Protocol :white_check_mark:"
+.PP
+It manage the communication with the client·s\&. It must be a \fCbinary protocol\fP\&.\\ For that, the client and server use the same \fCstructure\fP that is given in the RType-Utils folder, and look like this: 
+.PP
+.nf
+#pragma pack(push, 1)
+
+    struct Communication {
+        public:
+            NetworkType type{None};
+            std::array<char, MAX_SIZE> args;
+    };
+
+#pragma pack(pop)
+
+.fi
+.PP
+ The \fC#pragma pack\fP is used to avoid buffering problems\&.
+.SH "Game Logic :white_check_mark:"
+.PP
+The server is the hub of the game\&. It handles the games, the players, \&.\&.\&.\\ The Game Logic is the parts that handles this\&. It takes entities and components from the ECS, move them, decide when a boss will appear, \&.\&.\&.
+.SH "How to launch the project ?"
+.PP
+.PP
+.nf
+$> \&./r-type_server -h
+USAGE \&./r-type_server [port] [-h]
+    port    is the port number, default is 8080
+    -h  display this message and exit
+.fi
+.PP
+ 

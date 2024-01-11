@@ -28,7 +28,7 @@ namespace rserver::game
     constexpr std::string_view STANDARD_MUSIC{"Voyage1970"};
 
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */);
-    void UFO_system(rtype::ComponentManager &registry, float /* delta_time */);
+    void ufo_system(rtype::ComponentManager &registry, float /* delta_time */);
 
     class GameLogic
     {
@@ -44,8 +44,11 @@ namespace rserver::game
             void game_loop(rtype::PhysicsManager &physics_manager,
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
                            float delta_time);
+            void game_waiting(rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
+                              float delta_time);
             void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
-            void send_music(rserver::PlayersManager &players_manager, std::string music_name);
+            void send_music(rserver::PlayersManager &players_manager,
+                            const std::string &music_name);
             void destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                           rtype::ECSManager &manager);
             void destroy_too_long_entities(rserver::PlayersManager &players_manager,

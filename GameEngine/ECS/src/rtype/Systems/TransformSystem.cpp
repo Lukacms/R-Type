@@ -6,7 +6,6 @@
 */
 
 #include <iomanip>
-#include <iostream>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 

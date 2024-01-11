@@ -153,8 +153,8 @@ void rserver::Manager::run_game_logic()
         load_entity_properties();
         while (RUNNING) {
             if (timer.get_elapsed_time_in_ms() > game::TIMER) {
-                logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
-                                static_cast<float>(delta_time.get_elapsed_time_in_ms()));
+                /* logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
+                                static_cast<float>(delta_time.get_elapsed_time_in_ms())); */
                 this->run_all_rooms_logics(delta_time);
                 ecs.get_class().apply_system(
                     static_cast<float>(delta_time.get_elapsed_time_in_ms()));
@@ -179,7 +179,7 @@ void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
         else
-            room.check_wait_timeout();
+            room.check_wait_timeout(static_cast<float>(delta.get_elapsed_time_in_ms()));
     }
 }
 
@@ -238,12 +238,12 @@ void rserver::Manager::start_receive()
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
                     [commn, this]() { this->command_manager(commn, this->endpoint); });
-            if (clock.get_elapsed_time_in_ms() > game::TIMER) {
-                this->lobby_handler();
-                clock.reset();
-            }
         } catch (std::exception & /* e */) {
             // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
+        }
+        if (clock.get_elapsed_time_in_ms() > game::TIMER) {
+            this->lobby_handler();
+            clock.reset();
         }
     }
 }

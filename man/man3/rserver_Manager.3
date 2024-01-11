@@ -1,0 +1,183 @@
+.TH "rserver::Manager" 3 "Tue Jan 9 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::Manager \- manager class for the server\&. Will handle retrieving commmands, parsing them and doing the necessary actions  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Manager\&.hh>\fP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBManagerException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBManager\fP (asio::ip::port_type port=DEFAULT_PORT)"
+.br
+.RI "Default constructor\&. "
+.ti -1c
+.RI "\fBManager\fP (\fBManager\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBManager\fP (\fBManager\fP &&to_move)"
+.br
+.RI "Constructor by move\&. "
+.ti -1c
+.RI "\fB~Manager\fP ()"
+.br
+.RI "Destructor\&. Stop threads and quit\&. "
+.ti -1c
+.RI "\fBManager\fP & \fBoperator=\fP (\fBManager\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBManager\fP & \fBoperator=\fP (\fBManager\fP &&to_move)"
+.br
+.RI "operator = to move "
+.ti -1c
+.RI "void \fBstart_receive\fP ()"
+.br
+.ti -1c
+.RI "void \fBinput_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
+.br
+.ti -1c
+.RI "void \fBend_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
+.br
+.ti -1c
+.RI "void \fBroom_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBlaunch\fP (asio::ip::port_type port=DEFAULT_PORT)"
+.br
+.RI "static method to launch project\&. Define \fBManager\fP, run game logic on thread and start running asio networking "
+.ti -1c
+.RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &to_send, const \fBPlayer\fP &client, asio::ip::udp::socket &udp_socket)"
+.br
+.RI "Send a message to a specific client\&. "
+.ti -1c
+.RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &to_send, const \fBPlayersManager\fP &players, asio::ip::udp::socket &udp_socket, const PlayerStatus &status)"
+.br
+.RI "Send a message to all player that have the same status at the one given in param\&. "
+.ti -1c
+.RI "static void \fBsend_to_all\fP (\fBntw::Communication\fP &to_send, \fBPlayersManager\fP &players, asio::ip::udp::socket &udp_socket)"
+.br
+.RI "Send message to all clients that the \fBManager\fP has\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+manager class for the server\&. Will handle retrieving commmands, parsing them and doing the necessary actions 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rserver::Manager::Manager (asio::ip::port_type port = \fCDEFAULT_PORT\fP)"
+
+.PP
+Default constructor\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIport\fP port_type, default to 8080 
+.RE
+.PP
+
+.SS "rserver::Manager::Manager (\fBrserver::Manager\fP && to_move)"
+
+.PP
+Constructor by move\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBManager\fP && 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rserver::Manager::launch (asio::ip::port_type port = \fCDEFAULT_PORT\fP)\fC [static]\fP"
+
+.PP
+static method to launch project\&. Define \fBManager\fP, run game logic on thread and start running asio networking 
+.PP
+\fBParameters\fP
+.RS 4
+\fIport\fP - port_type 
+.RE
+.PP
+
+.SS "\fBrserver::Manager\fP & rserver::Manager::operator= (\fBManager\fP && to_move)"
+
+.PP
+operator = to move 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBManager\fP && 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fBManager\fP & 
+.RE
+.PP
+
+.SS "void rserver::Manager::send_message (const \fBntw::Communication\fP & to_send, const \fBPlayer\fP & client, asio::ip::udp::socket & udp_socket)\fC [static]\fP"
+
+.PP
+Send a message to a specific client\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_send\fP - Communication - struct containing message to send 
+.br
+\fIclient\fP - \fBPlayer\fP - containing udp endpoint to send message to 
+.br
+\fIudp_socket\fP - socket - udp::socket to send message from 
+.RE
+.PP
+
+.SS "void rserver::Manager::send_message (const \fBntw::Communication\fP & to_send, const \fBPlayersManager\fP & players, asio::ip::udp::socket & udp_socket, const PlayerStatus & status)\fC [static]\fP"
+
+.PP
+Send a message to all player that have the same status at the one given in param\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_send\fP Communication - message 
+.br
+\fIplayers\fP \fBPlayersManager\fP - all players 
+.br
+\fIudp_socket\fP udp::socket - socket to send from 
+.br
+\fIstatus\fP PlayerStatus - status required for the player to have 
+.RE
+.PP
+
+.SS "void rserver::Manager::send_to_all (\fBntw::Communication\fP & to_send, \fBPlayersManager\fP & players, asio::ip::udp::socket & udp_socket)\fC [static]\fP"
+
+.PP
+Send message to all clients that the \fBManager\fP has\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_send\fP 
+.br
+\fIplayers\fP 
+.br
+\fIudp_socket\fP 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

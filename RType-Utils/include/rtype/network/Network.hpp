@@ -34,6 +34,7 @@ namespace ntw
         ToGame,      // Client passing from waiting mode to game
         Input, // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
         Room, // Server -> send infos about room [id] [nb_player] [status], Client -> join room [id]
+              // or create one
         Music, // Send the music that the client should play, [MusicString],
     };
 

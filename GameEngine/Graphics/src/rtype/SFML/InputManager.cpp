@@ -23,7 +23,7 @@ void rtype::InputManager::update()
     }
     for (int button{static_cast<int>(sf::Mouse::Button::Left)}; button != sf::Mouse::ButtonCount;
          ++button) {
-        mouseButtonMap[static_cast<sf::Mouse::Button>(button)] =
+        mouse_button_map[static_cast<sf::Mouse::Button>(button)] =
             sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(button));
     }
 }
@@ -33,13 +33,14 @@ bool rtype::InputManager::is_key_pressed(sf::Keyboard::Key key) const
     for (const auto &keyring : m_key_mapping)
         if (static_cast<sf::Keyboard::Key>(keyring.key) == key)
             return keyring.is_pressed;
+    return false;
 }
 
 bool rtype::InputManager::is_mouse_button_pressed(sf::Mouse::Button button) const
 {
-    auto input = mouseButtonMap.find(button);
+    auto input{mouse_button_map.find(button)};
 
-    if (input != mouseButtonMap.end()) {
+    if (input != mouse_button_map.end()) {
         return input->second;
     }
     return false;
@@ -54,16 +55,16 @@ void rtype::InputManager::update_joystick()
 {
     for (auto &keyring : m_key_mapping) {
         if (keyring.key == sf::Keyboard::Up &&
-            sf::Joystick::getAxisPosition(0, sf::Joystick::Y) < 50.F)
+            sf::Joystick::getAxisPosition(0, sf::Joystick::Y) < JOYSTICK_INPUT)
             keyring.is_pressed = true;
         if (keyring.key == sf::Keyboard::Down &&
-            sf::Joystick::getAxisPosition(0, sf::Joystick::Y) > -50.F)
+            sf::Joystick::getAxisPosition(0, sf::Joystick::Y) > JOYSTICK_INPUT * -1)
             keyring.is_pressed = true;
         if (keyring.key == sf::Keyboard::Right &&
-            sf::Joystick::getAxisPosition(0, sf::Joystick::X) > 50.F)
+            sf::Joystick::getAxisPosition(0, sf::Joystick::X) > JOYSTICK_INPUT)
             keyring.is_pressed = true;
         if (keyring.key == sf::Keyboard::Left &&
-            sf::Joystick::getAxisPosition(0, sf::Joystick::X) < -50.F)
+            sf::Joystick::getAxisPosition(0, sf::Joystick::X) < JOYSTICK_INPUT * -1)
             keyring.is_pressed = true;
         if (keyring.key == sf::Keyboard::W &&
             (sf::Joystick::isButtonPressed(0, 7) || sf::Joystick::isButtonPressed(0, 1)))
