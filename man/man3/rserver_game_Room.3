@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rserver::game::Room
+rserver::game::Room \- \fBRoom\fP, containing players and a \fBGameLogic\fP to launch The room starts in waiting mode, waiting for 2+ people to connect, and then launch a game with levels, \&.\&.\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Room\&.hh>\fP
 .SS "Classes"
 
 .in +1c
@@ -19,12 +22,18 @@ rserver::game::Room
 .ti -1c
 .RI "\fBRoom\fP (asio::ip::udp::socket &psocket, std::size_t pid)"
 .br
+.RI "Constructor for room\&. "
 .ti -1c
 .RI "\fBRoom\fP (\fBRoom\fP const &to_copy)=delete"
 .br
 .ti -1c
 .RI "\fBRoom\fP (\fBRoom\fP &&to_move)"
 .br
+.RI "Move constructor\&. "
+.ti -1c
+.RI "\fB~Room\fP ()"
+.br
+.RI "Destructor that print a help message in debug mode\&. "
 .ti -1c
 .RI "\fBRoom\fP & \fBoperator=\fP (\fBRoom\fP const &to_copy)=delete"
 .br
@@ -34,34 +43,202 @@ rserver::game::Room
 .ti -1c
 .RI "void \fBadd_player\fP (\fBPlayer\fP &new_player)"
 .br
+.RI "Add a player to a room\&. Only if: "
 .ti -1c
 .RI "const RoomStatus & \fBget_status\fP () const"
 .br
+.RI "Get the status of the room\&. "
 .ti -1c
 .RI "std::size_t \fBget_nb_players\fP () const"
 .br
+.RI "Get the number of players that are in the room\&. "
 .ti -1c
 .RI "std::size_t \fBget_id\fP () const"
 .br
+.RI "Get the room id\&. "
 .ti -1c
 .RI "void \fBdel_player\fP (\fBPlayer\fP &to_del)"
 .br
+.RI "Remove a player from the room\&. Set its status back to Lobby, and its room id to -1\&. "
 .ti -1c
 .RI "\fBGameLogic\fP & \fBget_logic\fP ()"
 .br
+.RI "Get a reference to the room logic\&. "
 .ti -1c
 .RI "void \fBrun_game_logic\fP (\fBrtype::utils::Clock\fP &delta)"
 .br
+.RI "Run game logic, whith a clock\&. "
 .ti -1c
 .RI "void \fBcheck_wait_timeout\fP (float delta_time)"
 .br
+.RI "If room is in Waiting mode (2+) players, wait until \fCTIMEOUT_WAITING\fP is over, then set the room to InGame\&. Otherwise, launch game_waiting method of \fBGameLogic\fP\&. "
 .ti -1c
 .RI "bool \fBhas_player\fP (const \fBPlayer\fP &player)"
 .br
+.RI "Check if a player is in the room\&. "
 .ti -1c
 .RI "\fBrtype::ECSManager\fP & \fBget_ecs\fP ()"
 .br
+.RI "Get a reference to the ecs variable\&. "
 .in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::shared_mutex \fBecs_mutex\fP {}"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+\fBRoom\fP, containing players and a \fBGameLogic\fP to launch The room starts in waiting mode, waiting for 2+ people to connect, and then launch a game with levels, \&.\&.\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rserver::game::Room::Room (asio::ip::udp::socket & psocket, std::size_t pid)"
+
+.PP
+Constructor for room\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpsocket\fP - asio::udp::socket & 
+.br
+\fIpid\fP - size_t 
+.RE
+.PP
+
+.SS "rserver::game::Room::Room (\fBRoom\fP && to_move)"
+
+.PP
+Move constructor\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBgame::Room\fP && 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rserver::game::Room::add_player (\fBPlayer\fP & new_player)"
+
+.PP
+Add a player to a room\&. Only if: 
+.IP "\(bu" 2
+the room is not in a game
+.IP "\(bu" 2
+the room doesn't have more than 3 players
+.PP
+.PP
+\fBParameters\fP
+.RS 4
+\fInew_player\fP - \fBPlayer\fP & 
+.RE
+.PP
+
+.SS "void rserver::game::Room::check_wait_timeout (float delta_time)"
+
+.PP
+If room is in Waiting mode (2+) players, wait until \fCTIMEOUT_WAITING\fP is over, then set the room to InGame\&. Otherwise, launch game_waiting method of \fBGameLogic\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdelta_time\fP - float 
+.RE
+.PP
+
+.SS "void rserver::game::Room::del_player (\fBrserver::Player\fP & to_del)"
+
+.PP
+Remove a player from the room\&. Set its status back to Lobby, and its room id to -1\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_del\fP - \fBPlayer\fP & 
+.RE
+.PP
+
+.SS "\fBrtype::ECSManager\fP & rserver::game::Room::get_ecs ()"
+
+.PP
+Get a reference to the ecs variable\&. 
+.PP
+\fBReturns\fP
+.RS 4
+ECSManager & 
+.RE
+.PP
+
+.SS "std::size_t rserver::game::Room::get_id () const"
+
+.PP
+Get the room id\&. 
+.PP
+\fBReturns\fP
+.RS 4
+size_t 
+.RE
+.PP
+
+.SS "\fBrserver::game::GameLogic\fP & rserver::game::Room::get_logic ()"
+
+.PP
+Get a reference to the room logic\&. 
+.PP
+\fBReturns\fP
+.RS 4
+\fBGameLogic\fP & 
+.RE
+.PP
+
+.SS "std::size_t rserver::game::Room::get_nb_players () const"
+
+.PP
+Get the number of players that are in the room\&. 
+.PP
+\fBReturns\fP
+.RS 4
+size_t 
+.RE
+.PP
+
+.SS "const rserver::game::RoomStatus & rserver::game::Room::get_status () const"
+
+.PP
+Get the status of the room\&. 
+.PP
+\fBReturns\fP
+.RS 4
+RoomStatus { Lounge, Waiting, InGame } 
+.RE
+.PP
+
+.SS "bool rserver::game::Room::has_player (const \fBPlayer\fP & player)"
+
+.PP
+Check if a player is in the room\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+bool 
+.RE
+.PP
+
+.SS "void rserver::game::Room::run_game_logic (\fBrtype::utils::Clock\fP & delta)"
+
+.PP
+Run game logic, whith a clock\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdelta\fP - utils::Clock & 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

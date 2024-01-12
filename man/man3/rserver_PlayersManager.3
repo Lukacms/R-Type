@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rserver::PlayersManager
+rserver::PlayersManager \- Manage the players, to add / delete them\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <PlayersManager\&.hh>\fP
 .SS "Classes"
 
 .in +1c
@@ -44,12 +47,15 @@ rserver::PlayersManager
 .RI "std::size_t \fBlength\fP () const"
 .br
 .ti -1c
-.RI "const std::vector< \fBPlayer\fP > & \fBget_all_players\fP () const"
+.RI "std::vector< \fBPlayer\fP > \fBget_all_players\fP () const"
 .br
 .ti -1c
 .RI "void \fBremove_player\fP (\fBPlayer\fP &player)"
 .br
 .in -1c
+.SH "Detailed Description"
+.PP 
+Manage the players, to add / delete them\&. 
 
 .SH "Author"
 .PP 

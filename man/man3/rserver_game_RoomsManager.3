@@ -2,24 +2,24 @@
 .ad l
 .nh
 .SH NAME
-rserver::game::RoomsManager
+rserver::game::RoomsManager \- Manage the rooms, have functions to create / get / delete rooms\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <RoomsManager\&.hh>\fP
 .SS "Public Member Functions"
 
 .in +1c
 .ti -1c
-.RI "\fBRoomsManager\fP (\fBPlayersManager\fP &pmanager)"
+.RI "\fBRoomsManager\fP (\fBRoomsManager\fP const &to_copy)=default"
 .br
 .ti -1c
-.RI "\fBRoomsManager\fP (\fBRoomsManager\fP const &to_copy)=delete"
+.RI "\fBRoomsManager\fP (\fBRoomsManager\fP &&to_move)=default"
 .br
 .ti -1c
-.RI "\fBRoomsManager\fP (\fBRoomsManager\fP &&to_move)"
-.br
-.ti -1c
-.RI "\fBRoomsManager\fP & \fBoperator=\fP (\fBRoomsManager\fP const &to_copy)=delete"
+.RI "\fBRoomsManager\fP & \fBoperator=\fP (\fBRoomsManager\fP const &to_copy)=default"
 .br
 .ti -1c
 .RI "\fBRoomsManager\fP & \fBoperator=\fP (\fBRoomsManager\fP &&to_move)=delete"
@@ -27,22 +27,107 @@ rserver::game::RoomsManager
 .ti -1c
 .RI "void \fBjoin_random_room\fP (\fBPlayer\fP &player)"
 .br
+.RI "Allow player to join a random room that is available\&. If not, throw exception\&. "
 .ti -1c
 .RI "void \fBjoin_room\fP (\fBPlayer\fP &player, const std::size_t &room_id)"
 .br
+.RI "Join a specific room by its id\&. If room doesn't exists, throw exception\&. "
 .ti -1c
 .RI "void \fBadd_room\fP (\fBPlayer\fP &first_player, const std::size_t &nb_threads, asio::ip::udp::socket &socket)"
 .br
+.RI "Add a room to the list, and add the player that required this to the room\&. "
 .ti -1c
 .RI "void \fBleave_room_with_id\fP (\fBPlayer\fP &player, const std::size_t &room_id)"
 .br
+.RI "Make a player leave a room identified by its id\&. "
 .ti -1c
 .RI "\fBRoom\fP & \fBget_room_by_id\fP (const std::size_t &room_id)"
 .br
+.RI "Get a room by its id\&. "
 .ti -1c
 .RI "std::vector< \fBRoom\fP > & \fBget_rooms\fP ()"
 .br
+.RI "Get all rooms\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+Manage the rooms, have functions to create / get / delete rooms\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "void rserver::game::RoomsManager::add_room (\fBrserver::Player\fP & first_player, const std::size_t & nb_threads, asio::ip::udp::socket & socket)"
+
+.PP
+Add a room to the list, and add the player that required this to the room\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfirst_player\fP - \fBPlayer\fP & 
+.br
+\fInb_threads\fP - size_t 
+.br
+\fIsocket\fP - asio::udp::socket & 
+.RE
+.PP
+
+.SS "\fBrserver::game::Room\fP & rserver::game::RoomsManager::get_room_by_id (const std::size_t & room_id)"
+
+.PP
+Get a room by its id\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIroom_id\fP - size_t 
+.RE
+.PP
+
+.SS "std::vector< \fBrserver::game::Room\fP > & rserver::game::RoomsManager::get_rooms ()"
+
+.PP
+Get all rooms\&. 
+.PP
+\fBReturns\fP
+.RS 4
+vector<game::Room> 
+.RE
+.PP
+
+.SS "void rserver::game::RoomsManager::join_random_room (\fBrserver::Player\fP & player)"
+
+.PP
+Allow player to join a random room that is available\&. If not, throw exception\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.RE
+.PP
+
+.SS "void rserver::game::RoomsManager::join_room (\fBrserver::Player\fP & player, const std::size_t & room_id)"
+
+.PP
+Join a specific room by its id\&. If room doesn't exists, throw exception\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.br
+\fIroom_id\fP - std::size_t 
+.RE
+.PP
+
+.SS "void rserver::game::RoomsManager::leave_room_with_id (\fBrserver::Player\fP & player, const std::size_t & room_id)"
+
+.PP
+Make a player leave a room identified by its id\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.br
+\fIroom_id\fP - size_t 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

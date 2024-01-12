@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rserver::Player
+rserver::Player \- Handle connected client\&. Has infos concerning its level, which rooms it's connected to, and its entity value\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Player\&.hh>\fP
 .SS "Public Member Functions"
 
 .in +1c
@@ -71,6 +74,9 @@ rserver::Player
 .RI "std::shared_mutex \fBmutex\fP {}"
 .br
 .in -1c
+.SH "Detailed Description"
+.PP 
+Handle connected client\&. Has infos concerning its level, which rooms it's connected to, and its entity value\&. 
 
 .SH "Author"
 .PP 
