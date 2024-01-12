@@ -20,7 +20,7 @@ rserver::game::Room \- \fBRoom\fP, containing players and a \fBGameLogic\fP to l
 
 .in +1c
 .ti -1c
-.RI "\fBRoom\fP (asio::ip::udp::socket &psocket, std::size_t pid)"
+.RI "\fBRoom\fP (asio::ip::udp::socket &psocket, std::size_t pid, \fBPlayersManager\fP &pmanager)"
 .br
 .RI "Constructor for room\&. "
 .ti -1c
@@ -93,7 +93,7 @@ rserver::game::Room \- \fBRoom\fP, containing players and a \fBGameLogic\fP to l
 \fBRoom\fP, containing players and a \fBGameLogic\fP to launch The room starts in waiting mode, waiting for 2+ people to connect, and then launch a game with levels, \&.\&.\&. 
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "rserver::game::Room::Room (asio::ip::udp::socket & psocket, std::size_t pid)"
+.SS "rserver::game::Room::Room (asio::ip::udp::socket & psocket, std::size_t pid, \fBPlayersManager\fP & pmanager)"
 
 .PP
 Constructor for room\&. 

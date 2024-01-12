@@ -33,7 +33,7 @@ rserver::game::RoomsManager \- Manage the rooms, have functions to create / get 
 .br
 .RI "Join a specific room by its id\&. If room doesn't exists, throw exception\&. "
 .ti -1c
-.RI "void \fBadd_room\fP (\fBPlayer\fP &first_player, const std::size_t &nb_threads, asio::ip::udp::socket &socket)"
+.RI "void \fBadd_room\fP (\fBPlayer\fP &first_player, const std::size_t &nb_threads, asio::ip::udp::socket &socket, \fBPlayersManager\fP &manager)"
 .br
 .RI "Add a room to the list, and add the player that required this to the room\&. "
 .ti -1c
@@ -54,7 +54,7 @@ rserver::game::RoomsManager \- Manage the rooms, have functions to create / get 
 Manage the rooms, have functions to create / get / delete rooms\&. 
 .SH "Member Function Documentation"
 .PP 
-.SS "void rserver::game::RoomsManager::add_room (\fBrserver::Player\fP & first_player, const std::size_t & nb_threads, asio::ip::udp::socket & socket)"
+.SS "void rserver::game::RoomsManager::add_room (\fBrserver::Player\fP & first_player, const std::size_t & nb_threads, asio::ip::udp::socket & socket, \fBPlayersManager\fP & manager)"
 
 .PP
 Add a room to the list, and add the player that required this to the room\&. 

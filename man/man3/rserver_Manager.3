@@ -71,6 +71,9 @@ rserver::Manager \- manager class for the server\&. Will handle retrieving commm
 .br
 .RI "Send a message to all player that have the same status at the one given in param\&. "
 .ti -1c
+.RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &to_send, const \fBPlayersManager\fP &players, asio::ip::udp::socket &udp_socket, const std::size_t &room_id)"
+.br
+.ti -1c
 .RI "static void \fBsend_to_all\fP (\fBntw::Communication\fP &to_send, \fBPlayersManager\fP &players, asio::ip::udp::socket &udp_socket)"
 .br
 .RI "Send message to all clients that the \fBManager\fP has\&. "
