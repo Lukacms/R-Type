@@ -56,9 +56,11 @@ namespace rclient
 
         private:
             /* game engine */
-            dl::DlLoader<rtype::ECSManager> ecs;
             dl::DlLoader<rtype::IGraphicModule> graphics;
             dl::DlLoader<rtype::IAudioModule> audio;
+
+            std::shared_mutex graphics_lock{};
+            std::shared_mutex audio_lock{};
 
             /* network */
             asio::io_context context{};

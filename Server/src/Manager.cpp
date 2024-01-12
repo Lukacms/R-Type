@@ -49,23 +49,17 @@ rserver::Manager::Manager(asio::ip::port_type port)
       logic{this->udp_socket, this->ecs_mutex}
 {
 #ifdef __linux
-    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
     this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
 #else
-    this->ecs.init_class<void *()>(ECS_SL_PATH.data());
     this->physics.init_class<void *()>(PHYSICS_SL_PATH.data());
 #endif /* __linux */
 
     try {
         this->udp_socket.non_blocking(true);
-        /* should set timeout on non-blocking, but doesn't seems to be working */
-        /* this->udp_socket.set_option(
-            asio::detail::socket_option::integer<SOL_SOCKET, SO_RCVTIMEO>{TIMEOUT_MS}); */
         std::signal(SIGINT, Manager::handle_disconnection);
     } catch (std::exception & /* e */) {
         DEBUG(("This instance will stay blocking, clean <CTRL-C> will not work.\n"));
     }
-    init_ecs(this->ecs.get_class());
     DEBUG(("Constructed manager with port: %d%s", port, ENDL));
 }
 
@@ -77,7 +71,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
 rserver::Manager::Manager(rserver::Manager &&to_move)
     : udp_socket{std::move(to_move.udp_socket)}, threads{std::move(to_move.threads)},
       rooms{std::move(to_move.rooms)}, logic{to_move.udp_socket, to_move.ecs_mutex},
-      ecs{std::move(to_move.ecs)}, physics{std::move(to_move.physics)}
+      physics{std::move(to_move.physics)}
 {
 }
 
@@ -89,9 +83,7 @@ rserver::Manager::~Manager()
     ntw::Communication commn{ntw::NetworkType::End};
 
     this->threads.stop();
-    for (const auto &player : this->players.get_all_players()) {
-        Manager::send_message(commn, player, this->udp_socket);
-    }
+    Manager::send_to_all(commn, this->players, this->udp_socket);
     DEBUG(("Finished server%s", ENDL));
 }
 
@@ -109,7 +101,6 @@ rserver::Manager &rserver::Manager::operator=(Manager &&to_move)
     this->endpoint = std::move(to_move.endpoint);
     this->players = std::move(to_move.players);
     this->threads = std::move(to_move.threads);
-    this->ecs = std::move(to_move.ecs);
     this->physics = std::move(to_move.physics);
 
     return *this;
@@ -150,22 +141,17 @@ void load_entity_properties()
  * @brief method to run game logic
  *  the game logic has to be on another thread, as the asio context run is an infinite loop
  */
-void rserver::Manager::run_game_logic()
+void rserver::Manager::run_game_logic(rtype::utils::Clock &timer, rtype::utils::Clock &delta,
+                                      std::mutex &clocks_mutex)
 {
-    this->threads.add_job([this]() {
-        rtype::utils::Clock timer{};
-        rtype::utils::Clock delta_time{};
+    this->threads.add_job([&, this]() {
+        std::unique_lock<std::mutex> lock{clocks_mutex};
+
         load_entity_properties();
-        while (RUNNING) {
-            if (timer.get_elapsed_time_in_ms() > game::TIMER) {
-                /* logic.game_loop(this->physics.get_class(), players, this->ecs.get_class(),
-                                static_cast<float>(delta_time.get_elapsed_time_in_ms())); */
-                this->run_all_rooms_logics(delta_time);
-                ecs.get_class().apply_system(
-                    static_cast<float>(delta_time.get_elapsed_time_in_ms()));
-                timer.reset();
-                delta_time.reset();
-            }
+        if (timer.get_elapsed_time_in_ms() > game::TIMER) {
+            this->run_all_rooms_logics(delta);
+            timer.reset();
+            delta.reset();
         }
     });
 }
@@ -178,8 +164,7 @@ void rserver::Manager::run_game_logic()
  */
 void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
 {
-    std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
-
+    std::unique_lock<std::shared_mutex> lock{this->rooms_mutex};
     for (auto &room : this->rooms.get_rooms()) {
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
@@ -196,9 +181,10 @@ void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
  * @param client - Player - containing udp endpoint to send message to
  * @param udp_socket - socket - udp::socket to send message from
  */
-void rserver::Manager::send_message(const ntw::Communication &to_send, const Player &client,
+void rserver::Manager::send_message(const ntw::Communication &to_send, Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
+    std::shared_lock<std::shared_mutex> lock{client.mutex};
     udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
 }
 
@@ -212,8 +198,11 @@ void rserver::Manager::send_message(const ntw::Communication &to_send, const Pla
 void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                    asio::ip::udp::socket &udp_socket)
 {
-    for (const auto &client : players.get_all_players()) {
-        udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+    for (auto &client : players.get_all_players()) {
+        {
+            std::shared_lock<std::shared_mutex> lock{client.mutex};
+            udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+        }
     }
 }
 
@@ -221,31 +210,40 @@ void rserver::Manager::send_message(const ntw::Communication &to_send,
                                     const PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket, const PlayerStatus &status)
 {
-    for (const auto &client : players.get_all_players()) {
-        if (client.get_status() == status) {
-            udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+    for (auto &client : players.get_all_players()) {
+        {
+            std::shared_lock<std::shared_mutex> lock{client.mutex};
+            if (client.get_status() == status) {
+                udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+            }
         }
     }
 }
 
 /* async udp methods */
+/**
+ * @brief Handle network, messages recieved from clients. Also launched lobby functions that needs
+ * to communicate with clients
+ */
 void rserver::Manager::start_receive()
 {
     ntw::Communication commn{};
     rtype::utils::Clock clock{};
+    rtype::utils::Clock timer{};
+    rtype::utils::Clock delta{};
+    std::mutex clocks_mutex{};
 
-    this->run_game_logic();
     while (RUNNING) {
         try {
             this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
             DEBUG(("port upon receiving %d\n", this->endpoint.port()));
-            // DEBUG(("arguments here: %s\n", commn.args.data()));
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
                     [commn, this]() { this->command_manager(commn, this->endpoint); });
         } catch (std::exception & /* e */) {
             // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
         }
+        this->run_game_logic(timer, delta, clocks_mutex);
         if (clock.get_elapsed_time_in_ms() > game::TIMER) {
             this->lobby_handler();
             clock.reset();
@@ -253,6 +251,14 @@ void rserver::Manager::start_receive()
     }
 }
 
+/**
+ * @brief Handle commands recieved from client. Redirect to another function depending on the type
+ * of the communication struct
+ *
+ * @param communication - ntw::Communication - structure used to communicate
+ * @param client - asio::endpoint - endpoint recieved from client. Allow to find which client sent
+ * the message, or if new
+ */
 void rserver::Manager::command_manager(ntw::Communication const &communication,
                                        asio::ip::udp::endpoint &client)
 {
@@ -261,13 +267,11 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
 
     try {
         Player &player{this->players.get_by_id(client.port())};
+        std::shared_lock<std::shared_mutex> lock{player.mutex};
 
-        {
-            std::shared_lock<std::shared_mutex> lock{player.mutex};
-            for (const auto &handle : HANDLER) {
-                if (handle.type == communication.type)
-                    return handle.handler(*this, player, args);
-            }
+        for (const auto &handle : HANDLER) {
+            if (handle.type == communication.type)
+                return handle.handler(*this, player, args);
         }
     } catch (PlayersManager::PlayersException & /* e */) {
         this->add_new_player(client);
@@ -276,6 +280,12 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
     }
 }
 
+/**
+ * @brief Refuse client to connect to server
+ * @depreciated Was useful in previous version, in which there wasn't rooms
+ *
+ * @param client - asio::endpoint
+ */
 void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
 {
     ntw::Communication communication{ntw::NetworkType::Refusal};

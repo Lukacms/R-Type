@@ -14,16 +14,34 @@
 #include <rtype/Manager.hh>
 #include <rtype/clients/PlayersManager.hh>
 
+/**
+ * @brief Constructor
+ *
+ * @param socket - asio::udp::socket &
+ * @param ecs_mutex - shared_mutex &
+ */
 rserver::game::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)
     : m_socket{socket}, m_ecs_mutex{ecs_mutex}
 {
 }
 
+/**
+ * @brief Constructor by move
+ *
+ * @param to_move - GameLogic && - object to move to current class
+ */
 rserver::game::GameLogic::GameLogic(rserver::game::GameLogic &&to_move)
     : m_socket{to_move.m_socket}, m_ecs_mutex{to_move.m_ecs_mutex}
 {
 }
 
+/**
+ * @brief Game «loop». Do all actions needed by the game
+ *
+ * @param physics_manager - PhysicsManager &
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                          rserver::PlayersManager &players_manager,
                                          rtype::ECSManager &manager, float /* delta_time */)
@@ -46,16 +64,34 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
         m_level_manager.change_level();
 }
 
+/**
+ * @brief Handle entities during room's waiting mode. Only move player, and allow it to shoot
+ * bullets
+ *
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ * @param delta_time - float
+ */
 void rserver::game::GameLogic::game_waiting(rserver::PlayersManager &players_manager,
                                             rtype::ECSManager &manager, float delta_time)
 {
-    m_entities = manager.get_used_entity();
+    {
+        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
+        m_entities = manager.get_used_entity();
 
-    destroy_too_far_entities(players_manager, manager);
-    send_entity(players_manager, manager);
-    manager.apply_system(delta_time);
+        destroy_too_far_entities(players_manager, manager);
+        send_entity(players_manager, manager);
+        manager.apply_system(delta_time);
+    }
 }
 
+/**
+ * @brief Get collisions and handle them
+ *
+ * @param physics_manager - PhysicsManager &
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physics_manager,
                                                    rserver::PlayersManager &players_manager,
                                                    rtype::ECSManager &manager)
@@ -64,6 +100,13 @@ void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physic
     enemy_collision_responses(physics_manager, players_manager, manager);
 }
 
+/**
+ * @brief Handle collisions with the player
+ *
+ * @param physics_manager - PhysicsManager &
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager &physics_manager,
                                                           rserver::PlayersManager &players_manager,
                                                           rtype::ECSManager &manager)
@@ -92,6 +135,13 @@ void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager 
     }
 }
 
+/**
+ * @brief Handle collisions with enemies
+ *
+ * @param physics_manager - PhysicsManager &
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &physics_manager,
                                                          rserver::PlayersManager &players_manager,
                                                          rtype::ECSManager &manager)
@@ -121,6 +171,12 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
     }
 }
 
+/**
+ * @brief Send infos about all of the game's entities to players
+ *
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_manager,
                                            rtype::ECSManager &manager)
 {
@@ -140,6 +196,12 @@ void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_mana
     }
 }
 
+/**
+ * @brief Destroy entities that are not in screen's range
+ *
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                                         rtype::ECSManager &manager)
 {
@@ -170,6 +232,11 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
     }
 }
 
+/**
+ * @brief Spawn enemy if enemies' clock is big enough
+ *
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
     if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
@@ -182,6 +249,12 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
     }
 }
 
+/**
+ * @brief Spawn bonus when a enemy is killed
+ *
+ * @param entity_to_follow - std::size_t - id of entity
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow,
                                                     rtype::ECSManager &manager)
 {
@@ -200,6 +273,12 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
     explosion = manager.get_component<rtype::TransformComponent>(entity_to_follow);
 }
 
+/**
+ * @brief Send music that is being played to all players
+ *
+ * @param players_manager - PlayersManager &
+ * @param music_name - std::string - path to music
+ */
 void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manager,
                                           const std::string &music_name)
 {
@@ -210,6 +289,12 @@ void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manag
     Manager::send_to_all(music_descriptor, players_manager, m_socket);
 }
 
+/**
+ * @brief Destroy entities that have a clock that has timed out
+ *
+ * @param players_manager - PlayersManager &
+ * @param manager - ECSManager &
+ */
 void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager &players_manager,
                                                          rtype::ECSManager &manager)
 {

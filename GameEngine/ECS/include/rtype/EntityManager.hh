@@ -32,7 +32,7 @@ namespace rtype
             size_t create_entity(size_t entity);
             bool is_entity_used(std::size_t entity);
             void delete_entity(size_t entity);
-            std::vector<std::size_t> &get_used_entity();
+            std::vector<std::size_t> get_used_entity();
 
             class EntityException : public std::exception
             {

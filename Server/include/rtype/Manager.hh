@@ -12,6 +12,7 @@
 
 #include <asio.hpp>
 #include <exception>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <rtype/GameLogic/RoomsManager.hh>
 #include <rtype/SparseArray.hpp>
@@ -58,7 +59,7 @@ namespace rserver
 
             /* methods */
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
-            static void send_message(const ntw::Communication &to_send, const Player &client,
+            static void send_message(const ntw::Communication &to_send, Player &client,
                                      asio::ip::udp::socket &udp_socket);
             /**
              * @brief Send a message to all player that have the same status at the one given in
@@ -113,9 +114,8 @@ namespace rserver
             /* main variables */
             PlayersManager players{};
             ThreadPool threads{};
-            game::RoomsManager rooms{this->players};
+            game::RoomsManager rooms{};
             game::GameLogic logic;
-            dl::DlLoader<rtype::ECSManager> ecs{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
 
             /* utils */
@@ -129,8 +129,9 @@ namespace rserver
             void refuse_client(asio::ip::udp::endpoint &client);
             void add_new_player(asio::ip::udp::endpoint &client);
             void lobby_handler();
-            void shoot_according_level(Player &, rtype::ECSManager &);
-            void run_game_logic();
+            void shoot_according_level(Player &, rtype::ECSManager &, rtype::TransformComponent &);
+            void run_game_logic(rtype::utils::Clock &timer, rtype::utils::Clock &delta,
+                                std::mutex &clocks_mutex);
             void run_all_rooms_logics(rtype::utils::Clock &delta);
     };
 

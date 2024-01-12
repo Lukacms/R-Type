@@ -11,6 +11,12 @@
 #include <rtype/Manager.hh>
 
 /* constructors / destructors */
+/**
+ * @brief Constructor for room
+ *
+ * @param psocket - asio::udp::socket &
+ * @param pid - size_t
+ */
 rserver::game::Room::Room(asio::ip::udp::socket &psocket, std::size_t pid)
     : socket{psocket}, id{std::move(pid)}, logic{socket, ecs_mutex}
 {
@@ -25,18 +31,34 @@ rserver::game::Room::Room(asio::ip::udp::socket &psocket, std::size_t pid)
     DEBUG(("New game room created%s", ENDL));
 }
 
+/**
+ * @brief Move constructor
+ *
+ * @param to_move - game::Room &&
+ */
 rserver::game::Room::Room(rserver::game::Room &&to_move)
-    : socket{to_move.socket}, id{std::move(to_move.id)}, logic{std::move(to_move.logic)},
+    : socket{to_move.socket}, id{std::move(to_move.id)}, ecs{std::move(to_move.ecs)},
+      physics{std::move(to_move.physics)}, logic{std::move(to_move.logic)},
       manager{to_move.manager}, status{std::move(to_move.status)}
 {
 }
 
+/**
+ * @brief Destructor that print a help message in debug mode
+ */
 rserver::game::Room::~Room()
 {
     DEBUG(("Game room %zu deleted%s", this->id, ENDL));
 }
 
 /* methods */
+/**
+ * @brief Add a player to a room. Only if:
+ * - the room is not in a game
+ * - the room doesn't have more than 3 players
+ *
+ * @param new_player - Player &
+ */
 void rserver::game::Room::add_player(Player &new_player)
 {
     if (this->status == RoomStatus::InGame)
@@ -53,28 +75,44 @@ void rserver::game::Room::add_player(Player &new_player)
     } else if (this->players.size() == MAX_PLAYERS)
         this->status = RoomStatus::InGame;
     {
-        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+        std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
         new_player.set_entity_value(
             rserver::ServerEntityFactory::create("Player", this->ecs.get_class()));
+        new_player.set_room_id(static_cast<long>(this->id));
     }
-    new_player.set_room_id(static_cast<long>(this->id));
 }
 
+/**
+ * @brief Get the status of the room
+ *
+ * @return RoomStatus { Lounge, Waiting, InGame }
+ */
 const rserver::game::RoomStatus &rserver::game::Room::get_status() const
 {
     return this->status;
 }
 
+/**
+ * @brief Get the number of players that are in the room
+ *
+ * @return size_t
+ */
 std::size_t rserver::game::Room::get_nb_players() const
 {
     return this->players.size();
 }
 
+/**
+ * @brief Remove a player from the room. Set its status back to Lobby, and its room id to -1
+ *
+ * @param to_del - Player &
+ */
 void rserver::game::Room::del_player(rserver::Player &to_del)
 {
     for (auto player{this->players.begin()}; player != this->players.end(); player++) {
         if (to_del.get_port() == *player) {
             to_del.set_status(PlayerStatus::Lobby);
+            to_del.set_room_id(-1);
             this->players.erase(player);
             if (this->players.size() < 2)
                 this->status = RoomStatus::Lounge;
@@ -84,22 +122,43 @@ void rserver::game::Room::del_player(rserver::Player &to_del)
     throw RoomException("There are no matching player in this room.");
 }
 
+/**
+ * @brief Get the room id
+ *
+ * @return size_t
+ */
 std::size_t rserver::game::Room::get_id() const
 {
     return this->id;
 }
 
+/**
+ * @brief Get a reference to the room logic
+ *
+ * @return GameLogic &
+ */
 rserver::game::GameLogic &rserver::game::Room::get_logic()
 {
     return this->logic;
 }
 
+/**
+ * @brief Run game logic, whith a clock
+ *
+ * @param delta - utils::Clock &
+ */
 void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 {
     this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
                           static_cast<float>(delta.get_elapsed_time_in_s()));
 }
 
+/**
+ * @brief If room is in Waiting mode (2+) players, wait until `TIMEOUT_WAITING` is over, then set
+ * the room to InGame. Otherwise, launch game_waiting method of GameLogic
+ *
+ * @param delta_time - float
+ */
 void rserver::game::Room::check_wait_timeout(float delta_time)
 {
     {
@@ -117,6 +176,12 @@ void rserver::game::Room::check_wait_timeout(float delta_time)
     }
 }
 
+/**
+ * @brief Check if a player is in the room
+ *
+ * @param player - Player &
+ * @return bool
+ */
 bool rserver::game::Room::has_player(const Player &player)
 {
     for (auto &port : this->players) { // NOLINT
@@ -126,6 +191,11 @@ bool rserver::game::Room::has_player(const Player &player)
     return false;
 }
 
+/**
+ * @brief Get a reference to the ecs variable
+ *
+ * @return ECSManager &
+ */
 rtype::ECSManager &rserver::game::Room::get_ecs()
 {
     return this->ecs.get_class();

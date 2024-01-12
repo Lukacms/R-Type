@@ -29,6 +29,12 @@ namespace rserver
     static const std::string_view ENTITIES_PATH{"./assets/configs/entities.json"};
     constexpr float VELOCITY_BULLET{0.15F};
 
+    /**
+     * @class ServerEntityFactory
+     * @brief To create entities and register them with the ECS
+     *  They load the entities through a .json file containing all infos of the entities
+     *
+     */
     class ServerEntityFactory
     {
 
@@ -57,14 +63,8 @@ namespace rserver
             };
 
             static size_t create(const std::string &type, rtype::ECSManager &ecs_manager);
-            static size_t create_json(const std::string &type, rtype::ECSManager &ecs_manager);
 
         private:
-            static size_t create_enemy(rtype::ECSManager &ecs_manager);
-            static size_t create_player(rtype::ECSManager &ecs_manager);
-            static size_t create_kamikaze_enemy(rtype::ECSManager &ecs_manager);
-            static size_t create_UFO_enemy(rtype::ECSManager &ecs_manager);
-            static size_t create_bullet(rtype::ECSManager &ecs_manager);
-            static size_t create_upgrade(rtype::ECSManager &ecs_manager);
+            static size_t create_json(const std::string &type, rtype::ECSManager &ecs_manager);
     };
 } // namespace rserver

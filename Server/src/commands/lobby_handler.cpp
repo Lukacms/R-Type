@@ -9,6 +9,7 @@
 
 void rserver::Manager::lobby_handler()
 {
+    std::unique_lock<std::shared_mutex> lock{this->rooms_mutex};
     const auto &existing_rooms{this->rooms.get_rooms()};
 
     for (const auto &room : existing_rooms) {

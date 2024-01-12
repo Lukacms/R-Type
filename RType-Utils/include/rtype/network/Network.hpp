@@ -36,10 +36,14 @@ namespace ntw
         Room, // Server -> send infos about room [id] [nb_player] [status], Client -> join room [id]
               // or create one
         Music, // Send the music that the client should play, [MusicString],
+        Solo,  // Player [nb ais] (default to 1) -> wanting to be in solo game
     };
 
 #pragma pack(push, 1)
 
+    /**
+     * @brief Structure to pass through asio methods to communicate in binary
+     */
     struct Communication {
         public:
             /* variables */
@@ -47,6 +51,12 @@ namespace ntw
             std::array<char, MAX_SIZE> args{};
 
             /* methods */
+            /**
+             * @brief add a parameter to the array of char. The max value is 128
+             *
+             * @tparam TType template - should be number or string
+             * @param param - template parameter to add to the array of char
+             */
             template <typename TType> void add_param(TType param)
             {
                 std::string to_add{};
@@ -68,7 +78,12 @@ namespace ntw
                 }
             }
 
-            std::vector<std::string> deserialize()
+            /**
+             * @brief go from array<char, 128> to vector of string, by separating it with spaces
+             *
+             * @return vector of string. May be empty, but function won't throw exception
+             */
+            std::vector<std::string> deserialize() noexcept
             {
                 std::vector<std::string> dest{};
                 size_t pos = 0;

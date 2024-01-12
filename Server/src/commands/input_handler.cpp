@@ -6,6 +6,7 @@
 */
 
 #include <array>
+#include <iostream>
 #include <rtype.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
@@ -21,6 +22,8 @@ static const std::array<rserver::Vector2f, 4> POSITIONS{{
 
 void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::string> &args)
 {
+    std::unique_lock<std::shared_mutex> lock{
+        this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).ecs_mutex};
     auto &room_ecs{
         this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).get_ecs()};
     auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
@@ -29,8 +32,7 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
         throw ManagerException{WRONG_ARGUMENTS.data()};
     }
     if (args[0][0] == '4') {
-        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
-        shoot_according_level(player, room_ecs);
+        shoot_according_level(player, room_ecs, component);
         return;
     }
     component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
@@ -41,9 +43,10 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
  * @brief Create bullet according to the level of the player
  */
 void rserver::Manager::shoot_according_level(rserver::Player &player, // NOLINT
-                                             rtype::ECSManager &room_ecs)
+                                             rtype::ECSManager &room_ecs,
+                                             rtype::TransformComponent &component)
 {
-    auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
+    std::shared_lock<std::shared_mutex> plock{player.mutex};
 
     try {
         if (player.get_level() == 1) {

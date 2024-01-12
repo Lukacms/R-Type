@@ -1,6 +1,9 @@
-//
-// Created by kane on 08/01/24.
-//
+/*
+** EPITECH PROJECT, 2023
+** LevelManager
+** File description:
+** LevelManager
+*/
 
 #pragma once
 
@@ -13,6 +16,11 @@ namespace rserver
 {
     constexpr int WAVE_MODULO{580};
 
+    /**
+     * @class LevelManager
+     * @brief To handle levels handling, timing them, and launching the waves
+     *
+     */
     class LevelManager
     {
         public:

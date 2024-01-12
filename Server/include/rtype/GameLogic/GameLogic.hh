@@ -30,10 +30,16 @@ namespace rserver::game
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */);
     void ufo_system(rtype::ComponentManager &registry, float /* delta_time */);
 
+    /**
+     * @class GameLogic
+     * @brief To handle a game. Create entities with the ECS, move them when needed, launch level,
+     * waves of enemies, ...
+     *
+     */
     class GameLogic
     {
         public:
-            explicit GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
+            GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
             GameLogic(GameLogic const &to_copy) = delete;
             GameLogic(GameLogic &&to_move);
             ~GameLogic() = default;
