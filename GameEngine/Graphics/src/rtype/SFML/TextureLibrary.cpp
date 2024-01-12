@@ -12,7 +12,7 @@ rtype::TextureLibrary::TextureLibrary()
 
     if (!texture_file.is_open()) {
         std::cerr << "Cannot load textures because texture file doesn't exist" << std::endl;
-        throw std::exception();
+        throw TextureException("Texture file doesn't exist !");
     }
     auto textures = njson::parse(texture_file);
 
@@ -29,5 +29,15 @@ rtype::TextureBook &rtype::TextureLibrary::get_texture(std::string &name)
         if (name == texture.name)
             return texture;
     }
-    throw std::exception();
+    throw TextureException("Texture does not exist");
+}
+
+rtype::TextureLibrary::TextureException::TextureException(std::string &&perror_msg)
+{
+    m_error_msg = perror_msg;
+}
+
+const char *rtype::TextureLibrary::TextureException::what() const noexcept
+{
+    return m_error_msg.c_str();
 }

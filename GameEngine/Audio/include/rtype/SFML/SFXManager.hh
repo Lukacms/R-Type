@@ -16,7 +16,7 @@ namespace rtype
 {
 
     constexpr std::string_view SFX_FILEPATH{"./assets/configs/SFX.json"};
-    constexpr float SFX_STANDARD_VOLUME{100.F};
+    constexpr float SFX_STANDARD_VOLUME{50.F};
 
     struct Buffer {
             std::string name;
@@ -36,6 +36,22 @@ namespace rtype
             void play_sound(const std::string &name);
             void set_volume(float volume);
             void update();
+
+            class SFXException : std::exception
+            {
+                public:
+                    SFXException(std::string &&perror_msg);
+                    SFXException(SFXException const &to_copy) = default;
+                    SFXException(SFXException &&to_move) = default;
+                    ~SFXException() override = default;
+                    SFXException &operator=(SFXException const &to_copy) = default;
+                    SFXException &operator=(SFXException &&to_move) = default;
+
+                    [[nodiscard]] const char *what() const noexcept override;
+
+                private:
+                    std::string m_error_msg{"Error"};
+            };
 
         private:
             std::list<Buffer> m_buffers{};

@@ -178,13 +178,17 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
 
 void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
-    if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
-        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
-        auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
-        auto &transform = manager.get_component<rtype::TransformComponent>(entity);
-        transform.position_y = std::rand() % 550;
-        transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
-        m_enemy_clock.reset();
+    try {
+        if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
+            std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
+            auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
+            auto &transform = manager.get_component<rtype::TransformComponent>(entity);
+            transform.position_y = std::rand() % 550;
+            transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
+            m_enemy_clock.reset();
+        }
+    } catch (rserver::ServerEntityFactory::FactoryException &e) {
+        return;
     }
 }
 
@@ -194,16 +198,20 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
     int success = std::rand() % 1;
     auto &transforms = manager.get_components<rtype::TransformComponent>();
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
-    if (transforms[entity_to_follow].has_value() && success == 0) {
-        std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
-        transforms[entity] = {transforms[entity_to_follow]};
-        transforms[entity]->velocity_x = -0.1;
-        transforms[entity]->velocity_y = 0;
+    try {
+        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
+        if (transforms[entity_to_follow].has_value() && success == 0) {
+            std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
+            transforms[entity] = {transforms[entity_to_follow]};
+            transforms[entity]->velocity_x = -0.1;
+            transforms[entity]->velocity_y = 0;
+        }
+        size_t entity = rserver::ServerEntityFactory::create("Explosion", manager);
+        auto &explosion = manager.get_component<rtype::TransformComponent>(entity);
+        explosion = manager.get_component<rtype::TransformComponent>(entity_to_follow);
+    } catch (rserver::ServerEntityFactory::FactoryException &e) {
+        return;
     }
-    size_t entity = rserver::ServerEntityFactory::create("Explosion", manager);
-    auto &explosion = manager.get_component<rtype::TransformComponent>(entity);
-    explosion = manager.get_component<rtype::TransformComponent>(entity_to_follow);
 }
 
 void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manager,
@@ -257,12 +265,12 @@ void rserver::game::GameLogic::check_if_player_out_of_bounds(rtype::ECSManager &
         if (tags[entity]->tag != "Player")
             continue;
         auto &collider = manager.get_component<rtype::BoxColliderComponent>(entity);
-        if (transforms[entity]->position_x > 800 - collider.width)
-            transforms[entity]->position_x = 800 - collider.width;
+        if (transforms[entity]->position_x > 800 - (collider.width * transforms[entity]->scale_x))
+            transforms[entity]->position_x = 800 - (collider.width * transforms[entity]->scale_x);
         if (transforms[entity]->position_x < 0)
             transforms[entity]->position_x = 0;
-        if (transforms[entity]->position_y > 600 - collider.height)
-            transforms[entity]->position_y = 600 - collider.height;
+        if (transforms[entity]->position_y > 600 - (collider.height * transforms[entity]->scale_y))
+            transforms[entity]->position_y = 600 - (collider.height * transforms[entity]->scale_y);
         if (transforms[entity]->position_y < 0)
             transforms[entity]->position_y = 0;
     }

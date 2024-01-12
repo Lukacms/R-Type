@@ -33,6 +33,22 @@ namespace rtype
 
             TextureBook &get_texture(std::string &name);
 
+            class TextureException : std::exception
+            {
+                public:
+                    TextureException(std::string &&perror_msg);
+                    TextureException(TextureException const &to_copy) = default;
+                    TextureException(TextureException &&to_move) = default;
+                    ~TextureException() override = default;
+                    TextureException &operator=(TextureException const &to_copy) = default;
+                    TextureException &operator=(TextureException &&to_move) = default;
+
+                    [[nodiscard]] const char *what() const noexcept override;
+
+                private:
+                    std::string m_error_msg{"Error"};
+            };
+
         private:
             std::list<TextureBook> m_library;
     };
