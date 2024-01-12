@@ -1,0 +1,62 @@
+.TH "rtype::utils::ThreadPool" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::utils::ThreadPool \- Handle threads\&. The program has different parts of the code launched in different threads, to optimize run-time\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ThreadPool\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBThreadPool\fP (u_int p_nb_threads=std::thread::hardware_concurrency())"
+.br
+.RI "construct a new \fBThreadPool\fP object\&. Sould be only one in project, no need for more "
+.ti -1c
+.RI "\fBThreadPool\fP (\fBThreadPool\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBThreadPool\fP (\fBThreadPool\fP &&to_move)"
+.br
+.ti -1c
+.RI "\fBThreadPool\fP & \fBoperator=\fP (\fBThreadPool\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBThreadPool\fP & \fBoperator=\fP (\fBThreadPool\fP &&to_move)"
+.br
+.ti -1c
+.RI "void \fBadd_job\fP (const std::function< void()> &job)"
+.br
+.ti -1c
+.RI "void \fBstop\fP ()"
+.br
+.ti -1c
+.RI "bool \fBis_busy\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Handle threads\&. The program has different parts of the code launched in different threads, to optimize run-time\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rtype::utils::ThreadPool::ThreadPool (u_int p_nb_threads = \fCstd::thread::hardware_concurrency()\fP)"
+
+.PP
+construct a new \fBThreadPool\fP object\&. Sould be only one in project, no need for more Constructor for \fBThreadPool\fP\&. Construct nb_threads threads and assign them the method ThreadPool::thread_loop\&.
+.PP
+\fBParameters\fP
+.RS 4
+\fIp_nb_threads\fP - u_int - default is max threads that the system supports
+.br
+\fIp_nb_threads\fP - u_int 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

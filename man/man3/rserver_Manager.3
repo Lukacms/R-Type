@@ -48,12 +48,15 @@ rserver::Manager \- manager class for the server\&. Will handle retrieving commm
 .ti -1c
 .RI "void \fBinput_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
 .br
+.RI "Command handler for \fBManager\fP, handle the inputs sent from clients\&. "
 .ti -1c
 .RI "void \fBend_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
 .br
+.RI "Command handler for \fBManager\fP : end handler Delete player from rooms\&. "
 .ti -1c
 .RI "void \fBroom_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
 .br
+.RI "Handle room command from player\&. "
 .in -1c
 .SS "Static Public Member Functions"
 
@@ -104,6 +107,30 @@ Constructor by move\&.
 
 .SH "Member Function Documentation"
 .PP 
+.SS "void rserver::Manager::end_handler (\fBrserver::Player\fP & player, std::vector< std::string > &)"
+
+.PP
+Command handler for \fBManager\fP : end handler Delete player from rooms\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.RE
+.PP
+
+.SS "void rserver::Manager::input_handler (\fBrserver::Player\fP & player, std::vector< std::string > & args)"
+
+.PP
+Command handler for \fBManager\fP, handle the inputs sent from clients\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.br
+\fIargs\fP - vector<string> & 
+.RE
+.PP
+
 .SS "void rserver::Manager::launch (asio::ip::port_type port = \fCDEFAULT_PORT\fP)\fC [static]\fP"
 
 .PP
@@ -128,6 +155,19 @@ operator = to move
 \fBReturns\fP
 .RS 4
 \fBManager\fP & 
+.RE
+.PP
+
+.SS "void rserver::Manager::room_handler (\fBrserver::Player\fP & player, std::vector< std::string > & args)"
+
+.PP
+Handle room command from player\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.br
+\fIargs\fP - vector<string> & 
 .RE
 .PP
 
