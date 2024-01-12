@@ -1,0 +1,56 @@
+.TH "rserver::PlayersManager" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::PlayersManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPlayersException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPlayersManager\fP (\fBPlayersManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBPlayersManager\fP (\fBPlayersManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBPlayersManager\fP & \fBoperator=\fP (\fBPlayersManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBPlayersManager\fP & \fBoperator=\fP (\fBPlayersManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBPlayer\fP & \fBget_by_id\fP (asio::ip::port_type const &port)"
+.br
+.ti -1c
+.RI "\fBPlayer\fP & \fBget_by_entity_id\fP (std::size_t const &entity)"
+.br
+.ti -1c
+.RI "\fBrserver::Player\fP & \fBadd_player\fP (asio::ip::udp::endpoint &endpoint)"
+.br
+.ti -1c
+.RI "\fBrserver::Player\fP & \fBadd_player\fP (\fBPlayer\fP &to_add)"
+.br
+.ti -1c
+.RI "std::size_t \fBlength\fP () const"
+.br
+.ti -1c
+.RI "const std::vector< \fBPlayer\fP > & \fBget_all_players\fP () const"
+.br
+.ti -1c
+.RI "void \fBremove_player\fP (\fBPlayer\fP &player)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

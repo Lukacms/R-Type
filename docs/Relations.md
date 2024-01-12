@@ -9,7 +9,7 @@ classDiagram
     }
     class Manager {
         +launch(port)
-        +start_recieve() : to handle commands recieved asynchronously
+        +start_receive() : to handle commands received asynchronously
         +send_message(communication, player, socket)
         +send_to_all(communication, players, socket)
     }

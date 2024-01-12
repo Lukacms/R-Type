@@ -1,7 +1,12 @@
-//
-// Created by kane on 12/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** PhysicsManager
+*/
 
+#include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
@@ -25,14 +30,14 @@ void rtype::PhysicsManager::check_collisions(ECSManager &ecs_manager)
                 entity1 == entity2)
                 continue;
             if (transforms[entity1]->position_x < transforms[entity2]->position_x +
-                        (colliders[entity2]->width * transforms[entity2]->scale_x) &&
+                        (colliders[entity2]->width * std::abs(transforms[entity2]->scale_x)) &&
                 transforms[entity1]->position_x +
-                        (colliders[entity1]->width * transforms[entity1]->scale_x) >
+                        (colliders[entity1]->width * std::abs(transforms[entity1]->scale_x)) >
                     transforms[entity2]->position_x &&
                 transforms[entity1]->position_y < transforms[entity2]->position_y +
-                        (colliders[entity2]->height * transforms[entity2]->scale_y) &&
+                        (colliders[entity2]->height * std::abs(transforms[entity2]->scale_y)) &&
                 transforms[entity1]->position_y +
-                        (colliders[entity1]->height * transforms[entity1]->scale_y) >
+                        (colliders[entity1]->height * std::abs(transforms[entity1]->scale_y)) >
                     transforms[entity2]->position_y)
                 collision.collided.emplace_back(entity2);
         }

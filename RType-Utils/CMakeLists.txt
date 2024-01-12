@@ -9,25 +9,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
-if (WIN32)
-    include(FetchContent)
-    FetchContent_Declare(
-        dlfcn-win32
-        GIT_REPOSITORY "https://github.com/dlfcn-win32/dlfcn-win32.git"
-        GIT_TAG "v1.4.1"
-        SYSTEM
-    )
-    FetchContent_MakeAvailable(dlfcn-win32)
-endif()
+include_directories(include/)
 
 # only add the interface library
-add_library(r-type-utils INTERFACE)
+add_library(
+    r-type-utils SHARED
+    src/utils/Clock.cpp
+    src/utils/Vector2D.cpp
+    src/utils/Colors.cpp
+)
+target_link_libraries(
+    r-type-utils PRIVATE
+    nlohmann_json::nlohmann_json
+)
 
 # properties
 set_property(TARGET r-type-utils PROPERTY CXX_STANDARD 20)
 set_property(TARGET r-type-utils PROPERTY CXX_STANDARD_REQUIRED ON)
-if (WIN32)
-    # target_include_directories(r-type-utils ${CMAKE_BINARY_DIR}/_deps/dlfcn-win32-src)
-    find_library(dlfcn-win32 REQUIRED)
-    target_link_libraries(r-type-utils INTERFACE dlfcn-win32::dl)
-endif()

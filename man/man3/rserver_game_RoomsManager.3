@@ -1,0 +1,49 @@
+.TH "rserver::game::RoomsManager" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::game::RoomsManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRoomsManager\fP (\fBPlayersManager\fP &pmanager)"
+.br
+.ti -1c
+.RI "\fBRoomsManager\fP (\fBRoomsManager\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBRoomsManager\fP (\fBRoomsManager\fP &&to_move)"
+.br
+.ti -1c
+.RI "\fBRoomsManager\fP & \fBoperator=\fP (\fBRoomsManager\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBRoomsManager\fP & \fBoperator=\fP (\fBRoomsManager\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "void \fBjoin_random_room\fP (\fBPlayer\fP &player)"
+.br
+.ti -1c
+.RI "void \fBjoin_room\fP (\fBPlayer\fP &player, const std::size_t &room_id)"
+.br
+.ti -1c
+.RI "void \fBadd_room\fP (\fBPlayer\fP &first_player, const std::size_t &nb_threads, asio::ip::udp::socket &socket)"
+.br
+.ti -1c
+.RI "void \fBleave_room_with_id\fP (\fBPlayer\fP &player, const std::size_t &room_id)"
+.br
+.ti -1c
+.RI "\fBRoom\fP & \fBget_room_by_id\fP (const std::size_t &room_id)"
+.br
+.ti -1c
+.RI "std::vector< \fBRoom\fP > & \fBget_rooms\fP ()"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

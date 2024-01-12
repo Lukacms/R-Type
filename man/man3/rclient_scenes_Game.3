@@ -1,0 +1,60 @@
+.TH "rclient::scenes::Game" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::scenes::Game
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBrclient::scenes::IScene\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBGame\fP (asio::ip::udp::endpoint &pendpoint, asio::ip::udp::socket &psocket)"
+.br
+.ti -1c
+.RI "\fBGame\fP (\fBGame\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBGame\fP (\fBGame\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "\fBGame\fP & \fBoperator=\fP (\fBGame\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBGame\fP & \fBoperator=\fP (\fBGame\fP &&to_move)=delete"
+.br
+.ti -1c
+.RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
+.br
+.ti -1c
+.RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
+.br
+.ti -1c
+.RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
+.br
+.ti -1c
+.RI "void \fBcreate_entity\fP (\fBntw::Communication\fP &commn, State &state)"
+.br
+.ti -1c
+.RI "void \fBmove_entity\fP (\fBntw::Communication\fP &commn, State &state)"
+.br
+.ti -1c
+.RI "void \fBend_game\fP (\fBntw::Communication\fP &commn, State &state)"
+.br
+.ti -1c
+.RI "void \fBdelete_entity\fP (\fBntw::Communication\fP &commn, State &state)"
+.br
+.ti -1c
+.RI "void \fBmanage_entity\fP (\fBntw::Communication\fP &commn, State &state)"
+.br
+.ti -1c
+.RI "void \fBchange_music\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio)"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

@@ -1,0 +1,47 @@
+.TH "rtype::SpriteComponent" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::SpriteComponent
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSpriteComponent\fP (\fBrtype::utils::TextureRect\fP prec={}, std::string text='', \fBrtype::utils::Vector2D\fP< float > pog={})"
+.br
+.ti -1c
+.RI "\fBSpriteComponent\fP (\fBSpriteComponent\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBSpriteComponent\fP (\fBSpriteComponent\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBSpriteComponent\fP & \fBoperator=\fP (\fBSpriteComponent\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBSpriteComponent\fP & \fBoperator=\fP (\fBSpriteComponent\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBSpriteComponent\fP (const nlohmann::json &json)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBrtype::utils::TextureRect\fP \fBrectangle\fP {}"
+.br
+.ti -1c
+.RI "std::string \fBtexture_path\fP {}"
+.br
+.ti -1c
+.RI "\fBrtype::utils::Vector2D\fP< float > \fBorigin\fP {}"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

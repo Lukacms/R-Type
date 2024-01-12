@@ -32,13 +32,14 @@ static int display_help()
  */
 int main(int argc, const char *argv[])
 {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
     try {
         rserver::Infos infos{
             rserver::ArgsParser::get_args(argc, std::span(argv, std::size_t(argc)))};
 
         if (infos.help)
             return display_help();
-        rserver::Manager::launch(rserver::DEFAULT_PORT);
+        rserver::Manager::launch(infos.port);
     } catch (rserver::ArgsParser::ArgsException &e) {
         std::cout << e.what() << ENDL;
         return rserver::FAILURE;

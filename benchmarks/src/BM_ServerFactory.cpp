@@ -19,10 +19,10 @@ constexpr int ITERATIONS{1000};
 static void bm_server_factory(benchmark::State &state)
 {
     dl::DlLoader<rtype::ECSManager> ecs{};
-    SparseArray<rtype::BoxColliderComponent> boxes{};
-    SparseArray<rtype::TransformComponent> transform{};
-    SparseArray<rtype::TagComponent> tags{};
-    SparseArray<rtype::HealthComponent> healths{};
+    rtype::SparseArray<rtype::BoxColliderComponent> boxes{};
+    rtype::SparseArray<rtype::TransformComponent> transform{};
+    rtype::SparseArray<rtype::TagComponent> tags{};
+    rtype::SparseArray<rtype::HealthComponent> healths{};
     ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
 
     ecs.get_class().register_component(transform);
@@ -33,7 +33,7 @@ static void bm_server_factory(benchmark::State &state)
         rserver::ServerEntityFactory::create("BasicEnemy", ecs.get_class());
         rserver::ServerEntityFactory::create("Player", ecs.get_class());
         rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class());
-        rserver::ServerEntityFactory::create("Bullet", ecs.get_class());
+        rserver::ServerEntityFactory::create("PlayerBullet", ecs.get_class());
     }
 }
 

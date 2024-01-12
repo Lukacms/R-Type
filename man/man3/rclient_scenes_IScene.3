@@ -1,0 +1,39 @@
+.TH "rclient::scenes::IScene" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::scenes::IScene
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by \fBrclient::scenes::Game\fP, \fBrclient::scenes::Lounge\fP, \fBrclient::scenes::Menu\fP, and \fBrclient::scenes::PauseMenu\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBIScene\fP (\fBIScene\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBIScene\fP (\fBIScene\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBIScene\fP & \fBoperator=\fP (\fBIScene\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBIScene\fP & \fBoperator=\fP (\fBIScene\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "virtual void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics)=0"
+.br
+.ti -1c
+.RI "virtual void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state)=0"
+.br
+.ti -1c
+.RI "virtual void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state)=0"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

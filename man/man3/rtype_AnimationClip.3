@@ -1,0 +1,50 @@
+.TH "rtype::AnimationClip" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::AnimationClip
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAnimationClip\fP (std::string panim='', bool ploop=false, double ptime=0, std::vector< \fButils::TextureRect\fP > ptexts={})"
+.br
+.ti -1c
+.RI "\fBAnimationClip\fP (const \fBAnimationClip\fP &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBAnimationClip\fP (\fBAnimationClip\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBAnimationClip\fP & \fBoperator=\fP (const \fBAnimationClip\fP &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBAnimationClip\fP & \fBoperator=\fP (\fBAnimationClip\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBAnimationClip\fP (const nlohmann::json &json)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::string \fBanimation_name\fP"
+.br
+.ti -1c
+.RI "bool \fBis_loop\fP {false}"
+.br
+.ti -1c
+.RI "double \fBtime_after_change\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBrtype::utils::TextureRect\fP > \fBtexture_rects\fP"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

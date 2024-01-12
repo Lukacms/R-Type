@@ -14,6 +14,8 @@
 #include <thread>
 #include <vector>
 
+using u_int = unsigned int;
+
 namespace rclient
 {
 
@@ -27,9 +29,9 @@ namespace rclient
              *
              * @param p_nb_threads - u_int - default is max threads that the system supports
              */
-            ThreadPool(u_int p_nb_threads = std::thread::hardware_concurrency());
+            explicit ThreadPool(u_int p_nb_threads = std::thread::hardware_concurrency());
             ThreadPool(ThreadPool const &to_copy) = delete;
-            ThreadPool(ThreadPool &&to_move);
+            ThreadPool(ThreadPool &&to_move) noexcept ;
             ~ThreadPool() = default;
 
             /* override operator */

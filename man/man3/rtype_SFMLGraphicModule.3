@@ -1,0 +1,84 @@
+.TH "rtype::SFMLGraphicModule" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rtype::SFMLGraphicModule
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBrtype::IGraphicModule\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSFMLGraphicModule\fP (unsigned int width=STANDARD_WIDTH, unsigned int height=STANDARD_HEIGHT, const std::string &title=STANDARD_TITLE\&.data())"
+.br
+.ti -1c
+.RI "\fBSFMLGraphicModule\fP (const \fBSFMLGraphicModule\fP &)=delete"
+.br
+.ti -1c
+.RI "\fBSFMLGraphicModule\fP (\fBSFMLGraphicModule\fP &&)=delete"
+.br
+.ti -1c
+.RI "\fBSFMLGraphicModule\fP & \fBoperator=\fP (const \fBSFMLGraphicModule\fP &)=delete"
+.br
+.ti -1c
+.RI "\fBSFMLGraphicModule\fP & \fBoperator=\fP (\fBSFMLGraphicModule\fP &&)=delete"
+.br
+.ti -1c
+.RI "void \fBupdate\fP () final"
+.br
+.ti -1c
+.RI "void \fBdraw_components\fP (\fBSparseArray\fP< \fBSpriteComponent\fP > &sprites, \fBSparseArray\fP< \fBTransformComponent\fP > &transforms) final"
+.br
+.ti -1c
+.RI "void \fBdraw_components\fP (\fBSparseArray\fP< \fBTextComponent\fP > &text, \fBSparseArray\fP< \fBTransformComponent\fP > &transforms) final"
+.br
+.ti -1c
+.RI "void \fBdraw\fP (\fBSpriteComponent\fP &sprite_component, const \fBTransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "void \fBdraw\fP (\fBTextComponent\fP &text_component, const \fBTransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "void \fBdraw\fP (sf::Text &text_component, const \fBTransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "void \fBdraw\fP (sf::Sprite &sprite, const \fBTransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "float \fBget_text_width\fP (\fBTextComponent\fP &text) final"
+.br
+.ti -1c
+.RI "bool \fBis_sprite_left_click\fP (\fBrtype::SpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP &transform) final"
+.br
+.ti -1c
+.RI "void \fBset_view_port\fP (sf::View &view) final"
+.br
+.ti -1c
+.RI "sf::View \fBget_view_port\fP () final"
+.br
+.ti -1c
+.RI "void \fBdisplay\fP () final"
+.br
+.ti -1c
+.RI "void \fBclose_window\fP () final"
+.br
+.ti -1c
+.RI "void \fBclear\fP () final"
+.br
+.ti -1c
+.RI "bool \fBis_input_pressed\fP (rtype::Keys key) final"
+.br
+.ti -1c
+.RI "bool \fBis_window_open\fP () final"
+.br
+.ti -1c
+.RI "\fBrtype::utils::Vector2D\fP< float > \fBis_left_mouse_pressed\fP () final"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

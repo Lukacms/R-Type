@@ -9,6 +9,8 @@
 namespace rtype
 {
     struct TagComponent {
-            std::string tag;
+        public:
+            /* variables */
+            std::string tag{};
     };
 } // namespace rtype

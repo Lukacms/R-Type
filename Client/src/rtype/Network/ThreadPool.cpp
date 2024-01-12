@@ -12,13 +12,13 @@
 /* constructors / destructors */
 rclient::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(p_nb_threads)}
 {
-    for (u_int i = 0; i < this->nb_threads; i++) {
+    for (u_int i{0}; i < this->nb_threads; i++) {
         this->threads.emplace_back(&ThreadPool::thread_loop, this);
     }
 }
 
-rclient::ThreadPool::ThreadPool(rclient::ThreadPool &&to_move)
-    : nb_threads{std::move(to_move.nb_threads)}, queue{std::move(to_move.queue)}
+rclient::ThreadPool::ThreadPool(rclient::ThreadPool &&to_move) noexcept
+    : nb_threads{to_move.nb_threads}, queue{std::move(to_move.queue)}
 {
     to_move.stop();
 }
@@ -26,7 +26,7 @@ rclient::ThreadPool::ThreadPool(rclient::ThreadPool &&to_move)
 /* override operator */
 rclient::ThreadPool &rclient::ThreadPool::operator=(ThreadPool &&to_move)
 {
-    this->nb_threads = std::move(to_move.nb_threads);
+    this->nb_threads = to_move.nb_threads;
     this->queue = std::move(to_move.queue);
 
     to_move.stop();

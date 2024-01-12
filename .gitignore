@@ -38,12 +38,15 @@ cmake-build-release/
 .vscode/
 .cache/
 compile_commands.json
+latex
+html
 
 # specific to project
 r-type_server
 r-type_client
 build/
 libs/
+/assets/
 
 # tests
 tests-r-type_server

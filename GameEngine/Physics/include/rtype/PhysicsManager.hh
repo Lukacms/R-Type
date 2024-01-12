@@ -1,6 +1,11 @@
-//
-// Created by kane on 12/12/23.
-//
+/*
+** EPITECH PROJECT, 2023
+** rtype
+** File description:
+** PhysicsManager
+*/
+
+#pragma once
 
 #include <exception>
 #include <rtype/ECSManager.hpp>
