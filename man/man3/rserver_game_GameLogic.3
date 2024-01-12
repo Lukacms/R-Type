@@ -1,4 +1,4 @@
-.TH "rserver::game::GameLogic" 3 "Thu Jan 11 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::game::GameLogic" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -37,6 +37,9 @@ rserver::game::GameLogic
 .RI "void \fBsend_music\fP (\fBrserver::PlayersManager\fP &players_manager, const std::string &music_name)"
 .br
 .ti -1c
+.RI "void \fBsend_background\fP (\fBrserver::PlayersManager\fP &players_manager, const std::string &background_name)"
+.br
+.ti -1c
 .RI "void \fBdestroy_too_far_entities\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .ti -1c
@@ -56,6 +59,9 @@ rserver::game::GameLogic
 .br
 .ti -1c
 .RI "void \fBenemy_collision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBcheck_if_player_out_of_bounds\fP (\fBrtype::ECSManager\fP &manager)"
 .br
 .in -1c
 

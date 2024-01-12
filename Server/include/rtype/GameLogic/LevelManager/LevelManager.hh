@@ -29,6 +29,7 @@ namespace rserver
             bool is_level_finished();
             void change_level();
             std::string get_current_music();
+            std::string get_current_background();
 
         private:
             std::string m_current_level;

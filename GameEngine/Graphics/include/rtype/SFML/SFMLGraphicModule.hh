@@ -12,6 +12,7 @@
 #include <rtype/IGraphicModule.hh>
 #include <rtype/Keys.hh>
 #include <rtype/SFML/InputManager.hh>
+#include <rtype/SFML/TextureLibrary.hh>
 #include <rtype/SparseArray.hpp>
 #include <string_view>
 
@@ -23,12 +24,13 @@ namespace rtype
             rtype::Keys key;
     };
 
-    const constexpr std::array<SFMLKeyring, 20> KEYS_ARRAY{
+    const constexpr std::array<SFMLKeyring, 21> KEYS_ARRAY{
         {
             {sf::Keyboard::Up, rtype::Keys::UP},       {sf::Keyboard::Right, rtype::Keys::RIGHT},
             {sf::Keyboard::Down, rtype::Keys::DOWN},   {sf::Keyboard::Left, rtype::Keys::LEFT},
             {sf::Keyboard::Enter, rtype::Keys::ENTER}, {sf::Keyboard::Escape, rtype::Keys::ESCAPE},
             {sf::Keyboard::Q, rtype::Keys::Q},         {sf::Keyboard::S, rtype::Keys::S},
+            {sf::Keyboard::W, rtype::Keys::W},
             {sf::Keyboard::Num0, rtype::Keys::ZERO},   {sf::Keyboard::Num1, rtype::Keys::ONE},
             {sf::Keyboard::Num2, rtype::Keys::TWO},    {sf::Keyboard::Num3, rtype::Keys::THREE},
             {sf::Keyboard::Num4, rtype::Keys::FOUR},   {sf::Keyboard::Num5, rtype::Keys::FIVE},
@@ -76,5 +78,6 @@ namespace rtype
             sf::VideoMode m_mode;
             sf::RenderWindow m_window;
             InputManager m_input{};
+            TextureLibrary m_texture_library{};
     };
 } // namespace rtype

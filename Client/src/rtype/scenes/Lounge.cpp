@@ -70,6 +70,8 @@ void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
     graphics.draw(this->text, tmp);
     this->new_box = this->text.getGlobalBounds();
     this->text.setString(JOIN_ROOM.data());
+    tmp.position_x = this->width / MIDLE_DIV - TEXT_POS_LOUNGE * 4;
+    tmp.position_y = this->height - TEXT_POS_LOUNGE;
     graphics.draw(this->text, tmp);
     this->join_box = this->text.getGlobalBounds();
     this->transforms.back().position_y = TEXT_POS_LOUNGE;

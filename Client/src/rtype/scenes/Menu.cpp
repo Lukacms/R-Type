@@ -39,32 +39,32 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_texts[3].font_path = "./assets/font.ttf";
     m_texts[3].font_size = PLAY_FONT_SIZE;
 
-    m_sprites[0].texture_path = "./assets/SpaceBG.png";
+    m_sprites[0].texture_path = "MenuBG";
     m_sprites[0].origin = {0, 0};
-    m_sprites[1].texture_path = "./assets/Rtype-logo2.png";
+    m_sprites[1].texture_path = "RtypeLogo";
     m_sprites[1].origin = {LOGO_ORIGIN_X, 0};
 
-    m_sprites[2].texture_path = "./assets/button.png";
+    m_sprites[2].texture_path = "Button";
     m_sprites[2].origin = {100, 50};
     m_sprites[2].rectangle.width = 200;
     m_sprites[2].rectangle.height = 100;
 
-    m_sprites[3].texture_path = "./assets/High_score/full_score_window.png";
+    m_sprites[3].texture_path = "ScoreWindow";
     m_sprites[3].origin = {100, 50};
     m_sprites[3].rectangle.width = 390;
     m_sprites[3].rectangle.height = 450;
 
-    m_sprites[4].texture_path = "./assets/High_score/icon1.png";
+    m_sprites[4].texture_path = "IconFirst";
     m_sprites[4].origin = {100, 50};
     m_sprites[4].rectangle.width = 95;
     m_sprites[4].rectangle.height = 95;
 
-    m_sprites[5].texture_path = "./assets/High_score/icon2.png";
+    m_sprites[5].texture_path = "IconSecond";
     m_sprites[5].origin = {100, 50};
     m_sprites[5].rectangle.width = 95;
     m_sprites[5].rectangle.height = 95;
 
-    m_sprites[6].texture_path = "./assets/High_score/icon3.png";
+    m_sprites[6].texture_path = "IconThird";
     m_sprites[6].origin = {100, 50};
     m_sprites[6].rectangle.width = 95;
     m_sprites[6].rectangle.height = 95;
@@ -122,7 +122,6 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
         if (m_texts[5].text.empty()) {
             int i = 0;
             for (auto &it : j.items()) {
-                std::cout << it.value()["name"] << std::endl;
                 tmp = it.value()["name"];
                 tmp += " : ";
                 tmp += std::to_string(static_cast<int>(it.value()["score"]));

@@ -138,7 +138,6 @@ void load_entity_properties()
     }
     nlohmann::json json;
     file >> json;
-    std::cout << json["Enemies"] << std::endl;
 }
 
 /**

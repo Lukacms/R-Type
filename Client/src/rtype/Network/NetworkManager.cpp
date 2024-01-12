@@ -12,6 +12,7 @@
 #include <rtype/Factory/ClientEntityFactory.hh>
 #include <rtype/Network/NetworkManager.hh>
 #include <rtype/network/Network.hpp>
+#include <string>
 
 using asio::ip::udp;
 
@@ -96,6 +97,7 @@ void rclient::NetworkManager::move_entity(rclient::NetworkManager & /* network_m
 
     transform.position_x = std::stof(arguments[2]);
     transform.position_y = std::stof(arguments[3]);
+    transform.rotation = std::stof(arguments[4]);
 }
 
 void rclient::NetworkManager::end_game(rclient::NetworkManager & /* network_manager */,

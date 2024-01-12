@@ -1,0 +1,19 @@
+{
+  "BasicEnemy" : "./assets/entities/BasicEnemy.png",
+  "EnemyBullet" : "./assets/entities/EnemyBullet.png",
+  "Explosion" : "./assets/entities/Explosion.png",
+  "Kamikaze" : "./assets/entities/KamikazeEnemy.png",
+  "PlayerBullet" : "./assets/entities/PlayerShoot.png",
+  "Player" : "./assets/entities/Spaceship.png",
+  "UFO" : "./assets/entities/UFOEnemy.png",
+  "Upgrade" : "./assets/entities/Upgrade.png",
+  "Background": "./assets/backgrounds/backgrounds.png",
+  "Bomba": "./assets/entities/Bomba.png",
+  "ScoreWindow": "./assets/High_score/full_score_window.png",
+  "IconFirst": "./assets/High_score/icon1.png",
+  "IconSecond": "./assets/High_score/icon2.png",
+  "IconThird": "./assets/High_score/icon3.png",
+  "Button": "./assets/button.png",
+  "MenuBG": "./assets/SpaceBG.png",
+  "RtypeLogo": "./assets/Rtype-logo2.png"
+}

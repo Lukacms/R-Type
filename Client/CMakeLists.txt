@@ -38,6 +38,7 @@ add_library(
     src/rtype/scenes/Lounge.cpp
     src/rtype/scenes/Game.cpp
     src/rtype/components/Room.cpp
+        src/rtype/Background/BackgroundManager.cpp
 )
 
 target_compile_features(rtype-client-core PRIVATE cxx_std_20)

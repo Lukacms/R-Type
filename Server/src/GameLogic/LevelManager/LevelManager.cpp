@@ -87,3 +87,13 @@ std::string rserver::LevelManager::get_current_music()
     }
     return "";
 }
+
+std::string rserver::LevelManager::get_current_background()
+{
+    for (auto &level : m_levels) {
+        if (level.title != m_current_level)
+            continue;
+        return level.background;
+    }
+    return "";
+}

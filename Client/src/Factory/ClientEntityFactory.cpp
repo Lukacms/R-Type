@@ -6,6 +6,7 @@
 */
 
 #include <fstream>
+#include <iostream>
 #include <rtype.hh>
 #include <rtype/Components/AnimationComponent.hh>
 #include <rtype/Components/BoxColliderComponent.hh>

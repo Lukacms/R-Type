@@ -42,7 +42,6 @@ namespace rclient::scenes
             bool m_fading_text{false};
             bool m_left_selected{false};
             bool m_right_selected{false};
-            bool s_selected{false};
             unsigned int m_width{};
             unsigned int m_height{};
 

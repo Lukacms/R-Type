@@ -23,6 +23,7 @@ add_library(
     src/rtype/EntryPoint.cpp
     src/rtype/SFML/Systems/SpriteComponent.cpp
     src/rtype/SFML/Systems/AnimationComponent.cpp
+    src/rtype/SFML/TextureLibrary.cpp
 )
 
 target_compile_features(r-type-graphics PRIVATE cxx_std_20)

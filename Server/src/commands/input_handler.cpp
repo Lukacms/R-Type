@@ -45,34 +45,38 @@ void rserver::Manager::shoot_according_level(rserver::Player &player, // NOLINT
 {
     auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
 
-    if (player.get_level() == 1) {
-        size_t bullet_id{ServerEntityFactory::create("PlayerBullet", room_ecs)};
-        auto &transform_bullet{room_ecs.get_component<rtype::TransformComponent>(bullet_id)};
-        transform_bullet.position_x = component.position_x + POSITION_CHANGE;
-        transform_bullet.position_y = component.position_y + OFFSET_Y_BULLET;
-    } else if (player.get_level() == 2) {
-        size_t bullet_id1{ServerEntityFactory::create("PlayerBullet", room_ecs)};
-        size_t bullet_id2{ServerEntityFactory::create("PlayerBullet", room_ecs)};
-        auto &transform_bullet1{room_ecs.get_component<rtype::TransformComponent>(bullet_id1)};
-        auto &transform_bullet2{room_ecs.get_component<rtype::TransformComponent>(bullet_id2)};
-        transform_bullet1.position_x = component.position_x + POSITION_CHANGE;
-        transform_bullet1.position_y = component.position_y + OFFSET_Y_BULLET;
-        transform_bullet2.position_x = component.position_x + POSITION_CHANGE;
-        transform_bullet2.position_y = component.position_y;
-    } else {
-        size_t bullet_id1{ServerEntityFactory::create("PlayerBullet", room_ecs)};
-        size_t bullet_id2{ServerEntityFactory::create("PlayerBullet", room_ecs)};
-        size_t bullet_id3{ServerEntityFactory::create("PlayerBullet", room_ecs)};
-        auto &transform_bullet1{room_ecs.get_component<rtype::TransformComponent>(bullet_id1)};
-        auto &transform_bullet2{room_ecs.get_component<rtype::TransformComponent>(bullet_id2)};
-        auto &transform_bullet3{room_ecs.get_component<rtype::TransformComponent>(bullet_id3)};
-        transform_bullet1.position_x = component.position_x + POSITION_CHANGE;
-        transform_bullet1.position_y = component.position_y + OFFSET_Y_BULLET;
-        transform_bullet2.position_x = component.position_x + POSITION_CHANGE;
-        transform_bullet2.position_y = component.position_y;
-        transform_bullet3.position_x = component.position_x + POSITION_CHANGE;
-        transform_bullet3.position_y = component.position_y;
-        transform_bullet1.velocity_y = 0.15F;
-        transform_bullet3.velocity_y = -0.15F;
+    std::cout << "Here\n";
+    try {
+        if (player.get_level() == 1) {
+            size_t bullet_id{ServerEntityFactory::create("PlayerBullet", room_ecs)};
+            auto &transform_bullet{room_ecs.get_component<rtype::TransformComponent>(bullet_id)};
+            transform_bullet.position_x = component.position_x + POSITION_CHANGE;
+            transform_bullet.position_y = component.position_y + OFFSET_Y_BULLET;
+        } else if (player.get_level() == 2) {
+            size_t bullet_id1{ServerEntityFactory::create("PlayerBullet", room_ecs)};
+            size_t bullet_id2{ServerEntityFactory::create("PlayerBullet", room_ecs)};
+            auto &transform_bullet1{room_ecs.get_component<rtype::TransformComponent>(bullet_id1)};
+            auto &transform_bullet2{room_ecs.get_component<rtype::TransformComponent>(bullet_id2)};
+            transform_bullet1.position_x = component.position_x + POSITION_CHANGE;
+            transform_bullet1.position_y = component.position_y + OFFSET_Y_BULLET;
+            transform_bullet2.position_x = component.position_x + POSITION_CHANGE;
+            transform_bullet2.position_y = component.position_y;
+        } else {
+            size_t bullet_id1{ServerEntityFactory::create("PlayerBullet", room_ecs)};
+            size_t bullet_id2{ServerEntityFactory::create("PlayerBullet", room_ecs)};
+            size_t bullet_id3{ServerEntityFactory::create("PlayerBullet", room_ecs)};
+            auto &transform_bullet1{room_ecs.get_component<rtype::TransformComponent>(bullet_id1)};
+            auto &transform_bullet2{room_ecs.get_component<rtype::TransformComponent>(bullet_id2)};
+            auto &transform_bullet3{room_ecs.get_component<rtype::TransformComponent>(bullet_id3)};
+            transform_bullet1.position_x = component.position_x + POSITION_CHANGE;
+            transform_bullet1.position_y = component.position_y + OFFSET_Y_BULLET;
+            transform_bullet2.position_x = component.position_x + POSITION_CHANGE;
+            transform_bullet2.position_y = component.position_y;
+            transform_bullet3.position_x = component.position_x + POSITION_CHANGE;
+            transform_bullet3.position_y = component.position_y;
+            transform_bullet1.velocity_y = 0.15F;
+            transform_bullet3.velocity_y = -0.15F;
+        }
+    } catch (rserver::ServerEntityFactory::FactoryException & /* e */) {
     }
 }

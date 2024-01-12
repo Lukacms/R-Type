@@ -39,6 +39,22 @@ namespace rtype
             void set_volume(float volume);
             void update();
 
+            class BGMException : std::exception
+            {
+                public:
+                    BGMException(std::string &&perror_msg);
+                    BGMException(BGMException const &to_copy) = default;
+                    BGMException(BGMException &&to_move) = default;
+                    ~BGMException() override = default;
+                    BGMException &operator=(BGMException const &to_copy) = default;
+                    BGMException &operator=(BGMException &&to_move) = default;
+
+                    [[nodiscard]] const char *what() const noexcept override;
+
+                private:
+                    std::string m_error_msg{"Error"};
+            };
+
         private:
             std::vector<BGM> m_bgm{};
             sf::Music m_current_music{};

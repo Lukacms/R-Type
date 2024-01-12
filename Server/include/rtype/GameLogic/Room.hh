@@ -23,7 +23,8 @@ namespace rserver::game
     constexpr int MAX_ROOMS{100};
     constexpr int MAX_PLAYERS{4};
 
-    constexpr int TIMEOUT_WAITING{2 * 60};
+    // constexpr int TIMEOUT_WAITING{2 * 60};
+    constexpr int TIMEOUT_WAITING{10};
 
     enum class RoomStatus { Lounge, Waiting, InGame };
 
@@ -75,7 +76,7 @@ namespace rserver::game
             GameLogic logic{socket, ecs_mutex};
             std::vector<asio::ip::port_type> players{};
             PlayersManager manager{};
-            RoomStatus status{RoomStatus::Lounge};
+            RoomStatus status{RoomStatus::Waiting};
             rtype::utils::Clock timeout_connect{};
     };
 
