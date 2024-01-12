@@ -8,7 +8,7 @@
 #include <benchmark/benchmark.h>
 #include <cstdlib>
 #include <iostream>
-#include <rtype/clients/ThreadPool.hh>
+#include <rtype/utils/ThreadPool.hh>
 
 constexpr int ITERATIONS{50000};
 

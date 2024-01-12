@@ -7,6 +7,10 @@
 
 #include <rtype/Manager.hh>
 
+/**
+ * @brief Handler for lobby
+ * Send infos about rooms to players in lobby
+ */
 void rserver::Manager::lobby_handler()
 {
     std::unique_lock<std::shared_mutex> lock{this->rooms_mutex};

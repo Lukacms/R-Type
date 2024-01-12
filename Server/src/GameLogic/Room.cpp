@@ -113,6 +113,7 @@ void rserver::game::Room::del_player(rserver::Player &to_del)
         if (to_del.get_port() == *player) {
             to_del.set_status(PlayerStatus::Lobby);
             to_del.set_room_id(-1);
+            this->manager.remove_player(to_del);
             this->players.erase(player);
             if (this->players.size() < 2)
                 this->status = RoomStatus::Lounge;

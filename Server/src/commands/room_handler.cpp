@@ -8,6 +8,12 @@
 #include <rtype.hh>
 #include <rtype/Manager.hh>
 
+/**
+ * @brief Handle room command from player
+ *
+ * @param player - Player &
+ * @param args - vector<string> &
+ */
 void rserver::Manager::room_handler(rserver::Player &player, std::vector<std::string> &args)
 {
     std::unique_lock<std::shared_mutex> lock{this->rooms_mutex};

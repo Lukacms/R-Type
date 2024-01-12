@@ -20,6 +20,12 @@ static const std::array<rserver::Vector2f, 4> POSITIONS{{
     {.pos_x = rserver::POSITION_CHANGE * -1, .pos_y = 0},
 }};
 
+/**
+ * @brief Command handler for Manager, handle the inputs sent from clients
+ *
+ * @param player - Player &
+ * @param args - vector<string> &
+ */
 void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::string> &args)
 {
     std::unique_lock<std::shared_mutex> lock{
@@ -46,8 +52,6 @@ void rserver::Manager::shoot_according_level(rserver::Player &player, // NOLINT
                                              rtype::ECSManager &room_ecs,
                                              rtype::TransformComponent &component)
 {
-    std::shared_lock<std::shared_mutex> plock{player.mutex};
-
     try {
         if (player.get_level() == 1) {
             size_t bullet_id{ServerEntityFactory::create("PlayerBullet", room_ecs)};

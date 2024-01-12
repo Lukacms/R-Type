@@ -37,7 +37,6 @@ add_library(
     src/config/ConfigsFile.cpp
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
-    src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
     src/GameLogic/Room.cpp
     src/GameLogic/RoomsManager.cpp

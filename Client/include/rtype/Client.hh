@@ -17,7 +17,6 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/IAudioModule.hh>
 #include <rtype/IGraphicModule.hh>
-#include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/network/Network.hpp>
@@ -26,6 +25,7 @@
 #include <rtype/scenes/Menu.hh>
 #include <rtype/scenes/PauseMenu.hh>
 #include <rtype/utils/Clock.hh>
+#include <rtype/utils/ThreadPool.hh>
 #include <string>
 #include <string_view>
 
@@ -77,7 +77,7 @@ namespace rclient
             std::shared_mutex scenes;
 
             /* utils for network */
-            ThreadPool threads{};
+            rtype::utils::ThreadPool threads{};
             std::string host{};
             std::string port{};
 

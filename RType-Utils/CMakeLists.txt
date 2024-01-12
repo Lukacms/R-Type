@@ -17,6 +17,7 @@ add_library(
     src/utils/Clock.cpp
     src/utils/Vector2D.cpp
     src/utils/Colors.cpp
+    src/utils/ThreadPool.cpp
 )
 target_link_libraries(
     r-type-utils PRIVATE

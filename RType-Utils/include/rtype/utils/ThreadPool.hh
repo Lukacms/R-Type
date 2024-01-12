@@ -16,9 +16,15 @@
 
 using u_int = unsigned int;
 
-namespace rclient
+namespace rtype::utils
 {
 
+    /**
+     * @class ThreadPool
+     * @brief Handle threads. The program has different parts of the code launched in different
+     * threads, to optimize run-time
+     *
+     */
     class ThreadPool
     {
         public:
@@ -29,10 +35,10 @@ namespace rclient
              *
              * @param p_nb_threads - u_int - default is max threads that the system supports
              */
-            explicit ThreadPool(u_int p_nb_threads = std::thread::hardware_concurrency());
+            ThreadPool(u_int p_nb_threads = std::thread::hardware_concurrency());
             ThreadPool(ThreadPool const &to_copy) = delete;
-            ThreadPool(ThreadPool &&to_move) noexcept ;
-            ~ThreadPool() = default;
+            ThreadPool(ThreadPool &&to_move);
+            ~ThreadPool();
 
             /* override operator */
             ThreadPool &operator=(ThreadPool const &to_copy) = delete;
@@ -57,4 +63,4 @@ namespace rclient
             void thread_loop();
     };
 
-} // namespace rclient
+} // namespace rtype::utils

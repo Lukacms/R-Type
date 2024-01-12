@@ -7,29 +7,35 @@
 
 #include <algorithm>
 #include <mutex>
-#include <rtype/clients/ThreadPool.hh>
+#include <rtype/utils/ThreadPool.hh>
 
 /* constructors / destructors */
-rserver::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(p_nb_threads)}
+/**
+ * @brief Constructor for ThreadPool. Construct nb_threads threads and assign them the method
+ * ThreadPool::thread_loop
+ *
+ * @param p_nb_threads - u_int
+ */
+rtype::utils::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(p_nb_threads)}
 {
     for (u_int i{0}; i < this->nb_threads; i++) {
         this->threads.emplace_back(&ThreadPool::thread_loop, this);
     }
 }
 
-rserver::ThreadPool::~ThreadPool()
+rtype::utils::ThreadPool::~ThreadPool()
 {
     this->stop();
 }
 
-rserver::ThreadPool::ThreadPool(rserver::ThreadPool &&to_move)
+rtype::utils::ThreadPool::ThreadPool(rtype::utils::ThreadPool &&to_move)
     : nb_threads{std::move(to_move.nb_threads)}, queue{std::move(to_move.queue)}
 {
     to_move.stop();
 }
 
 /* override operator */
-rserver::ThreadPool &rserver::ThreadPool::operator=(ThreadPool &&to_move)
+rtype::utils::ThreadPool &rtype::utils::ThreadPool::operator=(ThreadPool &&to_move)
 {
     this->nb_threads = std::move(to_move.nb_threads);
     this->queue = std::move(to_move.queue);
@@ -39,7 +45,7 @@ rserver::ThreadPool &rserver::ThreadPool::operator=(ThreadPool &&to_move)
 }
 
 /* methods */
-void rserver::ThreadPool::add_job(const std::function<void()> &job)
+void rtype::utils::ThreadPool::add_job(const std::function<void()> &job)
 {
     {
         std::unique_lock<std::mutex> lock{this->mutex};
@@ -48,7 +54,7 @@ void rserver::ThreadPool::add_job(const std::function<void()> &job)
     this->condition.notify_one();
 }
 
-void rserver::ThreadPool::thread_loop()
+void rtype::utils::ThreadPool::thread_loop()
 {
     while (!this->should_terminate) {
         std::function<void()> job;
@@ -65,7 +71,7 @@ void rserver::ThreadPool::thread_loop()
     }
 }
 
-bool rserver::ThreadPool::is_busy()
+bool rtype::utils::ThreadPool::is_busy()
 {
     bool busy{false};
 
@@ -76,7 +82,7 @@ bool rserver::ThreadPool::is_busy()
     return busy;
 }
 
-void rserver::ThreadPool::stop()
+void rtype::utils::ThreadPool::stop()
 {
     {
         std::unique_lock<std::mutex> lock{this->mutex};

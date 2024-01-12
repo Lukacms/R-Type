@@ -18,9 +18,9 @@
 #include <rtype/SparseArray.hpp>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
-#include <rtype/clients/ThreadPool.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/network/Network.hpp>
+#include <rtype/utils/ThreadPool.hh>
 #include <shared_mutex>
 #include <string_view>
 #include <vector>
@@ -113,7 +113,7 @@ namespace rserver
 
             /* main variables */
             PlayersManager players{};
-            ThreadPool threads{};
+            rtype::utils::ThreadPool threads{};
             game::RoomsManager rooms{};
             game::GameLogic logic;
             dl::DlLoader<rtype::PhysicsManager> physics{};
