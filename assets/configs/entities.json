@@ -520,11 +520,11 @@
                 "rotation": 0
             },
             "animation": {
-                "current": "KaBOOM",
+                "current": "Idle",
                 "frame": 0,
                 "clips": [
                     {
-                        "name": "KaBOOM",
+                        "name": "Idle",
                         "loop": false,
                         "change": 100,
                         "textures": [
@@ -735,8 +735,8 @@
             }
         },
         {
-            "tag": "Mine",
-            "clock": true,
+            "tag": "MineEnemy",
+            "clock": false,
             "sprite": {
                 "texturePath": "./assets/entities/Bomba.png",
                 "textureRect": {
@@ -750,13 +750,17 @@
                     "y": 9
                 }
             },
+               "collider": {
+                "width": 18,
+                "height": 18
+            },
             "transform": {
                 "position": {
                     "x": 850,
                     "y": 0
                 },
                 "velocity": {
-                    "x": -2,
+                    "x": -0.1,
                     "y": 0
                 },
                 "scale": {
@@ -766,11 +770,11 @@
                 "rotation": 0
             },
             "animation": {
-                "current": "KaBOOM",
+                "current": "Idle",
                 "frame": 0,
                 "clips": [
                     {
-                        "name": "KaBOOM",
+                        "name": "Idle",
                         "loop": false,
                         "change": 100,
                         "textures": [
@@ -879,6 +883,42 @@
                         ]
                     }
                 ]
+            }
+        },
+        {
+            "tag": "EnemyBullet",
+            "clock": false,
+            "sprite": {
+                "texturePath": "./assets/entities/EnemyBullet.png",
+                "textureRect": {
+                    "x": 0,
+                    "y": 0,
+                    "width": 8,
+                    "height": 8
+                },
+                "origin": {
+                    "x": 4,
+                    "y": 4
+                }
+            },
+               "collider": {
+                "width": 8,
+                "height": 8
+            },
+            "transform": {
+                "position": {
+                    "x": 850,
+                    "y": 0
+                },
+                "velocity": {
+                    "x": -0.01,
+                    "y": 0
+                },
+                "scale": {
+                    "x": 2,
+                    "y": 2
+                },
+                "rotation": 0
             }
         }
     ]

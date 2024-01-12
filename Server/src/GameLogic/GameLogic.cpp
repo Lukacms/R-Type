@@ -188,6 +188,7 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
 {
     int success = std::rand() % 50;
     auto &transforms = manager.get_components<rtype::TransformComponent>();
+    auto tags = manager.get_components<rtype::TagComponent>();
 
     std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     if (transforms[entity_to_follow].has_value() && success == 0) {
@@ -196,9 +197,20 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
         transforms[entity]->velocity_x = -0.1;
         transforms[entity]->velocity_y = 0;
     }
+    if (tags[entity_to_follow]->tag == "MineEnemy") {
+        size_t bullet_left = rserver::ServerEntityFactory::create("EnemyBullet", manager);
+        transforms[bullet_left] = transforms[entity_to_follow];
+        size_t bullet_up_left = rserver::ServerEntityFactory::create("EnemyBullet", manager);
+        transforms[bullet_up_left] = transforms[entity_to_follow];
+        transforms[bullet_up_left]->velocity_y = 0.1;
+        size_t bullet_down_left = rserver::ServerEntityFactory::create("EnemyBullet", manager);
+        transforms[bullet_down_left] = transforms[entity_to_follow];
+        transforms[bullet_down_left]->velocity_y = -0.1;
+    }
     size_t entity = rserver::ServerEntityFactory::create("Explosion", manager);
     auto &explosion = manager.get_component<rtype::TransformComponent>(entity);
     explosion = manager.get_component<rtype::TransformComponent>(entity_to_follow);
+    explosion.velocity_x = 0;
 }
 
 void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manager,
