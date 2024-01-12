@@ -40,7 +40,8 @@ namespace rserver::game
     class GameLogic
     {
         public:
-            GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
+            GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex,
+                      const std::size_t &proom_id);
             GameLogic(GameLogic const &to_copy) = delete;
             GameLogic(GameLogic &&to_move);
             ~GameLogic() = default;
@@ -64,8 +65,10 @@ namespace rserver::game
                                            rtype::ECSManager &manager);
             void spawn_enemy(rtype::ECSManager &manager);
             void spawn_at_enemy_death(std::size_t entity_to_follow, rtype::ECSManager &manager);
-            static void spawn_bullets_for_mine(rtype::ECSManager &manager, std::size_t entity_to_follow);
-            void at_player_death(rtype::ECSManager &manager, rserver::PlayersManager &players_manager, std::size_t player);
+            static void spawn_bullets_for_mine(rtype::ECSManager &manager,
+                                               std::size_t entity_to_follow);
+            void at_player_death(rtype::ECSManager &manager,
+                                 rserver::PlayersManager &players_manager, std::size_t player);
 
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,
@@ -80,7 +83,7 @@ namespace rserver::game
 
             void check_if_player_out_of_bounds(rtype::ECSManager &manager);
             void check_if_enemy_dead(rtype::ECSManager &manager,
-                                     rserver::PlayersManager &player_manager, std::size_t entity);
+                                     rserver::PlayersManager &players_manager, std::size_t entity);
 
         private:
             std::vector<size_t> m_entities{};
@@ -89,5 +92,6 @@ namespace rserver::game
             rtype::utils::Clock m_enemy_clock{};
             rserver::LevelManager m_level_manager{};
             rtype::utils::Clock m_clock{};
+            std::size_t m_room_id{};
     };
 } // namespace rserver::game

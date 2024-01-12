@@ -15,6 +15,7 @@
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/Player.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <shared_mutex>
 #include <vector>
 
 namespace rserver::game
@@ -43,7 +44,7 @@ namespace rserver::game
 
             /* functions */
             Room() = delete;
-            Room(asio::ip::udp::socket &psocket, std::size_t pid);
+            Room(asio::ip::udp::socket &psocket, std::size_t pid, PlayersManager &pmanager);
             Room(Room const &to_copy) = delete;
             Room(Room &&to_move);
             ~Room();
@@ -84,9 +85,9 @@ namespace rserver::game
             dl::DlLoader<rtype::ECSManager> ecs{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
 
-            GameLogic logic{socket, ecs_mutex};
+            GameLogic logic{socket, ecs_mutex, id};
             std::vector<asio::ip::port_type> players{};
-            PlayersManager manager{};
+            PlayersManager &manager;
             RoomStatus status{RoomStatus::Waiting};
             rtype::utils::Clock timeout_connect{};
     };

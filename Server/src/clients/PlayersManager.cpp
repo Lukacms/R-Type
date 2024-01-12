@@ -27,6 +27,16 @@ rserver::Player &rserver::PlayersManager::get_by_entity_id(std::size_t const &en
     throw PlayersException();
 }
 
+rserver::Player &rserver::PlayersManager::get_by_entity_room_id(std::size_t const &entity,
+                                                                const std::size_t &room)
+{
+    for (auto &client : this->players) {
+        if (client.get_entity_value() == entity && client.get_room_id() == static_cast<long>(room))
+            return client;
+    }
+    throw PlayersException();
+}
+
 rserver::Player &rserver::PlayersManager::add_player(asio::ip::udp::endpoint &endpoint)
 {
     this->players.emplace_back(endpoint);

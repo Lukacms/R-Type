@@ -14,7 +14,7 @@ void rserver::Manager::room_handler(rserver::Player &player, std::vector<std::st
 
     try {
         if (args.empty()) {
-            this->rooms.add_room(player, this->threads.is_busy(), this->udp_socket);
+            this->rooms.add_room(player, this->threads.is_busy(), this->udp_socket, this->players);
             Manager::send_message({ntw::NetworkType::ToGame}, player, this->udp_socket);
             return;
         }

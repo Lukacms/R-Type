@@ -15,16 +15,14 @@
 #include <rtype/clients/PlayersManager.hh>
 #include <rtype/utils/Vector2D.hpp>
 
-static constexpr std::array<rtype::utils::Vector2D<float>, 8> DIRECTIONS{
-    {{0, -0.2F},
-     {0.15F, -0.15F},
-     {0.2F, 0},
-     {0.15F, 0.15F},
-     {0, 0.2F},
-     {-0.15F, 0.15F},
-     {-0.2F, 0},
-     {-0.15F, -0.15F}}
-};
+static const std::array<rtype::utils::Vector2D<float>, 8> DIRECTIONS{{{0, -0.2F},
+                                                                      {0.15F, -0.15F},
+                                                                      {0.2F, 0},
+                                                                      {0.15F, 0.15F},
+                                                                      {0, 0.2F},
+                                                                      {-0.15F, 0.15F},
+                                                                      {-0.2F, 0},
+                                                                      {-0.15F, -0.15F}}};
 
 /**
  * @brief Constructor
@@ -32,8 +30,9 @@ static constexpr std::array<rtype::utils::Vector2D<float>, 8> DIRECTIONS{
  * @param socket - asio::udp::socket &
  * @param ecs_mutex - shared_mutex &
  */
-rserver::game::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)
-    : m_socket{socket}, m_ecs_mutex{ecs_mutex}
+rserver::game::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex,
+                                    const std::size_t &proom_id)
+    : m_socket{socket}, m_ecs_mutex{ecs_mutex}, m_room_id{proom_id}
 {
 }
 
@@ -43,7 +42,7 @@ rserver::game::GameLogic::GameLogic(asio::ip::udp::socket &socket, std::shared_m
  * @param to_move - GameLogic && - object to move to current class
  */
 rserver::game::GameLogic::GameLogic(rserver::game::GameLogic &&to_move)
-    : m_socket{to_move.m_socket}, m_ecs_mutex{to_move.m_ecs_mutex}
+    : m_socket{to_move.m_socket}, m_ecs_mutex{to_move.m_ecs_mutex}, m_room_id{to_move.m_room_id}
 {
 }
 
@@ -58,9 +57,9 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                          rserver::PlayersManager &players_manager,
                                          rtype::ECSManager &manager, float /* delta_time */)
 {
+    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     m_entities = manager.get_used_entity();
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     physics_manager.check_collisions(manager);
     collision_responses(physics_manager, players_manager, manager);
     destroy_too_far_entities(players_manager, manager);
@@ -139,10 +138,10 @@ void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager 
                     continue;
                 if (tags[entity2]->tag == "Upgrade" &&
                     physics_manager.is_collided(entity1, entity2)) {
-                    players_manager.get_by_entity_id(entity1).level_up();
+                    players_manager.get_by_entity_room_id(entity1, m_room_id).level_up();
                     ntw::Communication destroy{.type = ntw::NetworkType::Destruction, .args = {}};
                     destroy.add_param(entity2);
-                    rserver::Manager::send_to_all(destroy, players_manager, m_socket);
+                    rserver::Manager::send_message(destroy, players_manager, m_socket, m_room_id);
                     manager.delete_entity(entity2);
                 }
                 if (tags[entity2]->tag.find("Enemy") != std::string::npos &&
@@ -184,7 +183,7 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
                 check_if_enemy_dead(manager, players_manager, entity1);
                 ntw::Communication destroy2{.type = ntw::NetworkType::Destruction, .args = {}};
                 destroy2.add_param(entity2);
-                rserver::Manager::send_to_all(destroy2, players_manager, m_socket);
+                rserver::Manager::send_message(destroy2, players_manager, m_socket, m_room_id);
                 manager.delete_entity(entity2);
             }
         }
@@ -213,7 +212,7 @@ void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_mana
         entity_descriptor.add_param(transforms[entity]->position_x);
         entity_descriptor.add_param(transforms[entity]->position_y);
         entity_descriptor.add_param(transforms[entity]->rotation);
-        Manager::send_to_all(entity_descriptor, players_manager, m_socket);
+        Manager::send_message(entity_descriptor, players_manager, m_socket, m_room_id);
     }
 }
 
@@ -242,14 +241,14 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
             ntw::Communication send{.type = ntw::NetworkType::Destruction};
             manager.delete_entity(entity);
             send.add_param(entity);
-            Manager::send_to_all(send, players_manager, m_socket);
+            Manager::send_message(send, players_manager, m_socket, m_room_id);
         }
         if (transforms[entity]->position_y < MIN_POSITION ||
             transforms[entity]->position_y > MAX_POSITION_Y) {
             ntw::Communication send{.type = ntw::NetworkType::Destruction};
             manager.delete_entity(entity);
             send.add_param(entity);
-            Manager::send_to_all(send, players_manager, m_socket);
+            Manager::send_message(send, players_manager, m_socket, m_room_id);
         }
     }
 }
@@ -270,7 +269,7 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
             transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
             m_enemy_clock.reset();
         }
-    } catch (rserver::ServerEntityFactory::FactoryException &e) {
+    } catch (rserver::ServerEntityFactory::FactoryException & /* e */) {
         return;
     }
 }
@@ -303,7 +302,7 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
         explosion = manager.get_component<rtype::TransformComponent>(entity_to_follow);
         explosion.velocity_x = 0;
         explosion.velocity_y = 0;
-    } catch (rserver::ServerEntityFactory::FactoryException &e) {
+    } catch (rserver::ServerEntityFactory::FactoryException & /* e */) {
         return;
     }
 }
@@ -321,7 +320,7 @@ void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manag
         return;
     ntw::Communication music_descriptor{ntw::NetworkType::Music, {}};
     music_descriptor.add_param(music_name);
-    Manager::send_to_all(music_descriptor, players_manager, m_socket);
+    Manager::send_message(music_descriptor, players_manager, m_socket, m_room_id);
 }
 
 void rserver::game::GameLogic::send_background(rserver::PlayersManager &players_manager,
@@ -331,7 +330,7 @@ void rserver::game::GameLogic::send_background(rserver::PlayersManager &players_
         return;
     ntw::Communication background_descriptor{ntw::NetworkType::Background, {}};
     background_descriptor.add_param(background_name);
-    Manager::send_to_all(background_descriptor, players_manager, m_socket);
+    Manager::send_message(background_descriptor, players_manager, m_socket, m_room_id);
 }
 
 /**
@@ -353,7 +352,7 @@ void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager
             continue;
         if (tags[entity]->tag == "Explosion" && clocks[entity]->clock.get_elapsed_time_in_s() > 2) {
             destruction_descriptor.add_param(entity);
-            Manager::send_to_all(destruction_descriptor, players_manager, m_socket);
+            Manager::send_message(destruction_descriptor, players_manager, m_socket, m_room_id);
             manager.delete_entity(entity);
         }
     }
@@ -398,12 +397,13 @@ void rserver::game::GameLogic::check_if_enemy_dead(rtype::ECSManager &manager,
     if (healths[entity]->health > 0)
         return;
     destroy.add_param(entity);
-    rserver::Manager::send_to_all(destroy, players_manager, m_socket);
+    rserver::Manager::send_message(destroy, players_manager, m_socket, m_room_id);
     spawn_at_enemy_death(entity, manager);
     manager.delete_entity(entity);
 }
 
-void rserver::game::GameLogic::spawn_bullets_for_mine(rtype::ECSManager &manager, std::size_t entity_to_follow)
+void rserver::game::GameLogic::spawn_bullets_for_mine(rtype::ECSManager &manager,
+                                                      std::size_t entity_to_follow)
 {
     auto &follow_transform = manager.get_component<rtype::TransformComponent>(entity_to_follow);
 
@@ -423,12 +423,12 @@ void rserver::game::GameLogic::at_player_death(rtype::ECSManager &manager,
 {
     ntw::Communication death{.type = ntw::NetworkType::End};
     ntw::Communication destruction{.type = ntw::NetworkType::Destruction};
-    auto &p_network = players_manager.get_by_entity_id(player);
+    auto &p_network = players_manager.get_by_entity_room_id(player, m_room_id);
 
     destruction.add_param(player);
     rserver::Manager::send_message(death, p_network, m_socket);
 
-    rserver::Manager::send_to_all(destruction, players_manager, m_socket);
+    rserver::Manager::send_message(destruction, players_manager, m_socket, m_room_id);
     size_t entity = rserver::ServerEntityFactory::create("Explosion", manager);
     auto &explosion_transform = manager.get_component<rtype::TransformComponent>(entity);
     auto &player_transform = manager.get_component<rtype::TransformComponent>(player);

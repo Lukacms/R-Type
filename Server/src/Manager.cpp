@@ -45,8 +45,7 @@ static const std::vector<rserver::CommandHandler> HANDLER{
  * @param port port_type, default to 8080
  */
 rserver::Manager::Manager(asio::ip::port_type port)
-    : udp_socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}},
-      logic{this->udp_socket, this->ecs_mutex}
+    : udp_socket{this->context, asio::ip::udp::endpoint{asio::ip::udp::v4(), port}}
 {
 #ifdef __linux
     this->physics.init_class<std::unique_ptr<rtype::PhysicsManager>()>(PHYSICS_SL_PATH.data());
@@ -70,8 +69,7 @@ rserver::Manager::Manager(asio::ip::port_type port)
  */
 rserver::Manager::Manager(rserver::Manager &&to_move)
     : udp_socket{std::move(to_move.udp_socket)}, threads{std::move(to_move.threads)},
-      rooms{std::move(to_move.rooms)}, logic{to_move.udp_socket, to_move.ecs_mutex},
-      physics{std::move(to_move.physics)}
+      rooms{std::move(to_move.rooms)}, physics{std::move(to_move.physics)}
 {
 }
 
@@ -214,6 +212,20 @@ void rserver::Manager::send_message(const ntw::Communication &to_send,
         {
             std::shared_lock<std::shared_mutex> lock{client.mutex};
             if (client.get_status() == status) {
+                udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+            }
+        }
+    }
+}
+
+void rserver::Manager::send_message(const ntw::Communication &to_send,
+                                    const PlayersManager &players,
+                                    asio::ip::udp::socket &udp_socket, const std::size_t &room_id)
+{
+    for (auto &client : players.get_all_players()) {
+        {
+            std::shared_lock<std::shared_mutex> lock{client.mutex};
+            if (client.get_room_id() == static_cast<long>(room_id)) {
                 udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
             }
         }

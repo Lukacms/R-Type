@@ -36,6 +36,8 @@ namespace rserver
             /* methods */
             [[nodiscard]] Player &get_by_id(asio::ip::port_type const &port);
             [[nodiscard]] Player &get_by_entity_id(std::size_t const &entity);
+            [[nodiscard]] Player &get_by_entity_room_id(std::size_t const &entity,
+                                                        const std::size_t &room);
             rserver::Player &add_player(asio::ip::udp::endpoint &endpoint);
             rserver::Player &add_player(Player &to_add);
             [[nodiscard]] std::size_t length() const;

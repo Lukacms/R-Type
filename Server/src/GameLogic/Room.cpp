@@ -17,8 +17,8 @@
  * @param psocket - asio::udp::socket &
  * @param pid - size_t
  */
-rserver::game::Room::Room(asio::ip::udp::socket &psocket, std::size_t pid)
-    : socket{psocket}, id{std::move(pid)}, logic{socket, ecs_mutex}
+rserver::game::Room::Room(asio::ip::udp::socket &psocket, std::size_t pid, PlayersManager &pmanager)
+    : socket{psocket}, id{std::move(pid)}, logic{socket, ecs_mutex, pid}, manager{pmanager}
 {
 #ifdef __linux
     this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
@@ -68,7 +68,6 @@ void rserver::game::Room::add_player(Player &new_player)
     if (this->players.size() >= MAX_PLAYERS)
         throw RoomException("Already max number of players");
     this->players.emplace_back(new_player.get_port());
-    auto &player{this->manager.add_player(new_player)};
     if (this->players.size() == 1) {
         this->status = RoomStatus::Waiting;
         this->timeout_connect.reset();
@@ -76,9 +75,9 @@ void rserver::game::Room::add_player(Player &new_player)
         this->status = RoomStatus::InGame;
     {
         std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
-        player.set_entity_value(
+        new_player.set_entity_value(
             rserver::ServerEntityFactory::create("Player", this->ecs.get_class()));
-        player.set_room_id(static_cast<long>(this->id));
+        new_player.set_room_id(static_cast<long>(this->id));
     }
 }
 

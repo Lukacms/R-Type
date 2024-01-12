@@ -8,11 +8,11 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <algorithm>
+#include <iostream>
 #include <rtype/Components/TextComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/SFML/SFMLGraphicModule.hh>
 #include <rtype/utils/Vector2D.hpp>
-#include <iostream>
 
 rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int height,
                                             const std::string &title)
@@ -39,7 +39,7 @@ void rtype::SFMLGraphicModule::draw_components(SparseArray<rtype::SpriteComponen
             sprite.setTexture(texture.texture);
             sprite.setColor({255, 255, 255, static_cast<sf::Uint8>(sprites[index]->opacity)});
             m_window.draw(sprite);
-        } catch (rtype::TextureLibrary::TextureException &e) {
+        } catch (rtype::TextureLibrary::TextureException & /* e */) {
             std::cerr << "R-Type : Texture " << sprites[index]->texture_path << " not found"
                       << std::endl;
             continue;
@@ -129,7 +129,7 @@ void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
         sprite.setTexture(texture.texture);
         sprite.setColor({255, 255, 255, static_cast<sf::Uint8>(sprite_component.opacity)});
         m_window.draw(sprite);
-    } catch (rtype::TextureLibrary::TextureException &e) {
+    } catch (rtype::TextureLibrary::TextureException & /* e */) {
         std::cerr << "R-Type : Texture " << sprite_component.texture_path << " not found"
                   << std::endl;
     }
