@@ -3,7 +3,7 @@
         {
             "tag": "Player",
             "sprite": {
-                "texturePath": "./assets/entities/Spaceship.png",
+                "texturePath": "Player",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -43,7 +43,7 @@
         {
             "tag": "BasicEnemy",
             "sprite": {
-                "texturePath": "./assets/entities/BasicEnemy.png",
+                "texturePath": "BasicEnemy",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -79,7 +79,7 @@
         {
             "tag": "PlayerBullet",
             "sprite": {
-                "texturePath": "./assets/entities/PlayerShoot.png",
+                "texturePath": "PlayerBullet",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -115,7 +115,7 @@
         {
             "tag": "Upgrade",
             "sprite": {
-                "texturePath": "./assets/entities/Upgrade.png",
+                "texturePath": "Upgrade",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -240,7 +240,7 @@
                 "height": 18
             },
             "sprite": {
-                "texturePath": "./assets/entities/KamikazeEnemy.png",
+                "texturePath": "Kamikaze",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -347,7 +347,7 @@
                 "height": 18
             },
             "sprite": {
-                "texturePath": "./assets/entities/UFOEnemy.png",
+                "texturePath": "UFO",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -492,7 +492,7 @@
             "tag": "Explosion",
             "clock": true,
             "sprite": {
-                "texturePath": "./assets/entities/Explosion.png",
+                "texturePath": "Explosion",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -615,7 +615,7 @@
             "tag": "Explosion",
             "clock": true,
             "sprite": {
-                "texturePath": "./assets/entities/Explosion.png",
+                "texturePath": "Explosion",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -738,7 +738,7 @@
             "tag": "MineEnemy",
             "clock": false,
             "sprite": {
-                "texturePath": "./assets/entities/Bomba.png",
+                "texturePath": "Bomba",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -889,7 +889,7 @@
             "tag": "EnemyBullet",
             "clock": false,
             "sprite": {
-                "texturePath": "./assets/entities/EnemyBullet.png",
+                "texturePath": "EnemyBullet",
                 "textureRect": {
                     "x": 0,
                     "y": 0,
@@ -922,4 +922,5 @@
             }
         }
     ]
+
 }

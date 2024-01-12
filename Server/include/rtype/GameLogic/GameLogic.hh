@@ -26,6 +26,7 @@ namespace rserver::game
     const constexpr int MIN_POSITION{-200};
     constexpr double TIMER{10};
     constexpr std::string_view STANDARD_MUSIC{"Voyage1970"};
+    constexpr std::string_view STANDARD_BACKGROUND{"BlueNebula"};
 
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */);
     void ufo_system(rtype::ComponentManager &registry, float /* delta_time */);
@@ -49,6 +50,8 @@ namespace rserver::game
             void send_entity(rserver::PlayersManager &players_manager, rtype::ECSManager &manager);
             void send_music(rserver::PlayersManager &players_manager,
                             const std::string &music_name);
+            void send_background(rserver::PlayersManager &players_manager,
+                                 const std::string &background_name);
             void destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                           rtype::ECSManager &manager);
             void destroy_too_long_entities(rserver::PlayersManager &players_manager,
@@ -66,6 +69,8 @@ namespace rserver::game
             void enemy_collision_responses(rtype::PhysicsManager &physics_manager,
                                            rserver::PlayersManager &players_manager,
                                            rtype::ECSManager &manager);
+
+            void check_if_player_out_of_bounds(rtype::ECSManager &manager);
 
         private:
             std::vector<size_t> m_entities{};

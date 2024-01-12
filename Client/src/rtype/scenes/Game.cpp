@@ -51,7 +51,10 @@ rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::s
 void rclient::scenes::Game::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
-    ecs.get_class().apply_system(1);
+    ecs.get_class().apply_system(0);
+    this->background_manager.update();
+    for (auto &bg : this->background_manager.get_backgrounds())
+        graphics.draw(bg.sprite, bg.transform);
     graphics.draw_components(this->ecs.get_class().get_components<rtype::SpriteComponent>(),
                              this->ecs.get_class().get_components<rtype::TransformComponent>());
     graphics.display();
@@ -103,6 +106,8 @@ void rclient::scenes::Game::handle_network(ntw::Communication &commn, rtype::IAu
     for (const auto &handler : HANDLER) {
         if (commn.type == ntw::NetworkType::Music)
             return change_music(commn, audio);
+        if (commn.type == ntw::NetworkType::Background)
+            return change_background(commn);
         if (handler.type == commn.type)
             return handler.handler(*this, commn, state);
     }
@@ -162,4 +167,10 @@ void rclient::scenes::Game::change_music(ntw::Communication &commn, rtype::IAudi
 {
     std::vector<std::string> arguments = commn.deserialize();
     audio.play_music(arguments[0]);
+}
+
+void rclient::scenes::Game::change_background(ntw::Communication commn)
+{
+    std::vector<std::string> arguments = commn.deserialize();
+    background_manager.change_background(arguments[0]);
 }

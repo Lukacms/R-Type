@@ -35,13 +35,16 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
     destroy_too_far_entities(players_manager, manager);
     destroy_too_long_entities(players_manager, manager);
     send_entity(players_manager, manager);
+    check_if_player_out_of_bounds(manager);
     if (!m_level_manager.has_enough_level()) {
         spawn_enemy(manager);
         send_music(players_manager, STANDARD_MUSIC.data());
+        send_background(players_manager, STANDARD_BACKGROUND.data());
         return;
     }
     m_level_manager.update(manager);
     send_music(players_manager, m_level_manager.get_current_music());
+    send_background(players_manager, m_level_manager.get_current_background());
     if (m_level_manager.is_level_finished())
         m_level_manager.change_level();
 }
@@ -69,6 +72,7 @@ void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager 
                                                           rtype::ECSManager &manager)
 {
     try {
+        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
         rtype::SparseArray<rtype::TagComponent> &tags =
             manager.get_components<rtype::TagComponent>();
         for (auto entity1 : m_entities) {
@@ -98,6 +102,7 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
 {
     auto &tags{manager.get_components<rtype::TagComponent>()};
 
+    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (const auto entity1 : m_entities) {
         if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
             continue;
@@ -147,6 +152,7 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
     auto &transforms{manager.get_components<rtype::TransformComponent>()};
     auto &tag{manager.get_components<rtype::TagComponent>()};
 
+    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (size_t entity{0}; entity < transforms.size(); entity += 1) {
         if (!transforms[entity].has_value())
             continue;
@@ -173,29 +179,40 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
 
 void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
-    if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
-        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
-        auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
-        auto &transform = manager.get_component<rtype::TransformComponent>(entity);
-        transform.position_y = std::rand() % 550;
-        transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
-        m_enemy_clock.reset();
+    try {
+        if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
+            std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
+            auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
+            auto &transform = manager.get_component<rtype::TransformComponent>(entity);
+            transform.position_y = std::rand() % 550;
+            transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
+            m_enemy_clock.reset();
+        }
+    } catch (rserver::ServerEntityFactory::FactoryException &e) {
+        return;
     }
 }
 
 void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow,
                                                     rtype::ECSManager &manager)
 {
-    int success = std::rand() % 50;
+    int success = std::rand() % 1;
     auto &transforms = manager.get_components<rtype::TransformComponent>();
     auto tags = manager.get_components<rtype::TagComponent>();
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
-    if (transforms[entity_to_follow].has_value() && success == 0) {
-        std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
-        transforms[entity] = {transforms[entity_to_follow]};
-        transforms[entity]->velocity_x = -0.1;
-        transforms[entity]->velocity_y = 0;
+    try {
+        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
+        if (transforms[entity_to_follow].has_value() && success == 0) {
+            std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
+            transforms[entity] = {transforms[entity_to_follow]};
+            transforms[entity]->velocity_x = -0.1;
+            transforms[entity]->velocity_y = 0;
+        }
+        size_t entity = rserver::ServerEntityFactory::create("Explosion", manager);
+        auto &explosion = manager.get_component<rtype::TransformComponent>(entity);
+        explosion = manager.get_component<rtype::TransformComponent>(entity_to_follow);
+    } catch (rserver::ServerEntityFactory::FactoryException &e) {
+        return;
     }
     if (tags[entity_to_follow]->tag == "MineEnemy") {
         size_t bullet_left = rserver::ServerEntityFactory::create("EnemyBullet", manager);
@@ -223,12 +240,23 @@ void rserver::game::GameLogic::send_music(rserver::PlayersManager &players_manag
     Manager::send_to_all(music_descriptor, players_manager, m_socket);
 }
 
+void rserver::game::GameLogic::send_background(rserver::PlayersManager &players_manager,
+                                               const std::string &background_name)
+{
+    if (background_name.empty())
+        return;
+    ntw::Communication background_descriptor{ntw::NetworkType::Background, {}};
+    background_descriptor.add_param(background_name);
+    Manager::send_to_all(background_descriptor, players_manager, m_socket);
+}
+
 void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager &players_manager,
                                                          rtype::ECSManager &manager)
 {
     auto &tags = manager.get_components<rtype::TagComponent>();
     auto &clocks = manager.get_components<rtype::ClockComponent>();
 
+    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (size_t entity{0}; entity < tags.size() && entity < clocks.size(); entity += 1) {
         ntw::Communication destruction_descriptor{ntw::NetworkType::Destruction, {}};
         if (!tags[entity].has_value() || !clocks[entity].has_value())
@@ -238,5 +266,28 @@ void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager
             Manager::send_to_all(destruction_descriptor, players_manager, m_socket);
             manager.delete_entity(entity);
         }
+    }
+}
+
+void rserver::game::GameLogic::check_if_player_out_of_bounds(rtype::ECSManager &manager)
+{
+    auto &transforms = manager.get_components<rtype::TransformComponent>();
+    auto &tags = manager.get_components<rtype::TagComponent>();
+
+    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
+    for (std::size_t entity = 0; entity < transforms.size() && entity < tags.size(); entity += 1) {
+        if (!transforms[entity].has_value() || !tags[entity].has_value())
+            continue;
+        if (tags[entity]->tag != "Player")
+            continue;
+        auto &collider = manager.get_component<rtype::BoxColliderComponent>(entity);
+        if (transforms[entity]->position_x > 800 - (collider.width * transforms[entity]->scale_x))
+            transforms[entity]->position_x = 800 - (collider.width * transforms[entity]->scale_x);
+        if (transforms[entity]->position_x < 0)
+            transforms[entity]->position_x = 0;
+        if (transforms[entity]->position_y > 600 - (collider.height * transforms[entity]->scale_y))
+            transforms[entity]->position_y = 600 - (collider.height * transforms[entity]->scale_y);
+        if (transforms[entity]->position_y < 0)
+            transforms[entity]->position_y = 0;
     }
 }

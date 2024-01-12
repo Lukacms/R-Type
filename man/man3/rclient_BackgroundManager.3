@@ -1,0 +1,37 @@
+.TH "rclient::BackgroundManager" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rclient::BackgroundManager
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBBackgroundManager\fP (\fBBackgroundManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBBackgroundManager\fP (\fBBackgroundManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBBackgroundManager\fP & \fBoperator=\fP (\fBBackgroundManager\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBBackgroundManager\fP & \fBoperator=\fP (\fBBackgroundManager\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "std::array< \fBBackgroundSpecifier\fP, 2 > \fBget_backgrounds\fP () const"
+.br
+.ti -1c
+.RI "void \fBchange_background\fP (std::string &name)"
+.br
+.ti -1c
+.RI "void \fBupdate\fP ()"
+.br
+.in -1c
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

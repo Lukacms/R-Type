@@ -15,7 +15,7 @@ rtype::SFXManager::SFXManager()
     std::ifstream sfx_file(SFX_FILEPATH.data());
 
     if (!sfx_file.is_open())
-        throw std::exception();
+        throw SFXException("SFX Json file doesn't exist\n");
     auto sfx = nlohmann::json::parse(sfx_file);
 
     for (const auto &[key, value] : sfx.items()) {
@@ -35,6 +35,7 @@ void rtype::SFXManager::play_sound(const std::string &name)
         sound.play();
         return;
     }
+    throw SFXException("SFX '" + name + "' doesn't exist\n");
 }
 
 void rtype::SFXManager::set_volume(float volume)
@@ -49,4 +50,14 @@ void rtype::SFXManager::update()
         if (iterator->getStatus() == sf::Sound::Stopped)
             iterator = m_sounds.erase(iterator);
     }
+}
+
+rtype::SFXManager::SFXException::SFXException(std::string &&perror_msg)
+{
+    m_error_msg = perror_msg;
+}
+
+const char *rtype::SFXManager::SFXException::what() const noexcept
+{
+    return m_error_msg.c_str();
 }

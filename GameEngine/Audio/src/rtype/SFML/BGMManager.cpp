@@ -10,7 +10,7 @@ rtype::BGMManager::BGMManager()
     std::ifstream bgm_file(BGM_FILEPATH.data());
 
     if (!bgm_file.is_open())
-        throw std::exception();
+        throw BGMException("BGM Json doesn't exist\n");
     auto bgm = nlohmann::json::parse(bgm_file);
 
     for (const auto &[key, value] : bgm.items())
@@ -45,6 +45,18 @@ void rtype::BGMManager::play_music(const std::string &name)
                 return;
             m_current_music.play();
             m_current_name = bgm.name;
+            return;
         }
     }
+    throw BGMException("BGM '" + name + "' doesn't exist\n");
+}
+
+rtype::BGMManager::BGMException::BGMException(std::string &&perror_msg)
+{
+    m_error_msg = perror_msg;
+}
+
+const char *rtype::BGMManager::BGMException::what() const noexcept
+{
+    return m_error_msg.c_str();
 }

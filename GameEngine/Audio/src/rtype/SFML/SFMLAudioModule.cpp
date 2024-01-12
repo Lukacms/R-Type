@@ -3,15 +3,24 @@
 //
 
 #include "rtype/SFML/SFMLAudioModule.hh"
+#include <iostream>
 
 void rtype::SFMLAudioModule::play_music(const std::string &name)
 {
-    m_bgm.play_music(name);
+    try {
+        m_bgm.play_music(name);
+    } catch (rtype::BGMManager::BGMException &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void rtype::SFMLAudioModule::play_sfx(const std::string &name)
 {
-    m_sfx.play_sound(name);
+    try {
+        m_sfx.play_sound(name);
+    } catch (rtype::SFXManager::SFXException &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void rtype::SFMLAudioModule::set_volume_music(float volume)
