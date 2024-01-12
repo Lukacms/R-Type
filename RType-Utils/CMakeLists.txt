@@ -16,10 +16,11 @@ add_library(
     r-type-utils SHARED
     src/utils/Clock.cpp
     src/utils/Vector2D.cpp
+    src/utils/Colors.cpp
 )
 target_link_libraries(
-        r-type-utils PRIVATE
-        nlohmann_json::nlohmann_json
+    r-type-utils PRIVATE
+    nlohmann_json::nlohmann_json
 )
 
 # properties

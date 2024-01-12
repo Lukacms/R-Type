@@ -48,7 +48,7 @@ namespace rclient
             class FactoryException : public std::exception
             {
                 public:
-                    FactoryException(std::string &&perror);
+                    explicit FactoryException(std::string &&perror);
                     FactoryException(FactoryException const &to_copy) = default;
                     FactoryException(FactoryException &&to_move) = default;
                     ~FactoryException() override = default;

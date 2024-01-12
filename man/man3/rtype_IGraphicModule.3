@@ -30,13 +30,25 @@ Inherited by \fBrtype::SFMLGraphicModule\fP\&.
 .RI "virtual void \fBdraw_components\fP (\fBSparseArray\fP< \fBrtype::SpriteComponent\fP > &sprites, \fBSparseArray\fP< \fBrtype::TransformComponent\fP > &transforms)=0"
 .br
 .ti -1c
-.RI "virtual void \fBdraw\fP (\fBrtype::SpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP transform)=0"
+.RI "virtual void \fBdraw_components\fP (\fBSparseArray\fP< \fBrtype::TextComponent\fP > &sprites, \fBSparseArray\fP< \fBrtype::TransformComponent\fP > &transforms)=0"
 .br
 .ti -1c
-.RI "virtual void \fBdraw\fP (sf::Sprite &sprite, \fBrtype::TransformComponent\fP transform)=0"
+.RI "virtual void \fBdraw\fP (\fBrtype::TextComponent\fP &text, const \fBrtype::TransformComponent\fP &transform)=0"
 .br
 .ti -1c
-.RI "virtual void \fBdraw\fP (sf::Text &text, \fBrtype::TransformComponent\fP transform)=0"
+.RI "virtual void \fBdraw\fP (\fBrtype::SpriteComponent\fP &sprite, const \fBrtype::TransformComponent\fP &transform)=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw\fP (sf::Sprite &sprite, const \fBrtype::TransformComponent\fP &transform)=0"
+.br
+.ti -1c
+.RI "virtual void \fBdraw\fP (sf::Text &text_component, const \fBTransformComponent\fP &transform)=0"
+.br
+.ti -1c
+.RI "virtual float \fBget_text_width\fP (\fBrtype::TextComponent\fP &text)=0"
+.br
+.ti -1c
+.RI "virtual bool \fBis_sprite_left_click\fP (\fBrtype::SpriteComponent\fP &sprite, \fBrtype::TransformComponent\fP &transform)=0"
 .br
 .ti -1c
 .RI "virtual void \fBset_view_port\fP (sf::View &)=0"

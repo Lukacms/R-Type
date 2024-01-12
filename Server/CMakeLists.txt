@@ -77,7 +77,9 @@ target_link_libraries(
     rtype-server-core
     rtype-server-interface
     )
-target_link_options(r-type_server PRIVATE -rdynamic)
+if (NOT WIN32)
+    target_link_options(r-type_server PRIVATE -rdynamic)
+endif ()
 target_compile_features(r-type_server PRIVATE cxx_std_20)
 target_compile_options(r-type_server PRIVATE ${WARNING_FLAGS})
 set_property(TARGET r-type_server PROPERTY CXX_STANDARD 20)

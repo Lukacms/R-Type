@@ -8,7 +8,10 @@
 #pragma once
 
 #include <array>
+#include <rtype/Components/SpriteComponent.hh>
+#include <rtype/Components/TextComponent.hh>
 #include <rtype/IGraphicModule.hh>
+#include <rtype/utils/Vector2D.hpp>
 #include <string>
 #include <string_view>
 
@@ -29,7 +32,7 @@ namespace rclient::components
     class RoomInfos
     {
         public:
-            RoomInfos(const unsigned int &pid, sf::Font &font);
+            RoomInfos(const unsigned int &pid, const std::string &font);
             RoomInfos(RoomInfos const &to_copy) = default;
             RoomInfos(RoomInfos &&to_move) = default;
             ~RoomInfos() = default;
@@ -50,7 +53,7 @@ namespace rclient::components
             unsigned int nb_players{1};
             unsigned int id;
             unsigned short status{0};
-            sf::Text text{};
+            rtype::TextComponent text{};
             sf::FloatRect box{};
             std::array<std::string, 3> statuses{"Lounge", "Waiting", "In Game"};
     };

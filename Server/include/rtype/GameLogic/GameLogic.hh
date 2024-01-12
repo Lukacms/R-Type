@@ -31,10 +31,16 @@ namespace rserver::game
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */);
     void ufo_system(rtype::ComponentManager &registry, float /* delta_time */);
 
+    /**
+     * @class GameLogic
+     * @brief To handle a game. Create entities with the ECS, move them when needed, launch level,
+     * waves of enemies, ...
+     *
+     */
     class GameLogic
     {
         public:
-            explicit GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
+            GameLogic(asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex);
             GameLogic(GameLogic const &to_copy) = delete;
             GameLogic(GameLogic &&to_move);
             ~GameLogic() = default;
@@ -58,6 +64,8 @@ namespace rserver::game
                                            rtype::ECSManager &manager);
             void spawn_enemy(rtype::ECSManager &manager);
             void spawn_at_enemy_death(std::size_t entity_to_follow, rtype::ECSManager &manager);
+            static void spawn_bullets_for_mine(rtype::ECSManager &manager, std::size_t entity_to_follow);
+            void at_player_death(rtype::ECSManager &manager, rserver::PlayersManager &players_manager, std::size_t player);
 
             // Collisions responses
             void collision_responses(rtype::PhysicsManager &physics_manager,
@@ -71,6 +79,8 @@ namespace rserver::game
                                            rtype::ECSManager &manager);
 
             void check_if_player_out_of_bounds(rtype::ECSManager &manager);
+            void check_if_enemy_dead(rtype::ECSManager &manager,
+                                     rserver::PlayersManager &player_manager, std::size_t entity);
 
         private:
             std::vector<size_t> m_entities{};

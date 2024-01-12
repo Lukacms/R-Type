@@ -5,8 +5,6 @@
 ** PlayersManager
 */
 
-#include <algorithm>
-#include <asio/registered_buffer.hpp>
 #include <rtype/clients/PlayersManager.hh>
 #include <shared_mutex>
 #include <vector>
@@ -48,7 +46,7 @@ std::size_t rserver::PlayersManager::length() const
     return this->players.size();
 }
 
-const std::vector<rserver::Player> &rserver::PlayersManager::get_all_players() const
+std::vector<rserver::Player> rserver::PlayersManager::get_all_players() const
 {
     return this->players;
 }

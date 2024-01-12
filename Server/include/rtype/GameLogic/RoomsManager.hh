@@ -14,14 +14,19 @@
 namespace rserver::game
 {
 
+    /**
+     * @class RoomsManager
+     * @brief Manage the rooms, have functions to create / get / delete rooms
+     *
+     */
     class RoomsManager
     {
         public:
-            RoomsManager(PlayersManager &pmanager);
-            RoomsManager(RoomsManager const &to_copy) = delete;
-            RoomsManager(RoomsManager &&to_move);
+            RoomsManager() = default;
+            RoomsManager(RoomsManager const &to_copy) = default;
+            RoomsManager(RoomsManager &&to_move) = default;
             ~RoomsManager() = default;
-            RoomsManager &operator=(RoomsManager const &to_copy) = delete;
+            RoomsManager &operator=(RoomsManager const &to_copy) = default;
             RoomsManager &operator=(RoomsManager &&to_move) = delete;
 
             /* methods */
@@ -36,8 +41,6 @@ namespace rserver::game
         private:
             std::vector<rserver::game::Room> rooms{};
             std::size_t last_id{0};
-
-            PlayersManager &manager;
     };
 
 } // namespace rserver::game

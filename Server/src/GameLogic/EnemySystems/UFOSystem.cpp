@@ -1,6 +1,9 @@
-//
-// Created by kane on 09/01/24.
-//
+/*
+** EPITECH PROJECT, 2023
+** EnemySystems
+** File description:
+** UFOSystem
+*/
 
 #include <algorithm>
 #include <cmath>
@@ -11,11 +14,22 @@
 
 namespace rserver::game
 {
+    /**
+     * @brief used by ufo_system to determine the movement of the entity
+     *
+     * @param x_wave - float
+     * @return - float
+     */
     static float sinus_wave(float x_wave)
     {
         return 100 * std::sin(x_wave / 50);
     }
 
+    /**
+     * @brief UFO System for the ufo enemy, that moves like a «snake», with sinusoidal functions
+     *
+     * @param registry ComponentManager
+     */
     void ufo_system(rtype::ComponentManager &registry, float /* delta_time */)
     {
         auto &clocks = registry.get_components<rtype::ClockComponent>();

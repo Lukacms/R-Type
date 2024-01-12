@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rserver::ServerEntityFactory
+rserver::ServerEntityFactory \- To create entities and register them with the ECS They load the entities through a \&.json file containing all infos of the entities\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <ServerEntityFactory\&.hh>\fP
 .SS "Classes"
 
 .in +1c
@@ -35,10 +38,31 @@ rserver::ServerEntityFactory
 .ti -1c
 .RI "static size_t \fBcreate\fP (const std::string &type, \fBrtype::ECSManager\fP &ecs_manager)"
 .br
-.ti -1c
-.RI "static size_t \fBcreate_json\fP (const std::string &type, \fBrtype::ECSManager\fP &ecs_manager)"
-.br
+.RI "Create a new entity and register it on the ECS\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+To create entities and register them with the ECS They load the entities through a \&.json file containing all infos of the entities\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "size_t rserver::ServerEntityFactory::create (const std::string & type, \fBrtype::ECSManager\fP & ecs_manager)\fC [static]\fP"
+
+.PP
+Create a new entity and register it on the ECS\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItype\fP - string - typename of the entity 
+.br
+\fIecs_manager\fP - ECSManager 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+size_t - id of the new entity 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

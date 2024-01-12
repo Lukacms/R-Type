@@ -195,7 +195,7 @@ size_t rclient::ClientEntityFactory::create_upgrade(std::size_t entity,
         transform.insert_at(entity, rtype::TransformComponent{});
         sprites.insert_at(entity, rtype::SpriteComponent{});
         animations.insert_at(entity, rtype::AnimationComponent{});
-        sprites[entity]->texture_path = "./Client/assets/Upgrade.png";
+        sprites[entity]->texture_path = "./assets/entities/Upgrade.png";
         transform[entity]->scale_x = 2;
         transform[entity]->scale_y = 2;
         sprites[entity]->rectangle = {0, 0, 17, 17};

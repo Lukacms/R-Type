@@ -24,6 +24,7 @@ target_include_directories(
     ../../RType-Utils/include
 )
 target_compile_options(r-type-ecs PRIVATE ${WARNING_FLAGS})
+target_compile_definitions(r-type-ecs PRIVATE RTYPE_ECS_EXPORTS)
 target_link_libraries(
     r-type-ecs PRIVATE
     r-type-ecs-interface

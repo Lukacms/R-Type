@@ -2,19 +2,24 @@
 .ad l
 .nh
 .SH NAME
-ntw::Communication
+ntw::Communication \- Structure to pass through asio methods to communicate in binary\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Network\&.hpp>\fP
 .SS "Public Member Functions"
 
 .in +1c
 .ti -1c
 .RI "template<typename TType > void \fBadd_param\fP (TType param)"
 .br
+.RI "add a parameter to the array of char\&. The max value is 128 "
 .ti -1c
-.RI "std::vector< std::string > \fBdeserialize\fP ()"
+.RI "std::vector< std::string > \fBdeserialize\fP () noexcept"
 .br
+.RI "go from array<char, 128> to vector of string, by separating it with spaces "
 .in -1c
 .SS "Public Attributes"
 
@@ -26,6 +31,38 @@ ntw::Communication
 .RI "std::array< char, MAX_SIZE > \fBargs\fP {}"
 .br
 .in -1c
+.SH "Detailed Description"
+.PP 
+Structure to pass through asio methods to communicate in binary\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "template<typename TType > void ntw::Communication::add_param (TType param)\fC [inline]\fP"
+
+.PP
+add a parameter to the array of char\&. The max value is 128 
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fITType\fP template - should be number or string 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIparam\fP - template parameter to add to the array of char 
+.RE
+.PP
+
+.SS "std::vector<std::string> ntw::Communication::deserialize ()\fC [inline]\fP, \fC [noexcept]\fP"
+
+.PP
+go from array<char, 128> to vector of string, by separating it with spaces 
+.PP
+\fBReturns\fP
+.RS 4
+vector of string\&. May be empty, but function won't throw exception 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

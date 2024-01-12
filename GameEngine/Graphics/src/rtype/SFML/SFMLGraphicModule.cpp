@@ -2,9 +2,17 @@
 // Created by kane on 14/12/23.
 //
 
-#include <iostream>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Window/Mouse.hpp>
+#include <algorithm>
+#include <rtype/Components/TextComponent.hh>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/SFML/SFMLGraphicModule.hh>
 #include <rtype/utils/Vector2D.hpp>
+#include <iostream>
 
 rtype::SFMLGraphicModule::SFMLGraphicModule(unsigned int width, unsigned int height,
                                             const std::string &title)
@@ -39,6 +47,32 @@ void rtype::SFMLGraphicModule::draw_components(SparseArray<rtype::SpriteComponen
     }
 }
 
+void rtype::SFMLGraphicModule::draw_components(SparseArray<rtype::TextComponent> &texts,
+                                               SparseArray<rtype::TransformComponent> &transforms)
+{
+    sf::Font font{};
+    sf::Text text{};
+    sf::Color colors{};
+
+    for (size_t index = 0; index < texts.size(); index += 1) {
+        if (!texts[index].has_value())
+            continue;
+        font.loadFromFile(texts[index]->font_path);
+        text.setFont(font);
+        text.setString(texts[index]->text);
+        text.setOrigin(texts[index]->origin.x, texts[index]->origin.y);
+        text.setCharacterSize(texts[index]->font_size);
+        colors.a = texts[index]->colors.opacity;
+        colors.r = texts[index]->colors.red;
+        colors.g = texts[index]->colors.green;
+        colors.b = texts[index]->colors.blue;
+        text.setFillColor(colors);
+        text.setPosition(transforms[index]->position_x, transforms[index]->position_y);
+        text.setScale(transforms[index]->scale_x, transforms[index]->scale_y);
+        m_window.draw(text);
+    }
+}
+
 void rtype::SFMLGraphicModule::display()
 {
     m_window.display();
@@ -61,8 +95,6 @@ void rtype::SFMLGraphicModule::close_window()
 
 bool rtype::SFMLGraphicModule::is_input_pressed(rtype::Keys key)
 {
-    if (key == rtype::Keys::DOWN)
-        printf("");
     for (const auto &keyring : KEYS_ARRAY) {
         if (keyring.key == key)
             return m_input.is_key_pressed(keyring.sfml_key);
@@ -82,7 +114,7 @@ void rtype::SFMLGraphicModule::update()
 }
 
 void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
-                                    rtype::TransformComponent transform)
+                                    const rtype::TransformComponent &transform)
 {
     sf::Sprite sprite{};
 
@@ -103,18 +135,77 @@ void rtype::SFMLGraphicModule::draw(rtype::SpriteComponent &sprite_component,
     }
 }
 
-void rtype::SFMLGraphicModule::draw(sf::Sprite &sprite_component,
-                                    rtype::TransformComponent transform)
+void rtype::SFMLGraphicModule::draw(sf::Sprite &sprite, const rtype::TransformComponent &transform)
 {
-    sprite_component.setPosition(transform.position_x, transform.position_y);
-    sprite_component.setScale(transform.scale_x, transform.scale_y);
-    m_window.draw(sprite_component);
+    sprite.setPosition(transform.position_x, transform.position_y);
+    sprite.setScale(transform.scale_x, transform.scale_y);
+    m_window.draw(sprite);
 }
 
-void rtype::SFMLGraphicModule::draw(sf::Text &text, rtype::TransformComponent transform)
+void rtype::SFMLGraphicModule::draw(sf::Text &text, const rtype::TransformComponent &transform)
 {
+
+    text.setPosition({transform.position_x, transform.position_y});
+    text.setScale({transform.scale_x, transform.scale_y});
+    m_window.draw(text);
+}
+
+void rtype::SFMLGraphicModule::draw(rtype::TextComponent &text_component,
+                                    const rtype::TransformComponent &transform)
+{
+    sf::Font font{};
+    sf::Text text{};
+    sf::Color colors{};
+
+    font.loadFromFile(text_component.font_path);
+    text.setFont(font);
+    text.setString(text_component.text);
+    text.setOrigin(text_component.origin.x, text_component.origin.y);
+    text.setCharacterSize(text_component.font_size);
+    colors.a = text_component.colors.opacity;
+    colors.r = text_component.colors.red;
+    colors.g = text_component.colors.green;
+    colors.b = text_component.colors.blue;
+    text.setFillColor(colors);
     text.setPosition(transform.position_x, transform.position_y);
     m_window.draw(text);
+}
+
+float rtype::SFMLGraphicModule::get_text_width(rtype::TextComponent &text_component)
+{
+    sf::Text text{};
+    sf::Font font{};
+
+    font.loadFromFile(text_component.font_path);
+    text.setFont(font);
+    text.setString(text_component.text);
+    text.setCharacterSize(text_component.font_size);
+    return text.getGlobalBounds().width;
+}
+
+bool rtype::SFMLGraphicModule::is_sprite_left_click(rtype::SpriteComponent &sprite,
+                                                    rtype::TransformComponent &transform)
+{
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        return false;
+
+    auto mouse_pos{sf::Mouse::getPosition(m_window)};
+    sf::Sprite tmp_sprite{};
+    sf::Texture tmp_texture{};
+    sf::IntRect tmp_rect{};
+
+    tmp_texture.loadFromFile(sprite.texture_path);
+    tmp_sprite.setPosition(transform.position_x, transform.position_y);
+    tmp_sprite.setOrigin(sprite.origin.x, sprite.origin.y);
+    tmp_rect.width = sprite.rectangle.width;
+    tmp_rect.left = sprite.rectangle.x;
+    tmp_rect.top = sprite.rectangle.y;
+    tmp_rect.height = sprite.rectangle.height;
+    tmp_sprite.setTextureRect(tmp_rect);
+    tmp_sprite.setTexture(tmp_texture);
+    sf::FloatRect sprite_pos{tmp_sprite.getGlobalBounds()};
+
+    return sprite_pos.contains(mouse_pos.x, mouse_pos.y);
 }
 
 rtype::utils::Vector2D<float> rtype::SFMLGraphicModule::is_left_mouse_pressed()

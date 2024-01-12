@@ -17,7 +17,6 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/IAudioModule.hh>
 #include <rtype/IGraphicModule.hh>
-#include <rtype/Network/NetworkManager.hh>
 #include <rtype/Network/ThreadPool.hh>
 #include <rtype/config/ArgsConfig.hh>
 #include <rtype/dlloader/DlLoader.hpp>
@@ -57,9 +56,11 @@ namespace rclient
 
         private:
             /* game engine */
-            dl::DlLoader<rtype::ECSManager> ecs;
             dl::DlLoader<rtype::IGraphicModule> graphics;
             dl::DlLoader<rtype::IAudioModule> audio;
+
+            std::shared_mutex graphics_lock{};
+            std::shared_mutex audio_lock{};
 
             /* network */
             asio::io_context context{};

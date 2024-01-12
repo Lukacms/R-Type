@@ -33,29 +33,20 @@ rclient::Client::Client(const rclient::Arguments &infos)
       game{this->endpoint, this->socket}, host{std::move(infos.hostname)},
       port{std::move(infos.port)}
 {
-    this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
+#ifdef __linux
     this->graphics.init_class<std::unique_ptr<rtype::IGraphicModule>(
         unsigned int width, unsigned int height, const std::string &title)>(
         "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH, rtype::STANDARD_HEIGHT,
         STANDARD_TITLE.data());
     this->audio.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so",
                                                                    "entrypoint");
-    rtype::SparseArray<rtype::SpriteComponent> sprites{};
-    rtype::SparseArray<rtype::TransformComponent> transforms{};
-    rtype::SparseArray<rtype::TagComponent> tags{};
-    rtype::SparseArray<rtype::BoxColliderComponent> colliders{};
-    rtype::SparseArray<rtype::HealthComponent> health{};
-    rtype::SparseArray<rtype::AnimationComponent> animation{};
-    std::function<void(rtype::ComponentManager &, float)> animation_system{
-        &rtype::animation_system};
-
-    ecs.get_class().register_component(sprites);
-    ecs.get_class().register_component(transforms);
-    ecs.get_class().register_component(tags);
-    ecs.get_class().register_component(colliders);
-    ecs.get_class().register_component(health);
-    ecs.get_class().register_component(animation);
-    ecs.get_class().add_system(animation_system);
+#else
+    this->graphics
+        .init_class<void *(unsigned int width, unsigned int height, const std::string &title)>(
+            "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH,
+            rtype::STANDARD_HEIGHT, STANDARD_TITLE.data());
+    this->audio.init_class<void *()>("./libs/r-type-audio.so", "entrypoint");
+#endif /* __linux */
     std::signal(SIGINT, &handle_sigint);
 }
 
@@ -108,13 +99,19 @@ void rclient::Client::setup_network()
     this->socket.open(asio::ip::udp::v4());
     this->socket.non_blocking(true); // <- set socket mode as non-blocking
     Client::send_message({ntw::NetworkType::Connection}, this->endpoint, this->socket);
+
     this->threads.add_job([&, this]() -> void {
         ntw::Communication commn{};
         asio::ip::udp::endpoint sender{};
 
-        while (RUNNING && this->state != scenes::State::End &&
-               this->graphics.get_class().is_window_open()) {
+        while (RUNNING && this->state != scenes::State::End) {
+            {
+                std::unique_lock<std::shared_mutex> lock{this->graphics_lock};
+                if (!this->graphics.get_class().is_window_open())
+                    break;
+            }
             try {
+                std::unique_lock<std::shared_mutex> lock{this->audio_lock};
                 this->socket.receive_from(asio::buffer(&commn, sizeof(commn)), sender);
                 if (sender.port() > 0) {
                     switch (this->state) {
@@ -146,8 +143,16 @@ void rclient::Client::loop()
 
     this->audio.get_class().play_music("TitleScreen");
     while (RUNNING && this->state != scenes::State::End) {
+        {
+            std::unique_lock<std::shared_mutex> lock{this->graphics_lock};
+            if (!this->graphics.get_class().is_window_open())
+                return;
+        }
         this->graphics.get_class().update();
-        this->audio.get_class().update();
+        {
+            std::unique_lock<std::shared_mutex> lock{this->audio_lock};
+            this->audio.get_class().update();
+        }
         if (clock.get_elapsed_time_in_ms() > GAME_TIMEOUT) {
             this->launch_displays();
             clock.reset();
@@ -158,26 +163,27 @@ void rclient::Client::loop()
 
 void rclient::Client::launch_displays()
 {
-    {
-        std::unique_lock<std::shared_mutex> lock{this->scenes};
-        switch (this->state) {
-            case scenes::State::Menu:
-                return this->menu.display(this->graphics.get_class());
-            case scenes::State::Lounge:
-                return this->lounge.display(this->graphics.get_class());
-            case scenes::State::Game:
-                return this->game.display(this->graphics.get_class());
-            case scenes::State::Pause:
-                return this->pause.display(this->graphics.get_class());
-            case scenes::State::End:
-                return;
-        }
+    std::unique_lock<std::shared_mutex> lock{this->scenes};
+    std::unique_lock<std::shared_mutex> g_lock{this->graphics_lock};
+    switch (this->state) {
+        case scenes::State::Menu:
+            return this->menu.display(this->graphics.get_class());
+        case scenes::State::Lounge:
+            return this->lounge.display(this->graphics.get_class());
+        case scenes::State::Game:
+            return this->game.display(this->graphics.get_class());
+        case scenes::State::Pause:
+            return this->pause.display(this->graphics.get_class());
+        case scenes::State::End:
+            return;
     }
 }
 
 void rclient::Client::check_events()
 {
 
+    std::unique_lock<std::shared_mutex> g_lock{this->graphics_lock};
+    std::unique_lock<std::shared_mutex> a_lock{this->audio_lock};
     if (this->state == scenes::State::Menu &&
         this->graphics.get_class().is_input_pressed(rtype::Keys::ENTER)) {
         this->setup_network();

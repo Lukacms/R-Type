@@ -28,9 +28,21 @@ namespace rserver::game
 
     enum class RoomStatus { Lounge, Waiting, InGame };
 
+    /**
+     * @class Room
+     * @brief Room, containing players and a GameLogic to launch
+     * The room starts in waiting mode, waiting for 2+ people to connect, and then launch a game
+     * with levels, ...
+     *
+     */
     class Room
     {
         public:
+            /* variables */
+            std::shared_mutex ecs_mutex{};
+
+            /* functions */
+            Room() = delete;
             Room(asio::ip::udp::socket &psocket, std::size_t pid);
             Room(Room const &to_copy) = delete;
             Room(Room &&to_move);
@@ -68,7 +80,6 @@ namespace rserver::game
 
         private:
             asio::ip::udp::socket &socket;
-            std::shared_mutex ecs_mutex{};
             std::size_t id{0};
             dl::DlLoader<rtype::ECSManager> ecs{};
             dl::DlLoader<rtype::PhysicsManager> physics{};

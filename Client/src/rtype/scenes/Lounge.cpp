@@ -131,7 +131,7 @@ void rclient::scenes::Lounge::rooms_handler(std::vector<std::string> &args, Stat
             return;
         }
     }
-    auto &created{this->rooms.emplace_back(r_id, this->font)};
+    auto &created{this->rooms.emplace_back(r_id, FONT_FILE.data())};
     created.set_status(status);
     created.set_nb_players(players);
 }

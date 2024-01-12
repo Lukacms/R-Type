@@ -18,6 +18,11 @@ namespace rserver
     constexpr std::string_view NO_PLAYER{"No player found for this id."};
     constexpr std::string_view PM_ERROR{"PlayersManager error."};
 
+    /**
+     * @class PlayersManager
+     * @brief Manage the players, to add / delete them
+     *
+     */
     class PlayersManager
     {
         public:
@@ -34,7 +39,7 @@ namespace rserver
             rserver::Player &add_player(asio::ip::udp::endpoint &endpoint);
             rserver::Player &add_player(Player &to_add);
             [[nodiscard]] std::size_t length() const;
-            [[nodiscard]] const std::vector<Player> &get_all_players() const;
+            [[nodiscard]] std::vector<Player> get_all_players() const;
             void remove_player(Player &player);
 
             // void delete_player(asio::ip::udp::endpoint &endpoint);

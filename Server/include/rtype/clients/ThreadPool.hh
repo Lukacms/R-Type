@@ -19,6 +19,12 @@ using u_int = unsigned int;
 namespace rserver
 {
 
+    /**
+     * @class ThreadPool
+     * @brief Handle threads. The program has different parts of the code launched in different
+     * threads, to optimize run-time
+     *
+     */
     class ThreadPool
     {
         public:

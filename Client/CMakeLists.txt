@@ -16,10 +16,12 @@ set_property(TARGET rtype-client-interface PROPERTY CXX_STANDARD 20)
 set_property(TARGET rtype-client-interface PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(
     rtype-client-interface INTERFACE
-    asio::asio
     r-type-utils
+    r-type-ecs
     r-type-audio
     r-type-graphics-interface
+    r-type-graphics
+    asio::asio
     nlohmann_json::nlohmann_json
 )
 
@@ -30,7 +32,6 @@ add_library(
     SHARED
     src/rtype/Client.cpp
     src/rtype/config/ArgsConfig.cpp
-    src/rtype/Network/NetworkManager.cpp
     src/rtype/Network/ThreadPool.cpp
     src/Factory/ClientEntityFactory.cpp
     src/rtype/scenes/Menu.cpp
@@ -58,7 +59,6 @@ target_link_libraries(
     rtype-client-core PRIVATE
     rtype-client-interface
     r-type-graphics-interface
-    r-type-graphics
     r-type-utils
     nlohmann_json::nlohmann_json
     asio::asio # link asio library to core
@@ -78,7 +78,9 @@ target_link_libraries(
     rtype-client-core
     rtype-client-interface
 )
-target_link_options(r-type_client PRIVATE -rdynamic)
+if (NOT WIN32)
+    target_link_options(r-type_client PRIVATE -rdynamic)
+endif ()
 target_compile_features(r-type_client PRIVATE cxx_std_20)
 target_compile_options(r-type_client PRIVATE ${WARNING_FLAGS})
 set_property(TARGET r-type_client PROPERTY CXX_STANDARD 20)

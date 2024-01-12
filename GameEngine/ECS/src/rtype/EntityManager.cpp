@@ -56,7 +56,7 @@ bool rtype::EntityManager::is_entity_used(std::size_t entity)
     return false;
 }
 
-std::vector<size_t> &rtype::EntityManager::get_used_entity()
+std::vector<size_t> rtype::EntityManager::get_used_entity()
 {
     return m_used;
 }

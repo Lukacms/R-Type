@@ -2,13 +2,20 @@
 .ad l
 .nh
 .SH NAME
-rserver::LevelManager
+rserver::LevelManager \- To handle levels handling, timing them, and launching the waves\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <LevelManager\&.hh>\fP
 .SS "Public Member Functions"
 
 .in +1c
+.ti -1c
+.RI "\fBLevelManager\fP ()"
+.br
+.RI "Constructor for \fBLevelManager\fP Parse level files, and assign random level to be played\&. "
 .ti -1c
 .RI "\fBLevelManager\fP (\fBLevelManager\fP const &to_copy)=delete"
 .br
@@ -24,25 +31,90 @@ rserver::LevelManager
 .ti -1c
 .RI "void \fBupdate\fP (\fBrtype::ECSManager\fP &ecs_manager)"
 .br
+.RI "Launch new vawes of enemies\&. "
 .ti -1c
 .RI "void \fBmanage_wave\fP (\fBconfig::Level\fP &level, \fBrtype::ECSManager\fP &ecs_manager)"
 .br
+.RI "Create all the entities of a wave of a level\&. "
 .ti -1c
 .RI "bool \fBhas_enough_level\fP ()"
 .br
+.RI "Check if there are at least one level\&. "
 .ti -1c
 .RI "bool \fBis_level_finished\fP ()"
 .br
+.RI "Check if current playing level is finished, and has done all of its waves\&. "
 .ti -1c
 .RI "void \fBchange_level\fP ()"
 .br
+.RI "Change level, reset waves\&. "
 .ti -1c
 .RI "std::string \fBget_current_music\fP ()"
 .br
-.ti -1c
-.RI "std::string \fBget_current_background\fP ()"
-.br
+.RI "Get music depending on level\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+To handle levels handling, timing them, and launching the waves\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "std::string rserver::LevelManager::get_current_music ()"
+
+.PP
+Get music depending on level\&. 
+.PP
+\fBReturns\fP
+.RS 4
+string - path to the music 
+.RE
+.PP
+
+.SS "bool rserver::LevelManager::has_enough_level ()"
+
+.PP
+Check if there are at least one level\&. 
+.PP
+\fBReturns\fP
+.RS 4
+bool 
+.RE
+.PP
+
+.SS "bool rserver::LevelManager::is_level_finished ()"
+
+.PP
+Check if current playing level is finished, and has done all of its waves\&. 
+.PP
+\fBReturns\fP
+.RS 4
+bool 
+.RE
+.PP
+
+.SS "void rserver::LevelManager::manage_wave (\fBconfig::Level\fP & level, \fBrtype::ECSManager\fP & ecs_manager)"
+
+.PP
+Create all the entities of a wave of a level\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIlevel\fP - Level 
+.br
+\fIecs_manager\fP - ECSManager 
+.RE
+.PP
+
+.SS "void rserver::LevelManager::update (\fBrtype::ECSManager\fP & ecs_manager)"
+
+.PP
+Launch new vawes of enemies\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIecs_manager\fP - ECSManager 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

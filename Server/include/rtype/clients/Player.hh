@@ -33,6 +33,12 @@ namespace rserver
     constexpr float OFFSET_Y_BULLET{11};
     constexpr float PLAYER_SPEED{1000};
 
+    /**
+     * @class Player
+     * @brief Handle connected client. Has infos concerning its level, which rooms it's connected
+     * to, and its entity value
+     *
+     */
     class Player
     {
         public:

@@ -49,7 +49,7 @@ void rclient::BackgroundManager::update()
         if (m_backgrounds[index].transform.position_x + BG_SIZE < 0)
             m_backgrounds[index].transform.position_x =
                 m_backgrounds[(index + 1) % m_backgrounds.size()].transform.position_x + BG_SIZE;
-        m_backgrounds[index].transform.position_x -= 2;
+        m_backgrounds[index].transform.position_x -= 0.5F;
     }
     if (m_backgrounds[0].sprite.opacity < 255 || m_current_background != m_new_background)
         handle_change();

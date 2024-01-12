@@ -9,6 +9,7 @@
 
 #include <exception>
 #include <span>
+#include <vector>
 #include <string>
 #include <string_view>
 
@@ -17,7 +18,7 @@ namespace rclient
     constexpr std::string_view DEFAULT_HOST{"0.0.0.0"};
     constexpr std::string_view DEFAULT_PORT{"8080"};
     constexpr std::string_view HELP_INDIC{"-h"};
-    constexpr std::array<std::string_view, 4> HELP_MSG{
+    static const std::vector<std::string> HELP_MSG{
         "USAGE ./r-type_client [host] [port] [-h]",
         "\thost\tis the host number, default to localhost, or 0.0.0.0",
         "\tport\tis the port number, default is 8080", "\t-h\tdisplay this message and exit"};
