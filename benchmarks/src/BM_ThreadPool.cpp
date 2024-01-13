@@ -14,7 +14,7 @@ constexpr int ITERATIONS{50000};
 
 static void bm_thread_pool(benchmark::State &state)
 {
-    rserver::ThreadPool pool{};
+    rtype::utils::ThreadPool pool{};
     auto res{0};
 
     auto lamda{[&res]() mutable {

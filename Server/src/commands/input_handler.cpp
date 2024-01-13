@@ -28,21 +28,44 @@ static const std::array<rserver::Vector2f, 4> POSITIONS{{
  */
 void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::string> &args)
 {
-    std::unique_lock<std::shared_mutex> lock{
-        this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).ecs_mutex};
-    auto &room_ecs{
-        this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).get_ecs()};
-    auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
+    try {
+        std::unique_lock<std::shared_mutex> lock{
+            this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).ecs_mutex};
+        auto &room_ecs{
+            this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).get_ecs()};
+        auto &component{
+            room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
 
-    if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
-        throw ManagerException{WRONG_ARGUMENTS.data()};
+        if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
+            throw ManagerException{WRONG_ARGUMENTS.data()};
+        }
+        if (args[0][0] == '4') {
+            shoot_according_level(player, room_ecs, component);
+            return;
+        }
+        component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
+        component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
+    } catch (game::Room::RoomException & /* e */) {
+        try {
+            auto &solo{this->get_solo_game(player)};
+            std::unique_lock<std::shared_mutex> lock{solo.get_mutex()};
+            auto &room_ecs{solo.get_ecs()};
+            auto &component{
+                room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
+
+            if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
+                throw ManagerException{WRONG_ARGUMENTS.data()};
+            }
+            if (args[0][0] == '4') {
+                shoot_according_level(player, room_ecs, component);
+                return;
+            }
+            component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
+            component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
+        } catch (game::solo::SoloGame::SoloException & /* e */) {
+            Manager::send_message({ntw::NetworkType::Ko}, player, this->udp_socket);
+        }
     }
-    if (args[0][0] == '4') {
-        shoot_according_level(player, room_ecs, component);
-        return;
-    }
-    component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
-    component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
 }
 
 /**

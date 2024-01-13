@@ -6,6 +6,7 @@
 */
 
 #include <algorithm>
+#include <iostream>
 #include <mutex>
 #include <rtype/utils/ThreadPool.hh>
 
@@ -84,10 +85,7 @@ bool rtype::utils::ThreadPool::is_busy()
 
 void rtype::utils::ThreadPool::stop()
 {
-    {
-        std::unique_lock<std::mutex> lock{this->mutex};
-        this->should_terminate = true;
-    }
+    this->should_terminate = true;
     this->condition.notify_all();
     for (std::thread &active : this->threads) {
         active.join();

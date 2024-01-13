@@ -65,14 +65,18 @@ void rclient::scenes::Lounge::display(rtype::IGraphicModule &graphics)
     this->text.setString(NEW_ROOM.data());
     this->text.setCharacterSize(PLAY_FONT_SIZE);
     graphics.draw(this->text,
-                  {this->width / MIDLE_DIV - TEXT_POS_LOUNGE * 2,
+                  {this->width / MIDLE_DIV - TEXT_POS_LOUNGE * 3,
                    static_cast<float>(this->height - TEXT_POS_LOUNGE)});
     this->new_box = this->text.getGlobalBounds();
     this->text.setString(JOIN_ROOM.data());
     graphics.draw(this->text,
-                  {this->width / MIDLE_DIV + TEXT_POS_LOUNGE * 2,
+                  {this->width / MIDLE_DIV + TEXT_POS_LOUNGE * 3,
                    static_cast<float>(this->height - TEXT_POS_LOUNGE)});
     this->join_box = this->text.getGlobalBounds();
+    this->text.setString(SOLO_GAME.data());
+    graphics.draw(this->text,
+                  {this->width / MIDLE_DIV, static_cast<float>(this->height - TEXT_POS_LOUNGE)});
+    this->solo_box = this->text.getGlobalBounds();
     this->transforms.back().position_y = TEXT_POS_LOUNGE;
     graphics.display();
     this->rooms.clear();
@@ -91,6 +95,9 @@ void rclient::scenes::Lounge::handle_events(rtype::IGraphicModule &graphics,
             ntw::Communication commn{ntw::NetworkType::Room};
             commn.add_param(-1);
             Client::send_message(commn, this->endpoint, this->socket);
+        }
+        if (this->solo_box.contains(mouse.x, mouse.y)) {
+            Client::send_message({ntw::NetworkType::Solo}, this->endpoint, this->socket);
         }
         this->new_room.reset();
     }

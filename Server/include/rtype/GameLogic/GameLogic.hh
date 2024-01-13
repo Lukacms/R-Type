@@ -47,6 +47,7 @@ namespace rserver::game
             GameLogic &operator=(GameLogic const &to_copy) = delete;
             GameLogic &operator=(GameLogic &&to_move) = delete;
 
+            /* multi game */
             void game_loop(rtype::PhysicsManager &physics_manager,
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
                            float delta_time);
@@ -72,6 +73,22 @@ namespace rserver::game
             void enemy_collision_responses(rtype::PhysicsManager &physics_manager,
                                            rserver::PlayersManager &players_manager,
                                            rtype::ECSManager &manager);
+
+            /* solo game */
+            void game_loop(rtype::PhysicsManager &physics_manager, rserver::Player &player,
+                           rtype::ECSManager &manager, float delta_time);
+            void send_entity(rserver::Player &player, rtype::ECSManager &manager);
+            void send_music(rserver::Player &player, const std::string &music_name);
+            void destroy_too_far_entities(rserver::Player &player, rtype::ECSManager &manager);
+            void destroy_too_long_entities(rserver::Player &player, rtype::ECSManager &manager);
+
+            // Collisions responses
+            void collision_responses(rtype::PhysicsManager &physics_manager,
+                                     rserver::Player &player, rtype::ECSManager &manager);
+            void player_collision_responses(rtype::PhysicsManager &physics_manager,
+                                            rserver::Player &player, rtype::ECSManager &manager);
+            void enemy_collision_responses(rtype::PhysicsManager &physics_manager,
+                                           rserver::Player &player, rtype::ECSManager &manager);
 
         private:
             std::vector<size_t> m_entities{};

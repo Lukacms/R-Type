@@ -57,7 +57,7 @@ namespace rtype::utils
             std::vector<std::thread> threads{};
             std::queue<std::function<void()>> queue{};
 
-            bool should_terminate{false};
+            volatile bool should_terminate{false};
 
             /* methods */
             void thread_loop();

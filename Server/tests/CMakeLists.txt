@@ -19,6 +19,7 @@ target_include_directories(tests-r-type_server PUBLIC ${PROJECT_SOURCE_DIR}/Serv
 target_link_libraries(
     tests-r-type_server PRIVATE
     rtype-server-core
+    r-type-utils
     rtype-server-interface
     GTest::gtest_main)
 include(GoogleTest)
