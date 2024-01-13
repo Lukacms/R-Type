@@ -164,7 +164,7 @@ void rserver::Manager::run_game_logic(rtype::utils::Clock &timer, rtype::utils::
  */
 void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
 {
-    std::unique_lock<std::shared_mutex> lock{this->rooms_mutex};
+    std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
     for (auto &room : this->rooms.get_rooms()) {
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
@@ -214,6 +214,20 @@ void rserver::Manager::send_message(const ntw::Communication &to_send,
         {
             std::shared_lock<std::shared_mutex> lock{client.mutex};
             if (client.get_status() == status) {
+                udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
+            }
+        }
+    }
+}
+
+void rserver::Manager::send_message(const ntw::Communication &to_send,
+                                    const PlayersManager &players,
+                                    asio::ip::udp::socket &udp_socket, const std::size_t &room_id)
+{
+    for (auto &client : players.get_all_players()) {
+        {
+            std::shared_lock<std::shared_mutex> lock{client.mutex};
+            if (client.get_room_id() == static_cast<long>(room_id)) {
                 udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
             }
         }

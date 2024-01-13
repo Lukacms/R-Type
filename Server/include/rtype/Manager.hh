@@ -73,6 +73,9 @@ namespace rserver
             static void send_message(const ntw::Communication &to_send,
                                      const PlayersManager &players,
                                      asio::ip::udp::socket &udp_socket, const PlayerStatus &status);
+            static void send_message(const ntw::Communication &to_send,
+                                     const PlayersManager &players,
+                                     asio::ip::udp::socket &udp_socket, const std::size_t &room_id);
             static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket);
 

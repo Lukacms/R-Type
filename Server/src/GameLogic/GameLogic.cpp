@@ -75,14 +75,11 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
 void rserver::game::GameLogic::game_waiting(rserver::PlayersManager &players_manager,
                                             rtype::ECSManager &manager, float delta_time)
 {
-    {
-        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
-        m_entities = manager.get_used_entity();
+    m_entities = manager.get_used_entity();
 
-        destroy_too_far_entities(players_manager, manager);
-        send_entity(players_manager, manager);
-        manager.apply_system(delta_time);
-    }
+    destroy_too_far_entities(players_manager, manager);
+    send_entity(players_manager, manager);
+    manager.apply_system(delta_time);
 }
 
 /**

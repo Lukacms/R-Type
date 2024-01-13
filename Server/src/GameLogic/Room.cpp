@@ -150,8 +150,12 @@ rserver::game::GameLogic &rserver::game::Room::get_logic()
  */
 void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 {
-    this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
-                          static_cast<float>(delta.get_elapsed_time_in_s()));
+    {
+        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+
+        this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
+                              static_cast<float>(delta.get_elapsed_time_in_s()));
+    }
 }
 
 /**
@@ -170,10 +174,7 @@ void rserver::game::Room::check_wait_timeout(float delta_time)
         return;
     if (this->timeout_connect.get_elapsed_time_in_s() > TIMEOUT_WAITING) {
         this->status = RoomStatus::InGame;
-        for (auto pid : this->players) {
-            Manager::send_message({ntw::NetworkType::ToGame}, this->manager.get_by_id(pid),
-                                  this->socket);
-        }
+        Manager::send_message({ntw::NetworkType::ToGame}, this->manager, this->socket, this->id);
     }
 }
 
