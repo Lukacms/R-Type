@@ -169,6 +169,7 @@ void rserver::game::Room::check_wait_timeout(float delta_time)
         return;
     if (this->timeout_connect.get_elapsed_time_in_s() > TIMEOUT_WAITING) {
         this->status = RoomStatus::InGame;
+        this->logic.reset_clock();
         for (auto pid : this->players) {
             Manager::send_message({ntw::NetworkType::ToGame}, this->manager.get_by_id(pid),
                                   this->socket);

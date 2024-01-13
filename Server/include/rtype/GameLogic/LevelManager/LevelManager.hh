@@ -36,6 +36,7 @@ namespace rserver
             bool has_enough_level();
             bool is_level_finished();
             void change_level();
+            void reset_clock();
             std::string get_current_music();
             std::string get_current_background();
 

@@ -37,7 +37,7 @@ namespace ntw
               // or create one
         Music,      // Send the music that the client should play, [MusicString],
         Background, // Send the background that the client should display, [BackgroundString],
-        Solo,  // Player [nb ais] (default to 1) -> wanting to be in solo game
+        Solo,       // Player [nb ais] (default to 1) -> wanting to be in solo game
     };
 
 #pragma pack(push, 1)

@@ -131,3 +131,8 @@ std::string rserver::LevelManager::get_current_background()
     }
     return "";
 }
+
+void rserver::LevelManager::reset_clock()
+{
+    m_level_clock.reset();
+}

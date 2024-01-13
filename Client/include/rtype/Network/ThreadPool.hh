@@ -31,7 +31,7 @@ namespace rclient
              */
             explicit ThreadPool(u_int p_nb_threads = std::thread::hardware_concurrency());
             ThreadPool(ThreadPool const &to_copy) = delete;
-            ThreadPool(ThreadPool &&to_move) noexcept ;
+            ThreadPool(ThreadPool &&to_move) noexcept;
             ~ThreadPool() = default;
 
             /* override operator */

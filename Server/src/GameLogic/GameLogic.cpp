@@ -177,14 +177,19 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
             if (!tags[entity1].has_value() || !healths[entity1].has_value() ||
                 tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
                 continue;
-            if (tags[entity2]->tag.find("PlayerBullet") != std::string::npos &&
-                physics_manager.is_collided(entity1, entity2)) {
+            if (!physics_manager.is_collided(entity1, entity2))
+                continue;
+            if (tags[entity2]->tag.find("PlayerBullet") != std::string::npos) {
                 healths[entity1]->health -= 10;
                 check_if_enemy_dead(manager, players_manager, entity1);
                 ntw::Communication destroy2{.type = ntw::NetworkType::Destruction, .args = {}};
                 destroy2.add_param(entity2);
                 rserver::Manager::send_message(destroy2, players_manager, m_socket, m_room_id);
                 manager.delete_entity(entity2);
+            }
+            if (tags[entity2]->tag.find("Asteroid") != std::string::npos) {
+                healths[entity1]->health = 0;
+                check_if_enemy_dead(manager, players_manager, entity1);
             }
         }
     }
@@ -435,4 +440,9 @@ void rserver::game::GameLogic::at_player_death(rtype::ECSManager &manager,
     explosion_transform.position_x = player_transform.position_x;
     explosion_transform.position_y = player_transform.position_y;
     manager.delete_entity(player);
+}
+
+void rserver::game::GameLogic::reset_clock()
+{
+    m_level_manager.reset_clock();
 }

@@ -9,9 +9,9 @@
 
 #include <exception>
 #include <span>
-#include <vector>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace rclient
 {

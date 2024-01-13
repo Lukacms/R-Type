@@ -84,6 +84,7 @@ namespace rserver::game
             void check_if_player_out_of_bounds(rtype::ECSManager &manager);
             void check_if_enemy_dead(rtype::ECSManager &manager,
                                      rserver::PlayersManager &players_manager, std::size_t entity);
+            void reset_clock();
 
         private:
             std::vector<size_t> m_entities{};
