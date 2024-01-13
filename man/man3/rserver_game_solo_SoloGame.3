@@ -6,11 +6,18 @@ rserver::game::solo::SoloGame
 .SH SYNOPSIS
 .br
 .PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBSoloException\fP"
+.br
+.in -1c
 .SS "Public Member Functions"
 
 .in +1c
 .ti -1c
-.RI "\fBSoloGame\fP (asio::ip::udp::socket &psocket, asio::ip::udp::endpoint &pendpoint)"
+.RI "\fBSoloGame\fP (asio::ip::udp::socket &psocket, \fBPlayer\fP &pplayer)"
 .br
 .ti -1c
 .RI "\fBSoloGame\fP (\fBSoloGame\fP const &to_copy)=delete"
@@ -23,6 +30,37 @@ rserver::game::solo::SoloGame
 .br
 .ti -1c
 .RI "\fBSoloGame\fP & \fBoperator=\fP (\fBSoloGame\fP &&to_move)"
+.br
+.ti -1c
+.RI "void \fBgame_turn\fP (\fBrtype::utils::Clock\fP &clock)"
+.br
+.ti -1c
+.RI "\fBPlayer\fP & \fBget_player\fP () const"
+.br
+.ti -1c
+.RI "void \fBadd_move_to_friend\fP (const int &move)"
+.br
+.ti -1c
+.RI "\fBFriend\fP & \fBget_friend_by_id\fP (const std::size_t &entity_id)"
+.br
+.ti -1c
+.RI "void \fBdelete_friend\fP (const std::size_t &entity_id)"
+.br
+.ti -1c
+.RI "void \fBend_game\fP ()"
+.br
+.ti -1c
+.RI "\fBrtype::ECSManager\fP & \fBget_ecs\fP () const"
+.br
+.ti -1c
+.RI "std::shared_mutex & \fBget_mutex\fP ()"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::shared_mutex \fBmutex\fP {}"
 .br
 .in -1c
 
