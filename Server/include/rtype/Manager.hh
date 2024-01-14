@@ -15,12 +15,13 @@
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <rtype/GameLogic/RoomsManager.hh>
+#include <rtype/GameLogic/solo/Solo.hh>
 #include <rtype/SparseArray.hpp>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
-#include <rtype/clients/ThreadPool.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/network/Network.hpp>
+#include <rtype/utils/ThreadPool.hh>
 #include <shared_mutex>
 #include <string_view>
 #include <vector>
@@ -87,6 +88,7 @@ namespace rserver
             void input_handler(Player &, std::vector<std::string> &);
             void end_handler(Player &, std::vector<std::string> &);
             void room_handler(Player &, std::vector<std::string> &);
+            void solo_handler(Player &, std::vector<std::string> &);
 
             /* exception */
             class ManagerException : public std::exception
@@ -116,13 +118,15 @@ namespace rserver
 
             /* main variables */
             PlayersManager players{};
-            ThreadPool threads{};
+            rtype::utils::ThreadPool threads{};
             game::RoomsManager rooms{};
+            std::vector<game::solo::SoloGame> solos{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
 
             /* utils */
             std::shared_mutex ecs_mutex{};
             std::shared_mutex rooms_mutex{};
+            std::shared_mutex solos_mutex{};
 
             /* methods */
             static void handle_disconnection(int);
@@ -135,6 +139,8 @@ namespace rserver
             void run_game_logic(rtype::utils::Clock &timer, rtype::utils::Clock &delta,
                                 std::mutex &clocks_mutex);
             void run_all_rooms_logics(rtype::utils::Clock &delta);
+            void run_solo_games(rtype::utils::Clock &delta);
+            [[nodiscard]] game::solo::SoloGame &get_solo_game(Player &player);
     };
 
     struct CommandHandler {

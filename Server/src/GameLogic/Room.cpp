@@ -74,7 +74,7 @@ void rserver::game::Room::add_player(Player &new_player)
     } else if (this->players.size() == MAX_PLAYERS)
         this->status = RoomStatus::InGame;
     {
-        std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
+        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
         new_player.set_entity_value(
             rserver::ServerEntityFactory::create("Player", this->ecs.get_class()));
         new_player.set_room_id(static_cast<long>(this->id));
@@ -148,6 +148,7 @@ rserver::game::GameLogic &rserver::game::Room::get_logic()
  */
 void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 {
+    std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
     this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
                           static_cast<float>(delta.get_elapsed_time_in_s()));
     this->ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_ms()));
@@ -170,10 +171,7 @@ void rserver::game::Room::check_wait_timeout(float delta_time)
     if (this->timeout_connect.get_elapsed_time_in_s() > TIMEOUT_WAITING) {
         this->status = RoomStatus::InGame;
         this->logic.reset_clock();
-        for (auto pid : this->players) {
-            Manager::send_message({ntw::NetworkType::ToGame}, this->manager.get_by_id(pid),
-                                  this->socket);
-        }
+        Manager::send_message({ntw::NetworkType::ToGame}, this->manager, this->socket, this->id);
     }
 }
 

@@ -37,7 +37,6 @@ add_library(
     src/config/ConfigsFile.cpp
     src/clients/Player.cpp
     src/clients/PlayersManager.cpp
-    src/clients/ThreadPool.cpp
     src/GameLogic/GameLogic.cpp
     src/GameLogic/Room.cpp
     src/GameLogic/RoomsManager.cpp
@@ -48,8 +47,11 @@ add_library(
     src/commands/end_handler.cpp
     src/commands/lobby_handler.cpp
     src/commands/room_handler.cpp
+    src/commands/solo_handler.cpp
     src/GameLogic/EnemySystems/KamikazeSystem.cpp
     src/GameLogic/EnemySystems/UFOSystem.cpp
+    src/GameLogic/solo/Solo.cpp
+    src/GameLogic/solo/Friend.cpp
 )
 
 target_compile_features(rtype-server-core PRIVATE cxx_std_20)

@@ -10,6 +10,14 @@
 #include <rtype/config/ArgsParser.hh>
 
 /* methods */
+/**
+ * @brief Static method to parse args given in agruments
+ *
+ * @param argc - int
+ * @param argv - span<const char *>
+ * @return Infos
+ * @throws ArgsException on error
+ */
 rserver::Infos rserver::ArgsParser::get_args(int argc, std::span<const char *> argv)
 {
     Infos infos{};

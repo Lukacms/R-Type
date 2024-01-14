@@ -49,6 +49,7 @@ namespace rserver::game
             GameLogic &operator=(GameLogic const &to_copy) = delete;
             GameLogic &operator=(GameLogic &&to_move) = delete;
 
+            /* multi game */
             void game_loop(rtype::PhysicsManager &physics_manager,
                            rserver::PlayersManager &players_manager, rtype::ECSManager &manager,
                            float delta_time);
@@ -85,6 +86,27 @@ namespace rserver::game
             void check_if_enemy_dead(rtype::ECSManager &manager,
                                      rserver::PlayersManager &players_manager, std::size_t entity);
             void reset_clock();
+
+            /* solo game */
+            void game_loop(rtype::PhysicsManager &physics_manager, rserver::Player &player,
+                           rtype::ECSManager &manager, float delta_time);
+            void send_entity(rserver::Player &player, rtype::ECSManager &manager);
+            void send_music(rserver::Player &player, const std::string &music_name);
+            void send_background(rserver::Player &player, const std::string &background_name);
+            void destroy_too_far_entities(rserver::Player &player, rtype::ECSManager &manager);
+            void destroy_too_long_entities(rserver::Player &player, rtype::ECSManager &manager);
+            void check_if_enemy_dead(rtype::ECSManager &manager, rserver::Player &player,
+                                     std::size_t entity);
+            void at_player_death(rtype::ECSManager &manager, rserver::Player &player,
+                                 std::size_t entity);
+
+            // Collisions responses
+            void collision_responses(rtype::PhysicsManager &physics_manager,
+                                     rserver::Player &player, rtype::ECSManager &manager);
+            void player_collision_responses(rtype::PhysicsManager &physics_manager,
+                                            rserver::Player &player, rtype::ECSManager &manager);
+            void enemy_collision_responses(rtype::PhysicsManager &physics_manager,
+                                           rserver::Player &player, rtype::ECSManager &manager);
 
         private:
             std::vector<size_t> m_entities{};

@@ -32,7 +32,6 @@ add_library(
     SHARED
     src/rtype/Client.cpp
     src/rtype/config/ArgsConfig.cpp
-    src/rtype/Network/ThreadPool.cpp
     src/Factory/ClientEntityFactory.cpp
     src/rtype/scenes/Menu.cpp
     src/rtype/scenes/PauseMenu.cpp

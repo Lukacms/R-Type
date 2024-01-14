@@ -35,6 +35,7 @@ static const std::vector<rserver::CommandHandler> HANDLER{
     {ntw::NetworkType::Input, &rserver::Manager::input_handler},
     {ntw::NetworkType::End, &rserver::Manager::end_handler},
     {ntw::NetworkType::Room, &rserver::Manager::room_handler},
+    {ntw::NetworkType::Solo, &rserver::Manager::solo_handler},
 };
 
 /* constructors and destructors */
@@ -80,8 +81,10 @@ rserver::Manager::~Manager()
 {
     ntw::Communication commn{ntw::NetworkType::End};
 
-    this->threads.stop();
-    Manager::send_to_all(commn, this->players, this->udp_socket);
+    {
+        std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
+        Manager::send_to_all(commn, this->players, this->udp_socket);
+    }
     DEBUG(("Finished server%s", ENDL));
 }
 
@@ -148,6 +151,7 @@ void rserver::Manager::run_game_logic(rtype::utils::Clock &timer, rtype::utils::
         load_entity_properties();
         if (timer.get_elapsed_time_in_ms() > game::TIMER) {
             this->run_all_rooms_logics(delta);
+            this->run_solo_games(delta);
             timer.reset();
             delta.reset();
         }
@@ -162,12 +166,21 @@ void rserver::Manager::run_game_logic(rtype::utils::Clock &timer, rtype::utils::
  */
 void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
 {
-    std::unique_lock<std::shared_mutex> lock{this->rooms_mutex};
+    std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
     for (auto &room : this->rooms.get_rooms()) {
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
         else
             room.check_wait_timeout(static_cast<float>(delta.get_elapsed_time_in_ms()));
+    }
+}
+
+void rserver::Manager::run_solo_games(rtype::utils::Clock &delta)
+{
+    std::shared_lock<std::shared_mutex> lock{this->solos_mutex};
+
+    for (auto &solo : this->solos) {
+        solo.game_turn(delta);
     }
 }
 
@@ -303,6 +316,21 @@ void rserver::Manager::refuse_client(asio::ip::udp::endpoint &client)
     ntw::Communication communication{ntw::NetworkType::Refusal};
 
     this->udp_socket.send_to(asio::buffer(&communication, sizeof(communication)), client);
+}
+
+/**
+ * @brief get a Solo game by its player. Will throw if there isn't any solo game with this id
+ *
+ * @param player - Player &
+ * @throws ManagerException
+ */
+rserver::game::solo::SoloGame &rserver::Manager::get_solo_game(rserver::Player &player)
+{
+    for (auto &solo : this->solos) {
+        if (solo.get_player().get_port() == player.get_port())
+            return solo;
+    }
+    throw ManagerException("There is no solo game for this player");
 }
 
 /**

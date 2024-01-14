@@ -13,7 +13,7 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 
 .in +1c
 .ti -1c
-.RI "\fBGameLogic\fP (asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex, const std::size_t &proom_id)"
+.RI "\fBGameLogic\fP (asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)"
 .br
 .RI "Constructor\&. "
 .ti -1c
@@ -46,9 +46,6 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .br
 .RI "Send music that is being played to all players\&. "
 .ti -1c
-.RI "void \fBsend_background\fP (\fBrserver::PlayersManager\fP &players_manager, const std::string &background_name)"
-.br
-.ti -1c
 .RI "void \fBdestroy_too_far_entities\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .RI "Destroy entities that are not in screen's range\&. "
@@ -65,9 +62,6 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .br
 .RI "Spawn bonus when a enemy is killed\&. "
 .ti -1c
-.RI "void \fBat_player_death\fP (\fBrtype::ECSManager\fP &manager, \fBrserver::PlayersManager\fP &players_manager, std::size_t player)"
-.br
-.ti -1c
 .RI "void \fBcollision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .RI "Get collisions and handle them\&. "
@@ -80,28 +74,44 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .br
 .RI "Handle collisions with enemies\&. "
 .ti -1c
-.RI "void \fBcheck_if_player_out_of_bounds\fP (\fBrtype::ECSManager\fP &manager)"
+.RI "void \fBgame_loop\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager, float delta_time)"
 .br
+.RI "Game «loop»\&. Do all actions needed by the game\&. "
 .ti -1c
-.RI "void \fBcheck_if_enemy_dead\fP (\fBrtype::ECSManager\fP &manager, \fBrserver::PlayersManager\fP &players_manager, std::size_t entity)"
+.RI "void \fBsend_entity\fP (\fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
 .br
+.RI "Send infos about all of the game's entities to players\&. "
 .ti -1c
-.RI "void \fBreset_clock\fP ()"
+.RI "void \fBsend_music\fP (\fBrserver::Player\fP &player, const std::string &music_name)"
 .br
-.in -1c
-.SS "Static Public Member Functions"
-
-.in +1c
+.RI "Send music that is being played to all players\&. "
 .ti -1c
-.RI "static void \fBspawn_bullets_for_mine\fP (\fBrtype::ECSManager\fP &manager, std::size_t entity_to_follow)"
+.RI "void \fBdestroy_too_far_entities\fP (\fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
 .br
+.RI "Destroy entities that are not in screen's range\&. "
+.ti -1c
+.RI "void \fBdestroy_too_long_entities\fP (\fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
+.br
+.RI "Destroy entities that have a clock that has timed out\&. "
+.ti -1c
+.RI "void \fBcollision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
+.br
+.RI "Get collisions and handle them\&. "
+.ti -1c
+.RI "void \fBplayer_collision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
+.br
+.RI "Handle collisions with the player\&. "
+.ti -1c
+.RI "void \fBenemy_collision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
+.br
+.RI "Handle collisions with enemies\&. "
 .in -1c
 .SH "Detailed Description"
 .PP 
 To handle a game\&. Create entities with the ECS, move them when needed, launch level, waves of enemies, \&.\&.\&. 
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "rserver::game::GameLogic::GameLogic (asio::ip::udp::socket & socket, std::shared_mutex & ecs_mutex, const std::size_t & proom_id)"
+.SS "rserver::game::GameLogic::GameLogic (asio::ip::udp::socket & socket, std::shared_mutex & ecs_mutex)"
 
 .PP
 Constructor\&. 
@@ -127,6 +137,21 @@ Constructor by move\&.
 
 .SH "Member Function Documentation"
 .PP 
+.SS "void rserver::game::GameLogic::collision_responses (\fBrtype::PhysicsManager\fP & physics_manager, \fBrserver::Player\fP & player, \fBrtype::ECSManager\fP & manager)"
+
+.PP
+Get collisions and handle them\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIphysics_manager\fP - PhysicsManager & 
+.br
+\fIplayer\fP - \fBPlayersManager\fP & 
+.br
+\fImanager\fP - ECSManager & 
+.RE
+.PP
+
 .SS "void rserver::game::GameLogic::collision_responses (\fBrtype::PhysicsManager\fP & physics_manager, \fBrserver::PlayersManager\fP & players_manager, \fBrtype::ECSManager\fP & manager)"
 
 .PP
@@ -137,6 +162,19 @@ Get collisions and handle them\&.
 \fIphysics_manager\fP - PhysicsManager & 
 .br
 \fIplayers_manager\fP - \fBPlayersManager\fP & 
+.br
+\fImanager\fP - ECSManager & 
+.RE
+.PP
+
+.SS "void rserver::game::GameLogic::destroy_too_far_entities (\fBrserver::Player\fP & player, \fBrtype::ECSManager\fP & manager)"
+
+.PP
+Destroy entities that are not in screen's range\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayersManager\fP & 
 .br
 \fImanager\fP - ECSManager & 
 .RE
@@ -155,6 +193,19 @@ Destroy entities that are not in screen's range\&.
 .RE
 .PP
 
+.SS "void rserver::game::GameLogic::destroy_too_long_entities (\fBrserver::Player\fP & player, \fBrtype::ECSManager\fP & manager)"
+
+.PP
+Destroy entities that have a clock that has timed out\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayersManager\fP & 
+.br
+\fImanager\fP - ECSManager & 
+.RE
+.PP
+
 .SS "void rserver::game::GameLogic::destroy_too_long_entities (\fBrserver::PlayersManager\fP & players_manager, \fBrtype::ECSManager\fP & manager)"
 
 .PP
@@ -168,10 +219,40 @@ Destroy entities that have a clock that has timed out\&.
 .RE
 .PP
 
+.SS "void rserver::game::GameLogic::enemy_collision_responses (\fBrtype::PhysicsManager\fP & physics_manager, \fBrserver::Player\fP & player, \fBrtype::ECSManager\fP & manager)"
+
+.PP
+Handle collisions with enemies\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIphysics_manager\fP - PhysicsManager & 
+.br
+\fIplayer\fP - \fBPlayersManager\fP & 
+.br
+\fImanager\fP - ECSManager & 
+.RE
+.PP
+
 .SS "void rserver::game::GameLogic::enemy_collision_responses (\fBrtype::PhysicsManager\fP & physics_manager, \fBrserver::PlayersManager\fP & players_manager, \fBrtype::ECSManager\fP & manager)"
 
 .PP
 Handle collisions with enemies\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIphysics_manager\fP - PhysicsManager & 
+.br
+\fIplayers_manager\fP - \fBPlayersManager\fP & 
+.br
+\fImanager\fP - ECSManager & 
+.RE
+.PP
+
+.SS "void rserver::game::GameLogic::game_loop (\fBrtype::PhysicsManager\fP & physics_manager, \fBrserver::Player\fP & player, \fBrtype::ECSManager\fP & manager, float delta_time)"
+
+.PP
+Game «loop»\&. Do all actions needed by the game\&. 
 .PP
 \fBParameters\fP
 .RS 4
@@ -213,6 +294,21 @@ Handle entities during room's waiting mode\&. Only move player, and allow it to 
 .RE
 .PP
 
+.SS "void rserver::game::GameLogic::player_collision_responses (\fBrtype::PhysicsManager\fP & physics_manager, \fBrserver::Player\fP & player, \fBrtype::ECSManager\fP & manager)"
+
+.PP
+Handle collisions with the player\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIphysics_manager\fP - PhysicsManager & 
+.br
+\fIplayer\fP - \fBPlayersManager\fP & 
+.br
+\fImanager\fP - ECSManager & 
+.RE
+.PP
+
 .SS "void rserver::game::GameLogic::player_collision_responses (\fBrtype::PhysicsManager\fP & physics_manager, \fBrserver::PlayersManager\fP & players_manager, \fBrtype::ECSManager\fP & manager)"
 
 .PP
@@ -228,6 +324,19 @@ Handle collisions with the player\&.
 .RE
 .PP
 
+.SS "void rserver::game::GameLogic::send_entity (\fBrserver::Player\fP & player, \fBrtype::ECSManager\fP & manager)"
+
+.PP
+Send infos about all of the game's entities to players\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayersManager\fP & 
+.br
+\fImanager\fP - ECSManager & 
+.RE
+.PP
+
 .SS "void rserver::game::GameLogic::send_entity (\fBrserver::PlayersManager\fP & players_manager, \fBrtype::ECSManager\fP & manager)"
 
 .PP
@@ -238,6 +347,19 @@ Send infos about all of the game's entities to players\&.
 \fIplayers_manager\fP - \fBPlayersManager\fP & 
 .br
 \fImanager\fP - ECSManager & 
+.RE
+.PP
+
+.SS "void rserver::game::GameLogic::send_music (\fBrserver::Player\fP & player, const std::string & music_name)"
+
+.PP
+Send music that is being played to all players\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayersManager\fP & 
+.br
+\fImusic_name\fP - std::string - path to music 
 .RE
 .PP
 

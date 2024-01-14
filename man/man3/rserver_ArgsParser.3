@@ -35,7 +35,33 @@ rserver::ArgsParser
 .ti -1c
 .RI "static \fBInfos\fP \fBget_args\fP (int argc, std::span< char const * > argv)"
 .br
+.RI "Static method to parse args given in agruments\&. "
 .in -1c
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBrserver::Infos\fP rserver::ArgsParser::get_args (int argc, std::span< char const * > argv)\fC [static]\fP"
+
+.PP
+Static method to parse args given in agruments\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIargc\fP - int 
+.br
+\fIargv\fP - span<const char *> 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fBInfos\fP 
+.RE
+.PP
+\fBExceptions\fP
+.RS 4
+\fI\fBArgsException\fP\fP on error 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 
