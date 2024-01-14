@@ -46,8 +46,12 @@ void rserver::game::solo::SoloGame::game_turn(rtype::utils::Clock &clock)
 {
     std::unique_lock<std::shared_mutex> lock{this->mutex};
 
-    this->game.game_loop(this->physics.get_class(), this->player, this->ecs.get_class(),
-                         static_cast<float>(clock.get_elapsed_time_in_ms()));
+    try {
+        this->game.game_loop(this->physics.get_class(), this->player, this->ecs.get_class(),
+                             static_cast<float>(clock.get_elapsed_time_in_ms()));
+    } catch (SoloGame::SoloException &e) {
+        throw e;
+    }
     this->ecs.get_class().apply_system(static_cast<float>(clock.get_elapsed_time_in_ms()));
 }
 

@@ -72,6 +72,11 @@ namespace dl
                 return *this->element.get();
             }
 
+            void release()
+            {
+                this->element.release();
+            }
+
             template <typename TSignature, typename... TValues>
             void init_class(std::string const &path,
                             std::string const &loader_func = DEFAULT_LOADER.data(),

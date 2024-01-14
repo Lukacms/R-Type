@@ -115,8 +115,15 @@ void rserver::game::Room::del_player(rserver::Player &to_del)
             to_del.set_status(PlayerStatus::Lobby);
             to_del.set_room_id(-1);
             this->players.erase(player);
-            // if (this->players.size() < 2)
-            //     this->status = RoomStatus::Lounge;
+            if (this->players.empty()) {
+                this->status = RoomStatus::Lounge;
+                this->ecs.release();
+#ifdef __linux
+                this->ecs.init_class<std::unique_ptr<rtype::ECSManager>()>(ECS_SL_PATH.data());
+#else
+                this->ecs.init_class<void *()>(ECS_SL_PATH.data());
+#endif /* __linux */
+            }
             return;
         }
     }
