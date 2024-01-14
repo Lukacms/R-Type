@@ -227,6 +227,8 @@ if (RTYPE_BUILD_TESTS)
     add_subdirectory(Server/tests)
     add_subdirectory(Client/tests)
     add_subdirectory(RType-Utils/tests/)
+    add_subdirectory(GameEngine/tests/ECS/)
+    add_subdirectory(GameEngine/tests/Physics/)
 endif()
 
 if (RTYPE_BUILD_BENCHMARKS)

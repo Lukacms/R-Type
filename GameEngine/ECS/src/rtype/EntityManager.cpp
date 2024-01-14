@@ -26,6 +26,8 @@ size_t rtype::EntityManager::create_entity(size_t entity)
 {
     bool exist{false};
 
+    if (entity > MAX_ENTITIES)
+        throw EntityException("Entity too high.");
     for (size_t i{0}; i < m_queue.size(); i++)
         if (m_queue[i] == entity) {
             exist = true;

@@ -8,7 +8,7 @@ enable_testing()
 
 add_executable(
     tests-r-type_client
-    src/main.cpp
+    src/testClientFactory.cpp
     )
 target_compile_options(tests-r-type_client PRIVATE ${WARNING_FLAGS})
 target_include_directories(tests-r-type_client PUBLIC ${PROJECT_SOURCE_DIR}/Client/include)
