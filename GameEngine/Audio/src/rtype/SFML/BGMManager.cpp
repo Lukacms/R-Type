@@ -3,6 +3,7 @@
 //
 
 #include <fstream>
+#include <rtype/IAudioModule.hh>
 #include <rtype/SFML/BGMManager.hh>
 
 rtype::BGMManager::BGMManager()
@@ -10,7 +11,7 @@ rtype::BGMManager::BGMManager()
     std::ifstream bgm_file(BGM_FILEPATH.data());
 
     if (!bgm_file.is_open())
-        throw BGMException("BGM Json doesn't exist\n");
+        throw rtype::AudioModuleException("BGM Json doesn't exist\n");
     auto bgm = nlohmann::json::parse(bgm_file);
 
     for (const auto &[key, value] : bgm.items())

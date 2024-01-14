@@ -6,6 +6,7 @@
 */
 
 #include "rtype/SFML/SFXManager.hh"
+#include "rtype/IAudioModule.hh"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -15,7 +16,7 @@ rtype::SFXManager::SFXManager()
     std::ifstream sfx_file(SFX_FILEPATH.data());
 
     if (!sfx_file.is_open())
-        throw SFXException("SFX Json file doesn't exist\n");
+        throw rtype::AudioModuleException("SFX Json file doesn't exist\n");
     auto sfx = nlohmann::json::parse(sfx_file);
 
     for (const auto &[key, value] : sfx.items()) {

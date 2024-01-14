@@ -33,20 +33,24 @@ rclient::Client::Client(const rclient::Arguments &infos)
       game{this->endpoint, this->socket}, host{std::move(infos.hostname)},
       port{std::move(infos.port)}
 {
+    try {
 #ifdef __linux
-    this->graphics.init_class<std::unique_ptr<rtype::IGraphicModule>(
-        unsigned int width, unsigned int height, const std::string &title)>(
-        "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH, rtype::STANDARD_HEIGHT,
-        STANDARD_TITLE.data());
-    this->audio.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so",
-                                                                   "entrypoint");
-#else
-    this->graphics
-        .init_class<void *(unsigned int width, unsigned int height, const std::string &title)>(
+        this->graphics.init_class<std::unique_ptr<rtype::IGraphicModule>(
+            unsigned int width, unsigned int height, const std::string &title)>(
             "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH,
             rtype::STANDARD_HEIGHT, STANDARD_TITLE.data());
-    this->audio.init_class<void *()>("./libs/r-type-audio.so", "entrypoint");
+        this->audio.init_class<std::unique_ptr<rtype::IAudioModule>()>("./libs/r-type-audio.so",
+                                                                       "entrypoint");
+#else
+        this->graphics
+            .init_class<void *(unsigned int width, unsigned int height, const std::string &title)>(
+                "./libs/r-type-graphics.so", "entrypoint", rtype::STANDARD_WIDTH,
+                rtype::STANDARD_HEIGHT, STANDARD_TITLE.data());
+        this->audio.init_class<void *()>("./libs/r-type-audio.so", "entrypoint");
 #endif /* __linux */
+    } catch (rtype::AudioModuleException &e) {
+        throw Client::ClientException("Audio Module cannot be loaded");
+    }
     std::signal(SIGINT, &handle_sigint);
 }
 
@@ -82,10 +86,13 @@ void rclient::Client::send_message(const ntw::Communication &commn,
 
 int rclient::Client::launch(const Arguments &infos)
 {
-    Client client{infos};
-
-    client.loop();
-    return SUCCESS;
+    try {
+        Client client{infos};
+        client.loop();
+        return SUCCESS;
+    } catch (rtype::AudioModuleException &e) {
+        throw ClientException("Audio module cannot be load\n");
+    }
 }
 
 /**
@@ -210,4 +217,14 @@ void rclient::Client::check_events()
         case scenes::State::End:
             return;
     }
+}
+
+rclient::Client::ClientException::ClientException(std::string &&perror_msg)
+{
+    m_error_msg = perror_msg;
+}
+
+const char *rclient::Client::ClientException::what() const noexcept
+{
+    return m_error_msg.c_str();
 }
