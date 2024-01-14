@@ -24,4 +24,21 @@ namespace rtype
             virtual void set_volume_sfx(float volume) = 0;
             virtual void update() = 0;
     };
+
+    class AudioModuleException : std::exception
+    {
+        public:
+            AudioModuleException(std::string &&perror_msg);
+            AudioModuleException(AudioModuleException const &to_copy) = default;
+            AudioModuleException(AudioModuleException &&to_move) = default;
+            ~AudioModuleException() override = default;
+            AudioModuleException &operator=(AudioModuleException const &to_copy) = default;
+            AudioModuleException &operator=(AudioModuleException &&to_move) = default;
+
+            [[nodiscard]] const char *what() const noexcept override;
+
+        private:
+            std::string m_error_msg{"Error"};
+    };
+
 } // namespace rtype

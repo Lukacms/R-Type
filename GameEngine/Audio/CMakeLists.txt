@@ -6,6 +6,7 @@ add_library(r-type-audio SHARED
     src/rtype/SFML/BGMManager.cpp
     src/rtype/SFML/SFXManager.cpp
     src/rtype/SFML/SFMLAudioModule.cpp
+    src/rtype/AudioModuleException.cpp
     src/rtype/EntryPoint.cpp
 )
 

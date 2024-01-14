@@ -25,8 +25,8 @@ namespace rserver::game
     const constexpr int MAX_POSITION_Y{700};
     const constexpr int MIN_POSITION{-200};
     constexpr double TIMER{10};
-    constexpr std::string_view STANDARD_MUSIC{"Voyage1970"};
-    constexpr std::string_view STANDARD_BACKGROUND{"BlueNebula"};
+    constexpr std::string_view STANDARD_MUSIC{"SeptetteForTheDeadPrincess"};
+    constexpr std::string_view STANDARD_BACKGROUND{"DeepPurpleNebula"};
 
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */);
     void ufo_system(rtype::ComponentManager &registry, float /* delta_time */);
