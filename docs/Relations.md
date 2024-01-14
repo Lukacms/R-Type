@@ -28,6 +28,9 @@ classDiagram
         +game_loop(ecs_manager, players)
         +collision_response(ecs_manager, players)
     }
+    class Room {
+        +launch_game()
+    }
     class PlayersManager {
         +add_player(endpoint, socket) Player&
         +delete_Player(endpoint)
@@ -36,11 +39,13 @@ classDiagram
     click Manager href "../Server/include/rtype/Manager.hh"
     click ThreadPool href "../Server/include/rtype/clients/ThreadPool.hh"
     click PlayersManager href "../Server/include/rtype/GameLogic/GameLogic.hh"
+    click PlayersManager href "../Server/include/rtype/GameLogic/Room.hh"
     main <-- ArgsParser : get the Arguments and handle errors
     main --> Manager
-    Manager ..> GameLogic
+    Manager ..> Room
     Manager ..> ThreadPool
     Manager ..> PlayersManager
+    Room ..> GameLogic
 ```
 
 ## RType-Utils
