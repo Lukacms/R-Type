@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-dl::DlLoader< TLoad >
+dl::DlLoader< TLoad > \- Windows version of dlloader class\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <DlLoader\&.hpp>\fP
 .SS "Public Member Functions"
 
 .in +1c
@@ -16,6 +19,10 @@ dl::DlLoader< TLoad >
 .RI "\fBDlLoader\fP (\fBDlLoader\fP &&to_move)=default"
 .br
 .ti -1c
+.RI "\fB~DlLoader\fP ()"
+.br
+.RI "delete pointer to TLoad, and free handle to shared library "
+.ti -1c
 .RI "\fBDlLoader\fP & \fBoperator=\fP (\fBDlLoader\fP const &to_copy)=delete"
 .br
 .ti -1c
@@ -24,10 +31,72 @@ dl::DlLoader< TLoad >
 .ti -1c
 .RI "TLoad & \fBget_class\fP () const"
 .br
+.RI "Get a reference of TLoad\&. "
+.ti -1c
+.RI "void \fBrelease\fP ()"
+.br
+.RI "Release the pointer to TLoad\&. Will then be equal to nullptr\&. "
 .ti -1c
 .RI "template<typename TSignature , typename\&.\&.\&. TValues> void \fBinit_class\fP (std::string const &path, std::string const &loader_func=DEFAULT_LOADER\&.data(), TValues &&\&.\&.\&.values)"
 .br
+.RI "Load shared library element into TLoad * with windows methods LoadLibrary and GetProcAddress\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<class TLoad>
+.br
+class dl::DlLoader< TLoad >"
+Windows version of dlloader class\&. 
+
+
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fITLoad\fP - template of the class to load 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+TLoad & 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "template<class TLoad > TLoad& \fBdl::DlLoader\fP< TLoad >::get_class () const\fC [inline]\fP"
+
+.PP
+Get a reference of TLoad\&. 
+.PP
+\fBReturns\fP
+.RS 4
+TLoad & 
+.RE
+.PP
+
+.SS "template<class TLoad > template<typename TSignature , typename\&.\&.\&. TValues> void \fBdl::DlLoader\fP< TLoad >::init_class (std::string const & path, std::string const & loader_func = \fCDEFAULT_LOADER\&.data()\fP, TValues &&\&.\&.\&. values)\fC [inline]\fP"
+
+.PP
+Load shared library element into TLoad * with windows methods LoadLibrary and GetProcAddress\&. 
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fITSignature\fP - signature for the function - must return void * - https://stackoverflow.com/questions/26792750/function-signatures-in-c-templates 
+.br
+\fITValues\fP - variadic templates, values to pass to TSignature loading function 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIpath\fP - path to shared libraries 
+.br
+\fIloader_func\fP - name of the loader function 
+.br
+\fIvalues\fP - TValues \&.\&.\&. 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

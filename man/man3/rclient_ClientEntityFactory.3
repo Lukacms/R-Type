@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rclient::ClientEntityFactory
+rclient::ClientEntityFactory \- Build entities from nlohmann::json config files\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <ClientEntityFactory\&.hh>\fP
 .SS "Classes"
 
 .in +1c
@@ -35,10 +38,57 @@ rclient::ClientEntityFactory
 .ti -1c
 .RI "static size_t \fBcreate\fP (std::size_t entity, const std::string &type, \fBrtype::ECSManager\fP &ecs_manager)"
 .br
+.RI "Create function\&. Call private create_json function\&. "
 .ti -1c
 .RI "static size_t \fBcreate_json\fP (std::size_t entity, const std::string &type, \fBrtype::ECSManager\fP &ecs_manager)"
 .br
+.RI "Building client's entity from server's entity id and nlohmann::json configuration file\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+Build entities from nlohmann::json config files\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "std::size_t rclient::ClientEntityFactory::create (std::size_t entity, const std::string & type, \fBrtype::ECSManager\fP & ecs_manager)\fC [static]\fP"
+
+.PP
+Create function\&. Call private create_json function\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIentity\fP - size_t 
+.br
+\fItype\fP - const string & 
+.br
+\fIecs_manager\fP - ECSManager & 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+id to entity - size_t 
+.RE
+.PP
+
+.SS "size_t rclient::ClientEntityFactory::create_json (std::size_t entity, const std::string & type, \fBrtype::ECSManager\fP & ecs_manager)\fC [static]\fP"
+
+.PP
+Building client's entity from server's entity id and nlohmann::json configuration file\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIentity\fP - size_t 
+.br
+\fItype\fP - const string & 
+.br
+\fIecs_manager\fP - ECSManager & 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+id to constructed entity - size_t 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

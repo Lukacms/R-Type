@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rclient::ArgsConfig
+rclient::ArgsConfig \- Parse args and return informations\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <ArgsConfig\&.hh>\fP
 .SS "Classes"
 
 .in +1c
@@ -35,7 +38,31 @@ rclient::ArgsConfig
 .ti -1c
 .RI "static \fBArguments\fP \fBparse_args\fP (int argc, std::span< const char * > argv)"
 .br
+.RI "Go through argv elements given in main and get infos\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+Parse args and return informations\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBrclient::Arguments\fP rclient::ArgsConfig::parse_args (int argc, std::span< const char * > argv)\fC [static]\fP"
+
+.PP
+Go through argv elements given in main and get infos\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIargc\fP - number of elements 
+.br
+\fIargv\fP - span<const char *> - safer way to handle argv 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+- \fBArguments\fP 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 
