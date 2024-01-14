@@ -86,7 +86,10 @@ namespace rtype
             template <class TComponent> TComponent &get_component(size_t entity)
             {
                 try {
-                    return m_component_manager.get_components<TComponent>()[entity].value();
+                    SparseArray<TComponent> &components = m_component_manager.get_components<TComponent>();
+                    if (!components[entity].has_value())
+                        throw ECSManager::ECSException("Component is not allocated\n");
+                    return components[entity].value();
                 } catch (ComponentManager::ComponentException &e) {
                     throw ECSManager::ECSException(e.what());
                 }

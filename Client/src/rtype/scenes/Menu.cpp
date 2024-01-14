@@ -62,7 +62,7 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     animate();
     for (size_t i{0}; i < 2; i++) {
         graphics.draw(m_sprites[i], m_transforms[i]);
-        graphics.draw(m_sprites[2], m_transforms[2 + i]);
+        //graphics.draw(m_sprites[2], m_transforms[2 + i]);
     }
     m_texts[0].origin = {graphics.get_text_width(m_texts[0]) / 2.0F, 0};
     button_handling(graphics);
@@ -74,8 +74,8 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     auto tmp_transform_2 = m_transforms[3];
     tmp_transform_2.position_x -= 50;
     tmp_transform_2.position_y -= 20;
-    graphics.draw(m_texts[1], tmp_transform_1);
-    graphics.draw(m_texts[2], tmp_transform_2);
+    //graphics.draw(m_texts[1], tmp_transform_1);
+    //graphics.draw(m_texts[2], tmp_transform_2);
     graphics.display();
 }
 

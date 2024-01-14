@@ -281,7 +281,7 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow, // NOLINT
                                                     rtype::ECSManager &manager)
 {
-    int success = std::rand() % 1;
+    int success = std::rand() % 30;
     auto &transforms = manager.get_components<rtype::TransformComponent>();
     auto &tags = manager.get_components<rtype::TagComponent>();
 
