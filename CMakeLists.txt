@@ -10,6 +10,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
+# setup version numbers
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR 2)
+set(VERSION_PATCH 1)
+
 # executables will be at the root of the folder
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
@@ -165,6 +170,8 @@ if (CMAKE_BUILD_TYPE MATCHES "Debug")
 elseif (CMAKE_BUILD_TYPE MATCHES "tsan")
     set(CMAKE_CXX_FLAGS
         "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
+elseif (CMAKE_BUILD_TYPE MATCHES "Release" AND NOT WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-exception-parameter -Wno-unused-variable")
 endif ()
 
 # Clang-tidy
@@ -227,6 +234,8 @@ if (RTYPE_BUILD_TESTS)
     add_subdirectory(Server/tests)
     add_subdirectory(Client/tests)
     add_subdirectory(RType-Utils/tests/)
+    add_subdirectory(GameEngine/tests/ECS/)
+    add_subdirectory(GameEngine/tests/Physics/)
 endif()
 
 if (RTYPE_BUILD_BENCHMARKS)
@@ -252,5 +261,13 @@ if (CMAKE_BUILD_TYPE MATCHES "Release")
     install(TARGETS r-type-utils RUNTIME DESTINATION bin)
     install(TARGETS r-type_server RUNTIME DESTINATION bin)
     install(TARGETS rtype-server-core RUNTIME DESTINATION bin)
+    install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets DESTINATION bin)
+    set(CPACK_PACKAGE_NAME "R-Type-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${CMAKE_BUILD_TYPE}-${CMAKE_CXX_COMPILER_VERSION}")
+    set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.md")
+    set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+    set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+    set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+    set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
+    set(CPACK_SET_DESTDIR ${PROJECT_SOURCE_DIR})
     include(CPack)
 endif ()

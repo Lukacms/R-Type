@@ -9,6 +9,7 @@
 
 #include <asio.hpp>
 #include <functional>
+#include <rtype/Background/BackgroundManager.hh>
 #include <rtype/ECSManager.hpp>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/scenes/IScene.hh>
@@ -18,6 +19,11 @@
 namespace rclient::scenes
 {
 
+    /**
+     * @class Game
+     * @brief Game Scene. Is a child of IScene
+     *
+     */
     class Game : public IScene
     {
         public:
@@ -41,6 +47,7 @@ namespace rclient::scenes
             void delete_entity(ntw::Communication &commn, State &state);
             void manage_entity(ntw::Communication &commn, State &state);
             void change_music(ntw::Communication &commn, rtype::IAudioModule &audio);
+            void change_background(ntw::Communication commn);
 
         private:
             dl::DlLoader<rtype::ECSManager> ecs;
@@ -50,6 +57,8 @@ namespace rclient::scenes
             /* to be able to send messages */
             asio::ip::udp::endpoint &endpoint;
             asio::ip::udp::socket &socket;
+
+            rclient::BackgroundManager background_manager{};
     };
 
     struct CommandHandler {

@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include <rtype/Components/TextComponent.hh>
-#include <rtype/IGraphicModule.hh>
 #include <array>
 #include <chrono>
 #include <functional>
+#include <rtype/Components/TextComponent.hh>
 #include <rtype/IAudioModule.hh>
+#include <rtype/IGraphicModule.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
@@ -23,6 +23,12 @@ namespace rclient::scenes
     constexpr int MUTE_BASE{100};
     constexpr int UNMUTE_BASE{50};
 
+    /**
+     * @class PauseMenu
+     * @brief Pause Menu scene. Is a child of IScene, and can be joined by pressing <ECS> key in
+     * game
+     *
+     */
     class PauseMenu : public IScene
     {
         public:

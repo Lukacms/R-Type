@@ -12,6 +12,10 @@
 #include <rtype/config/ConfigsFile.hh>
 
 /* static method */
+/**
+ * @brief static method to parse LEVEL_FOLDER file
+ * @throws ConfigsException if something goes wrong
+ */
 std::vector<rserver::config::Level> rserver::config::ConfigsFile::parse()
 {
     try {
@@ -23,6 +27,12 @@ std::vector<rserver::config::Level> rserver::config::ConfigsFile::parse()
     }
 }
 
+/**
+ * @brief Method called by parse, to open and parse json file with nlohmann::json
+ *
+ * @return vector<Level>
+ * @throws ConfigsException if something goes wrong
+ */
 std::vector<rserver::config::Level> rserver::config::ConfigsFile::do_parse()
 {
     for (const auto &path : std::filesystem::directory_iterator(config::LEVEL_FOLDER.data())) {
@@ -53,6 +63,11 @@ std::vector<rserver::config::Level> rserver::config::ConfigsFile::do_parse()
     return this->levels;
 }
 
+/**
+ * @brief Add enemies to level
+ *
+ * @param enemies - njson
+ */
 void rserver::config::ConfigsFile::add_enemies(const njson &enemies)
 {
     std::string tag{enemies["tag"]};

@@ -1,4 +1,4 @@
-.TH "rserver::Manager" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::Manager" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -44,15 +44,23 @@ rserver::Manager \- manager class for the server\&. Will handle retrieving commm
 .ti -1c
 .RI "void \fBstart_receive\fP ()"
 .br
+.RI "Handle network, messages recieved from clients\&. Also launched lobby functions that needs to communicate with clients\&. "
 .ti -1c
 .RI "void \fBinput_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
 .br
+.RI "Command handler for \fBManager\fP, handle the inputs sent from clients\&. "
 .ti -1c
 .RI "void \fBend_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
 .br
+.RI "Command handler for \fBManager\fP : end handler Delete player from rooms\&. "
 .ti -1c
 .RI "void \fBroom_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
 .br
+.RI "Handle room command from player\&. "
+.ti -1c
+.RI "void \fBsolo_handler\fP (\fBPlayer\fP &, std::vector< std::string > &)"
+.br
+.RI "Handle room command from player\&. "
 .in -1c
 .SS "Static Public Member Functions"
 
@@ -62,13 +70,16 @@ rserver::Manager \- manager class for the server\&. Will handle retrieving commm
 .br
 .RI "static method to launch project\&. Define \fBManager\fP, run game logic on thread and start running asio networking "
 .ti -1c
-.RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &to_send, const \fBPlayer\fP &client, asio::ip::udp::socket &udp_socket)"
+.RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &to_send, \fBPlayer\fP &client, asio::ip::udp::socket &udp_socket)"
 .br
 .RI "Send a message to a specific client\&. "
 .ti -1c
 .RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &to_send, const \fBPlayersManager\fP &players, asio::ip::udp::socket &udp_socket, const PlayerStatus &status)"
 .br
 .RI "Send a message to all player that have the same status at the one given in param\&. "
+.ti -1c
+.RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &to_send, const \fBPlayersManager\fP &players, asio::ip::udp::socket &udp_socket, const std::size_t &room_id)"
+.br
 .ti -1c
 .RI "static void \fBsend_to_all\fP (\fBntw::Communication\fP &to_send, \fBPlayersManager\fP &players, asio::ip::udp::socket &udp_socket)"
 .br
@@ -103,6 +114,30 @@ Constructor by move\&.
 
 .SH "Member Function Documentation"
 .PP 
+.SS "void rserver::Manager::end_handler (\fBrserver::Player\fP & player, std::vector< std::string > &)"
+
+.PP
+Command handler for \fBManager\fP : end handler Delete player from rooms\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.RE
+.PP
+
+.SS "void rserver::Manager::input_handler (\fBrserver::Player\fP & player, std::vector< std::string > & args)"
+
+.PP
+Command handler for \fBManager\fP, handle the inputs sent from clients\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.br
+\fIargs\fP - vector<string> & 
+.RE
+.PP
+
 .SS "void rserver::Manager::launch (asio::ip::port_type port = \fCDEFAULT_PORT\fP)\fC [static]\fP"
 
 .PP
@@ -130,18 +165,16 @@ operator = to move
 .RE
 .PP
 
-.SS "void rserver::Manager::send_message (const \fBntw::Communication\fP & to_send, const \fBPlayer\fP & client, asio::ip::udp::socket & udp_socket)\fC [static]\fP"
+.SS "void rserver::Manager::room_handler (\fBrserver::Player\fP & player, std::vector< std::string > & args)"
 
 .PP
-Send a message to a specific client\&. 
+Handle room command from player\&. 
 .PP
 \fBParameters\fP
 .RS 4
-\fIto_send\fP - Communication - struct containing message to send 
+\fIplayer\fP - \fBPlayer\fP & 
 .br
-\fIclient\fP - \fBPlayer\fP - containing udp endpoint to send message to 
-.br
-\fIudp_socket\fP - socket - udp::socket to send message from 
+\fIargs\fP - vector<string> & 
 .RE
 .PP
 
@@ -162,6 +195,21 @@ Send a message to all player that have the same status at the one given in param
 .RE
 .PP
 
+.SS "void rserver::Manager::send_message (const \fBntw::Communication\fP & to_send, \fBPlayer\fP & client, asio::ip::udp::socket & udp_socket)\fC [static]\fP"
+
+.PP
+Send a message to a specific client\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_send\fP - Communication - struct containing message to send 
+.br
+\fIclient\fP - \fBPlayer\fP - containing udp endpoint to send message to 
+.br
+\fIudp_socket\fP - socket - udp::socket to send message from 
+.RE
+.PP
+
 .SS "void rserver::Manager::send_to_all (\fBntw::Communication\fP & to_send, \fBPlayersManager\fP & players, asio::ip::udp::socket & udp_socket)\fC [static]\fP"
 
 .PP
@@ -174,6 +222,19 @@ Send message to all clients that the \fBManager\fP has\&.
 \fIplayers\fP 
 .br
 \fIudp_socket\fP 
+.RE
+.PP
+
+.SS "void rserver::Manager::solo_handler (\fBrserver::Player\fP & player, std::vector< std::string > &)"
+
+.PP
+Handle room command from player\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & 
+.br
+\fIargs\fP - vector<string> & 
 .RE
 .PP
 

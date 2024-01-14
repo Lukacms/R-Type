@@ -8,6 +8,13 @@
 #include <rtype/config/ArgsConfig.hh>
 #include <utility>
 
+/**
+ * @brief Go through argv elements given in main and get infos
+ *
+ * @param argc - number of elements
+ * @param argv - span<const char *> - safer way to handle argv
+ * @return - Arguments
+ */
 rclient::Arguments rclient::ArgsConfig::parse_args(int argc, std::span<const char *> argv)
 {
     Arguments infos{};

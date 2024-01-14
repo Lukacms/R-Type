@@ -32,7 +32,7 @@ namespace rtype
             void update() final;
 
         private:
-            rtype::SFXManager m_sfx{};
-            rtype::BGMManager m_bgm{};
+            rtype::SFXManager m_sfx;
+            rtype::BGMManager m_bgm;
     };
 } // namespace rtype

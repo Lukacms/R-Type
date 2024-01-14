@@ -6,6 +6,7 @@
 */
 
 #include <array>
+#include <iostream>
 #include <rtype.hh>
 #include <rtype/Components/TransformComponent.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
@@ -19,32 +20,65 @@ static const std::array<rserver::Vector2f, 4> POSITIONS{{
     {.pos_x = rserver::POSITION_CHANGE * -1, .pos_y = 0},
 }};
 
+/**
+ * @brief Command handler for Manager, handle the inputs sent from clients
+ *
+ * @param player - Player &
+ * @param args - vector<string> &
+ */
 void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::string> &args)
 {
-    auto &room_ecs{
-        this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).get_ecs()};
-    auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
+    try {
+        std::unique_lock<std::shared_mutex> lock{
+            this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).ecs_mutex};
+        auto &room_ecs{
+            this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).get_ecs()};
+        auto &component{
+            room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
 
-    if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
-        throw ManagerException{WRONG_ARGUMENTS.data()};
-    }
-    if (args[0][0] == '4') {
-        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
-        shoot_according_level(player, room_ecs);
+        if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
+            throw ManagerException{WRONG_ARGUMENTS.data()};
+        }
+        if (args[0][0] == '4') {
+            shoot_according_level(player, room_ecs, component);
+            return;
+        }
+        component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
+        component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
+    } catch (game::Room::RoomException & /* e */) {
+        try {
+            auto &solo{this->get_solo_game(player)};
+            std::unique_lock<std::shared_mutex> lock{solo.get_mutex()};
+            auto &room_ecs{solo.get_ecs()};
+            auto &component{
+                room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
+
+            if (args.size() != 1 || !(is_number(args[0])) || args[0][0] < '0' || args[0][0] > '4') {
+                throw ManagerException{WRONG_ARGUMENTS.data()};
+            }
+            if (args[0][0] == '4') {
+                shoot_according_level(player, room_ecs, component);
+                return;
+            }
+            component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
+            component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
+        } catch (game::solo::SoloGame::SoloException & /* e */) {
+            Manager::send_message({ntw::NetworkType::Ko}, player, this->udp_socket);
+        } catch (rtype::ECSManager::ECSException & /* e */) {
+            return;
+        }
+    } catch (rtype::ECSManager::ECSException & /* e */) {
         return;
     }
-    component.position_x += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_x;
-    component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
 }
 
 /**
  * @brief Create bullet according to the level of the player
  */
 void rserver::Manager::shoot_according_level(rserver::Player &player, // NOLINT
-                                             rtype::ECSManager &room_ecs)
+                                             rtype::ECSManager &room_ecs,
+                                             rtype::TransformComponent &component)
 {
-    auto &component{room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
-
     try {
         if (player.get_level() == 1) {
             size_t bullet_id{ServerEntityFactory::create("PlayerBullet", room_ecs)};
@@ -77,6 +111,8 @@ void rserver::Manager::shoot_according_level(rserver::Player &player, // NOLINT
             transform_bullet3.velocity_y = VELOCITY_BULLET * -1;
         }
     } catch (ServerEntityFactory::FactoryException &e) {
+        throw ManagerException(e.what());
+    } catch (rtype::ECSManager::ECSException &e) {
         throw ManagerException(e.what());
     }
 }

@@ -1,11 +1,14 @@
-.TH "rserver::PlayersManager" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::PlayersManager" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-rserver::PlayersManager
+rserver::PlayersManager \- Manage the players, to add / delete them\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <PlayersManager\&.hh>\fP
 .SS "Classes"
 
 .in +1c
@@ -31,25 +34,137 @@ rserver::PlayersManager
 .ti -1c
 .RI "\fBPlayer\fP & \fBget_by_id\fP (asio::ip::port_type const &port)"
 .br
+.RI "Get a player by its port id\&. "
 .ti -1c
 .RI "\fBPlayer\fP & \fBget_by_entity_id\fP (std::size_t const &entity)"
+.br
+.RI "Get a player by its entity id\&. "
+.ti -1c
+.RI "\fBPlayer\fP & \fBget_by_entity_room_id\fP (std::size_t const &entity, const std::size_t &room)"
 .br
 .ti -1c
 .RI "\fBrserver::Player\fP & \fBadd_player\fP (asio::ip::udp::endpoint &endpoint)"
 .br
+.RI "Add a player to the \fBManager\fP\&. Will create a player from the given endpoint\&. "
 .ti -1c
 .RI "\fBrserver::Player\fP & \fBadd_player\fP (\fBPlayer\fP &to_add)"
 .br
+.RI "Add an already existing player to the \fBManager\fP\&. "
 .ti -1c
 .RI "std::size_t \fBlength\fP () const"
 .br
+.RI "Return the number of players in the \fBManager\fP\&. "
 .ti -1c
-.RI "const std::vector< \fBPlayer\fP > & \fBget_all_players\fP () const"
+.RI "std::vector< \fBPlayer\fP > \fBget_all_players\fP () const"
 .br
+.RI "Get all the players in the \fBManager\fP\&. "
 .ti -1c
 .RI "void \fBremove_player\fP (\fBPlayer\fP &player)"
 .br
+.RI "remove a player from the \fBManager\fP Won't throw error if the player is not in the manager "
 .in -1c
+.SH "Detailed Description"
+.PP 
+Manage the players, to add / delete them\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBrserver::Player\fP & rserver::PlayersManager::add_player (asio::ip::udp::endpoint & endpoint)"
+
+.PP
+Add a player to the \fBManager\fP\&. Will create a player from the given endpoint\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIendpoint\fP - asio::udp::endpoint - to create the player 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fBPlayer\fP & 
+.RE
+.PP
+
+.SS "\fBrserver::Player\fP & rserver::PlayersManager::add_player (\fBrserver::Player\fP & to_add)"
+
+.PP
+Add an already existing player to the \fBManager\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_add\fP - \fBPlayer\fP & 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fBPlayer\fP & 
+.RE
+.PP
+
+.SS "std::vector< \fBrserver::Player\fP > rserver::PlayersManager::get_all_players () const"
+
+.PP
+Get all the players in the \fBManager\fP\&. 
+.PP
+\fBReturns\fP
+.RS 4
+vector<Player> 
+.RE
+.PP
+
+.SS "\fBrserver::Player\fP & rserver::PlayersManager::get_by_entity_id (std::size_t const & entity)"
+
+.PP
+Get a player by its entity id\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIentity\fP - size_t 
+.RE
+.PP
+\fBExceptions\fP
+.RS 4
+\fI\fBPlayersException\fP\fP - if entity id is not linked to any player 
+.RE
+.PP
+
+.SS "\fBrserver::Player\fP & rserver::PlayersManager::get_by_id (asio::ip::port_type const & port)"
+
+.PP
+Get a player by its port id\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIport\fP - asio::port_type - id of player 
+.RE
+.PP
+\fBExceptions\fP
+.RS 4
+\fI\fBPlayersException\fP\fP - if port_type is not linked to any player 
+.RE
+.PP
+
+.SS "std::size_t rserver::PlayersManager::length () const"
+
+.PP
+Return the number of players in the \fBManager\fP\&. 
+.PP
+\fBReturns\fP
+.RS 4
+size_t 
+.RE
+.PP
+
+.SS "void rserver::PlayersManager::remove_player (\fBrserver::Player\fP & player)"
+
+.PP
+remove a player from the \fBManager\fP Won't throw error if the player is not in the manager 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayer\fP & to delete 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

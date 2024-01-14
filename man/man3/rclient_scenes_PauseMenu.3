@@ -1,11 +1,14 @@
-.TH "rclient::scenes::PauseMenu" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.TH "rclient::scenes::PauseMenu" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-rclient::scenes::PauseMenu
+rclient::scenes::PauseMenu \- Pause \fBMenu\fP scene\&. Is a child of \fBIScene\fP, and can be joined by pressing <ECS> key in game\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <PauseMenu\&.hh>\fP
 .PP
 Inherits \fBrclient::scenes::IScene\fP\&.
 .SS "Public Member Functions"
@@ -14,6 +17,7 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "\fBPauseMenu\fP (unsigned int width=rtype::STANDARD_WIDTH, unsigned int height=rtype::STANDARD_HEIGHT)"
 .br
+.RI "Constructor for \fBPauseMenu\fP\&. "
 .ti -1c
 .RI "\fBPauseMenu\fP (\fBPauseMenu\fP const &to_copy)=delete"
 .br
@@ -29,13 +33,79 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
 .br
+.RI "Display elements to window\&. Override method of \fBIScene\fP\&. "
 .ti -1c
 .RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
+.RI "Handle user events\&. "
 .ti -1c
 .RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
+.RI "Handle network elements recieved from server\&. Here only End is useful\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+Pause \fBMenu\fP scene\&. Is a child of \fBIScene\fP, and can be joined by pressing <ECS> key in game\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rclient::scenes::PauseMenu::PauseMenu (unsigned int width = \fCrtype::STANDARD_WIDTH\fP, unsigned int height = \fCrtype::STANDARD_HEIGHT\fP)"
+
+.PP
+Constructor for \fBPauseMenu\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIwidth\fP - u_int 
+.br
+\fIheight\fP - u_int 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rclient::scenes::PauseMenu::display (\fBrtype::IGraphicModule\fP & graphics)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Display elements to window\&. Override method of \fBIScene\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::PauseMenu::handle_events (\fBrtype::IGraphicModule\fP & graphics, \fBrtype::IAudioModule\fP & audio, State & state)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Handle user events\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.br
+\fIstate\fP - State & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::PauseMenu::handle_network (\fBntw::Communication\fP & commn, \fBrtype::IAudioModule\fP & audio, State & state)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Handle network elements recieved from server\&. Here only End is useful\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.br
+\fIstate\fP - State & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
 
 .SH "Author"
 .PP 

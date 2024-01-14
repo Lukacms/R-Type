@@ -28,6 +28,7 @@ namespace rclient::scenes
 
     constexpr std::string_view NEW_ROOM{"NEW ROOM"};
     constexpr std::string_view JOIN_ROOM{"JOIN ROOM"};
+    constexpr std::string_view SOLO_GAME{"SOLO GAME"};
     constexpr std::string_view FONT_FILE{"./assets/font.ttf"};
     constexpr std::string_view ROOM_CONTAINER{"./assets/Room.png"};
     static const sf::FloatRect VIEWPORT{0.25F, 0.05F, 0.6F, 0.6F};
@@ -35,6 +36,11 @@ namespace rclient::scenes
     constexpr int TEXT_POS_LOUNGE{100};
     constexpr int ROOM_TIMEOUT{200};
 
+    /**
+     * @class Lounge
+     * @brief Lounge scene. Is a child of IScene
+     *
+     */
     class Lounge : public IScene
     {
         public:
@@ -67,6 +73,7 @@ namespace rclient::scenes
             sf::Text text{};
             sf::FloatRect new_box{};
             sf::FloatRect join_box{};
+            sf::FloatRect solo_box{};
             unsigned int width{};
             unsigned int height{};
             std::array<std::string, 1> paths{"./assets/SpaceBG.png"};

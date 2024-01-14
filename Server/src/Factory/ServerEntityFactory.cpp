@@ -14,6 +14,13 @@
 #include <rtype/ECSManager.hpp>
 #include <rtype/Factory/ServerEntityFactory.hh>
 
+/**
+ * @brief Create a new entity and register it on the ECS
+ *
+ * @param type - string - typename of the entity
+ * @param ecs_manager - ECSManager
+ * @return size_t - id of the new entity
+ */
 size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSManager &ecs_manager)
 {
     try {
@@ -23,21 +30,29 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
     }
 }
 
+/**
+ * @brief Called by the method create. Read the "./assets/conigs/entities.json" file to register
+ * entities
+ *
+ * @param type - string - typename of entity
+ * @param ecs_manager - ECSManager
+ * @return - size_t - id of entity
+ */
 size_t rserver::ServerEntityFactory::create_json(const std::string &type,
                                                  rtype::ECSManager &ecs_manager)
 {
-    std::ifstream file{ENTITIES_PATH.data()};
-    njson entities{};
-    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-    auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
-
-    if (!file.is_open())
-        throw FactoryException("Couldn't find entities infos");
-    entities = njson::parse(file);
     try {
+        std::ifstream file{ENTITIES_PATH.data()};
+        njson entities{};
+        auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
+        auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
+        auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
+        auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
+        auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
+
+        if (!file.is_open())
+            throw FactoryException("Couldn't find entities infos");
+        entities = njson::parse(file);
         for (auto &entity : entities["entities"]) {
             if (entity["tag"] != type)
                 continue;
@@ -55,102 +70,10 @@ size_t rserver::ServerEntityFactory::create_json(const std::string &type,
         }
     } catch (nlohmann::json::exception &e) {
         DEBUG(("%s%s", e.what(), ENDL));
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw FactoryException(e.what());
     }
     throw FactoryException("Unknown entity type");
-}
-
-size_t rserver::ServerEntityFactory::create_enemy(rtype::ECSManager &ecs_manager)
-{
-    size_t entity{ecs_manager.create_entity()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-
-    health.insert_at(entity, BASIC_HEALTH);
-    collider.insert_at(entity, BASIC_COLLIDER);
-    tag.insert_at(entity, rtype::TagComponent{"BasicEnemy"});
-    transform.insert_at(entity, TRANS_ENEMY);
-    return entity;
-}
-
-size_t rserver::ServerEntityFactory::create_player(rtype::ECSManager &ecs_manager)
-{
-    size_t entity{ecs_manager.create_entity()};
-    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-
-    health.insert_at(entity, BASIC_HEALTH);
-    collider.insert_at(entity, BASIC_COLLIDER);
-    tag.insert_at(entity, rtype::TagComponent{"Player"});
-    transform.insert_at(entity, TRANS_PLAYER);
-    return entity;
-}
-
-size_t rserver::ServerEntityFactory::create_kamikaze_enemy(rtype::ECSManager &ecs_manager)
-{
-    size_t entity{ecs_manager.create_entity()};
-    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-    auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
-
-    health.insert_at(entity, BASIC_HEALTH);
-    collider.insert_at(entity, KAMIKAZE_COLLIDER);
-    tag.insert_at(entity, rtype::TagComponent{"KamikazeEnemy"});
-    transform.insert_at(entity, TRANS_ENEMY);
-    clocks.insert_at(entity, {});
-    return entity;
-}
-
-size_t rserver::ServerEntityFactory::create_bullet(rtype::ECSManager &ecs_manager)
-{
-    size_t entity{ecs_manager.create_entity()};
-    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-
-    health.insert_at(entity, rtype::HealthComponent{0, 0});
-    collider.insert_at(entity, COLLIDER_BULLET);
-    tag.insert_at(entity, rtype::TagComponent{"PlayerBullet"});
-    transform.insert_at(entity, TRANS_BULLET);
-    transform[entity]->velocity_x = 1;
-    return entity;
-}
-
-size_t rserver::ServerEntityFactory::create_upgrade(rtype::ECSManager &ecs_manager)
-{
-    size_t entity = ecs_manager.create_entity();
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-
-    collider.insert_at(entity, rtype::BoxColliderComponent{36, 36});
-    tag.insert_at(entity, rtype::TagComponent{"Upgrade"});
-    transform.insert_at(entity, rtype::TransformComponent{0, 0, 0, 0, 1, 1});
-    transform[entity]->velocity_x = -5;
-    return entity;
-}
-
-size_t rserver::ServerEntityFactory::create_UFO_enemy(rtype::ECSManager &ecs_manager)
-{
-    size_t entity{ecs_manager.create_entity()};
-    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-    auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
-
-    health.insert_at(entity, BASIC_HEALTH);
-    collider.insert_at(entity, {64, 64});
-    tag.insert_at(entity, rtype::TagComponent{"UFOEnemy"});
-    transform.insert_at(entity, {});
-    clocks.insert_at(entity, {});
-    return entity;
 }
 
 /* exception */

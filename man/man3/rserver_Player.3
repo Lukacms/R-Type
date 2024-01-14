@@ -1,68 +1,88 @@
-.TH "rserver::Player" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::Player" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-rserver::Player
+rserver::Player \- Handle connected client\&. Has infos concerning its level, which rooms it's connected to, and its entity value\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Player\&.hh>\fP
 .SS "Public Member Functions"
 
 .in +1c
 .ti -1c
 .RI "\fBPlayer\fP (asio::ip::udp::endpoint p_endpoint)"
 .br
+.RI "Constructor for \fBPlayer\fP class, need to be given an endpoint\&. "
 .ti -1c
 .RI "\fBPlayer\fP (\fBPlayer\fP const &to_copy)"
 .br
+.RI "Copy constructor for \fBPlayer\fP class\&. "
 .ti -1c
 .RI "\fBPlayer\fP (\fBPlayer\fP &&to_move)"
 .br
+.RI "Move constructor for \fBPlayer\fP class\&. "
 .ti -1c
 .RI "\fBPlayer\fP & \fBoperator=\fP (\fBPlayer\fP const &to_copy)=delete"
 .br
 .ti -1c
 .RI "\fBPlayer\fP & \fBoperator=\fP (\fBPlayer\fP &&to_move)"
 .br
+.RI "Move operator for client class\&. "
 .ti -1c
 .RI "bool \fBoperator==\fP (asio::ip::port_type &port) const"
 .br
+.RI "Equality operator for players\&. "
 .ti -1c
 .RI "asio::ip::port_type \fBget_port\fP () const"
 .br
+.RI "Get the port of the player's endpoint\&. "
 .ti -1c
 .RI "asio::ip::udp::endpoint \fBget_endpoint\fP () const"
 .br
+.RI "Get the player's endpoint\&. "
 .ti -1c
 .RI "const std::size_t & \fBget_entity_value\fP () const"
 .br
+.RI "Get the player's entity value\&. "
 .ti -1c
 .RI "const PlayerStatus & \fBget_status\fP () const"
 .br
+.RI "Get the player's status\&. "
 .ti -1c
 .RI "const long & \fBget_room_id\fP () const"
 .br
+.RI "Get the player's room id To see which room it's in\&. "
 .ti -1c
 .RI "std::size_t \fBget_level\fP () const"
 .br
+.RI "Get the player's level\&. "
 .ti -1c
 .RI "void \fBset_room_id\fP (const long &new_id)"
 .br
+.RI "Set room id for player, when they join one\&. "
 .ti -1c
 .RI "void \fBset_status\fP (const PlayerStatus &new_status)"
 .br
+.RI "Set the player status to desired value\&. "
 .ti -1c
 .RI "void \fBset_entity_value\fP (std::size_t const &value)"
 .br
+.RI "Set the entity value to desired value\&. "
 .ti -1c
 .RI "void \fBlevel_up\fP ()"
 .br
+.RI "Increase the player's level by one, if it's under 3 Will allow the player to have better weapons\&. "
 .ti -1c
 .RI "void \fBlock\fP ()"
 .br
+.RI "Lock the \fBPlayer\fP's mutex\&. "
 .ti -1c
 .RI "void \fBunlock\fP ()"
 .br
+.RI "Unlock the player's mutex\&. "
 .in -1c
 .SS "Public Attributes"
 
@@ -71,6 +91,177 @@ rserver::Player
 .RI "std::shared_mutex \fBmutex\fP {}"
 .br
 .in -1c
+.SH "Detailed Description"
+.PP 
+Handle connected client\&. Has infos concerning its level, which rooms it's connected to, and its entity value\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rserver::Player::Player (asio::ip::udp::endpoint p_endpoint)"
+
+.PP
+Constructor for \fBPlayer\fP class, need to be given an endpoint\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIp_endpoint\fP - asio::udp::endpoint 
+.RE
+.PP
+
+.SS "rserver::Player::Player (\fBPlayer\fP const & to_copy)"
+
+.PP
+Copy constructor for \fBPlayer\fP class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_copy\fP - const \fBPlayer\fP & 
+.RE
+.PP
+
+.SS "rserver::Player::Player (\fBrserver::Player\fP && to_move)"
+
+.PP
+Move constructor for \fBPlayer\fP class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBPlayer\fP && 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "asio::ip::udp::endpoint rserver::Player::get_endpoint () const"
+
+.PP
+Get the player's endpoint\&. 
+.PP
+\fBReturns\fP
+.RS 4
+asio::udp::endpoint 
+.RE
+.PP
+
+.SS "const std::size_t & rserver::Player::get_entity_value () const"
+
+.PP
+Get the player's entity value\&. 
+.PP
+\fBReturns\fP
+.RS 4
+size_t 
+.RE
+.PP
+
+.SS "std::size_t rserver::Player::get_level () const"
+
+.PP
+Get the player's level\&. 
+.PP
+\fBReturns\fP
+.RS 4
+size_t 
+.RE
+.PP
+
+.SS "asio::ip::port_type rserver::Player::get_port () const"
+
+.PP
+Get the port of the player's endpoint\&. 
+.PP
+\fBReturns\fP
+.RS 4
+asio::port_type 
+.RE
+.PP
+
+.SS "const long & rserver::Player::get_room_id () const"
+
+.PP
+Get the player's room id To see which room it's in\&. 
+.PP
+\fBReturns\fP
+.RS 4
+long (can be -1 if player is not in room) 
+.RE
+.PP
+
+.SS "const rserver::PlayerStatus & rserver::Player::get_status () const"
+
+.PP
+Get the player's status\&. 
+.PP
+\fBReturns\fP
+.RS 4
+PlayerStatus { Lobby, Room, Game } 
+.RE
+.PP
+
+.SS "\fBrserver::Player\fP & rserver::Player::operator= (\fBPlayer\fP && to_move)"
+
+.PP
+Move operator for client class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBPlayer\fP && 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+- reference to \fBPlayer\fP 
+.RE
+.PP
+
+.SS "bool rserver::Player::operator== (asio::ip::port_type & port) const"
+
+.PP
+Equality operator for players\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIport\fP - asio::port_type 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+bool 
+.RE
+.PP
+
+.SS "void rserver::Player::set_entity_value (std::size_t const & value)"
+
+.PP
+Set the entity value to desired value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIvalue\fP - size_t 
+.RE
+.PP
+
+.SS "void rserver::Player::set_room_id (const long & new_id)"
+
+.PP
+Set room id for player, when they join one\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fInew_id\fP long 
+.RE
+.PP
+
+.SS "void rserver::Player::set_status (const PlayerStatus & new_status)"
+
+.PP
+Set the player status to desired value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fInew_status\fP - PlayerStatus 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

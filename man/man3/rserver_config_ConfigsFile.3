@@ -1,4 +1,4 @@
-.TH "rserver::config::ConfigsFile" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.TH "rserver::config::ConfigsFile" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -31,9 +31,11 @@ rserver::config::ConfigsFile
 .ti -1c
 .RI "std::vector< \fBLevel\fP > \fBdo_parse\fP ()"
 .br
+.RI "Method called by parse, to open and parse json file with nlohmann::json\&. "
 .ti -1c
 .RI "void \fBadd_enemies\fP (const njson &enemies)"
 .br
+.RI "Add enemies to level\&. "
 .in -1c
 .SS "Static Public Member Functions"
 
@@ -41,7 +43,48 @@ rserver::config::ConfigsFile
 .ti -1c
 .RI "static std::vector< \fBLevel\fP > \fBparse\fP ()"
 .br
+.RI "static method to parse LEVEL_FOLDER file "
 .in -1c
+.SH "Member Function Documentation"
+.PP 
+.SS "void rserver::config::ConfigsFile::add_enemies (const njson & enemies)"
+
+.PP
+Add enemies to level\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIenemies\fP - njson 
+.RE
+.PP
+
+.SS "std::vector< \fBrserver::config::Level\fP > rserver::config::ConfigsFile::do_parse ()"
+
+.PP
+Method called by parse, to open and parse json file with nlohmann::json\&. 
+.PP
+\fBReturns\fP
+.RS 4
+vector<Level> 
+.RE
+.PP
+\fBExceptions\fP
+.RS 4
+\fI\fBConfigsException\fP\fP if something goes wrong 
+.RE
+.PP
+
+.SS "std::vector< \fBrserver::config::Level\fP > rserver::config::ConfigsFile::parse ()\fC [static]\fP"
+
+.PP
+static method to parse LEVEL_FOLDER file 
+.PP
+\fBExceptions\fP
+.RS 4
+\fI\fBConfigsException\fP\fP if something goes wrong 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

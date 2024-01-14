@@ -28,6 +28,11 @@ namespace rclient
     const sf::Vector2f ORIGIN_ENEMY{16.5, 7.5};
     static const std::string_view ENTITIES_PATH{"./assets/configs/entities.json"};
 
+    /**
+     * @class ClientEntityFactory
+     * @brief Build entities from nlohmann::json config files
+     *
+     */
     class ClientEntityFactory
     {
             enum class Type { ENEMY, PLAYER, OTHER_PLAYER, BULLET };
@@ -62,11 +67,5 @@ namespace rclient
             };
 
         private:
-            static size_t create_enemy(std::size_t entity, rtype::ECSManager &ecs_manager);
-            static size_t create_player(std::size_t entity, rtype::ECSManager &ecs_manager);
-            static size_t create_kamikaze_enemy(std::size_t entity, rtype::ECSManager &ecs_manager);
-            static size_t create_bullet(std::size_t entity, rtype::ECSManager &ecs_manager);
-            static size_t create_upgrade(std::size_t entity, rtype::ECSManager &ecs_manager);
-            static size_t create_UFO_enemy(std::size_t entity, rtype::ECSManager &ecs_manager);
     };
 } // namespace rclient

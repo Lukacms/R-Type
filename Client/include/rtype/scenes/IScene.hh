@@ -40,6 +40,11 @@ namespace rclient::scenes
         End,
     };
 
+    /**
+     * @class IScene
+     * @brief Interface for scenes. Has methods to display, handle events and network inputs
+     *
+     */
     class IScene
     {
         public:

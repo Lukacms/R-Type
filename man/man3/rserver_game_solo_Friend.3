@@ -1,0 +1,75 @@
+.TH "rserver::game::solo::Friend" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::game::solo::Friend \- Should have been an AI for the solo game\&. Not yet implemented\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Friend\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFriend\fP (\fBFriend\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBFriend\fP (\fBFriend\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "\fBFriend\fP & \fBoperator=\fP (\fBFriend\fP const &to_copy)=default"
+.br
+.ti -1c
+.RI "\fBFriend\fP & \fBoperator=\fP (\fBFriend\fP &&to_move)=default"
+.br
+.ti -1c
+.RI "void \fBadd_move_to_queue\fP (const int &move)"
+.br
+.RI "Add a move to the queue, which will be played later on\&. "
+.ti -1c
+.RI "void \fBset_entity_id\fP (std::size_t new_id)"
+.br
+.RI "Set a new entity id\&. "
+.ti -1c
+.RI "std::size_t \fBget_entity_id\fP () const"
+.br
+.ti -1c
+.RI "std::size_t \fBget_level\fP () const"
+.br
+.ti -1c
+.RI "int \fBpop\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Should have been an AI for the solo game\&. Not yet implemented\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "void rserver::game::solo::Friend::add_move_to_queue (const int & move)"
+
+.PP
+Add a move to the queue, which will be played later on\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fImove\fP - int 
+.RE
+.PP
+
+.SS "void rserver::game::solo::Friend::set_entity_id (std::size_t new_id)"
+
+.PP
+Set a new entity id\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fInew_id\fP - std::size_t 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

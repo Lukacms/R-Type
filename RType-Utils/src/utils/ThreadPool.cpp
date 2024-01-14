@@ -7,29 +7,50 @@
 
 #include <algorithm>
 #include <mutex>
-#include <rtype/clients/ThreadPool.hh>
+#include <rtype/utils/ThreadPool.hh>
 
 /* constructors / destructors */
-rserver::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(p_nb_threads)}
+/**
+ * @brief Constructor for ThreadPool. Construct nb_threads threads and assign them the method
+ * ThreadPool::thread_loop
+ *
+ * @param p_nb_threads - u_int
+ */
+rtype::utils::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(p_nb_threads)}
 {
     for (u_int i{0}; i < this->nb_threads; i++) {
         this->threads.emplace_back(&ThreadPool::thread_loop, this);
     }
 }
 
-rserver::ThreadPool::~ThreadPool()
+/**
+ * @brief Destructor for thread pool. Stops threads
+ */
+rtype::utils::ThreadPool::~ThreadPool()
 {
-    this->stop();
+    if (this->is_busy())
+        this->stop();
 }
 
-rserver::ThreadPool::ThreadPool(rserver::ThreadPool &&to_move)
+/**
+ * @brief Constructor by move
+ *
+ * @param to_move - ThreadPool &&
+ */
+rtype::utils::ThreadPool::ThreadPool(rtype::utils::ThreadPool &&to_move)
     : nb_threads{std::move(to_move.nb_threads)}, queue{std::move(to_move.queue)}
 {
     to_move.stop();
 }
 
 /* override operator */
-rserver::ThreadPool &rserver::ThreadPool::operator=(ThreadPool &&to_move)
+/**
+ * @brief Operator equal by move
+ *
+ * @param to_move - ThreadPool &&
+ * @return - ThreadPool & - this
+ */
+rtype::utils::ThreadPool &rtype::utils::ThreadPool::operator=(ThreadPool &&to_move)
 {
     this->nb_threads = std::move(to_move.nb_threads);
     this->queue = std::move(to_move.queue);
@@ -39,7 +60,13 @@ rserver::ThreadPool &rserver::ThreadPool::operator=(ThreadPool &&to_move)
 }
 
 /* methods */
-void rserver::ThreadPool::add_job(const std::function<void()> &job)
+/**
+ * @brief Add a job to do to the queue of jobs. The job must be a function returning void and taking
+ * no param (can and should be a lambda)
+ *
+ * @param job - std::function<void()> &
+ */
+void rtype::utils::ThreadPool::add_job(const std::function<void()> &job)
 {
     {
         std::unique_lock<std::mutex> lock{this->mutex};
@@ -48,7 +75,11 @@ void rserver::ThreadPool::add_job(const std::function<void()> &job)
     this->condition.notify_one();
 }
 
-void rserver::ThreadPool::thread_loop()
+/**
+ * @brief Function that is called for every thread. Run as long as the variable `should_terminate`
+ * is set to true
+ */
+void rtype::utils::ThreadPool::thread_loop()
 {
     while (!this->should_terminate) {
         std::function<void()> job;
@@ -65,7 +96,12 @@ void rserver::ThreadPool::thread_loop()
     }
 }
 
-bool rserver::ThreadPool::is_busy()
+/**
+ * @brief Return if the pool is busy, which means if there are jobs in the queue
+ *
+ * @return bool
+ */
+bool rtype::utils::ThreadPool::is_busy()
 {
     bool busy{false};
 
@@ -76,7 +112,10 @@ bool rserver::ThreadPool::is_busy()
     return busy;
 }
 
-void rserver::ThreadPool::stop()
+/**
+ * @brief Stops every thread of the pool
+ */
+void rtype::utils::ThreadPool::stop()
 {
     {
         std::unique_lock<std::mutex> lock{this->mutex};

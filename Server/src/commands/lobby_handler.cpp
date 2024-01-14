@@ -7,6 +7,10 @@
 
 #include <rtype/Manager.hh>
 
+/**
+ * @brief Handler for lobby
+ * Send infos about rooms to players in lobby
+ */
 void rserver::Manager::lobby_handler()
 {
     const auto &existing_rooms{this->rooms.get_rooms()};

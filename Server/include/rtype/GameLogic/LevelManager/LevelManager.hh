@@ -1,6 +1,9 @@
-//
-// Created by kane on 08/01/24.
-//
+/*
+** EPITECH PROJECT, 2023
+** LevelManager
+** File description:
+** LevelManager
+*/
 
 #pragma once
 
@@ -13,6 +16,11 @@ namespace rserver
 {
     constexpr int WAVE_MODULO{580};
 
+    /**
+     * @class LevelManager
+     * @brief To handle levels handling, timing them, and launching the waves
+     *
+     */
     class LevelManager
     {
         public:
@@ -28,7 +36,9 @@ namespace rserver
             bool has_enough_level();
             bool is_level_finished();
             void change_level();
+            void reset_clock();
             std::string get_current_music();
+            std::string get_current_background();
 
         private:
             std::string m_current_level;

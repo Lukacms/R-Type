@@ -1,11 +1,14 @@
-.TH "rclient::scenes::Game" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.TH "rclient::scenes::Game" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-rclient::scenes::Game
+rclient::scenes::Game \- \fBGame\fP Scene\&. Is a child of \fBIScene\fP\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Game\&.hh>\fP
 .PP
 Inherits \fBrclient::scenes::IScene\fP\&.
 .SS "Public Member Functions"
@@ -14,6 +17,7 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "\fBGame\fP (asio::ip::udp::endpoint &pendpoint, asio::ip::udp::socket &psocket)"
 .br
+.RI "Constructor for \fBGame\fP class\&. "
 .ti -1c
 .RI "\fBGame\fP (\fBGame\fP const &to_copy)=delete"
 .br
@@ -29,31 +33,192 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
 .br
+.RI "Override function of \fBIScene\fP, to display elements to graphical window\&. "
 .ti -1c
 .RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
+.RI "Override function of \fBIScene\fP\&. Handle events recieved from the user\&. "
 .ti -1c
 .RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
+.RI "Handle network function\&. Override of \fBIScene\fP, launches function pointer to handlers\&. "
 .ti -1c
 .RI "void \fBcreate_entity\fP (\fBntw::Communication\fP &commn, State &state)"
 .br
+.RI "Create a new entity with the ecs and \fBClientEntityFactory\fP\&. "
 .ti -1c
 .RI "void \fBmove_entity\fP (\fBntw::Communication\fP &commn, State &state)"
 .br
+.RI "Move an entity with a TransformComponent\&. "
 .ti -1c
 .RI "void \fBend_game\fP (\fBntw::Communication\fP &commn, State &state)"
 .br
+.RI "Finish game and close client\&. "
 .ti -1c
 .RI "void \fBdelete_entity\fP (\fBntw::Communication\fP &commn, State &state)"
 .br
+.RI "Delete an entity\&. "
 .ti -1c
 .RI "void \fBmanage_entity\fP (\fBntw::Communication\fP &commn, State &state)"
 .br
+.RI "Manage an entity: create it if needed, then move it\&. "
 .ti -1c
 .RI "void \fBchange_music\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio)"
 .br
+.RI "Change music to the one given\&. "
+.ti -1c
+.RI "void \fBchange_background\fP (\fBntw::Communication\fP commn)"
+.br
+.RI "Change the background to the one given by the server\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+\fBGame\fP Scene\&. Is a child of \fBIScene\fP\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rclient::scenes::Game::Game (asio::ip::udp::endpoint & pendpoint, asio::ip::udp::socket & psocket)"
+
+.PP
+Constructor for \fBGame\fP class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpendpoint\fP - asio::udp::endpoint & 
+.br
+\fIpsocket\fP - asio::udp::socket & 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rclient::scenes::Game::change_background (\fBntw::Communication\fP commn)"
+
+.PP
+Change the background to the one given by the server\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication 
+.RE
+.PP
+
+.SS "void rclient::scenes::Game::change_music (\fBntw::Communication\fP & commn, \fBrtype::IAudioModule\fP & audio)"
+
+.PP
+Change music to the one given\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.br
+\fIaudio\fP - IAudioModule & 
+.RE
+.PP
+
+.SS "void rclient::scenes::Game::create_entity (\fBntw::Communication\fP & commn, State & state)"
+
+.PP
+Create a new entity with the ecs and \fBClientEntityFactory\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.RE
+.PP
+
+.SS "void rclient::scenes::Game::delete_entity (\fBntw::Communication\fP & commn, State & state)"
+
+.PP
+Delete an entity\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.RE
+.PP
+
+.SS "void rclient::scenes::Game::display (\fBrtype::IGraphicModule\fP & graphics)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Override function of \fBIScene\fP, to display elements to graphical window\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::Game::end_game (\fBntw::Communication\fP & commn, State & state)"
+
+.PP
+Finish game and close client\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIstate\fP - State & 
+.RE
+.PP
+
+.SS "void rclient::scenes::Game::handle_events (\fBrtype::IGraphicModule\fP & graphics, \fBrtype::IAudioModule\fP & audio, State & state)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Override function of \fBIScene\fP\&. Handle events recieved from the user\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.br
+\fIaudio\fP - IAudioModule & 
+.br
+\fIstate\fP - State & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::Game::handle_network (\fBntw::Communication\fP & commn, \fBrtype::IAudioModule\fP & audio, State & state)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Handle network function\&. Override of \fBIScene\fP, launches function pointer to handlers\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.br
+\fIaudio\fP - IAudioModule & 
+.br
+\fIstate\fP - State & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::Game::manage_entity (\fBntw::Communication\fP & commn, State & state)"
+
+.PP
+Manage an entity: create it if needed, then move it\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.br
+\fIstate\fP - State & 
+.RE
+.PP
+
+.SS "void rclient::scenes::Game::move_entity (\fBntw::Communication\fP & commn, State & state)"
+
+.PP
+Move an entity with a TransformComponent\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

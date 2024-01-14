@@ -22,7 +22,6 @@ namespace ntw
 
     enum class NetworkType {
         None,        // Nothing : None
-        Start,       // Start the game : Start
         Connection,  // client trying to join a server's game : Connection
         Refusal,     // 1 client cannot join a server's game : Refusal
         Ok,          // Everything is good : Ok
@@ -35,11 +34,16 @@ namespace ntw
         Input, // Send the input of the player to server : Input [UP/RIGHT/DOWN/LEFT/W(Shooting)]
         Room, // Server -> send infos about room [id] [nb_player] [status], Client -> join room [id]
               // or create one
-        Music, // Send the music that the client should play, [MusicString],
+        Music,      // Send the music that the client should play, [MusicString],
+        Background, // Send the background that the client should display, [BackgroundString],
+        Solo,       // Player [nb ais] (default to 1) -> wanting to be in solo game
     };
 
 #pragma pack(push, 1)
 
+    /**
+     * @brief Structure to pass through asio methods to communicate in binary
+     */
     struct Communication {
         public:
             /* variables */
@@ -47,6 +51,12 @@ namespace ntw
             std::array<char, MAX_SIZE> args{};
 
             /* methods */
+            /**
+             * @brief add a parameter to the array of char. The max value is 128
+             *
+             * @tparam TType template - should be number or string
+             * @param param - template parameter to add to the array of char
+             */
             template <typename TType> void add_param(TType param)
             {
                 std::string to_add{};
@@ -68,7 +78,12 @@ namespace ntw
                 }
             }
 
-            std::vector<std::string> deserialize()
+            /**
+             * @brief go from array<char, 128> to vector of string, by separating it with spaces
+             *
+             * @return vector of string. May be empty, but function won't throw exception
+             */
+            std::vector<std::string> deserialize() noexcept
             {
                 std::vector<std::string> dest{};
                 size_t pos = 0;

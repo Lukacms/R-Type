@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 #include <rtype/Components/BoxColliderComponent.hh>
+#include <rtype/Components/ClockComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Components/TransformComponent.hh>
@@ -17,8 +18,18 @@
 TEST(ServerEntityFactory, constructor_with_exception)
 {
     dl::DlLoader<rtype::ECSManager> ecs{};
+    rtype::SparseArray<rtype::BoxColliderComponent> boxes{};
+    rtype::SparseArray<rtype::TransformComponent> transform{};
+    rtype::SparseArray<rtype::TagComponent> tags{};
+    rtype::SparseArray<rtype::HealthComponent> healths{};
+    rtype::SparseArray<rtype::ClockComponent> clocks{};
 
     ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
+    ecs.get_class().register_component(transform);
+    ecs.get_class().register_component(boxes);
+    ecs.get_class().register_component(tags);
+    ecs.get_class().register_component(healths);
+    ecs.get_class().register_component(clocks);
     EXPECT_THROW(rserver::ServerEntityFactory::create("unknown type", ecs.get_class()),
                  rserver::ServerEntityFactory::FactoryException);
 }
@@ -32,8 +43,6 @@ TEST(ServerEntityFactory, constructor_without_register)
                  rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("Player", ecs.get_class()),
                  rtype::ECSManager::ECSException);
-    EXPECT_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()),
-                 rtype::ECSManager::ECSException);
     EXPECT_THROW(rserver::ServerEntityFactory::create("PlayerBullet", ecs.get_class()),
                  rtype::ECSManager::ECSException);
 }
@@ -45,14 +54,15 @@ TEST(ServerEntityFactory, constructor_no_throw)
     rtype::SparseArray<rtype::TransformComponent> transform{};
     rtype::SparseArray<rtype::TagComponent> tags{};
     rtype::SparseArray<rtype::HealthComponent> healths{};
+    rtype::SparseArray<rtype::ClockComponent> clocks{};
     ecs.init_class<std::unique_ptr<rtype::ECSManager>()>("./libs/r-type-ecs.so");
 
     ecs.get_class().register_component(transform);
     ecs.get_class().register_component(boxes);
     ecs.get_class().register_component(tags);
     ecs.get_class().register_component(healths);
+    ecs.get_class().register_component(clocks);
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("BasicEnemy", ecs.get_class()));
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("Player", ecs.get_class()));
-    EXPECT_NO_THROW(rserver::ServerEntityFactory::create("OtherPlayer", ecs.get_class()));
     EXPECT_NO_THROW(rserver::ServerEntityFactory::create("PlayerBullet", ecs.get_class()));
 }

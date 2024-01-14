@@ -1,4 +1,4 @@
-.TH "rclient::Client" 3 "Fri Jan 12 2024" "My Project" \" -*- nroff -*-
+.TH "rclient::Client" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -6,18 +6,31 @@ rclient::Client
 .SH SYNOPSIS
 .br
 .PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBClientException\fP"
+.br
+.in -1c
 .SS "Public Member Functions"
 
 .in +1c
 .ti -1c
 .RI "\fBClient\fP (const \fBrclient::Arguments\fP &infos)"
 .br
+.RI "Constructor for \fBClient\fP class\&. Init dlloaded classes, and everything needed\&. "
 .ti -1c
 .RI "\fBClient\fP (\fBClient\fP const &to_copy)=delete"
 .br
 .ti -1c
 .RI "\fBClient\fP (\fBClient\fP &&to_move)"
 .br
+.RI "Move constructor for client's class\&. "
+.ti -1c
+.RI "\fB~Client\fP ()"
+.br
+.RI "Destructor for \fBClient\fP class\&. "
 .ti -1c
 .RI "\fBClient\fP & \fBoperator=\fP (\fBClient\fP const &to_copy)=delete"
 .br
@@ -27,6 +40,7 @@ rclient::Client
 .ti -1c
 .RI "void \fBloop\fP ()"
 .br
+.RI "\fBClient\fP's loop, launches display, handle network and events\&. "
 .in -1c
 .SS "Static Public Member Functions"
 
@@ -34,10 +48,69 @@ rclient::Client
 .ti -1c
 .RI "static int \fBlaunch\fP (const \fBArguments\fP &infos)"
 .br
+.RI "static method to create and launch client graphics, first on Menu scene "
 .ti -1c
 .RI "static void \fBsend_message\fP (const \fBntw::Communication\fP &commn, const asio::ip::udp::endpoint &endpoint, asio::ip::udp::socket &socket)"
 .br
+.RI "Send a message to the server\&. "
 .in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rclient::Client::Client (const \fBrclient::Arguments\fP & infos)"
+
+.PP
+Constructor for \fBClient\fP class\&. Init dlloaded classes, and everything needed\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIinfos\fP - \fBArguments\fP & 
+.RE
+.PP
+
+.SS "rclient::Client::Client (\fBrclient::Client\fP && to_move)"
+
+.PP
+Move constructor for client's class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBClient\fP && 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "int rclient::Client::launch (const \fBArguments\fP & infos)\fC [static]\fP"
+
+.PP
+static method to create and launch client graphics, first on Menu scene 
+.PP
+\fBParameters\fP
+.RS 4
+\fIinfos\fP - const \fBArguments\fP & 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+- int 
+.RE
+.PP
+
+.SS "void rclient::Client::send_message (const \fBntw::Communication\fP & commn, const asio::ip::udp::endpoint & endpoint, asio::ip::udp::socket & socket)\fC [static]\fP"
+
+.PP
+Send a message to the server\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - const Communication & 
+.br
+\fIendpoint\fP - const asio::udp::endpoint & 
+.br
+\fIsocket\fP - asio::udp::socket & 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

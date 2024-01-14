@@ -7,6 +7,11 @@
 
 #include <rtype/utils/Clock.hh>
 
+/**
+ * @brief Get elapsed time in raw chrono format
+ *
+ * @return chrono::duration<double>
+ */
 std::chrono::duration<double> rtype::utils::Clock::get_elapsed_time()
 {
     this->updated = std::chrono::steady_clock::now();
@@ -14,6 +19,11 @@ std::chrono::duration<double> rtype::utils::Clock::get_elapsed_time()
     return updated - start;
 }
 
+/**
+ * @brief Get elapsed time in seconds
+ *
+ * @return double
+ */
 double rtype::utils::Clock::get_elapsed_time_in_s()
 {
     auto tmp{this->get_elapsed_time()};
@@ -21,6 +31,11 @@ double rtype::utils::Clock::get_elapsed_time_in_s()
     return tmp.count();
 }
 
+/**
+ * @brief Get elapsed time in milliseconds
+ *
+ * @return double
+ */
 double rtype::utils::Clock::get_elapsed_time_in_ms()
 {
     this->updated = std::chrono::steady_clock::now();

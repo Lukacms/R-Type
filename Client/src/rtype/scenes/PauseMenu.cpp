@@ -10,6 +10,12 @@
 #include <rtype/scenes/PauseMenu.hh>
 #include <rtype/utils/Color.hh>
 
+/**
+ * @brief Constructor for PauseMenu
+ *
+ * @param width - u_int
+ * @param height - u_int
+ */
 rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
     : m_width(width), m_height(height)
 {
@@ -67,12 +73,17 @@ rclient::scenes::PauseMenu::PauseMenu(unsigned int width, unsigned int height)
                                   static_cast<float>(m_height) / TEXT_HEIGHT_DIV - TEXT_HEIGHT_DIV};
 }
 
+/**
+ * @brief Display elements to window. Override method of IScene
+ *
+ * @param graphics - IGraphicModule &
+ */
 void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
 {
     for (size_t i{0}; i < 2; i++)
         graphics.draw(m_sprites[i], m_transforms[i]);
     for (size_t i{0}; i < 4; i++) {
-        if (m_texts[i].origin.x < 0.1f && m_texts[i].origin.y > -0.1F)
+        if (m_texts[i].origin.x < 0.1F && m_texts[i].origin.y > -0.1F)
             m_texts[i].origin = {graphics.get_text_width(m_texts[i]) / 2.0F, 0};
         graphics.draw(m_texts[i], m_texts_transforms[i]);
     }
@@ -80,6 +91,12 @@ void rclient::scenes::PauseMenu::display(rtype::IGraphicModule &graphics)
     graphics.display();
 }
 
+/**
+ * @brief Handle user events
+ *
+ * @param graphics - IGraphicModule &
+ * @param state - State &
+ */
 void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics,
                                                rtype::IAudioModule & /*audio*/, State &state)
 {
@@ -87,8 +104,15 @@ void rclient::scenes::PauseMenu::handle_events(rtype::IGraphicModule &graphics,
         state = State::Game;
 }
 
-void rclient::scenes::PauseMenu::handle_network(ntw::Communication & /* commn */,
-                                                rtype::IAudioModule & /*audio*/,
-                                                State & /* state */)
+/**
+ * @brief Handle network elements recieved from server. Here only End is useful
+ *
+ * @param commn - Communication &
+ * @param state - State &
+ */
+void rclient::scenes::PauseMenu::handle_network(ntw::Communication &commn,
+                                                rtype::IAudioModule & /*audio*/, State &state)
 {
+    if (commn.type == ntw::NetworkType::End)
+        state = State::End;
 }

@@ -5,14 +5,21 @@
 ** room_handler
 */
 
+#include <iostream>
 #include <rtype.hh>
 #include <rtype/Manager.hh>
 
+/**
+ * @brief Handle room command from player
+ *
+ * @param player - Player &
+ * @param args - vector<string> &
+ */
 void rserver::Manager::room_handler(rserver::Player &player, std::vector<std::string> &args)
 {
     try {
         if (args.empty()) {
-            this->rooms.add_room(player, this->threads.is_busy(), this->udp_socket);
+            this->rooms.add_room(player, this->threads.is_busy(), this->udp_socket, this->players);
             Manager::send_message({ntw::NetworkType::ToGame}, player, this->udp_socket);
             return;
         }

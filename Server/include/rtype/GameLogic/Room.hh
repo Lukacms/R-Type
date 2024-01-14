@@ -15,6 +15,7 @@
 #include <rtype/PhysicsManager.hh>
 #include <rtype/clients/Player.hh>
 #include <rtype/dlloader/DlLoader.hpp>
+#include <shared_mutex>
 #include <vector>
 
 namespace rserver::game
@@ -23,14 +24,27 @@ namespace rserver::game
     constexpr int MAX_ROOMS{100};
     constexpr int MAX_PLAYERS{4};
 
-    constexpr int TIMEOUT_WAITING{2 * 60};
+    // constexpr int TIMEOUT_WAITING{2 * 60};
+    constexpr int TIMEOUT_WAITING{10};
 
     enum class RoomStatus { Lounge, Waiting, InGame };
 
+    /**
+     * @class Room
+     * @brief Room, containing players and a GameLogic to launch
+     * The room starts in waiting mode, waiting for 2+ people to connect, and then launch a game
+     * with levels, ...
+     *
+     */
     class Room
     {
         public:
-            Room(asio::ip::udp::socket &psocket, std::size_t pid);
+            /* variables */
+            std::shared_mutex ecs_mutex{};
+
+            /* functions */
+            Room() = delete;
+            Room(asio::ip::udp::socket &psocket, std::size_t pid, PlayersManager &pmanager);
             Room(Room const &to_copy) = delete;
             Room(Room &&to_move);
             ~Room();
@@ -67,15 +81,14 @@ namespace rserver::game
 
         private:
             asio::ip::udp::socket &socket;
-            std::shared_mutex ecs_mutex{};
             std::size_t id{0};
             dl::DlLoader<rtype::ECSManager> ecs{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
 
-            GameLogic logic{socket, ecs_mutex};
+            GameLogic logic{socket, ecs_mutex, id};
             std::vector<asio::ip::port_type> players{};
-            PlayersManager manager{};
-            RoomStatus status{RoomStatus::Lounge};
+            PlayersManager &manager;
+            RoomStatus status{RoomStatus::Waiting};
             rtype::utils::Clock timeout_connect{};
     };
 

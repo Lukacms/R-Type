@@ -1,0 +1,195 @@
+.TH "rserver::game::solo::SoloGame" 3 "Sun Jan 14 2024" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rserver::game::solo::SoloGame \- Class to handle games where the player decides to be alone\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Solo\&.hh>\fP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBSoloException\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSoloGame\fP (asio::ip::udp::socket &psocket, \fBPlayer\fP &pplayer)"
+.br
+.RI "Constructor for the class\&. Initialize dlloaded entities and other params\&. "
+.ti -1c
+.RI "\fBSoloGame\fP (\fBSoloGame\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBSoloGame\fP (\fBSoloGame\fP &&to_move)"
+.br
+.RI "Move constructor\&. "
+.ti -1c
+.RI "\fBSoloGame\fP & \fBoperator=\fP (\fBSoloGame\fP const &to_copy)=delete"
+.br
+.ti -1c
+.RI "\fBSoloGame\fP & \fBoperator=\fP (\fBSoloGame\fP &&to_move)"
+.br
+.RI "Operator override for move\&. "
+.ti -1c
+.RI "void \fBgame_turn\fP (\fBrtype::utils::Clock\fP &clock)"
+.br
+.RI "Play a game's turn\&. Launches the game logic, throw in case of exception, and udpate entities\&. "
+.ti -1c
+.RI "\fBPlayer\fP & \fBget_player\fP () const"
+.br
+.RI "Get the class' player\&. "
+.ti -1c
+.RI "void \fBadd_move_to_friend\fP (const int &move)"
+.br
+.RI "Add a move made by the player to the ais\&. "
+.ti -1c
+.RI "\fBFriend\fP & \fBget_friend_by_id\fP (const std::size_t &entity_id)"
+.br
+.ti -1c
+.RI "void \fBdelete_friend\fP (const std::size_t &entity_id)"
+.br
+.RI "Delete an AI, when colliding on enemy\&. "
+.ti -1c
+.RI "void \fBend_game\fP ()"
+.br
+.RI "End the game\&. "
+.ti -1c
+.RI "\fBrtype::ECSManager\fP & \fBget_ecs\fP () const"
+.br
+.RI "Get the class' ecs\&. "
+.ti -1c
+.RI "std::shared_mutex & \fBget_mutex\fP ()"
+.br
+.RI "Get a reference to the class' mutex\&. "
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::shared_mutex \fBmutex\fP {}"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Class to handle games where the player decides to be alone\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rserver::game::solo::SoloGame::SoloGame (asio::ip::udp::socket & psocket, \fBPlayer\fP & pplayer)"
+
+.PP
+Constructor for the class\&. Initialize dlloaded entities and other params\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpsocket\fP - udp::socket & 
+.br
+\fIpplayer\fP - \fBPlayer\fP & 
+.RE
+.PP
+
+.SS "rserver::game::solo::SoloGame::SoloGame (\fBSoloGame\fP && to_move)"
+
+.PP
+Move constructor\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBSoloGame\fP && 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rserver::game::solo::SoloGame::add_move_to_friend (const int & move)"
+
+.PP
+Add a move made by the player to the ais\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fImove\fP - const int & 
+.RE
+.PP
+
+.SS "void rserver::game::solo::SoloGame::delete_friend (const std::size_t & entity_id)"
+
+.PP
+Delete an AI, when colliding on enemy\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIentity_id\fP - const size_t & 
+.RE
+.PP
+
+.SS "void rserver::game::solo::SoloGame::game_turn (\fBrtype::utils::Clock\fP & clock)"
+
+.PP
+Play a game's turn\&. Launches the game logic, throw in case of exception, and udpate entities\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIclock\fP - Clock & 
+.RE
+.PP
+
+.SS "\fBrtype::ECSManager\fP & rserver::game::solo::SoloGame::get_ecs () const"
+
+.PP
+Get the class' ecs\&. 
+.PP
+\fBReturns\fP
+.RS 4
+ECSManager & 
+.RE
+.PP
+
+.SS "std::shared_mutex & rserver::game::solo::SoloGame::get_mutex ()"
+
+.PP
+Get a reference to the class' mutex\&. 
+.PP
+\fBReturns\fP
+.RS 4
+shared_mutex & 
+.RE
+.PP
+
+.SS "\fBrserver::Player\fP & rserver::game::solo::SoloGame::get_player () const"
+
+.PP
+Get the class' player\&. 
+.PP
+\fBReturns\fP
+.RS 4
+
+.RE
+.PP
+
+.SS "\fBrserver::game::solo::SoloGame\fP & rserver::game::solo::SoloGame::operator= (\fBSoloGame\fP && to_move)"
+
+.PP
+Operator override for move\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBSoloGame\fP && 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fBSoloGame\fP & - *this 
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for My Project from the source code\&.

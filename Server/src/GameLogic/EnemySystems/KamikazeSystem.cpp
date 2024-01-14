@@ -1,6 +1,9 @@
-//
-// Created by kane on 09/01/24.
-//
+/*
+** EPITECH PROJECT, 2023
+** EnemySystems
+** File description:
+** KamikazeSystem
+*/
 
 #include <algorithm>
 #include <cmath>
@@ -11,6 +14,14 @@
 
 namespace rserver::game
 {
+    /**
+     * @brief Function called by KamikazeSystem, used to find the nearest player in which it'll be
+     * locked
+     *
+     * @param transforms - <TransformComponent>
+     * @param tags - <TagComponent>
+     * @param enemy_entity - size_t - id of enemy
+     */
     static void find_nearest_player(rtype::SparseArray<rtype::TransformComponent> &transforms,
                                     rtype::SparseArray<rtype::TagComponent> &tags,
                                     std::size_t enemy_entity)
@@ -23,11 +34,11 @@ namespace rserver::game
             if (tags[entity]->tag == "Player")
                 players.emplace_back(transforms[entity].value());
         }
-        auto lambda = [&](rtype::TransformComponent &p1, rtype::TransformComponent &p2) -> bool {
-            return std::sqrt(std::pow(p1.position_x - transforms[enemy_entity]->position_x, 2) +
-                             std::pow(p1.position_y - transforms[enemy_entity]->position_y, 2)) <
-                std::sqrt(std::pow(p2.position_x - transforms[enemy_entity]->position_x, 2) +
-                          std::pow(p2.position_y - transforms[enemy_entity]->position_y, 2));
+        auto lambda = [&](rtype::TransformComponent &p_1, rtype::TransformComponent &p_2) -> bool {
+            return std::sqrt(std::pow(p_1.position_x - transforms[enemy_entity]->position_x, 2) +
+                             std::pow(p_1.position_y - transforms[enemy_entity]->position_y, 2)) <
+                std::sqrt(std::pow(p_2.position_x - transforms[enemy_entity]->position_x, 2) +
+                          std::pow(p_2.position_y - transforms[enemy_entity]->position_y, 2));
         };
         std::sort(players.begin(), players.end(), lambda);
         if (players.empty()) {
@@ -45,6 +56,12 @@ namespace rserver::game
             (focused_player.position_y - transforms[enemy_entity]->position_y) / magnitude;
     }
 
+    /**
+     * @brief System for the kamikaze enemy. Enemy that register your position, and throw itself at
+     * you, trying to touch you
+     *
+     * @param registry ComponentManager
+     */
     void kamikaze_system(rtype::ComponentManager &registry, float /* delta_time */)
     {
         auto &clocks = registry.get_components<rtype::ClockComponent>();

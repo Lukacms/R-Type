@@ -12,14 +12,16 @@
 
 #include <asio.hpp>
 #include <exception>
+#include <rtype/Components/TransformComponent.hh>
 #include <rtype/ECSManager.hpp>
 #include <rtype/GameLogic/RoomsManager.hh>
+#include <rtype/GameLogic/solo/Solo.hh>
 #include <rtype/SparseArray.hpp>
 #include <rtype/clients/Player.hh>
 #include <rtype/clients/PlayersManager.hh>
-#include <rtype/clients/ThreadPool.hh>
 #include <rtype/dlloader/DlLoader.hpp>
 #include <rtype/network/Network.hpp>
+#include <rtype/utils/ThreadPool.hh>
 #include <shared_mutex>
 #include <string_view>
 #include <vector>
@@ -58,7 +60,7 @@ namespace rserver
 
             /* methods */
             static void launch(asio::ip::port_type port = DEFAULT_PORT);
-            static void send_message(const ntw::Communication &to_send, const Player &client,
+            static void send_message(const ntw::Communication &to_send, Player &client,
                                      asio::ip::udp::socket &udp_socket);
             /**
              * @brief Send a message to all player that have the same status at the one given in
@@ -72,6 +74,9 @@ namespace rserver
             static void send_message(const ntw::Communication &to_send,
                                      const PlayersManager &players,
                                      asio::ip::udp::socket &udp_socket, const PlayerStatus &status);
+            static void send_message(const ntw::Communication &to_send,
+                                     const PlayersManager &players,
+                                     asio::ip::udp::socket &udp_socket, const std::size_t &room_id);
             static void send_to_all(ntw::Communication &to_send, PlayersManager &players,
                                     asio::ip::udp::socket &udp_socket);
 
@@ -83,6 +88,7 @@ namespace rserver
             void input_handler(Player &, std::vector<std::string> &);
             void end_handler(Player &, std::vector<std::string> &);
             void room_handler(Player &, std::vector<std::string> &);
+            void solo_handler(Player &, std::vector<std::string> &);
 
             /* exception */
             class ManagerException : public std::exception
@@ -112,10 +118,9 @@ namespace rserver
 
             /* main variables */
             PlayersManager players{};
-            ThreadPool threads{};
-            game::RoomsManager rooms{this->players};
-            game::GameLogic logic;
-            dl::DlLoader<rtype::ECSManager> ecs{};
+            rtype::utils::ThreadPool threads{};
+            game::RoomsManager rooms{};
+            std::vector<game::solo::SoloGame> solos{};
             dl::DlLoader<rtype::PhysicsManager> physics{};
 
             /* utils */
@@ -129,9 +134,12 @@ namespace rserver
             void refuse_client(asio::ip::udp::endpoint &client);
             void add_new_player(asio::ip::udp::endpoint &client);
             void lobby_handler();
-            void shoot_according_level(Player &, rtype::ECSManager &);
-            void run_game_logic();
+            void shoot_according_level(Player &, rtype::ECSManager &, rtype::TransformComponent &);
+            void run_game_logic(rtype::utils::Clock &timer, rtype::utils::Clock &delta,
+                                std::mutex &clocks_mutex);
             void run_all_rooms_logics(rtype::utils::Clock &delta);
+            void run_solo_games(rtype::utils::Clock &delta);
+            [[nodiscard]] game::solo::SoloGame &get_solo_game(Player &player);
     };
 
     struct CommandHandler {

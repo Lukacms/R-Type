@@ -10,6 +10,12 @@
 #include <rtype/scenes/IScene.hh>
 #include <rtype/scenes/Menu.hh>
 
+/**
+ * @brief Menu constructor. Create all assets needed
+ *
+ * @param width - u_int
+ * @param height - u_int
+ */
 rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     : m_width(width), m_height(height)
 {
@@ -31,11 +37,11 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_texts[2].font_path = "./assets/font.ttf";
     m_texts[2].font_size = 20;
 
-    m_sprites[0].texture_path = "./assets/SpaceBG.png";
+    m_sprites[0].texture_path = "BackgroundScreen";
     m_sprites[0].origin = {0, 0};
-    m_sprites[1].texture_path = "./assets/Rtype-logo2.png";
+    m_sprites[1].texture_path = "Logo";
     m_sprites[1].origin = {LOGO_ORIGIN_X, 0};
-    m_sprites[2].texture_path = "./assets/button.png";
+    m_sprites[2].texture_path = "Button";
     m_sprites[2].origin = {100, 50};
     m_sprites[2].rectangle.width = 200;
     m_sprites[2].rectangle.height = 100;
@@ -56,13 +62,18 @@ rclient::scenes::Menu::Menu(unsigned int width, unsigned int height)
     m_transforms[4].position_y = static_cast<float>(m_height) / TEXT_HEIGHT_DIV;
 }
 
+/**
+ * @brief Display method. Override function of IScene
+ *
+ * @param graphics - IGraphicModule &
+ */
 void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
     animate();
     for (size_t i{0}; i < 2; i++) {
         graphics.draw(m_sprites[i], m_transforms[i]);
-        graphics.draw(m_sprites[2], m_transforms[2 + i]);
+        // graphics.draw(m_sprites[2], m_transforms[2 + i]);
     }
     m_texts[0].origin = {graphics.get_text_width(m_texts[0]) / 2.0F, 0};
     button_handling(graphics);
@@ -74,11 +85,17 @@ void rclient::scenes::Menu::display(rtype::IGraphicModule &graphics)
     auto tmp_transform_2 = m_transforms[3];
     tmp_transform_2.position_x -= 50;
     tmp_transform_2.position_y -= 20;
-    graphics.draw(m_texts[1], tmp_transform_1);
-    graphics.draw(m_texts[2], tmp_transform_2);
+    // graphics.draw(m_texts[1], tmp_transform_1);
+    // graphics.draw(m_texts[2], tmp_transform_2);
     graphics.display();
 }
 
+/**
+ * @brief Handle events recieved by the user
+ *
+ * @param graphics - IGraphicModule &
+ * @param state - IAudioModule &
+ */
 void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics,
                                           rtype::IAudioModule & /*audio*/, State &state)
 {
@@ -86,6 +103,9 @@ void rclient::scenes::Menu::handle_events(rtype::IGraphicModule &graphics,
         state = State::Lounge;
 }
 
+/**
+ * @brief Animate logo
+ */
 void rclient::scenes::Menu::animate() // NOLINT
 {
     auto now = std::chrono::steady_clock::now();
@@ -131,6 +151,11 @@ void rclient::scenes::Menu::handle_network(ntw::Communication & /* commn */,
 {
 }
 
+/**
+ * @brief Handle buttons click
+ *
+ * @param graphical_module - IGraphicModule &
+ */
 void rclient::scenes::Menu::button_handling(rtype::IGraphicModule &graphical_module)
 {
     if (graphical_module.is_sprite_left_click(m_sprites[2], m_transforms[2])) {
@@ -143,6 +168,11 @@ void rclient::scenes::Menu::button_handling(rtype::IGraphicModule &graphical_mod
     }
 }
 
+/**
+ * @brief Handle text entered for port / host
+ *
+ * @param graphical_module - IGraphicModule &
+ */
 void rclient::scenes::Menu::key_handling(rtype::IGraphicModule &graphical_module)
 {
     char tmp{'\0'};

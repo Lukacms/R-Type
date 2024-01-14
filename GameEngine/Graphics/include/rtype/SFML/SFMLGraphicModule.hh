@@ -12,6 +12,7 @@
 #include <rtype/IGraphicModule.hh>
 #include <rtype/Keys.hh>
 #include <rtype/SFML/InputManager.hh>
+#include <rtype/SFML/TextureLibrary.hh>
 #include <rtype/SparseArray.hpp>
 #include <string_view>
 
@@ -74,5 +75,6 @@ namespace rtype
             sf::VideoMode m_mode;
             sf::RenderWindow m_window;
             InputManager m_input{};
+            TextureLibrary m_texture_library{};
     };
 } // namespace rtype
