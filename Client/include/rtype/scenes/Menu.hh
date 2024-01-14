@@ -20,6 +20,11 @@
 
 namespace rclient::scenes
 {
+    /**
+     * @class Menu
+     * @brief Menu scene. Is a child of IScene, and the first scene of the game
+     *
+     */
     class Menu : public IScene
     {
         public:

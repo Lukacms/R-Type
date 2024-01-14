@@ -29,6 +29,11 @@ namespace rclient::components
     constexpr int POS4{40 * 5};
     constexpr int POS5{20};
 
+    /**
+     * @class RoomInfos
+     * @brief Infos about rooms, how to display them, ...
+     *
+     */
     class RoomInfos
     {
         public:

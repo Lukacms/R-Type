@@ -6,6 +6,9 @@
 #include <iostream>
 #include <rtype/Background/BackgroundManager.hh>
 
+/**
+ * @brief Constructor of BackgroundManager
+ */
 rclient::BackgroundManager::BackgroundManager()
 {
     m_backgrounds[0].transform = rtype::TransformComponent{0, 0, 0, 0, 1, 1};
@@ -30,6 +33,11 @@ rclient::BackgroundManager::BackgroundManager()
     }
 }
 
+/**
+ * @brief Method to change the background with a fading effect
+ *
+ * @param name - string &
+ */
 void rclient::BackgroundManager::change_background(std::string &name)
 {
     if (name == m_new_background)
@@ -38,11 +46,19 @@ void rclient::BackgroundManager::change_background(std::string &name)
     m_new_background = name;
 }
 
+/**
+ * @brief return backgrounds specifiers
+ *
+ * @return <BackgroundSpecifier, 2>
+ */
 std::array<rclient::BackgroundSpecifier, 2> rclient::BackgroundManager::get_backgrounds() const
 {
     return m_backgrounds;
 }
 
+/**
+ * @brief update background, move the parallax, ...
+ */
 void rclient::BackgroundManager::update()
 {
     for (std::size_t index = 0; index < m_backgrounds.size(); index += 1) {
@@ -55,6 +71,9 @@ void rclient::BackgroundManager::update()
         handle_change();
 }
 
+/**
+ * @brief Handle the background's change, with fading effect
+ */
 void rclient::BackgroundManager::handle_change()
 {
     if (is_fading_in && m_backgrounds[0].sprite.opacity > 5) {

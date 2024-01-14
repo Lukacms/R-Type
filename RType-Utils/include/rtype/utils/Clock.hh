@@ -12,6 +12,11 @@
 namespace rtype::utils
 {
 
+    /**
+     * @class Clock
+     * @brief Class to keep track of time. Can be reset, and can get time in seconds or miliseconds
+     *
+     */
     class Clock
     {
         public:

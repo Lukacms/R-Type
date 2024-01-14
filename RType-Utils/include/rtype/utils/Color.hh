@@ -11,6 +11,11 @@ namespace rtype::utils
 {
     constexpr int MAX_COLOR{255};
 
+    /**
+     * @class Colors
+     * @brief Colors class
+     *
+     */
     struct Colors {
         public:
             unsigned char red{0};

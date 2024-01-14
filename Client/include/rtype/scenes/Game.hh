@@ -19,6 +19,11 @@
 namespace rclient::scenes
 {
 
+    /**
+     * @class Game
+     * @brief Game Scene. Is a child of IScene
+     *
+     */
     class Game : public IScene
     {
         public:

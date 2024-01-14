@@ -5,12 +5,12 @@
 ** Game
 */
 
-#include "rtype/Components/SpriteComponent.hh"
 #include <iostream>
 #include <rtype.hh>
 #include <rtype/Client.hh>
 #include <rtype/Components/BoxColliderComponent.hh>
 #include <rtype/Components/HealthComponent.hh>
+#include <rtype/Components/SpriteComponent.hh>
 #include <rtype/Components/TagComponent.hh>
 #include <rtype/Factory/ClientEntityFactory.hh>
 #include <rtype/network/Network.hpp>
@@ -19,6 +19,9 @@
 #include <string>
 #include <vector>
 
+/**
+ * @brief Handler of network events by their type event
+ */
 static const std::vector<rclient::scenes::CommandHandler> HANDLER{
     {ntw::NetworkType::Entity, &rclient::scenes::Game::manage_entity},
     {ntw::NetworkType::Destruction, &rclient::scenes::Game::delete_entity},
@@ -26,6 +29,12 @@ static const std::vector<rclient::scenes::CommandHandler> HANDLER{
     {ntw::NetworkType::End, &rclient::scenes::Game::end_game},
 };
 
+/**
+ * @brief Constructor for Game class
+ *
+ * @param pendpoint - asio::udp::endpoint &
+ * @param psocket - asio::udp::socket &
+ */
 rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::socket &psocket)
     : endpoint{pendpoint}, socket{psocket}
 {
@@ -52,18 +61,30 @@ rclient::scenes::Game::Game(asio::ip::udp::endpoint &pendpoint, asio::ip::udp::s
     this->ecs.get_class().add_system(animation_system);
 }
 
+/**
+ * @brief Override function of IScene, to display elements to graphical window
+ *
+ * @param graphics - IGraphicModule &
+ */
 void rclient::scenes::Game::display(rtype::IGraphicModule &graphics)
 {
     graphics.clear();
     ecs.get_class().apply_system(0);
     this->background_manager.update();
-    for (auto &bg : this->background_manager.get_backgrounds())
-        graphics.draw(bg.sprite, bg.transform);
+    for (auto &cbg : this->background_manager.get_backgrounds())
+        graphics.draw(cbg.sprite, cbg.transform);
     graphics.draw_components(this->ecs.get_class().get_components<rtype::SpriteComponent>(),
                              this->ecs.get_class().get_components<rtype::TransformComponent>());
     graphics.display();
 }
 
+/**
+ * @brief Override function of IScene. Handle events recieved from the user
+ *
+ * @param graphics - IGraphicModule &
+ * @param audio - IAudioModule &
+ * @param state - State &
+ */
 void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics,
                                           rtype::IAudioModule &audio, State &state)
 {
@@ -104,30 +125,46 @@ void rclient::scenes::Game::handle_events(rtype::IGraphicModule &graphics,
         state = State::Pause;
 }
 
+/**
+ * @brief Handle network function. Override of IScene, launches function pointer to handlers
+ *
+ * @param commn - Communication &
+ * @param audio - IAudioModule &
+ * @param state - State &
+ */
 void rclient::scenes::Game::handle_network(ntw::Communication &commn, rtype::IAudioModule &audio,
                                            State &state)
 {
     for (const auto &handler : HANDLER) {
         if (commn.type == ntw::NetworkType::Music)
-            return change_music(commn, audio);
+            return this->change_music(commn, audio);
         if (commn.type == ntw::NetworkType::Background)
-            return change_background(commn);
+            return this->change_background(commn);
         if (handler.type == commn.type)
             return handler.handler(*this, commn, state);
     }
 }
 
 /* network functions */
+/**
+ * @brief Delete an entity
+ *
+ * @param commn - Communication &
+ */
 void rclient::scenes::Game::delete_entity(ntw::Communication &commn, State & /* state */)
 {
-    {
-        // std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
-        std::vector<std::string> arguments = commn.deserialize();
+    // std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
+    std::vector<std::string> arguments = commn.deserialize();
 
-        this->ecs.get_class().delete_entity(static_cast<size_t>(std::stoi(arguments[0])));
-    }
+    this->ecs.get_class().delete_entity(static_cast<size_t>(std::stoi(arguments[0])));
 }
 
+/**
+ * @brief Manage an entity: create it if needed, then move it.
+ *
+ * @param commn - Communication &
+ * @param state - State &
+ */
 void rclient::scenes::Game::manage_entity(ntw::Communication &commn, State &state)
 {
     std::vector<std::string> arguments = commn.deserialize();
@@ -141,16 +178,24 @@ void rclient::scenes::Game::manage_entity(ntw::Communication &commn, State &stat
     // DEBUG(("New X: %s, New Y: %s%s", arguments[2].c_str(), arguments[3].c_str(), ENDL));
 }
 
+/**
+ * @brief Create a new entity with the ecs and ClientEntityFactory
+ *
+ * @param commn - Communication &
+ */
 void rclient::scenes::Game::create_entity(ntw::Communication &commn, State & /* state */)
 {
-    {
-        std::vector<std::string> arguments = commn.deserialize();
+    std::vector<std::string> arguments = commn.deserialize();
 
-        rclient::ClientEntityFactory::create(static_cast<size_t>(std::stoi(arguments[0])),
-                                             arguments[1], this->ecs.get_class());
-    }
+    rclient::ClientEntityFactory::create(static_cast<size_t>(std::stoi(arguments[0])), arguments[1],
+                                         this->ecs.get_class());
 }
 
+/**
+ * @brief Move an entity with a TransformComponent
+ *
+ * @param commn - Communication &
+ */
 void rclient::scenes::Game::move_entity(ntw::Communication &commn, State & /* state */)
 {
     std::vector<std::string> arguments{commn.deserialize()};
@@ -162,17 +207,34 @@ void rclient::scenes::Game::move_entity(ntw::Communication &commn, State & /* st
     transform.rotation = std::stof(arguments[4]);
 }
 
+/**
+ * @brief Finish game and close client
+ *
+ * @param state - State &
+ */
 void rclient::scenes::Game::end_game(ntw::Communication & /* commn */, State &state) // NOLINT
 {
     state = State::End;
 }
 
-void rclient::scenes::Game::change_music(ntw::Communication &commn, rtype::IAudioModule &audio)
+/**
+ * @brief Change music to the one given
+ *
+ * @param commn - Communication &
+ * @param audio - IAudioModule &
+ */
+void rclient::scenes::Game::change_music(ntw::Communication &commn, // NOLINT
+                                         rtype::IAudioModule &audio)
 {
     std::vector<std::string> arguments = commn.deserialize();
     audio.play_music(arguments[0]);
 }
 
+/**
+ * @brief Change the background to the one given by the server
+ *
+ * @param commn - Communication
+ */
 void rclient::scenes::Game::change_background(ntw::Communication commn)
 {
     std::vector<std::string> arguments = commn.deserialize();

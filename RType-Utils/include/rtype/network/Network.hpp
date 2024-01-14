@@ -22,7 +22,6 @@ namespace ntw
 
     enum class NetworkType {
         None,        // Nothing : None
-        Start,       // Start the game : Start
         Connection,  // client trying to join a server's game : Connection
         Refusal,     // 1 client cannot join a server's game : Refusal
         Ok,          // Everything is good : Ok

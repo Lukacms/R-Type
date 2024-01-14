@@ -7,6 +7,11 @@
 
 #include <rtype/utils/Color.hh>
 
+/**
+ * @namespace rtype::utils
+ * @brief define enums of basic colors to not be obligated to define them each time
+ * Should be noted that it does not seems to works on windows
+ */
 namespace rtype::utils
 {
     const Colors Colors::Black{0, 0, 0};

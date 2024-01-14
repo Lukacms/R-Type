@@ -22,12 +22,20 @@
 /* handle <CTRL-C> */
 static volatile std::atomic_int RUNNING{1};
 
+/**
+ * @brief Signal function to have a clean quit
+ */
 static void handle_sigint(int /* unused */)
 {
     RUNNING = 0;
 }
 
 /* ctor / dtor */
+/**
+ * @brief Constructor for Client class. Init dlloaded classes, and everything needed
+ *
+ * @param infos - Arguments &
+ */
 rclient::Client::Client(const rclient::Arguments &infos)
     : resolver{this->context}, socket{this->context}, lounge{this->socket, this->endpoint},
       game{this->endpoint, this->socket}, host{std::move(infos.hostname)},
@@ -50,6 +58,9 @@ rclient::Client::Client(const rclient::Arguments &infos)
     std::signal(SIGINT, &handle_sigint);
 }
 
+/**
+ * @brief Destructor for Client class
+ */
 rclient::Client::~Client()
 {
     RUNNING = 0;
@@ -61,6 +72,11 @@ rclient::Client::~Client()
     DEBUG(("Stopping client%s", ENDL));
 }
 
+/**
+ * @brief Move constructor for client's class
+ *
+ * @param to_move - Client &&
+ */
 rclient::Client::Client(rclient::Client &&to_move)
     : resolver{std::move(to_move.resolver)}, socket{std::move(to_move.socket)},
       lounge{to_move.socket, to_move.endpoint}, game{to_move.endpoint, to_move.socket},
@@ -69,9 +85,14 @@ rclient::Client::Client(rclient::Client &&to_move)
 {
 }
 
-/* methods */
-
 /* static */
+/**
+ * @brief Send a message to the server
+ *
+ * @param commn - const Communication &
+ * @param endpoint - const asio::udp::endpoint &
+ * @param socket - asio::udp::socket &
+ */
 void rclient::Client::send_message(const ntw::Communication &commn,
                                    const asio::ip::udp::endpoint &endpoint,
                                    asio::ip::udp::socket &socket)
@@ -80,6 +101,12 @@ void rclient::Client::send_message(const ntw::Communication &commn,
         socket.send_to(asio::buffer(&commn, sizeof(commn)), endpoint);
 }
 
+/**
+ * @brief static method to create and launch client graphics, first on Menu scene
+ *
+ * @param infos - const Arguments &
+ * @return - int
+ */
 int rclient::Client::launch(const Arguments &infos)
 {
     Client client{infos};
@@ -87,6 +114,8 @@ int rclient::Client::launch(const Arguments &infos)
     client.loop();
     return SUCCESS;
 }
+
+/* methods */
 
 /**
  * @brief Setup network for the rest of the game.
@@ -137,6 +166,9 @@ void rclient::Client::setup_network()
     });
 }
 
+/**
+ * @brief Client's loop, launches display, handle network and events
+ */
 void rclient::Client::loop()
 {
     rtype::utils::Clock clock{};
@@ -161,6 +193,9 @@ void rclient::Client::loop()
     }
 }
 
+/**
+ * @brief Launches all displays depending on Scene enum
+ */
 void rclient::Client::launch_displays()
 {
     std::unique_lock<std::shared_mutex> lock{this->scenes};
@@ -179,6 +214,9 @@ void rclient::Client::launch_displays()
     }
 }
 
+/**
+ * @brief check if there were any events, and handle them, here on in state's function
+ */
 void rclient::Client::check_events()
 {
 

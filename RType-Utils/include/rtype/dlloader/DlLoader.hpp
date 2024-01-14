@@ -25,6 +25,11 @@ namespace dl
     constexpr std::string_view ERROR_FETCH_LOADER{"Unable to fetch loader function."};
     constexpr std::string_view ERROR_LOAD_CLASS{"Could not load class."};
 
+    /**
+     * @class DlException
+     * @brief Exception class for dlloader
+     *
+     */
     class DlException : public std::exception
     {
         public:
@@ -48,6 +53,12 @@ namespace dl
             std::string error_msg{"Error"};
     };
 
+    /**
+     * @brief DlLoader is a class to load shared libraries to unique_ptr of the TLoad type
+     *
+     * @tparam TLoad - template class to load into unique_ptr
+     * @return - TLoad &
+     */
     template <class TLoad> class DlLoader
     {
         public:
@@ -56,6 +67,9 @@ namespace dl
             DlLoader(DlLoader const &to_copy) = delete;
             DlLoader(DlLoader &&to_move) = default;
 
+            /**
+             * @brief Destructor for DlLoader. Release unique_ptr and dlclose handler
+             */
             ~DlLoader()
             {
                 this->element.release();
@@ -67,16 +81,36 @@ namespace dl
             DlLoader &operator=(DlLoader &&to_move) = default;
 
             /* methods */
+            /**
+             * @brief Get a reference to TLoad
+             *
+             * @return TLoad &
+             */
             TLoad &get_class() const
             {
                 return *this->element.get();
             }
 
+            /**
+             * @brief Release the pointer to TLoad. Will then be equal to nullptr
+             */
             void release()
             {
                 this->element.release();
+                this->element = nullptr;
             }
 
+            /**
+             * @brief Init the class. Load the TLoad class from a shared library using a function
+             * with TSignature * signature
+             *
+             * @tparam TSignature - signature for the function -
+             * https://stackoverflow.com/questions/26792750/function-signatures-in-c-templates
+             * @tparam TValues - variadic templates, values to pass to TSignature loading function
+             * @param path - path to shared libraries
+             * @param loader_func - name of the loader function
+             * @param values - TValues ...
+             */
             template <typename TSignature, typename... TValues>
             void init_class(std::string const &path,
                             std::string const &loader_func = DEFAULT_LOADER.data(),
@@ -137,6 +171,12 @@ namespace dl
             std::string error_msg{"Error"};
     };
 
+    /**
+     * @brief Windows version of dlloader class
+     *
+     * @tparam TLoad - template of the class to load
+     * @return TLoad &
+     */
     template <class TLoad> class DlLoader
     {
         public:
@@ -145,6 +185,9 @@ namespace dl
             DlLoader(DlLoader const &to_copy) = delete;
             DlLoader(DlLoader &&to_move) = default;
 
+            /**
+             * @brief delete pointer to TLoad, and free handle to shared library
+             */
             ~DlLoader()
             {
                 delete this->element;
@@ -156,11 +199,36 @@ namespace dl
             DlLoader &operator=(DlLoader &&to_move) = default;
 
             /* methods */
+            /**
+             * @brief Get a reference of TLoad
+             *
+             * @return TLoad &
+             */
             TLoad &get_class() const
             {
                 return *this->element;
             }
 
+            /**
+             * @brief Release the pointer to TLoad. Will then be equal to nullptr
+             */
+            void release()
+            {
+                this->element.release();
+                this->element = nullptr;
+            }
+
+            /**
+             * @brief Load shared library element into TLoad * with windows methods LoadLibrary and
+             * GetProcAddress
+             *
+             * @tparam TSignature - signature for the function - must return void * -
+             * https://stackoverflow.com/questions/26792750/function-signatures-in-c-templates
+             * @tparam TValues - variadic templates, values to pass to TSignature loading function
+             * @param path - path to shared libraries
+             * @param loader_func - name of the loader function
+             * @param values - TValues ...
+             */
             template <typename TSignature, typename... TValues>
             void init_class(std::string const &path,
                             std::string const &loader_func = DEFAULT_LOADER.data(),

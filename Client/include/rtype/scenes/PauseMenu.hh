@@ -23,6 +23,12 @@ namespace rclient::scenes
     constexpr int MUTE_BASE{100};
     constexpr int UNMUTE_BASE{50};
 
+    /**
+     * @class PauseMenu
+     * @brief Pause Menu scene. Is a child of IScene, and can be joined by pressing <ECS> key in
+     * game
+     *
+     */
     class PauseMenu : public IScene
     {
         public:
