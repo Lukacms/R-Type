@@ -24,6 +24,14 @@ static const std::array<rtype::utils::Vector2D<float>, 8> DIRECTIONS{{{0, -0.2F}
                                                                       {-0.2F, 0},
                                                                       {-0.15F, -0.15F}}};
 
+static const std::array<std::string, 5> ENEMIES{{
+    {"BasicEnemy"},
+    {"KamikazeEnemy"},
+    {"UFOEnemy"},
+    {"MineEnemy"},
+    {"Asteroid"},
+}};
+
 /**
  * @brief Constructor
  *
@@ -260,11 +268,16 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
 void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
     try {
-        if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
-            auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
-            auto &transform = manager.get_component<rtype::TransformComponent>(entity);
-            transform.position_y = std::rand() % 550;
-            transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 10) / 10);
+        if (m_enemy_clock.get_elapsed_time_in_ms() > std::rand() % 1000 + 1000) {
+            int turns = std::rand() % 4;
+            for (; turns > 0; turns -= 1) {
+                std::string random_enemy =
+                    ENEMIES[static_cast<ulong>(std::rand()) % ENEMIES.size()];
+                auto entity = rserver::ServerEntityFactory::create(random_enemy, manager);
+                auto &transform = manager.get_component<rtype::TransformComponent>(entity);
+                transform.position_y = std::rand() % 580;
+                transform.velocity_x = -1.F * (static_cast<float>(std::rand() % 30) / 100 + 0.2F);
+            }
             m_enemy_clock.reset();
         }
     } catch (rserver::ServerEntityFactory::FactoryException & /* e */) {
