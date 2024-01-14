@@ -170,7 +170,7 @@ if (CMAKE_BUILD_TYPE MATCHES "Debug")
 elseif (CMAKE_BUILD_TYPE MATCHES "tsan")
     set(CMAKE_CXX_FLAGS
         "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer -fsanitize=thread -O2 -g")
-elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+elseif (CMAKE_BUILD_TYPE MATCHES "Release" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-exception-parameter -Wno-unused-variable")
 endif ()
 

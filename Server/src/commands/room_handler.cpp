@@ -5,6 +5,7 @@
 ** room_handler
 */
 
+#include <iostream>
 #include <rtype.hh>
 #include <rtype/Manager.hh>
 

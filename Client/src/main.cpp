@@ -41,7 +41,7 @@ int main(int argc, const char *argv[])
     } catch (rclient::ArgsConfig::ArgsException &e) {
         std::cout << e.what() << ENDL;
         return rclient::FAILURE;
-    } catch (rclient::Client::ClientException &e) {
+    } catch (rclient::Client::ClientException & /* e */) {
         return rclient::FAILURE;
     }
 }

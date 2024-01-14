@@ -157,10 +157,14 @@ rserver::game::GameLogic &rserver::game::Room::get_logic()
  */
 void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 {
-    std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
-    this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
-                          static_cast<float>(delta.get_elapsed_time_in_s()));
-    this->ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_ms()));
+    try {
+        std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
+        this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
+                              static_cast<float>(delta.get_elapsed_time_in_s()));
+        this->ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_ms()));
+    } catch (rtype::ECSManager::ECSException &e) {
+        DEBUG(("Exception in run_game_logic: %s%s", e.what(), ENDL));
+    }
 }
 
 /**
@@ -171,9 +175,12 @@ void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
  */
 void rserver::game::Room::check_wait_timeout(float delta_time)
 {
-    {
+    try {
+
         std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
         this->logic.game_waiting(this->manager, this->ecs.get_class(), delta_time);
+    } catch (rtype::ECSManager::ECSException &e) {
+        DEBUG(("Exception in run_game_logic: %s%s", e.what(), ENDL));
     }
     if (this->status != RoomStatus::Waiting)
         return;

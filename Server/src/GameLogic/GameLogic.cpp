@@ -65,25 +65,29 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                          rserver::PlayersManager &players_manager,
                                          rtype::ECSManager &manager, float /* delta_time */)
 {
-    m_entities = manager.get_used_entity();
+    try {
+        m_entities = manager.get_used_entity();
 
-    physics_manager.check_collisions(manager);
-    collision_responses(physics_manager, players_manager, manager);
-    destroy_too_far_entities(players_manager, manager);
-    destroy_too_long_entities(players_manager, manager);
-    send_entity(players_manager, manager);
-    check_if_player_out_of_bounds(manager);
-    if (!m_level_manager.has_enough_level()) {
-        spawn_enemy(manager);
-        send_music(players_manager, STANDARD_MUSIC.data());
-        send_background(players_manager, STANDARD_BACKGROUND.data());
-        return;
+        physics_manager.check_collisions(manager);
+        collision_responses(physics_manager, players_manager, manager);
+        destroy_too_far_entities(players_manager, manager);
+        destroy_too_long_entities(players_manager, manager);
+        send_entity(players_manager, manager);
+        check_if_player_out_of_bounds(manager);
+        if (!m_level_manager.has_enough_level()) {
+            spawn_enemy(manager);
+            send_music(players_manager, STANDARD_MUSIC.data());
+            send_background(players_manager, STANDARD_BACKGROUND.data());
+            return;
+        }
+        m_level_manager.update(manager);
+        send_music(players_manager, m_level_manager.get_current_music());
+        send_background(players_manager, m_level_manager.get_current_background());
+        if (m_level_manager.is_level_finished())
+            m_level_manager.change_level();
+    } catch (rtype::ECSManager::ECSException & /* e */) {
+        // DEBUG(("Exception in game_loop: %s%s", e.what(), ENDL));
     }
-    m_level_manager.update(manager);
-    send_music(players_manager, m_level_manager.get_current_music());
-    send_background(players_manager, m_level_manager.get_current_background());
-    if (m_level_manager.is_level_finished())
-        m_level_manager.change_level();
 }
 
 /**
@@ -97,11 +101,15 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
 void rserver::game::GameLogic::game_waiting(rserver::PlayersManager &players_manager,
                                             rtype::ECSManager &manager, float delta_time)
 {
-    m_entities = manager.get_used_entity();
+    try {
+        m_entities = manager.get_used_entity();
 
-    destroy_too_far_entities(players_manager, manager);
-    send_entity(players_manager, manager);
-    manager.apply_system(delta_time);
+        destroy_too_far_entities(players_manager, manager);
+        send_entity(players_manager, manager);
+        manager.apply_system(delta_time);
+    } catch (rtype::ECSManager::ECSException & /* e */) {
+        // DEBUG(("Exception in game_loop: %s%s", e.what(), ENDL));
+    }
 }
 
 /**
@@ -115,8 +123,12 @@ void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physic
                                                    rserver::PlayersManager &players_manager,
                                                    rtype::ECSManager &manager)
 {
-    player_collision_responses(physics_manager, players_manager, manager);
-    enemy_collision_responses(physics_manager, players_manager, manager);
+    try {
+        player_collision_responses(physics_manager, players_manager, manager);
+        enemy_collision_responses(physics_manager, players_manager, manager);
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
+    }
 }
 
 /**
@@ -154,8 +166,8 @@ void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager 
                 }
             }
         }
-    } catch (rtype::ECSManager::ECSException &e) {
-        DEBUG(("Exception in player_collision_responses: %s%s", e.what(), ENDL));
+    } catch (rtype::ECSManager::ECSException & /* e */) {
+        // DEBUG(("Exception in player_collision_responses: %s%s", e.what(), ENDL));
     }
 }
 
@@ -170,31 +182,35 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
                                                          rserver::PlayersManager &players_manager,
                                                          rtype::ECSManager &manager)
 {
-    auto &tags{manager.get_components<rtype::TagComponent>()};
-    auto &healths{manager.get_components<rtype::HealthComponent>()};
+    try {
+        auto &tags{manager.get_components<rtype::TagComponent>()};
+        auto &healths{manager.get_components<rtype::HealthComponent>()};
 
-    for (const auto entity1 : m_entities) {
-        if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
-            continue;
-        for (const auto entity2 : m_entities) {
-            if (!tags[entity1].has_value() || !healths[entity1].has_value() ||
-                tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
+        for (const auto entity1 : m_entities) {
+            if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
                 continue;
-            if (!physics_manager.is_collided(entity1, entity2))
-                continue;
-            if (tags[entity2]->tag.find("PlayerBullet") != std::string::npos) {
-                healths[entity1]->health -= 10;
-                check_if_enemy_dead(manager, players_manager, entity1);
-                ntw::Communication destroy2{.type = ntw::NetworkType::Destruction, .args = {}};
-                destroy2.add_param(entity2);
-                rserver::Manager::send_message(destroy2, players_manager, m_socket, m_room_id);
-                manager.delete_entity(entity2);
-            }
-            if (tags[entity2]->tag.find("Asteroid") != std::string::npos) {
-                healths[entity1]->health = 0;
-                check_if_enemy_dead(manager, players_manager, entity1);
+            for (const auto entity2 : m_entities) {
+                if (!tags[entity1].has_value() || !healths[entity1].has_value() ||
+                    tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
+                    continue;
+                if (!physics_manager.is_collided(entity1, entity2))
+                    continue;
+                if (tags[entity2]->tag.find("PlayerBullet") != std::string::npos) {
+                    healths[entity1]->health -= 10;
+                    check_if_enemy_dead(manager, players_manager, entity1);
+                    ntw::Communication destroy2{.type = ntw::NetworkType::Destruction, .args = {}};
+                    destroy2.add_param(entity2);
+                    rserver::Manager::send_message(destroy2, players_manager, m_socket, m_room_id);
+                    manager.delete_entity(entity2);
+                }
+                if (tags[entity2]->tag.find("Asteroid") != std::string::npos) {
+                    healths[entity1]->health = 0;
+                    check_if_enemy_dead(manager, players_manager, entity1);
+                }
             }
         }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -207,20 +223,25 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
 void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_manager,
                                            rtype::ECSManager &manager)
 {
-    rtype::SparseArray<rtype::TransformComponent> &transforms{
-        manager.get_components<rtype::TransformComponent>()};
-    rtype::SparseArray<rtype::TagComponent> &tags{manager.get_components<rtype::TagComponent>()};
+    try {
+        rtype::SparseArray<rtype::TransformComponent> &transforms{
+            manager.get_components<rtype::TransformComponent>()};
+        rtype::SparseArray<rtype::TagComponent> &tags{
+            manager.get_components<rtype::TagComponent>()};
 
-    for (size_t entity{0}; entity < transforms.size(); entity += 1) {
-        ntw::Communication entity_descriptor{ntw::NetworkType::Entity, {}};
-        if (!transforms[entity].has_value())
-            continue;
-        entity_descriptor.add_param(entity);
-        entity_descriptor.add_param(!tags[entity].has_value() ? "Nothing" : tags[entity]->tag);
-        entity_descriptor.add_param(transforms[entity]->position_x);
-        entity_descriptor.add_param(transforms[entity]->position_y);
-        entity_descriptor.add_param(transforms[entity]->rotation);
-        Manager::send_message(entity_descriptor, players_manager, m_socket, m_room_id);
+        for (size_t entity{0}; entity < transforms.size(); entity += 1) {
+            ntw::Communication entity_descriptor{ntw::NetworkType::Entity, {}};
+            if (!transforms[entity].has_value())
+                continue;
+            entity_descriptor.add_param(entity);
+            entity_descriptor.add_param(!tags[entity].has_value() ? "Nothing" : tags[entity]->tag);
+            entity_descriptor.add_param(transforms[entity]->position_x);
+            entity_descriptor.add_param(transforms[entity]->position_y);
+            entity_descriptor.add_param(transforms[entity]->rotation);
+            Manager::send_message(entity_descriptor, players_manager, m_socket, m_room_id);
+        }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -233,30 +254,34 @@ void rserver::game::GameLogic::send_entity(rserver::PlayersManager &players_mana
 void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager &players_manager,
                                                         rtype::ECSManager &manager)
 {
-    auto &transforms{manager.get_components<rtype::TransformComponent>()};
-    auto &tag{manager.get_components<rtype::TagComponent>()};
+    try {
+        auto &transforms{manager.get_components<rtype::TransformComponent>()};
+        auto &tag{manager.get_components<rtype::TagComponent>()};
 
-    for (size_t entity{0}; entity < transforms.size(); entity += 1) {
-        if (!transforms[entity].has_value())
-            continue;
-        if (!tag[entity].has_value())
-            continue;
-        if (tag[entity]->tag == "Player")
-            continue;
-        if (transforms[entity]->position_x < MIN_POSITION ||
-            transforms[entity]->position_x > MAX_POSITION_X) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction};
-            manager.delete_entity(entity);
-            send.add_param(entity);
-            Manager::send_message(send, players_manager, m_socket, m_room_id);
+        for (size_t entity{0}; entity < transforms.size(); entity += 1) {
+            if (!transforms[entity].has_value())
+                continue;
+            if (!tag[entity].has_value())
+                continue;
+            if (tag[entity]->tag == "Player")
+                continue;
+            if (transforms[entity]->position_x < MIN_POSITION ||
+                transforms[entity]->position_x > MAX_POSITION_X) {
+                ntw::Communication send{.type = ntw::NetworkType::Destruction};
+                manager.delete_entity(entity);
+                send.add_param(entity);
+                Manager::send_message(send, players_manager, m_socket, m_room_id);
+            }
+            if (transforms[entity]->position_y < MIN_POSITION ||
+                transforms[entity]->position_y > MAX_POSITION_Y) {
+                ntw::Communication send{.type = ntw::NetworkType::Destruction};
+                manager.delete_entity(entity);
+                send.add_param(entity);
+                Manager::send_message(send, players_manager, m_socket, m_room_id);
+            }
         }
-        if (transforms[entity]->position_y < MIN_POSITION ||
-            transforms[entity]->position_y > MAX_POSITION_Y) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction};
-            manager.delete_entity(entity);
-            send.add_param(entity);
-            Manager::send_message(send, players_manager, m_socket, m_room_id);
-        }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -282,6 +307,8 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
         }
     } catch (rserver::ServerEntityFactory::FactoryException & /* e */) {
         return;
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -314,6 +341,8 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
         explosion.velocity_y = 0;
     } catch (rserver::ServerEntityFactory::FactoryException & /* e */) {
         return;
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -352,40 +381,54 @@ void rserver::game::GameLogic::send_background(rserver::PlayersManager &players_
 void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager &players_manager,
                                                          rtype::ECSManager &manager)
 {
-    auto &tags = manager.get_components<rtype::TagComponent>();
-    auto &clocks = manager.get_components<rtype::ClockComponent>();
+    try {
+        auto &tags = manager.get_components<rtype::TagComponent>();
+        auto &clocks = manager.get_components<rtype::ClockComponent>();
 
-    for (size_t entity{0}; entity < tags.size() && entity < clocks.size(); entity += 1) {
-        ntw::Communication destruction_descriptor{ntw::NetworkType::Destruction, {}};
-        if (!tags[entity].has_value() || !clocks[entity].has_value())
-            continue;
-        if (tags[entity]->tag == "Explosion" && clocks[entity]->clock.get_elapsed_time_in_s() > 2) {
-            destruction_descriptor.add_param(entity);
-            Manager::send_message(destruction_descriptor, players_manager, m_socket, m_room_id);
-            manager.delete_entity(entity);
+        for (size_t entity{0}; entity < tags.size() && entity < clocks.size(); entity += 1) {
+            ntw::Communication destruction_descriptor{ntw::NetworkType::Destruction, {}};
+            if (!tags[entity].has_value() || !clocks[entity].has_value())
+                continue;
+            if (tags[entity]->tag == "Explosion" &&
+                clocks[entity]->clock.get_elapsed_time_in_s() > 2) {
+                destruction_descriptor.add_param(entity);
+                Manager::send_message(destruction_descriptor, players_manager, m_socket, m_room_id);
+                manager.delete_entity(entity);
+            }
         }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
-void rserver::game::GameLogic::check_if_player_out_of_bounds(rtype::ECSManager &manager)
+void rserver::game::GameLogic::check_if_player_out_of_bounds(rtype::ECSManager &manager) // NOLINT
 {
-    auto &transforms = manager.get_components<rtype::TransformComponent>();
-    auto &tags = manager.get_components<rtype::TagComponent>();
+    try {
+        auto &transforms = manager.get_components<rtype::TransformComponent>();
+        auto &tags = manager.get_components<rtype::TagComponent>();
 
-    for (std::size_t entity = 0; entity < transforms.size() && entity < tags.size(); entity += 1) {
-        if (!transforms[entity].has_value() || !tags[entity].has_value())
-            continue;
-        if (tags[entity]->tag != "Player")
-            continue;
-        auto &collider = manager.get_component<rtype::BoxColliderComponent>(entity);
-        if (transforms[entity]->position_x > 800 - (collider.width * transforms[entity]->scale_x))
-            transforms[entity]->position_x = 800 - (collider.width * transforms[entity]->scale_x);
-        if (transforms[entity]->position_x < 0)
-            transforms[entity]->position_x = 0;
-        if (transforms[entity]->position_y > 600 - (collider.height * transforms[entity]->scale_y))
-            transforms[entity]->position_y = 600 - (collider.height * transforms[entity]->scale_y);
-        if (transforms[entity]->position_y < 0)
-            transforms[entity]->position_y = 0;
+        for (std::size_t entity = 0; entity < transforms.size() && entity < tags.size();
+             entity += 1) {
+            if (!transforms[entity].has_value() || !tags[entity].has_value())
+                continue;
+            if (tags[entity]->tag != "Player")
+                continue;
+            auto &collider = manager.get_component<rtype::BoxColliderComponent>(entity);
+            if (transforms[entity]->position_x >
+                800 - (collider.width * transforms[entity]->scale_x))
+                transforms[entity]->position_x =
+                    800 - (collider.width * transforms[entity]->scale_x);
+            if (transforms[entity]->position_x < 0)
+                transforms[entity]->position_x = 0;
+            if (transforms[entity]->position_y >
+                600 - (collider.height * transforms[entity]->scale_y))
+                transforms[entity]->position_y =
+                    600 - (collider.height * transforms[entity]->scale_y);
+            if (transforms[entity]->position_y < 0)
+                transforms[entity]->position_y = 0;
+        }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -393,35 +436,43 @@ void rserver::game::GameLogic::check_if_enemy_dead(rtype::ECSManager &manager,
                                                    rserver::PlayersManager &players_manager,
                                                    std::size_t entity)
 {
-    auto &healths = manager.get_components<rtype::HealthComponent>();
-    auto &tags = manager.get_components<rtype::TagComponent>();
-    ntw::Communication destroy{.type = ntw::NetworkType::Destruction, .args = {}};
+    try {
+        auto &healths = manager.get_components<rtype::HealthComponent>();
+        auto &tags = manager.get_components<rtype::TagComponent>();
+        ntw::Communication destroy{.type = ntw::NetworkType::Destruction, .args = {}};
 
-    if (!healths[entity].has_value() && !tags[entity].has_value())
-        return;
-    if (tags[entity]->tag.find("Enemy") == std::string::npos &&
-        tags[entity]->tag.find("Player") == std::string::npos)
-        return;
-    if (healths[entity]->health > 0)
-        return;
-    destroy.add_param(entity);
-    rserver::Manager::send_message(destroy, players_manager, m_socket, m_room_id);
-    spawn_at_enemy_death(entity, manager);
-    manager.delete_entity(entity);
+        if (!healths[entity].has_value() && !tags[entity].has_value())
+            return;
+        if (tags[entity]->tag.find("Enemy") == std::string::npos &&
+            tags[entity]->tag.find("Player") == std::string::npos)
+            return;
+        if (healths[entity]->health > 0)
+            return;
+        destroy.add_param(entity);
+        rserver::Manager::send_message(destroy, players_manager, m_socket, m_room_id);
+        spawn_at_enemy_death(entity, manager);
+        manager.delete_entity(entity);
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
+    }
 }
 
 void rserver::game::GameLogic::spawn_bullets_for_mine(rtype::ECSManager &manager,
                                                       std::size_t entity_to_follow)
 {
-    auto &follow_transform = manager.get_component<rtype::TransformComponent>(entity_to_follow);
+    try {
+        auto &follow_transform = manager.get_component<rtype::TransformComponent>(entity_to_follow);
 
-    for (auto direction : DIRECTIONS) {
-        std::size_t bullet = rserver::ServerEntityFactory::create("EnemyBullet", manager);
-        auto &bullet_transform = manager.get_component<rtype::TransformComponent>(bullet);
-        bullet_transform.position_x = follow_transform.position_x;
-        bullet_transform.position_y = follow_transform.position_y;
-        bullet_transform.velocity_x = direction.x;
-        bullet_transform.velocity_y = direction.y;
+        for (auto direction : DIRECTIONS) {
+            std::size_t bullet = rserver::ServerEntityFactory::create("EnemyBullet", manager);
+            auto &bullet_transform = manager.get_component<rtype::TransformComponent>(bullet);
+            bullet_transform.position_x = follow_transform.position_x;
+            bullet_transform.position_y = follow_transform.position_y;
+            bullet_transform.velocity_x = direction.x;
+            bullet_transform.velocity_y = direction.y;
+        }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -447,6 +498,8 @@ void rserver::game::GameLogic::at_player_death(rtype::ECSManager &manager,
         manager.delete_entity(player);
     } catch (PlayersManager::PlayersException & /* e */) {
         return;
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -468,25 +521,29 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                          rserver::Player &player, rtype::ECSManager &manager,
                                          float /* delta_time */)
 {
-    m_entities = manager.get_used_entity();
+    try {
+        m_entities = manager.get_used_entity();
 
-    physics_manager.check_collisions(manager);
-    collision_responses(physics_manager, player, manager);
-    destroy_too_far_entities(player, manager);
-    destroy_too_long_entities(player, manager);
-    send_entity(player, manager);
-    check_if_player_out_of_bounds(manager);
-    if (!m_level_manager.has_enough_level()) {
-        spawn_enemy(manager);
-        send_music(player, STANDARD_MUSIC.data());
-        send_background(player, STANDARD_BACKGROUND.data());
-        return;
+        physics_manager.check_collisions(manager);
+        collision_responses(physics_manager, player, manager);
+        destroy_too_far_entities(player, manager);
+        destroy_too_long_entities(player, manager);
+        send_entity(player, manager);
+        check_if_player_out_of_bounds(manager);
+        if (!m_level_manager.has_enough_level()) {
+            spawn_enemy(manager);
+            send_music(player, STANDARD_MUSIC.data());
+            send_background(player, STANDARD_BACKGROUND.data());
+            return;
+        }
+        m_level_manager.update(manager);
+        send_music(player, m_level_manager.get_current_music());
+        send_background(player, m_level_manager.get_current_background());
+        if (m_level_manager.is_level_finished())
+            m_level_manager.change_level();
+    } catch (rtype::ECSManager::ECSException & /* e */) {
+        // DEBUG(("Exception occured in game_loop: %s%s", e.what(), ENDL));
     }
-    m_level_manager.update(manager);
-    send_music(player, m_level_manager.get_current_music());
-    send_background(player, m_level_manager.get_current_background());
-    if (m_level_manager.is_level_finished())
-        m_level_manager.change_level();
 }
 
 /**
@@ -502,10 +559,12 @@ void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physic
 {
     try {
         player_collision_responses(physics_manager, player, manager);
+        enemy_collision_responses(physics_manager, player, manager);
     } catch (solo::SoloGame::SoloException &e) {
         throw e;
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
-    enemy_collision_responses(physics_manager, player, manager);
 }
 
 /**
@@ -582,31 +641,35 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
                                                          rserver::Player &player,
                                                          rtype::ECSManager &manager)
 {
-    auto &tags{manager.get_components<rtype::TagComponent>()};
-    auto &healths{manager.get_components<rtype::HealthComponent>()};
+    try {
+        auto &tags{manager.get_components<rtype::TagComponent>()};
+        auto &healths{manager.get_components<rtype::HealthComponent>()};
 
-    for (const auto entity1 : m_entities) {
-        if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
-            continue;
-        for (const auto entity2 : m_entities) {
-            if (!tags[entity1].has_value() || !healths[entity1].has_value() ||
-                tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
+        for (const auto entity1 : m_entities) {
+            if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
                 continue;
-            if (!physics_manager.is_collided(entity1, entity2))
-                continue;
-            if (tags[entity2]->tag.find("PlayerBullet") != std::string::npos) {
-                healths[entity1]->health -= 10;
-                check_if_enemy_dead(manager, player, entity1);
-                ntw::Communication destroy2{.type = ntw::NetworkType::Destruction, .args = {}};
-                destroy2.add_param(entity2);
-                rserver::Manager::send_message(destroy2, player, m_socket);
-                manager.delete_entity(entity2);
-            }
-            if (tags[entity2]->tag.find("Asteroid") != std::string::npos) {
-                healths[entity1]->health = 0;
-                check_if_enemy_dead(manager, player, entity1);
+            for (const auto entity2 : m_entities) {
+                if (!tags[entity1].has_value() || !healths[entity1].has_value() ||
+                    tags[entity2]->tag.find("Enemy") != std::string::npos || entity1 == entity2)
+                    continue;
+                if (!physics_manager.is_collided(entity1, entity2))
+                    continue;
+                if (tags[entity2]->tag.find("PlayerBullet") != std::string::npos) {
+                    healths[entity1]->health -= 10;
+                    check_if_enemy_dead(manager, player, entity1);
+                    ntw::Communication destroy2{.type = ntw::NetworkType::Destruction, .args = {}};
+                    destroy2.add_param(entity2);
+                    rserver::Manager::send_message(destroy2, player, m_socket);
+                    manager.delete_entity(entity2);
+                }
+                if (tags[entity2]->tag.find("Asteroid") != std::string::npos) {
+                    healths[entity1]->health = 0;
+                    check_if_enemy_dead(manager, player, entity1);
+                }
             }
         }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -618,20 +681,25 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
  */
 void rserver::game::GameLogic::send_entity(rserver::Player &player, rtype::ECSManager &manager)
 {
-    rtype::SparseArray<rtype::TransformComponent> &transforms{
-        manager.get_components<rtype::TransformComponent>()};
-    rtype::SparseArray<rtype::TagComponent> &tags{manager.get_components<rtype::TagComponent>()};
+    try {
+        rtype::SparseArray<rtype::TransformComponent> &transforms{
+            manager.get_components<rtype::TransformComponent>()};
+        rtype::SparseArray<rtype::TagComponent> &tags{
+            manager.get_components<rtype::TagComponent>()};
 
-    for (size_t entity{0}; entity < transforms.size(); entity += 1) {
-        ntw::Communication entity_descriptor{ntw::NetworkType::Entity, {}};
-        if (!transforms[entity].has_value())
-            continue;
-        entity_descriptor.add_param(entity);
-        entity_descriptor.add_param(!tags[entity].has_value() ? "Nothing" : tags[entity]->tag);
-        entity_descriptor.add_param(transforms[entity]->position_x);
-        entity_descriptor.add_param(transforms[entity]->position_y);
-        entity_descriptor.add_param(transforms[entity]->rotation);
-        Manager::send_message(entity_descriptor, player, m_socket);
+        for (size_t entity{0}; entity < transforms.size(); entity += 1) {
+            ntw::Communication entity_descriptor{ntw::NetworkType::Entity, {}};
+            if (!transforms[entity].has_value())
+                continue;
+            entity_descriptor.add_param(entity);
+            entity_descriptor.add_param(!tags[entity].has_value() ? "Nothing" : tags[entity]->tag);
+            entity_descriptor.add_param(transforms[entity]->position_x);
+            entity_descriptor.add_param(transforms[entity]->position_y);
+            entity_descriptor.add_param(transforms[entity]->rotation);
+            Manager::send_message(entity_descriptor, player, m_socket);
+        }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -644,30 +712,34 @@ void rserver::game::GameLogic::send_entity(rserver::Player &player, rtype::ECSMa
 void rserver::game::GameLogic::destroy_too_far_entities(rserver::Player &player,
                                                         rtype::ECSManager &manager)
 {
-    auto &transforms{manager.get_components<rtype::TransformComponent>()};
-    auto &tag{manager.get_components<rtype::TagComponent>()};
+    try {
+        auto &transforms{manager.get_components<rtype::TransformComponent>()};
+        auto &tag{manager.get_components<rtype::TagComponent>()};
 
-    for (size_t entity{0}; entity < transforms.size(); entity += 1) {
-        if (!transforms[entity].has_value())
-            continue;
-        if (!tag[entity].has_value())
-            continue;
-        if (tag[entity]->tag == "Player")
-            continue;
-        if (transforms[entity]->position_x < MIN_POSITION ||
-            transforms[entity]->position_x > MAX_POSITION_X) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction};
-            manager.delete_entity(entity);
-            send.add_param(entity);
-            Manager::send_message(send, player, m_socket);
+        for (size_t entity{0}; entity < transforms.size(); entity += 1) {
+            if (!transforms[entity].has_value())
+                continue;
+            if (!tag[entity].has_value())
+                continue;
+            if (tag[entity]->tag == "Player")
+                continue;
+            if (transforms[entity]->position_x < MIN_POSITION ||
+                transforms[entity]->position_x > MAX_POSITION_X) {
+                ntw::Communication send{.type = ntw::NetworkType::Destruction};
+                manager.delete_entity(entity);
+                send.add_param(entity);
+                Manager::send_message(send, player, m_socket);
+            }
+            if (transforms[entity]->position_y < MIN_POSITION ||
+                transforms[entity]->position_y > MAX_POSITION_Y) {
+                ntw::Communication send{.type = ntw::NetworkType::Destruction};
+                manager.delete_entity(entity);
+                send.add_param(entity);
+                Manager::send_message(send, player, m_socket);
+            }
         }
-        if (transforms[entity]->position_y < MIN_POSITION ||
-            transforms[entity]->position_y > MAX_POSITION_Y) {
-            ntw::Communication send{.type = ntw::NetworkType::Destruction};
-            manager.delete_entity(entity);
-            send.add_param(entity);
-            Manager::send_message(send, player, m_socket);
-        }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
@@ -711,46 +783,59 @@ void rserver::game::GameLogic::send_background(rserver::Player &player,
 void rserver::game::GameLogic::destroy_too_long_entities(rserver::Player &player,
                                                          rtype::ECSManager &manager)
 {
-    auto &tags = manager.get_components<rtype::TagComponent>();
-    auto &clocks = manager.get_components<rtype::ClockComponent>();
+    try {
+        auto &tags = manager.get_components<rtype::TagComponent>();
+        auto &clocks = manager.get_components<rtype::ClockComponent>();
 
-    for (size_t entity{0}; entity < tags.size() && entity < clocks.size(); entity += 1) {
-        ntw::Communication destruction_descriptor{ntw::NetworkType::Destruction, {}};
-        if (!tags[entity].has_value() || !clocks[entity].has_value())
-            continue;
-        if (tags[entity]->tag == "Explosion" && clocks[entity]->clock.get_elapsed_time_in_s() > 2) {
-            destruction_descriptor.add_param(entity);
-            Manager::send_message(destruction_descriptor, player, m_socket);
-            manager.delete_entity(entity);
+        for (size_t entity{0}; entity < tags.size() && entity < clocks.size(); entity += 1) {
+            ntw::Communication destruction_descriptor{ntw::NetworkType::Destruction, {}};
+            if (!tags[entity].has_value() || !clocks[entity].has_value())
+                continue;
+            if (tags[entity]->tag == "Explosion" &&
+                clocks[entity]->clock.get_elapsed_time_in_s() > 2) {
+                destruction_descriptor.add_param(entity);
+                Manager::send_message(destruction_descriptor, player, m_socket);
+                manager.delete_entity(entity);
+            }
         }
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
     }
 }
 
 void rserver::game::GameLogic::check_if_enemy_dead(rtype::ECSManager &manager,
                                                    rserver::Player &player, std::size_t entity)
 {
-    auto &healths = manager.get_components<rtype::HealthComponent>();
-    auto &tags = manager.get_components<rtype::TagComponent>();
-    ntw::Communication destroy{.type = ntw::NetworkType::Destruction, .args = {}};
+    try {
+        auto &healths = manager.get_components<rtype::HealthComponent>();
+        auto &tags = manager.get_components<rtype::TagComponent>();
+        ntw::Communication destroy{.type = ntw::NetworkType::Destruction, .args = {}};
 
-    if (!healths[entity].has_value() && !tags[entity].has_value())
-        return;
-    if (tags[entity]->tag.find("Enemy") == std::string::npos &&
-        tags[entity]->tag.find("Player") == std::string::npos)
-        return;
-    if (healths[entity]->health > 0)
-        return;
-    destroy.add_param(entity);
-    rserver::Manager::send_message(destroy, player, m_socket);
-    spawn_at_enemy_death(entity, manager);
-    manager.delete_entity(entity);
+        if (!healths[entity].has_value() && !tags[entity].has_value())
+            return;
+        if (tags[entity]->tag.find("Enemy") == std::string::npos &&
+            tags[entity]->tag.find("Player") == std::string::npos)
+            return;
+        if (healths[entity]->health > 0)
+            return;
+        destroy.add_param(entity);
+        rserver::Manager::send_message(destroy, player, m_socket);
+        spawn_at_enemy_death(entity, manager);
+        manager.delete_entity(entity);
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
+    }
 }
 
 void rserver::game::GameLogic::at_player_death(rtype::ECSManager &manager, rserver::Player &player,
                                                std::size_t entity)
 {
-    ntw::Communication death{.type = ntw::NetworkType::End};
+    try {
+        ntw::Communication death{.type = ntw::NetworkType::End};
 
-    rserver::Manager::send_message(death, player, m_socket);
-    manager.delete_entity(entity);
+        rserver::Manager::send_message(death, player, m_socket);
+        manager.delete_entity(entity);
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw e;
+    }
 }

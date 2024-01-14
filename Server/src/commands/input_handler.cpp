@@ -64,6 +64,8 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
             component.position_y += POSITIONS[static_cast<std::size_t>(args[0][0] - '0')].pos_y;
         } catch (game::solo::SoloGame::SoloException & /* e */) {
             Manager::send_message({ntw::NetworkType::Ko}, player, this->udp_socket);
+        } catch (rtype::ECSManager::ECSException & /* e */) {
+            return;
         }
     } catch (rtype::ECSManager::ECSException & /* e */) {
         return;
@@ -109,6 +111,8 @@ void rserver::Manager::shoot_according_level(rserver::Player &player, // NOLINT
             transform_bullet3.velocity_y = VELOCITY_BULLET * -1;
         }
     } catch (ServerEntityFactory::FactoryException &e) {
+        throw ManagerException(e.what());
+    } catch (rtype::ECSManager::ECSException &e) {
         throw ManagerException(e.what());
     }
 }

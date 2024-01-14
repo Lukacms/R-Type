@@ -41,18 +41,18 @@ size_t rserver::ServerEntityFactory::create(const std::string &type, rtype::ECSM
 size_t rserver::ServerEntityFactory::create_json(const std::string &type,
                                                  rtype::ECSManager &ecs_manager)
 {
-    std::ifstream file{ENTITIES_PATH.data()};
-    njson entities{};
-    auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
-    auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
-    auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
-    auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
-    auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
-
-    if (!file.is_open())
-        throw FactoryException("Couldn't find entities infos");
-    entities = njson::parse(file);
     try {
+        std::ifstream file{ENTITIES_PATH.data()};
+        njson entities{};
+        auto &health{ecs_manager.get_components<rtype::HealthComponent>()};
+        auto &collider{ecs_manager.get_components<rtype::BoxColliderComponent>()};
+        auto &tag{ecs_manager.get_components<rtype::TagComponent>()};
+        auto &transform{ecs_manager.get_components<rtype::TransformComponent>()};
+        auto &clocks{ecs_manager.get_components<rtype::ClockComponent>()};
+
+        if (!file.is_open())
+            throw FactoryException("Couldn't find entities infos");
+        entities = njson::parse(file);
         for (auto &entity : entities["entities"]) {
             if (entity["tag"] != type)
                 continue;
@@ -70,6 +70,8 @@ size_t rserver::ServerEntityFactory::create_json(const std::string &type,
         }
     } catch (nlohmann::json::exception &e) {
         DEBUG(("%s%s", e.what(), ENDL));
+    } catch (rtype::ECSManager::ECSException &e) {
+        throw FactoryException(e.what());
     }
     throw FactoryException("Unknown entity type");
 }

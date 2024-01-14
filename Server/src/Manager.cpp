@@ -9,7 +9,6 @@
 #include <csignal>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <mutex>
 #include <nlohmann/json.hpp>
 #include <rtype.hh>
@@ -238,7 +237,7 @@ void rserver::Manager::start_receive()
     while (RUNNING) {
         try {
             this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
-            // DEBUG(("port upon receiving %d\n", this->endpoint.port()));
+            DEBUG(("port upon receiving %d\n", this->endpoint.port()));
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
                     [commn, this]() { this->command_manager(commn, this->endpoint); });
