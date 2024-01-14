@@ -13,7 +13,7 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 
 .in +1c
 .ti -1c
-.RI "\fBGameLogic\fP (asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex)"
+.RI "\fBGameLogic\fP (asio::ip::udp::socket &socket, std::shared_mutex &ecs_mutex, const std::size_t &proom_id)"
 .br
 .RI "Constructor\&. "
 .ti -1c
@@ -46,6 +46,9 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .br
 .RI "Send music that is being played to all players\&. "
 .ti -1c
+.RI "void \fBsend_background\fP (\fBrserver::PlayersManager\fP &players_manager, const std::string &background_name)"
+.br
+.ti -1c
 .RI "void \fBdestroy_too_far_entities\fP (\fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .RI "Destroy entities that are not in screen's range\&. "
@@ -62,6 +65,9 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .br
 .RI "Spawn bonus when a enemy is killed\&. "
 .ti -1c
+.RI "void \fBat_player_death\fP (\fBrtype::ECSManager\fP &manager, \fBrserver::PlayersManager\fP &players_manager, std::size_t player)"
+.br
+.ti -1c
 .RI "void \fBcollision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .RI "Get collisions and handle them\&. "
@@ -73,6 +79,15 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .RI "void \fBenemy_collision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::PlayersManager\fP &players_manager, \fBrtype::ECSManager\fP &manager)"
 .br
 .RI "Handle collisions with enemies\&. "
+.ti -1c
+.RI "void \fBcheck_if_player_out_of_bounds\fP (\fBrtype::ECSManager\fP &manager)"
+.br
+.ti -1c
+.RI "void \fBcheck_if_enemy_dead\fP (\fBrtype::ECSManager\fP &manager, \fBrserver::PlayersManager\fP &players_manager, std::size_t entity)"
+.br
+.ti -1c
+.RI "void \fBreset_clock\fP ()"
+.br
 .ti -1c
 .RI "void \fBgame_loop\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager, float delta_time)"
 .br
@@ -86,6 +101,10 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .br
 .RI "Send music that is being played to all players\&. "
 .ti -1c
+.RI "void \fBsend_background\fP (\fBrserver::Player\fP &player, const std::string &background_name)"
+.br
+.RI "Send background that is being played to all players\&. "
+.ti -1c
 .RI "void \fBdestroy_too_far_entities\fP (\fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
 .br
 .RI "Destroy entities that are not in screen's range\&. "
@@ -93,6 +112,12 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .RI "void \fBdestroy_too_long_entities\fP (\fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
 .br
 .RI "Destroy entities that have a clock that has timed out\&. "
+.ti -1c
+.RI "void \fBcheck_if_enemy_dead\fP (\fBrtype::ECSManager\fP &manager, \fBrserver::Player\fP &player, std::size_t entity)"
+.br
+.ti -1c
+.RI "void \fBat_player_death\fP (\fBrtype::ECSManager\fP &manager, \fBrserver::Player\fP &player, std::size_t entity)"
+.br
 .ti -1c
 .RI "void \fBcollision_responses\fP (\fBrtype::PhysicsManager\fP &physics_manager, \fBrserver::Player\fP &player, \fBrtype::ECSManager\fP &manager)"
 .br
@@ -106,12 +131,19 @@ rserver::game::GameLogic \- To handle a game\&. Create entities with the ECS, mo
 .br
 .RI "Handle collisions with enemies\&. "
 .in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static void \fBspawn_bullets_for_mine\fP (\fBrtype::ECSManager\fP &manager, std::size_t entity_to_follow)"
+.br
+.in -1c
 .SH "Detailed Description"
 .PP 
 To handle a game\&. Create entities with the ECS, move them when needed, launch level, waves of enemies, \&.\&.\&. 
 .SH "Constructor & Destructor Documentation"
 .PP 
-.SS "rserver::game::GameLogic::GameLogic (asio::ip::udp::socket & socket, std::shared_mutex & ecs_mutex)"
+.SS "rserver::game::GameLogic::GameLogic (asio::ip::udp::socket & socket, std::shared_mutex & ecs_mutex, const std::size_t & proom_id)"
 
 .PP
 Constructor\&. 
@@ -321,6 +353,19 @@ Handle collisions with the player\&.
 \fIplayers_manager\fP - \fBPlayersManager\fP & 
 .br
 \fImanager\fP - ECSManager & 
+.RE
+.PP
+
+.SS "void rserver::game::GameLogic::send_background (\fBrserver::Player\fP & player, const std::string & background_name)"
+
+.PP
+Send background that is being played to all players\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIplayer\fP - \fBPlayersManager\fP & 
+.br
+\fImusic_name\fP - std::string - path to music 
 .RE
 .PP
 
