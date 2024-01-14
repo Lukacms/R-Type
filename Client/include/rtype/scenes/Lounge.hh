@@ -36,6 +36,11 @@ namespace rclient::scenes
     constexpr int TEXT_POS_LOUNGE{100};
     constexpr int ROOM_TIMEOUT{200};
 
+    /**
+     * @class Lounge
+     * @brief Lounge scene. Is a child of IScene
+     *
+     */
     class Lounge : public IScene
     {
         public:

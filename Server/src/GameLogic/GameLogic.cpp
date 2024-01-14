@@ -500,7 +500,11 @@ void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physic
                                                    rserver::Player &player,
                                                    rtype::ECSManager &manager)
 {
-    player_collision_responses(physics_manager, player, manager);
+    try {
+        player_collision_responses(physics_manager, player, manager);
+    } catch (solo::SoloGame::SoloException &e) {
+        throw e;
+    }
     enemy_collision_responses(physics_manager, player, manager);
 }
 
@@ -558,6 +562,7 @@ void rserver::game::GameLogic::player_collision_responses( // NOLINT
                 if (tags[entity2]->tag.find("Enemy") != std::string::npos ||
                     tags[entity2]->tag.find("Asteroid") != std::string::npos) {
                     at_player_death(manager, player, entity1);
+                    throw solo::SoloGame::SoloException("Death");
                 }
             }
         }

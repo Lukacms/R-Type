@@ -2,13 +2,20 @@
 .ad l
 .nh
 .SH NAME
-rclient::BackgroundManager
+rclient::BackgroundManager \- Manage the game's backgrounds\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <BackgroundManager\&.hh>\fP
 .SS "Public Member Functions"
 
 .in +1c
+.ti -1c
+.RI "\fBBackgroundManager\fP ()"
+.br
+.RI "Constructor of \fBBackgroundManager\fP\&. "
 .ti -1c
 .RI "\fBBackgroundManager\fP (\fBBackgroundManager\fP const &to_copy)=default"
 .br
@@ -24,13 +31,43 @@ rclient::BackgroundManager
 .ti -1c
 .RI "std::array< \fBBackgroundSpecifier\fP, 2 > \fBget_backgrounds\fP () const"
 .br
+.RI "return backgrounds specifiers "
 .ti -1c
 .RI "void \fBchange_background\fP (std::string &name)"
 .br
+.RI "Method to change the background with a fading effect\&. "
 .ti -1c
 .RI "void \fBupdate\fP ()"
 .br
+.RI "update background, move the parallax, \&.\&.\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+Manage the game's backgrounds\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "void rclient::BackgroundManager::change_background (std::string & name)"
+
+.PP
+Method to change the background with a fading effect\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIname\fP - string & 
+.RE
+.PP
+
+.SS "std::array< \fBrclient::BackgroundSpecifier\fP, 2 > rclient::BackgroundManager::get_backgrounds () const"
+
+.PP
+return backgrounds specifiers 
+.PP
+\fBReturns\fP
+.RS 4
+<\fBBackgroundSpecifier\fP, 2> 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

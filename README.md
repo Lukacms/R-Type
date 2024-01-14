@@ -21,8 +21,20 @@ The project is built using [CMake](https://cmake.org/), with an overlay using [j
 You can see all the rules of the justfile [here](./docs/Build.md).
 
 ### Dependencies
-The project is done in [C++](https://en.wikipedia.org/wiki/C%2B%2B), and build using [CMake](https://cmake.org/).
+The project is done in [C++20](https://en.wikipedia.org/wiki/C%2B%2B), and build using [CMake](https://cmake.org/).
 All other dependencies are built with cmake using FetchContent.
+We use:
+* `SFML` for display of Client's elements
+* `GoogleTests` for unit tests
+* `GoogleBenchmarks` for benchmarks
+* `Doxygen` for documentation, they are generated with [man format](./man/man3/)
+* `justfile` to compile, lint and test the project
+
+We implemented the R-Type with the following features:
+* A multithreaded server, handling multiple rooms, solo games, levels, and more
+* A graphical client, that is also multithreaded
+* A `Entity Component System`, as well as a [Game Engine](./GameEngine)
+* A client-server [communication protocol](https://github.com/Lukacms/R-Type/wiki/Protocol)
 
 ### Documentation
 To have more information, look at the [docs](./docs/) folder.\
@@ -30,67 +42,8 @@ There is also a [wiki](https://github.com/Lukacms/R-Type/wiki/).
 
 ## Build
 
-### Linux
-To build the project, follow the steps below:
-```bash
-# Make sure you have the necessary system packages installed
-# ⚠️ The following system packages installation commands may change depending on 
-# your OS. Below example is for Ubuntu 20.04
-sudo apt-get update -qq
-sudo apt-get install -y cmake clang ninja-build just ccache
-
-# Have to install some libraries required for some libraries, such as SFML
-sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libdrm-dev libgbm-dev
-
-# clone the repository
-git clone git@github.com:Lukacms/R-Type.git
-cd R-Type
-
-just ninja # clangd
-just release # g++
-```
-
-Once the project is built, it will have the following architecture:
-```bash
-.
-├── build
-│   └── build files
-├── Client
-├── CMakeLists.txt
-├── GameEngine
-├── justfile
-├── libs
-│   ├── rtype-client-core.so
-│   ├── ...
-│   └── rtype-server-core.so
-├── README.md
-├── r-type_client
-├── r-type_server
-├── RType-Utils
-└── Server
-```
-
-### Windows
-Make sure to have the following package installed. Name may vary:
-* just
-* cmake
-* clang
-* ninja-build
-* dlfcn-win32 with `vcpkg`
-
-And for SFML:
-* libxrandr-dev
-* libxcursor-dev
-* libudev-dev
-* libopenal-dev
-* libflac-dev
-* libvorbis-dev
-* libgl1-mesa-dev
-* libegl1-mesa-dev
-* libdrm-dev
-* libgbm-dev
-
-You can then launch the project with `just windows`.
+* [Building the project on Linux](./docs/UsageLinux.md)
+* [Building the project on Windows](./docs/UsageWindows.md)
 
 ## Contribute to the project
 The details are on the [wiki's](https://github.com/Lukacms/R-Type/wiki/New-Developer-on-the-project-%3F) page to known how to startr contributing on the project.

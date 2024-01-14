@@ -17,16 +17,33 @@ namespace rclient
     constexpr std::string_view BG_BASE{"Background"};
     constexpr std::string_view BG_JSON_PATH{"./assets/configs/Backgrounds.json"};
 
+    /**
+     * @class BackgroundSpecifier
+     * @brief Utils for background, to apply transform and sprite components
+     *
+     */
     struct BackgroundSpecifier {
+        public:
             rtype::TransformComponent transform;
             rtype::SpriteComponent sprite;
     };
 
+    /**
+     * @class BackgroundRectangle
+     * @brief Structure for the background. Has a texture's name, with its rectangle
+     *
+     */
     struct BackgroundRectangle {
+        public:
             std::string name;
             rtype::utils::TextureRect rectangle;
     };
 
+    /**
+     * @class BackgroundManager
+     * @brief Manage the game's backgrounds
+     *
+     */
     class BackgroundManager
     {
         public:

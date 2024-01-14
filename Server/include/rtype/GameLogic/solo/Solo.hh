@@ -23,6 +23,11 @@ namespace rserver::game::solo
     constexpr std::string_view END{"End of Game."};
     constexpr std::string_view DEL_ENTITY{"Del entity"};
 
+    /**
+     * @class SoloGame
+     * @brief Class to handle games where the player decides to be alone
+     *
+     */
     class SoloGame
     {
         public:

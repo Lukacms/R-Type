@@ -22,21 +22,30 @@ rtype::utils::ThreadPool \- Handle threads\&. The program has different parts of
 .ti -1c
 .RI "\fBThreadPool\fP (\fBThreadPool\fP &&to_move)"
 .br
+.RI "Constructor by move\&. "
+.ti -1c
+.RI "\fB~ThreadPool\fP ()"
+.br
+.RI "Destructor for thread pool\&. Stops threads\&. "
 .ti -1c
 .RI "\fBThreadPool\fP & \fBoperator=\fP (\fBThreadPool\fP const &to_copy)=delete"
 .br
 .ti -1c
 .RI "\fBThreadPool\fP & \fBoperator=\fP (\fBThreadPool\fP &&to_move)"
 .br
+.RI "Operator equal by move\&. "
 .ti -1c
 .RI "void \fBadd_job\fP (const std::function< void()> &job)"
 .br
+.RI "Add a job to do to the queue of jobs\&. The job must be a function returning void and taking no param (can and should be a lambda) "
 .ti -1c
 .RI "void \fBstop\fP ()"
 .br
+.RI "Stops every thread of the pool\&. "
 .ti -1c
 .RI "bool \fBis_busy\fP ()"
 .br
+.RI "Return if the pool is busy, which means if there are jobs in the queue\&. "
 .in -1c
 .SH "Detailed Description"
 .PP 
@@ -53,6 +62,57 @@ construct a new \fBThreadPool\fP object\&. Sould be only one in project, no need
 \fIp_nb_threads\fP - u_int - default is max threads that the system supports
 .br
 \fIp_nb_threads\fP - u_int 
+.RE
+.PP
+
+.SS "rtype::utils::ThreadPool::ThreadPool (\fBThreadPool\fP && to_move)"
+
+.PP
+Constructor by move\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBThreadPool\fP && 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rtype::utils::ThreadPool::add_job (const std::function< void()> & job)"
+
+.PP
+Add a job to do to the queue of jobs\&. The job must be a function returning void and taking no param (can and should be a lambda) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIjob\fP - std::function<void()> & 
+.RE
+.PP
+
+.SS "bool rtype::utils::ThreadPool::is_busy ()"
+
+.PP
+Return if the pool is busy, which means if there are jobs in the queue\&. 
+.PP
+\fBReturns\fP
+.RS 4
+bool 
+.RE
+.PP
+
+.SS "\fBrtype::utils::ThreadPool\fP & rtype::utils::ThreadPool::operator= (\fBThreadPool\fP && to_move)"
+
+.PP
+Operator equal by move\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIto_move\fP - \fBThreadPool\fP && 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+- \fBThreadPool\fP & - this 
 .RE
 .PP
 

@@ -8,12 +8,22 @@
 
 namespace rtype::utils
 {
+    /**
+     * @brief Structure for 2 values, x and y. Values can be anything, as long as its consistent
+     *
+     * @tparam TComponent - template value
+     */
     template <typename TComponent> struct Vector2D {
         public:
             TComponent x{0};
             TComponent y{0};
     };
 
+    /**
+     * @class TextureRect
+     * @brief x, y, width and height values to have a rect. Is used for texture, hence its name
+     *
+     */
     struct TextureRect {
         public:
             int x{0};

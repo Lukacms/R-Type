@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rclient::scenes::Lounge
+rclient::scenes::Lounge \- \fBLounge\fP scene\&. Is a child of \fBIScene\fP\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Lounge\&.hh>\fP
 .PP
 Inherits \fBrclient::scenes::IScene\fP\&.
 .SS "Public Member Functions"
@@ -14,6 +17,7 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "\fBLounge\fP (asio::ip::udp::socket &psocket, asio::ip::udp::endpoint &pendpoint, const unsigned int &pwidth=rtype::STANDARD_WIDTH, const unsigned int &pheight=rtype::STANDARD_HEIGHT)"
 .br
+.RI "Constructor for \fBLounge\fP's class\&. "
 .ti -1c
 .RI "\fBLounge\fP (\fBLounge\fP const &to_copy)=default"
 .br
@@ -29,25 +33,129 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
 .br
+.RI "Display of elements; override function of \fBIScene\fP\&. "
 .ti -1c
 .RI "void \fBadd_room\fP (unsigned int r_id)"
 .br
 .ti -1c
 .RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
+.RI "handle network events; override function of \fBIScene\fP "
 .ti -1c
 .RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
+.RI "handle network functions recieved by the server "
 .ti -1c
 .RI "void \fBrooms_handler\fP (std::vector< std::string > &args, State &state)"
 .br
+.RI "handle room command "
 .ti -1c
 .RI "void \fBend_handler\fP (std::vector< std::string > &args, State &state)"
 .br
+.RI "End command\&. Close the client\&. "
 .ti -1c
 .RI "void \fBto_game_handler\fP (std::vector< std::string > &args, State &state)"
 .br
+.RI "ToGame handle - client will be going to \fBGame\fP scene\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+\fBLounge\fP scene\&. Is a child of \fBIScene\fP\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rclient::scenes::Lounge::Lounge (asio::ip::udp::socket & psocket, asio::ip::udp::endpoint & pendpoint, const unsigned int & pwidth = \fCrtype::STANDARD_WIDTH\fP, const unsigned int & pheight = \fCrtype::STANDARD_HEIGHT\fP)"
+
+.PP
+Constructor for \fBLounge\fP's class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpsocket\fP - asio::udp::socket & 
+.br
+\fIpendpoint\fP - asio::udp::endpoint & 
+.br
+\fIpwidth\fP - const u_int & 
+.br
+\fIpheight\fP - const u_int & 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rclient::scenes::Lounge::display (\fBrtype::IGraphicModule\fP & graphics)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Display of elements; override function of \fBIScene\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::Lounge::end_handler (std::vector< std::string > & args, State & state)"
+
+.PP
+End command\&. Close the client\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIstate\fP - State & 
+.RE
+.PP
+
+.SS "void rclient::scenes::Lounge::handle_events (\fBrtype::IGraphicModule\fP & graphics, \fBrtype::IAudioModule\fP & audio, State & state)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+handle network events; override function of \fBIScene\fP 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::Lounge::handle_network (\fBntw::Communication\fP & commn, \fBrtype::IAudioModule\fP & audio, State & state)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+handle network functions recieved by the server 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcommn\fP - Communication & 
+.br
+\fIstate\fP - IAudioModule & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::Lounge::rooms_handler (std::vector< std::string > & args, State & state)"
+
+.PP
+handle room command 
+.PP
+\fBParameters\fP
+.RS 4
+\fIargs\fP - <string> 
+.RE
+.PP
+
+.SS "void rclient::scenes::Lounge::to_game_handler (std::vector< std::string > & args, State & state)"
+
+.PP
+ToGame handle - client will be going to \fBGame\fP scene\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIstate\fP - State & 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

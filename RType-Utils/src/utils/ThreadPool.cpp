@@ -6,7 +6,6 @@
 */
 
 #include <algorithm>
-#include <iostream>
 #include <mutex>
 #include <rtype/utils/ThreadPool.hh>
 
@@ -24,13 +23,20 @@ rtype::utils::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(
     }
 }
 
+/**
+ * @brief Destructor for thread pool. Stops threads
+ */
 rtype::utils::ThreadPool::~ThreadPool()
 {
     if (this->is_busy())
         this->stop();
-    std::cout << "quitting boat\n";
 }
 
+/**
+ * @brief Constructor by move
+ *
+ * @param to_move - ThreadPool &&
+ */
 rtype::utils::ThreadPool::ThreadPool(rtype::utils::ThreadPool &&to_move)
     : nb_threads{std::move(to_move.nb_threads)}, queue{std::move(to_move.queue)}
 {
@@ -38,6 +44,12 @@ rtype::utils::ThreadPool::ThreadPool(rtype::utils::ThreadPool &&to_move)
 }
 
 /* override operator */
+/**
+ * @brief Operator equal by move
+ *
+ * @param to_move - ThreadPool &&
+ * @return - ThreadPool & - this
+ */
 rtype::utils::ThreadPool &rtype::utils::ThreadPool::operator=(ThreadPool &&to_move)
 {
     this->nb_threads = std::move(to_move.nb_threads);
@@ -48,6 +60,12 @@ rtype::utils::ThreadPool &rtype::utils::ThreadPool::operator=(ThreadPool &&to_mo
 }
 
 /* methods */
+/**
+ * @brief Add a job to do to the queue of jobs. The job must be a function returning void and taking
+ * no param (can and should be a lambda)
+ *
+ * @param job - std::function<void()> &
+ */
 void rtype::utils::ThreadPool::add_job(const std::function<void()> &job)
 {
     {
@@ -57,6 +75,10 @@ void rtype::utils::ThreadPool::add_job(const std::function<void()> &job)
     this->condition.notify_one();
 }
 
+/**
+ * @brief Function that is called for every thread. Run as long as the variable `should_terminate`
+ * is set to true
+ */
 void rtype::utils::ThreadPool::thread_loop()
 {
     while (!this->should_terminate) {
@@ -74,6 +96,11 @@ void rtype::utils::ThreadPool::thread_loop()
     }
 }
 
+/**
+ * @brief Return if the pool is busy, which means if there are jobs in the queue
+ *
+ * @return bool
+ */
 bool rtype::utils::ThreadPool::is_busy()
 {
     bool busy{false};
@@ -85,6 +112,9 @@ bool rtype::utils::ThreadPool::is_busy()
     return busy;
 }
 
+/**
+ * @brief Stops every thread of the pool
+ */
 void rtype::utils::ThreadPool::stop()
 {
     {

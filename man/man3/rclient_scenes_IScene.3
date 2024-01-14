@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rclient::scenes::IScene
+rclient::scenes::IScene \- Interface for scenes\&. Has methods to display, handle events and network inputs\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <IScene\&.hh>\fP
 .PP
 Inherited by \fBrclient::scenes::Game\fP, \fBrclient::scenes::Lounge\fP, \fBrclient::scenes::Menu\fP, and \fBrclient::scenes::PauseMenu\fP\&.
 .SS "Public Member Functions"
@@ -33,6 +36,9 @@ Inherited by \fBrclient::scenes::Game\fP, \fBrclient::scenes::Lounge\fP, \fBrcli
 .RI "virtual void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state)=0"
 .br
 .in -1c
+.SH "Detailed Description"
+.PP 
+Interface for scenes\&. Has methods to display, handle events and network inputs\&. 
 
 .SH "Author"
 .PP 

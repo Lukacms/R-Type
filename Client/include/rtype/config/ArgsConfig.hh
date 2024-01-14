@@ -27,6 +27,11 @@ namespace rclient
     constexpr std::string_view WRONG_ARGS_NB{"Wrong number of arguments."};
     constexpr std::string_view PORT_IS_NB{"The port argument should be a positive number."};
 
+    /**
+     * @class Arguments
+     * @brief Every parameter that can be put on command line
+     *
+     */
     struct Arguments {
         public:
             std::string port{DEFAULT_PORT.data()};
@@ -34,6 +39,11 @@ namespace rclient
             bool help{false};
     };
 
+    /**
+     * @class ArgsConfig
+     * @brief Parse args and return informations
+     *
+     */
     class ArgsConfig
     {
         public:

@@ -5,3 +5,5 @@
 * [What's our game engine, and how does it works ?](./GameEngine.md)
 * [Visual renders of the project](./Renders.md)
 * [Projects tests](./Tests.md)
+* [Windows compilation](./UsageWindows.md)
+* [Linux compilation](./UsageLinux.md)

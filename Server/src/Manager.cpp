@@ -163,8 +163,12 @@ void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
 
 void rserver::Manager::run_solo_games(rtype::utils::Clock &delta)
 {
-    for (auto &solo : this->solos) {
-        solo.game_turn(delta);
+    for (auto solo{this->solos.begin()}; solo != this->solos.end(); solo++) {
+        try {
+            solo->game_turn(delta);
+        } catch (game::solo::SoloGame::SoloException & /* e */) {
+            this->solos.erase(solo);
+        }
     }
 }
 

@@ -2,16 +2,20 @@
 .ad l
 .nh
 .SH NAME
-rclient::components::RoomInfos
+rclient::components::RoomInfos \- Infos about rooms, how to display them, \&.\&.\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Room\&.hh>\fP
 .SS "Public Member Functions"
 
 .in +1c
 .ti -1c
 .RI "\fBRoomInfos\fP (const unsigned int &pid, const std::string &font)"
 .br
+.RI "Constructor for \fBRoomInfos\fP class\&. "
 .ti -1c
 .RI "\fBRoomInfos\fP (\fBRoomInfos\fP const &to_copy)=default"
 .br
@@ -27,25 +31,133 @@ rclient::components::RoomInfos
 .ti -1c
 .RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics, sf::Sprite &sprite, \fBrtype::TransformComponent\fP &trans)"
 .br
+.RI "Display elements of a room from a starting position\&. "
 .ti -1c
 .RI "void \fBset_nb_players\fP (const unsigned int &new_players)"
 .br
+.RI "Set the number of players in the room\&. "
 .ti -1c
 .RI "void \fBset_status\fP (const unsigned short &pstatus)"
 .br
+.RI "Set the status of the room\&. "
 .ti -1c
 .RI "unsigned int \fBget_id\fP () const"
 .br
+.RI "Get the room's id\&. "
 .ti -1c
 .RI "unsigned short \fBget_status\fP () const"
 .br
+.RI "Get the room's status\&. "
 .ti -1c
 .RI "unsigned int \fBget_nb_players\fP () const"
 .br
+.RI "Get the room's number of players\&. "
 .ti -1c
 .RI "sf::FloatRect \fBget_box\fP () const"
 .br
+.RI "Get the limits of the rooms, with top, left, width and height\&. "
 .in -1c
+.SH "Detailed Description"
+.PP 
+Infos about rooms, how to display them, \&.\&.\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rclient::components::RoomInfos::RoomInfos (const unsigned int & pid, const std::string & font)"
+
+.PP
+Constructor for \fBRoomInfos\fP class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpid\fP - const u_int & 
+.br
+\fIfont\fP - string, path to text's font 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rclient::components::RoomInfos::display (\fBrtype::IGraphicModule\fP & graphics, sf::Sprite & sprite, \fBrtype::TransformComponent\fP & trans)"
+
+.PP
+Display elements of a room from a starting position\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.br
+\fIsprite\fP - Sprite & 
+.br
+\fItrans\fP - TransformComponent & 
+.RE
+.PP
+
+.SS "sf::FloatRect rclient::components::RoomInfos::get_box () const"
+
+.PP
+Get the limits of the rooms, with top, left, width and height\&. 
+.PP
+\fBReturns\fP
+.RS 4
+FloatRect 
+.RE
+.PP
+
+.SS "unsigned int rclient::components::RoomInfos::get_id () const"
+
+.PP
+Get the room's id\&. 
+.PP
+\fBReturns\fP
+.RS 4
+u_int 
+.RE
+.PP
+
+.SS "unsigned int rclient::components::RoomInfos::get_nb_players () const"
+
+.PP
+Get the room's number of players\&. 
+.PP
+\fBReturns\fP
+.RS 4
+u_int 
+.RE
+.PP
+
+.SS "unsigned short rclient::components::RoomInfos::get_status () const"
+
+.PP
+Get the room's status\&. 
+.PP
+\fBReturns\fP
+.RS 4
+u_short 
+.RE
+.PP
+
+.SS "void rclient::components::RoomInfos::set_nb_players (const unsigned int & new_players)"
+
+.PP
+Set the number of players in the room\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fInew_players\fP - const u_int & 
+.RE
+.PP
+
+.SS "void rclient::components::RoomInfos::set_status (const unsigned short & pstatus)"
+
+.PP
+Set the status of the room\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpstatus\fP - const u_short & - is associated to a enum 
+.RE
+.PP
+
 
 .SH "Author"
 .PP 

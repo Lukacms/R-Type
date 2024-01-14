@@ -10,6 +10,11 @@
 #include <rtype/Client.hh>
 #include <rtype/config/ArgsConfig.hh>
 
+/**
+ * @brief Display help message
+ *
+ * @return int - SUCCESS (0)
+ */
 static int display_help()
 {
     for (auto const &str : rclient::HELP_MSG) {
@@ -18,6 +23,13 @@ static int display_help()
     return rclient::SUCCESS;
 }
 
+/**
+ * @brief Main function, to launch all parts
+ *
+ * @param argc - int
+ * @param argv - const char *[]
+ * @return - int - SUCCESS (0) | FAILURE (84)
+ */
 int main(int argc, const char *argv[])
 {
     try {

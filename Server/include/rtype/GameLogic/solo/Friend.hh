@@ -10,6 +10,11 @@
 namespace rserver::game::solo
 {
 
+    /**
+     * @class Friend
+     * @brief Should have been an AI for the solo game. Not yet implemented
+     *
+     */
     class Friend
     {
         public:

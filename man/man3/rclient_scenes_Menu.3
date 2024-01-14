@@ -2,10 +2,13 @@
 .ad l
 .nh
 .SH NAME
-rclient::scenes::Menu
+rclient::scenes::Menu \- \fBMenu\fP scene\&. Is a child of \fBIScene\fP, and the first scene of the game\&.  
+
 .SH SYNOPSIS
 .br
 .PP
+.PP
+\fC#include <Menu\&.hh>\fP
 .PP
 Inherits \fBrclient::scenes::IScene\fP\&.
 .SS "Public Member Functions"
@@ -14,6 +17,7 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "\fBMenu\fP (unsigned int width=rtype::STANDARD_WIDTH, unsigned int height=rtype::STANDARD_HEIGHT)"
 .br
+.RI "\fBMenu\fP constructor\&. Create all assets needed\&. "
 .ti -1c
 .RI "\fBMenu\fP (\fBMenu\fP const &to_copy)=delete"
 .br
@@ -29,13 +33,63 @@ Inherits \fBrclient::scenes::IScene\fP\&.
 .ti -1c
 .RI "void \fBdisplay\fP (\fBrtype::IGraphicModule\fP &graphics) override"
 .br
+.RI "Display method\&. Override function of \fBIScene\fP\&. "
 .ti -1c
 .RI "void \fBhandle_events\fP (\fBrtype::IGraphicModule\fP &graphics, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
+.RI "Handle events recieved by the user\&. "
 .ti -1c
 .RI "void \fBhandle_network\fP (\fBntw::Communication\fP &commn, \fBrtype::IAudioModule\fP &audio, State &state) override"
 .br
 .in -1c
+.SH "Detailed Description"
+.PP 
+\fBMenu\fP scene\&. Is a child of \fBIScene\fP, and the first scene of the game\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "rclient::scenes::Menu::Menu (unsigned int width = \fCrtype::STANDARD_WIDTH\fP, unsigned int height = \fCrtype::STANDARD_HEIGHT\fP)"
+
+.PP
+\fBMenu\fP constructor\&. Create all assets needed\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIwidth\fP - u_int 
+.br
+\fIheight\fP - u_int 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void rclient::scenes::Menu::display (\fBrtype::IGraphicModule\fP & graphics)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Display method\&. Override function of \fBIScene\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
+.SS "void rclient::scenes::Menu::handle_events (\fBrtype::IGraphicModule\fP & graphics, \fBrtype::IAudioModule\fP & audio, State & state)\fC [override]\fP, \fC [virtual]\fP"
+
+.PP
+Handle events recieved by the user\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIgraphics\fP - IGraphicModule & 
+.br
+\fIstate\fP - IAudioModule & 
+.RE
+.PP
+
+.PP
+Implements \fBrclient::scenes::IScene\fP\&.
 
 .SH "Author"
 .PP 
