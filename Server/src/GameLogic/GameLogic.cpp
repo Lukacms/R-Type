@@ -272,7 +272,7 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
             int turns = std::rand() % 4;
             for (; turns > 0; turns -= 1) {
                 std::string random_enemy =
-                    ENEMIES[static_cast<ulong>(std::rand()) % ENEMIES.size()];
+                    ENEMIES[static_cast<unsigned long>(std::rand()) % ENEMIES.size()];
                 auto entity = rserver::ServerEntityFactory::create(random_enemy, manager);
                 auto &transform = manager.get_component<rtype::TransformComponent>(entity);
                 transform.position_y = std::rand() % 580;
