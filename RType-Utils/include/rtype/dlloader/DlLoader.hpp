@@ -214,7 +214,7 @@ namespace dl
              */
             void release()
             {
-                this->element.release();
+                delete this->element;
                 this->element = nullptr;
             }
 
