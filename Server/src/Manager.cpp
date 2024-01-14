@@ -81,10 +81,8 @@ rserver::Manager::~Manager()
 {
     ntw::Communication commn{ntw::NetworkType::End};
 
-    {
-        std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
-        Manager::send_to_all(commn, this->players, this->udp_socket);
-    }
+    this->threads.stop();
+    Manager::send_to_all(commn, this->players, this->udp_socket);
     DEBUG(("Finished server%s", ENDL));
 }
 
@@ -125,19 +123,6 @@ void rserver::Manager::launch(asio::ip::port_type port)
     }
 }
 
-void load_entity_properties()
-{
-    std::string path = rserver::ENTITIES_FILE.data();
-    std::ifstream file{path};
-
-    if (!file) {
-        return;
-    }
-    nlohmann::json json;
-    file >> json;
-    std::cout << json["Enemies"] << std::endl;
-}
-
 /**
  * @brief method to run game logic
  *  the game logic has to be on another thread, as the asio context run is an infinite loop
@@ -148,10 +133,8 @@ void rserver::Manager::run_game_logic(rtype::utils::Clock &timer, rtype::utils::
     this->threads.add_job([&, this]() {
         std::unique_lock<std::mutex> lock{clocks_mutex};
 
-        load_entity_properties();
         if (timer.get_elapsed_time_in_ms() > game::TIMER) {
             this->run_all_rooms_logics(delta);
-            this->run_solo_games(delta);
             timer.reset();
             delta.reset();
         }
@@ -166,19 +149,20 @@ void rserver::Manager::run_game_logic(rtype::utils::Clock &timer, rtype::utils::
  */
 void rserver::Manager::run_all_rooms_logics(rtype::utils::Clock &delta)
 {
-    std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
+    std::unique_lock<std::shared_mutex> lock{this->rooms_mutex};
+
     for (auto &room : this->rooms.get_rooms()) {
         if (room.get_status() == game::RoomStatus::InGame)
             room.run_game_logic(delta);
         else
             room.check_wait_timeout(static_cast<float>(delta.get_elapsed_time_in_ms()));
     }
+    this->lobby_handler();
+    this->run_solo_games(delta);
 }
 
 void rserver::Manager::run_solo_games(rtype::utils::Clock &delta)
 {
-    std::shared_lock<std::shared_mutex> lock{this->solos_mutex};
-
     for (auto &solo : this->solos) {
         solo.game_turn(delta);
     }
@@ -195,7 +179,6 @@ void rserver::Manager::run_solo_games(rtype::utils::Clock &delta)
 void rserver::Manager::send_message(const ntw::Communication &to_send, Player &client,
                                     asio::ip::udp::socket &udp_socket)
 {
-    std::shared_lock<std::shared_mutex> lock{client.mutex};
     udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
 }
 
@@ -210,10 +193,7 @@ void rserver::Manager::send_to_all(ntw::Communication &to_send, PlayersManager &
                                    asio::ip::udp::socket &udp_socket)
 {
     for (auto &client : players.get_all_players()) {
-        {
-            std::shared_lock<std::shared_mutex> lock{client.mutex};
-            udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
-        }
+        udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
     }
 }
 
@@ -222,11 +202,8 @@ void rserver::Manager::send_message(const ntw::Communication &to_send,
                                     asio::ip::udp::socket &udp_socket, const PlayerStatus &status)
 {
     for (auto &client : players.get_all_players()) {
-        {
-            std::shared_lock<std::shared_mutex> lock{client.mutex};
-            if (client.get_status() == status) {
-                udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
-            }
+        if (client.get_status() == status) {
+            udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
         }
     }
 }
@@ -236,11 +213,8 @@ void rserver::Manager::send_message(const ntw::Communication &to_send,
                                     asio::ip::udp::socket &udp_socket, const std::size_t &room_id)
 {
     for (auto &client : players.get_all_players()) {
-        {
-            std::shared_lock<std::shared_mutex> lock{client.mutex};
-            if (client.get_room_id() == static_cast<long>(room_id)) {
-                udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
-            }
+        if (client.get_room_id() == static_cast<long>(room_id)) {
+            udp_socket.send_to(asio::buffer(&to_send, sizeof(to_send)), client.get_endpoint());
         }
     }
 }
@@ -253,7 +227,6 @@ void rserver::Manager::send_message(const ntw::Communication &to_send,
 void rserver::Manager::start_receive()
 {
     ntw::Communication commn{};
-    rtype::utils::Clock clock{};
     rtype::utils::Clock timer{};
     rtype::utils::Clock delta{};
     std::mutex clocks_mutex{};
@@ -261,7 +234,7 @@ void rserver::Manager::start_receive()
     while (RUNNING) {
         try {
             this->udp_socket.receive_from(asio::buffer(&commn, sizeof(commn)), this->endpoint);
-            DEBUG(("port upon receiving %d\n", this->endpoint.port()));
+            // DEBUG(("port upon receiving %d\n", this->endpoint.port()));
             if (this->endpoint.port() > 0)
                 this->threads.add_job(
                     [commn, this]() { this->command_manager(commn, this->endpoint); });
@@ -269,10 +242,6 @@ void rserver::Manager::start_receive()
             // DEBUG(("An exception has occured while recieving: %s\n", e.what()));
         }
         this->run_game_logic(timer, delta, clocks_mutex);
-        if (clock.get_elapsed_time_in_ms() > game::TIMER) {
-            this->lobby_handler();
-            clock.reset();
-        }
     }
 }
 
@@ -289,10 +258,10 @@ void rserver::Manager::command_manager(ntw::Communication const &communication,
 {
     std::vector<std::string> args{
         split_delimitor(communication.args.data(), ntw::DELIMITORS.data())};
+    std::unique_lock<std::shared_mutex> rlock{this->rooms_mutex};
 
     try {
         Player &player{this->players.get_by_id(client.port())};
-        std::shared_lock<std::shared_mutex> lock{player.mutex};
 
         for (const auto &handle : HANDLER) {
             if (handle.type == communication.type)

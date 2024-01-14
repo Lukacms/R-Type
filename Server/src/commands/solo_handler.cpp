@@ -16,8 +16,6 @@
  */
 void rserver::Manager::solo_handler(rserver::Player &player, std::vector<std::string> & /* args */)
 {
-    std::unique_lock<std::shared_mutex> lock{this->solos_mutex};
-
     try {
         if (player.get_room_id() != -1)
             throw game::solo::SoloGame::SoloException("Already in room");

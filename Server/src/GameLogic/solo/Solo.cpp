@@ -44,7 +44,7 @@ rserver::game::solo::SoloGame &rserver::game::solo::SoloGame::operator=(SoloGame
 
 void rserver::game::solo::SoloGame::game_turn(rtype::utils::Clock &clock)
 {
-    std::shared_lock<std::shared_mutex> lock{this->mutex};
+    std::unique_lock<std::shared_mutex> lock{this->mutex};
 
     this->game.game_loop(this->physics.get_class(), this->player, this->ecs.get_class(),
                          static_cast<float>(clock.get_elapsed_time_in_ms()));

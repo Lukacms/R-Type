@@ -5,6 +5,7 @@
 ** Room
 */
 
+#include <iostream>
 #include <rtype.hh>
 #include <rtype/Factory/ServerEntityFactory.hh>
 #include <rtype/GameLogic/Room.hh>
@@ -28,7 +29,7 @@ rserver::game::Room::Room(asio::ip::udp::socket &psocket, std::size_t pid, Playe
     this->physics.init_class<void *()>(PHYSICS_SL_PATH.data());
 #endif /* __linux */
     init_ecs(this->ecs.get_class());
-    DEBUG(("New game room created%s", ENDL));
+    DEBUG(("New game room created with id: %zu%s", pid, ENDL));
 }
 
 /**
@@ -108,6 +109,7 @@ std::size_t rserver::game::Room::get_nb_players() const
  */
 void rserver::game::Room::del_player(rserver::Player &to_del)
 {
+    std::cout << "deleting player on quit\n";
     for (auto player{this->players.begin()}; player != this->players.end(); player++) {
         if (to_del.get_port() == *player) {
             to_del.set_status(PlayerStatus::Lobby);
@@ -148,7 +150,7 @@ rserver::game::GameLogic &rserver::game::Room::get_logic()
  */
 void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 {
-    std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+    std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
     this->logic.game_loop(this->physics.get_class(), this->manager, this->ecs.get_class(),
                           static_cast<float>(delta.get_elapsed_time_in_s()));
     this->ecs.get_class().apply_system(static_cast<float>(delta.get_elapsed_time_in_ms()));
@@ -163,7 +165,7 @@ void rserver::game::Room::run_game_logic(rtype::utils::Clock &delta)
 void rserver::game::Room::check_wait_timeout(float delta_time)
 {
     {
-        std::shared_lock<std::shared_mutex> lock{this->ecs_mutex};
+        std::unique_lock<std::shared_mutex> lock{this->ecs_mutex};
         this->logic.game_waiting(this->manager, this->ecs.get_class(), delta_time);
     }
     if (this->status != RoomStatus::Waiting)

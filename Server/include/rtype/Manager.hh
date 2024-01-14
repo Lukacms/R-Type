@@ -126,7 +126,6 @@ namespace rserver
             /* utils */
             std::shared_mutex ecs_mutex{};
             std::shared_mutex rooms_mutex{};
-            std::shared_mutex solos_mutex{};
 
             /* methods */
             static void handle_disconnection(int);

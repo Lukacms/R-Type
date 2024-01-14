@@ -57,7 +57,6 @@ void rserver::game::GameLogic::game_loop(rtype::PhysicsManager &physics_manager,
                                          rserver::PlayersManager &players_manager,
                                          rtype::ECSManager &manager, float /* delta_time */)
 {
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     m_entities = manager.get_used_entity();
 
     physics_manager.check_collisions(manager);
@@ -124,7 +123,6 @@ void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager 
                                                           rtype::ECSManager &manager)
 {
     try {
-        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
         rtype::SparseArray<rtype::TagComponent> &tags =
             manager.get_components<rtype::TagComponent>();
         for (auto entity1 : m_entities) {
@@ -167,7 +165,6 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
     auto &tags{manager.get_components<rtype::TagComponent>()};
     auto &healths{manager.get_components<rtype::HealthComponent>()};
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (const auto entity1 : m_entities) {
         if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
             continue;
@@ -231,7 +228,6 @@ void rserver::game::GameLogic::destroy_too_far_entities(rserver::PlayersManager 
     auto &transforms{manager.get_components<rtype::TransformComponent>()};
     auto &tag{manager.get_components<rtype::TagComponent>()};
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (size_t entity{0}; entity < transforms.size(); entity += 1) {
         if (!transforms[entity].has_value())
             continue;
@@ -265,7 +261,6 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
 {
     try {
         if (m_enemy_clock.get_elapsed_time_in_ms() > 20) {
-            std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
             auto entity = rserver::ServerEntityFactory::create("BasicEnemy", manager);
             auto &transform = manager.get_component<rtype::TransformComponent>(entity);
             transform.position_y = std::rand() % 550;
@@ -283,7 +278,7 @@ void rserver::game::GameLogic::spawn_enemy(rtype::ECSManager &manager)
  * @param entity_to_follow - std::size_t - id of entity
  * @param manager - ECSManager &
  */
-void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow,
+void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow, // NOLINT
                                                     rtype::ECSManager &manager)
 {
     int success = std::rand() % 1;
@@ -291,11 +286,10 @@ void rserver::game::GameLogic::spawn_at_enemy_death(std::size_t entity_to_follow
     auto &tags = manager.get_components<rtype::TagComponent>();
 
     try {
-        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
         if (transforms[entity_to_follow].has_value() && success == 0) {
             std::size_t entity = rserver::ServerEntityFactory::create("Upgrade", manager);
             transforms[entity] = {transforms[entity_to_follow]};
-            transforms[entity]->velocity_x = -0.1;
+            transforms[entity]->velocity_x = -0.1F;
             transforms[entity]->velocity_y = 0;
         }
         if (tags[entity_to_follow]->tag.find("Mine") != std::string::npos)
@@ -348,7 +342,6 @@ void rserver::game::GameLogic::destroy_too_long_entities(rserver::PlayersManager
     auto &tags = manager.get_components<rtype::TagComponent>();
     auto &clocks = manager.get_components<rtype::ClockComponent>();
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (size_t entity{0}; entity < tags.size() && entity < clocks.size(); entity += 1) {
         ntw::Communication destruction_descriptor{ntw::NetworkType::Destruction, {}};
         if (!tags[entity].has_value() || !clocks[entity].has_value())
@@ -366,7 +359,6 @@ void rserver::game::GameLogic::check_if_player_out_of_bounds(rtype::ECSManager &
     auto &transforms = manager.get_components<rtype::TransformComponent>();
     auto &tags = manager.get_components<rtype::TagComponent>();
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (std::size_t entity = 0; entity < transforms.size() && entity < tags.size(); entity += 1) {
         if (!transforms[entity].has_value() || !tags[entity].has_value())
             continue;
@@ -426,6 +418,7 @@ void rserver::game::GameLogic::at_player_death(rtype::ECSManager &manager,
 {
     ntw::Communication death{.type = ntw::NetworkType::End};
     ntw::Communication destruction{.type = ntw::NetworkType::Destruction};
+
     try {
         auto &p_network = players_manager.get_by_entity_room_id(player, m_room_id);
 
@@ -439,7 +432,7 @@ void rserver::game::GameLogic::at_player_death(rtype::ECSManager &manager,
         explosion_transform.position_x = player_transform.position_x;
         explosion_transform.position_y = player_transform.position_y;
         manager.delete_entity(player);
-    } catch (PlayersManager::PlayersException &e) {
+    } catch (PlayersManager::PlayersException & /* e */) {
         return;
     }
 }
@@ -505,9 +498,8 @@ void rserver::game::GameLogic::collision_responses(rtype::PhysicsManager &physic
  * @param player - PlayersManager &
  * @param manager - ECSManager &
  */
-void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager &physics_manager,
-                                                          rserver::Player &player,
-                                                          rtype::ECSManager &manager)
+void rserver::game::GameLogic::player_collision_responses( // NOLINT
+    rtype::PhysicsManager &physics_manager, rserver::Player &player, rtype::ECSManager &manager)
 {
     try {
         rtype::SparseArray<rtype::TagComponent> &tags =
@@ -533,7 +525,6 @@ void rserver::game::GameLogic::player_collision_responses(rtype::PhysicsManager 
     }
 
     try {
-        std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
         rtype::SparseArray<rtype::TagComponent> &tags =
             manager.get_components<rtype::TagComponent>();
         for (auto entity1 : m_entities) {
@@ -576,7 +567,6 @@ void rserver::game::GameLogic::enemy_collision_responses(rtype::PhysicsManager &
     auto &tags{manager.get_components<rtype::TagComponent>()};
     auto &healths{manager.get_components<rtype::HealthComponent>()};
 
-    std::shared_lock<std::shared_mutex> lock{m_ecs_mutex};
     for (const auto entity1 : m_entities) {
         if (!tags[entity1].has_value() || tags[entity1]->tag.find("Enemy") == std::string::npos)
             continue;

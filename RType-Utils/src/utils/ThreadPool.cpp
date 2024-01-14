@@ -26,7 +26,9 @@ rtype::utils::ThreadPool::ThreadPool(u_int p_nb_threads) : nb_threads{std::move(
 
 rtype::utils::ThreadPool::~ThreadPool()
 {
-    this->stop();
+    if (this->is_busy())
+        this->stop();
+    std::cout << "quitting boat\n";
 }
 
 rtype::utils::ThreadPool::ThreadPool(rtype::utils::ThreadPool &&to_move)
@@ -85,7 +87,10 @@ bool rtype::utils::ThreadPool::is_busy()
 
 void rtype::utils::ThreadPool::stop()
 {
-    this->should_terminate = true;
+    {
+        std::unique_lock<std::mutex> lock{this->mutex};
+        this->should_terminate = true;
+    }
     this->condition.notify_all();
     for (std::thread &active : this->threads) {
         active.join();

@@ -29,7 +29,7 @@ static const std::array<rserver::Vector2f, 4> POSITIONS{{
 void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::string> &args)
 {
     try {
-        std::shared_lock<std::shared_mutex> lock{
+        std::unique_lock<std::shared_mutex> lock{
             this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).ecs_mutex};
         auto &room_ecs{
             this->rooms.get_room_by_id(static_cast<std::size_t>(player.get_room_id())).get_ecs()};
@@ -48,7 +48,7 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
     } catch (game::Room::RoomException & /* e */) {
         try {
             auto &solo{this->get_solo_game(player)};
-            std::shared_lock<std::shared_mutex> lock{solo.get_mutex()};
+            std::unique_lock<std::shared_mutex> lock{solo.get_mutex()};
             auto &room_ecs{solo.get_ecs()};
             auto &component{
                 room_ecs.get_component<rtype::TransformComponent>(player.get_entity_value())};
@@ -65,7 +65,7 @@ void rserver::Manager::input_handler(rserver::Player &player, std::vector<std::s
         } catch (game::solo::SoloGame::SoloException & /* e */) {
             Manager::send_message({ntw::NetworkType::Ko}, player, this->udp_socket);
         }
-    } catch (rtype::ECSManager::ECSException &e) {
+    } catch (rtype::ECSManager::ECSException & /* e */) {
         return;
     }
 }

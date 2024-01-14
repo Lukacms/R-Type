@@ -49,18 +49,17 @@ void rserver::game::RoomsManager::join_room(rserver::Player &player, const std::
  * @param socket - asio::udp::socket &
  */
 void rserver::game::RoomsManager::add_room(rserver::Player &first_player,
-                                           const std::size_t &nb_threads,
+                                           const std::size_t & /* nb_threads */,
                                            asio::ip::udp::socket &socket, PlayersManager &manager)
 {
-    if (this->rooms.size() >= (nb_threads - 2))
-        throw Room::RoomException("No room available.");
-    this->rooms.emplace_back(socket, this->last_id, manager);
+    auto &new_room{this->rooms.emplace_back(socket, this->last_id, manager)};
     this->last_id++;
     try {
-        this->rooms.back().add_player(first_player);
+        new_room.add_player(first_player);
     } catch (Room::RoomException &e) {
         throw e;
     }
+    std::cout << this->rooms.size() << "\n";
 }
 
 /**

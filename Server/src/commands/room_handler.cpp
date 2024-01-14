@@ -16,8 +16,6 @@
  */
 void rserver::Manager::room_handler(rserver::Player &player, std::vector<std::string> &args)
 {
-    std::shared_lock<std::shared_mutex> lock{this->rooms_mutex};
-
     try {
         if (args.empty()) {
             this->rooms.add_room(player, this->threads.is_busy(), this->udp_socket, this->players);
