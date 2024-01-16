@@ -167,6 +167,7 @@ void rserver::Manager::run_solo_games(rtype::utils::Clock &delta)
             solo->game_turn(delta);
         } catch (game::solo::SoloGame::SoloException & /* e */) {
             this->solos.erase(solo);
+            return;
         }
     }
 }
